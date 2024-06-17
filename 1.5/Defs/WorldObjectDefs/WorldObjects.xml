@@ -18,6 +18,9 @@
 		<comps>
 			<li Class="SaveOurShip2.WorldObjectCompProps_TimedForcedExitShip"/>
 		</comps>
+		<modExtensions>
+			<li Class = "Vehicles.SpaceObjectDefModExtension"/>
+		</modExtensions>
 	</WorldObjectDef>
 	<WorldObjectDef>
 		<defName>ShipEnemy</defName>
@@ -34,6 +37,9 @@
 		<comps>
 			<li Class="SaveOurShip2.WorldObjectCompProps_TimedForcedExitShip"/>
 		</comps>
+		<modExtensions>
+			<li Class = "Vehicles.SpaceObjectDefModExtension"/>
+		</modExtensions>
 	</WorldObjectDef>
 	<WorldObjectDef>
 		<defName>WreckSpace</defName>
@@ -50,6 +56,9 @@
 		<comps>
 			<li Class="SaveOurShip2.WorldObjectCompProps_TimedForcedExitShip"/>
 		</comps>
+		<modExtensions>
+			<li Class = "Vehicles.SpaceObjectDefModExtension"/>
+		</modExtensions>
 	</WorldObjectDef>
 	<WorldObjectDef>
 		<defName>SiteSpace</defName>
@@ -65,6 +74,9 @@
 			<li Class="SaveOurShip2.WorldObjectCompProps_TimedForcedExitShip"/>
 			<li Class="WorldObjectCompProperties_EnterCooldown"/>
 		</comps>
+		<modExtensions>
+			<li Class = "Vehicles.SpaceObjectDefModExtension"/>
+		</modExtensions>
 		<mapGenerator>EmptySpaceMap</mapGenerator>
 	</WorldObjectDef>
 	<WorldObjectDef>
@@ -101,6 +113,9 @@
 		<comps>
 			<li Class="SaveOurShip2.WorldObjectCompProps_MoonPillarSite"/>
 		</comps>
+		<modExtensions>
+			<li Class = "Vehicles.SpaceObjectDefModExtension"/>
+		</modExtensions>
 	</WorldObjectDef>
 	<WorldObjectDef>
 		<defName>TribalPillarSite</defName>

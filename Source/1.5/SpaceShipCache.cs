@@ -380,9 +380,7 @@ namespace SaveOurShip2
 		{
 			if (Engines.Any(e => e.Props.reactionless))
 				return true;
-			if (fuelNeeded == 0)
-				fuelNeeded = MassActual;
-			return 1000 < fuelNeeded || RCSs.Count * 2000 < fuelNeeded;
+			return RCSs.Count > 0;
 		}
 		public float FuelNeeded(bool atmospheric)
 		{
@@ -476,7 +474,7 @@ namespace SaveOurShip2
 			fakeMover.targetMap = targetMap;
 			fakeMover.atmospheric = atmospheric;
 			fakeMover.fuelPaidByTarget = fuelPaidByTarget;
-			fakeMover.Position = fakeMover.shipRoot.Position;
+			fakeMover.Position = targetMap.Center;
 			fakeMover.SpawnSetup(targetMap, false);
 			List<object> selected = new List<object>();
 			foreach (object ob in Find.Selector.SelectedObjects)
@@ -1359,5 +1357,10 @@ namespace SaveOurShip2
 			}
 			ShipInteriorMod2.MoveShipFlag = false;
 		}
+
+		public bool Powered()
+        {
+			return Core != null && !IsWreck && (Core.PowerComp.PowerNet.HasActivePowerSource || Core.PowerComp.PowerNet.CurrentStoredEnergy() >= 1000);
+        }
 	}
 }

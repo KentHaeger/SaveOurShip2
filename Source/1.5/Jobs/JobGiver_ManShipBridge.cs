@@ -31,7 +31,7 @@ namespace SaveOurShip2
 			Thing thing = GenClosest.ClosestThingReachable(GetRoot(pawn), pawn.Map, ThingRequest.ForGroup(ThingRequestGroup.BuildingArtificial), PathEndMode.InteractionCell, TraverseParms.For(pawn), maxDistFromPoint, validator);
 			if (thing != null)
 			{
-				Job job = JobMaker.MakeJob(DefDatabase<JobDef>.GetNamed("ManShipBridge"), thing);
+				Job job = JobMaker.MakeJob(ResourceBank.JobDefOf.ManShipBridge, thing);
 				job.expiryInterval = 2000;
 				job.checkOverrideOnExpire = true;
 				return job;

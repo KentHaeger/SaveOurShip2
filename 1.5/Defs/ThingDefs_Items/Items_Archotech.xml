@@ -28,10 +28,10 @@
     <techLevel>Archotech</techLevel>
   </ThingDef>
 
-  <ThingDef ParentName="MechSerumBase">
+  <ThingDef ParentName="DrugPillBase">
     <defName>ArchotechRepairGel</defName>
-    <label>mechanite repair gel</label>
-    <description>A one-use super-dose of mechanites tuned to repair damaged items. Applied to an object such as a weapon or piece of apparel, it restores the object to full condition.</description>
+    <label>archite repair gel</label>
+    <description>A one-use super-dose of archites tuned to repair damaged items. It can either be used to fully restore an item's hit points, or applied to all worn gear. In the latter case the repair effect will be split between all damaged equipment.</description>
     <graphicData>
       <texPath>Things/Item/Special/RestorationGel</texPath>
       <graphicClass>Graphic_Single</graphicClass>
@@ -39,6 +39,7 @@
     <stackLimit>10</stackLimit>
     <statBases>
       <MarketValue>500</MarketValue>
+      <Mass>1</Mass>
     </statBases>
     <thingCategories>
       <li>Items</li>
@@ -47,10 +48,20 @@
     <thingSetMakerTags>
       <li>RewardStandardMidFreq</li>
     </thingSetMakerTags>
+    <ingestible>
+        <drugCategory>Medical</drugCategory>
+        <outcomeDoers>
+            <li Class="IngestionOutcomeDoer_GiveHediff">
+              <hediffDef>SoSRepairGear</hediffDef>
+              <severity>1.0</severity>
+            </li>
+        </outcomeDoers>
+		<ingestCommandString>Apply to gear</ingestCommandString>
+    </ingestible>
     <comps>
       <li Class="CompProperties_Usable">
         <useJob>UseItem</useJob>
-        <useLabel>Use repair gel</useLabel>
+        <useLabel>Repair single item</useLabel>
         <useDuration>0</useDuration>
       </li>
       <li Class="CompProperties_Targetable">
@@ -59,8 +70,32 @@
       <li>
         <compClass>SaveOurShip2.CompTargetEffect_RepairItem</compClass>
       </li>
+	  <li Class="CompProperties_Drug">
+		<listOrder>9999</listOrder>
+	  </li>
     </comps>
   </ThingDef>
+  
+  <HediffDef>
+    <defName>SoSRepairGear</defName>
+    <label>repair archites</label>
+    <labelNoun>repairing gear</labelNoun>
+    <description>This pawn's gear is being repaired by archites.</description>
+    <hediffClass>HediffWithComps</hediffClass>
+    <isBad>false</isBad>
+    <comps>
+      <li Class="HediffCompProperties_Disappears">
+        <disappearsAfterTicks>6000~8000</disappearsAfterTicks>
+      </li>
+      <li Class="SaveOurShip2.HediffCompProperties_GearRepair">
+        <ticksPerRepair>12</ticksPerRepair>
+      </li>
+    </comps>
+    <stages>
+      <li>
+      </li>
+    </stages>
+  </HediffDef>
 
   <ThingDef ParentName="ResourceBase">
     <defName>ArchotechMechaniteCore</defName>

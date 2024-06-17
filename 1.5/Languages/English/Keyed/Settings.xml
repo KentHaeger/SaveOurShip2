@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <LanguageData>
-	<SoS.Settings.ShowVersionUI>SOS2EXP {0}</SoS.Settings.ShowVersionUI>
+	<SoS.Settings.ShowVersionUI>SOS2 {0}</SoS.Settings.ShowVersionUI>
 	<SoS.Settings.RenderPlanet>Dynamic planet rendering</SoS.Settings.RenderPlanet>
 	<SoS.Settings.RenderPlanet.Desc>If checked, orbital maps will show a day/night cycle on the planet. Disable this option if the game runs slowly in space. Default: off</SoS.Settings.RenderPlanet.Desc>
 	

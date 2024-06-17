@@ -187,6 +187,7 @@ namespace SaveOurShip2
 			public static JobDef BreachAirlock;
 			public static JobDef DefendBreacher;
 			public static JobDef ManShipBridge;
+			public static JobDef LoadTorpedoTube;
 		}
 
 		[DefOf]
@@ -301,5 +302,11 @@ namespace SaveOurShip2
         {
 			public static FleckDef SoS2Exhaust_Short;
         }
+
+		[DefOf]
+		public static class ShipDefOf
+        {
+			public static ShipDef MechPsychicAmp;
+		}
 	}
 }

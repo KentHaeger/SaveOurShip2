@@ -29,6 +29,10 @@ namespace SaveOurShip2
 					thing.Destroy();
 				MapGenerator.Caves[cell] = 0;
 			}
+			foreach(IntVec3 cell in cells.Where(c=>c.DistanceToEdge(map) <= 5)) //Failsafe for shuttle landing areas
+            {
+				map.roofGrid.SetRoof(cell, null);
+			}
 			for (int i = 0; i < 5; i++)
 			{
 				Dig(new IntVec3(0, 0, Rand.Range(5, map.Size.z - 5)), 90, 20 , cells, map, false);

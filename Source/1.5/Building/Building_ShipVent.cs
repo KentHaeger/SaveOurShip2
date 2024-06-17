@@ -108,11 +108,18 @@ namespace SaveOurShip2
 
 			if (Map.IsSpace())
 			{
+				Room room = ventTo.GetRoom(Map);
+				ShipMapComp comp = Map.GetComponent<ShipMapComp>();
+				SpaceShipCache ship = comp.ShipsOnMap[comp.ShipIndexOnVec(Position)];
+				int pointsOfDamage = 0;
+				if (ship.LifeSupports.Count > 0)
+				{
+					pointsOfDamage = room.CellCount / ship.LifeSupports.Count / 2;
+				}
 				Command_Action expelSuperheatedAir = new Command_Action
 				{
 					action = delegate
 					{
-						Room room = ventTo.GetRoom(Map);
 						foreach (IntVec3 cell in room.Cells)
 							FleckMaker.ThrowDustPuff(cell, Map, 1);
 						foreach (Fire fire in room.ContainedThings<Fire>())
@@ -123,16 +130,13 @@ namespace SaveOurShip2
 								WeatherEvent_VacuumDamage.DoPawnDecompressionDamage(pawn, 10);
 						}
 						room.Temperature = 0f;
-						ShipMapComp comp = Map.GetComponent<ShipMapComp>();
-						SpaceShipCache ship = comp.ShipsOnMap[comp.ShipIndexOnVec(Position)];
-						int pointsOfDamage = room.CellCount / ship.LifeSupports.Count;
 						Log.Message("Dealing " + pointsOfDamage + " to each of " + ship.LifeSupports.Count + " life supports.");
 						foreach (CompShipLifeSupport lifeSupport in ship.LifeSupports.ToList()) //Curse you, collection modification bugs!
 							lifeSupport.parent.TakeDamage(new DamageInfo(DamageDefOf.Deterioration, pointsOfDamage));
 						DefDatabase<SoundDef>.GetNamed("Explosion_Smoke").PlayOneShot(this);
 					},
 					defaultLabel = "SoS.ExpelSuperheatedAir".Translate(),
-					defaultDesc = "SoS.ExpelSuperheatedAirDesc".Translate(),
+					defaultDesc = "SoS.ExpelSuperheatedAirDesc".Translate("<color=\"red\">"+pointsOfDamage+"</color>"),
 					icon = ContentFinder<Texture2D>.Get("UI/VacuumSuckSuckSuck")
 				};
 				if (ventTo.GetRoom(Map).Temperature < 100)
@@ -142,8 +146,6 @@ namespace SaveOurShip2
 				}
 				else
 				{
-					ShipMapComp comp = Map.GetComponent<ShipMapComp>();
-					SpaceShipCache ship = comp.ShipsOnMap[comp.ShipIndexOnVec(Position)];
 					if (!ship.LifeSupports.Any())
 					{
 						expelSuperheatedAir.disabled = true;

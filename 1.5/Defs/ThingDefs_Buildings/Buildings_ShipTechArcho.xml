@@ -1660,6 +1660,7 @@
 		<researchPrerequisites>
 			<li>ArchotechMechaniteWeapon</li>
 		</researchPrerequisites>
+		<interactionCellIcon>DiningChair</interactionCellIcon>
 	</ThingDef>
 	<RecipeDef>
 		<defName>RecyclotronRecipe</defName>

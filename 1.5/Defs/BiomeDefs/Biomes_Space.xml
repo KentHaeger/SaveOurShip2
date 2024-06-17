@@ -16,6 +16,7 @@
 		<texture>World/Biomes/space</texture>
 		<forageability>0</forageability>
 		<isExtremeBiome>true</isExtremeBiome>
+		<hasBedrock>false</hasBedrock>
 		<soundsAmbient />
 		<diseaseMtbDays>99999</diseaseMtbDays>
 		<diseases/>

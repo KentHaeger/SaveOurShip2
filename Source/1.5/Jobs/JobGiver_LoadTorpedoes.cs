@@ -46,7 +46,7 @@ namespace SaveOurShip2
 			Thing otherThing = GenClosest.ClosestThingReachable(GetRoot(pawn), pawn.Map, ThingRequest.ForGroup(ThingRequestGroup.HaulableAlways), PathEndMode.Touch, TraverseParms.For(pawn), maxDistFromPoint, otherValidator);
 			if (thing != null && otherThing != null)
 			{
-				Job job = JobMaker.MakeJob(DefDatabase<JobDef>.GetNamed("LoadTorpedoTube"), thing, otherThing);
+				Job job = JobMaker.MakeJob(ResourceBank.JobDefOf.LoadTorpedoTube, thing, otherThing);
 				job.expiryInterval = 2000;
 				job.checkOverrideOnExpire = true;
 				return job;

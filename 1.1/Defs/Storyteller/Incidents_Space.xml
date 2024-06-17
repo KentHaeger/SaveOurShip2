@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <!-- ============================== Big threats ==============================-->
+  
+  <IncidentDef>
+    <defName>ShipCombat</defName>
+    <label>ship combat</label>
+    <targetTags>
+      <li>Map_SpaceHome</li>
+    </targetTags>
+    <workerClass>IncidentWorker_ShipCombat</workerClass>
+    <baseChance>1</baseChance>
+    <category>ThreatBig</category>
+    <pointsScaleable>true</pointsScaleable>
+    <tale>ShipCombat</tale>
+  </IncidentDef>
+  
+  <!-- ===Compatibility===-->
+  <IncidentDef>
+    <defName>SoSFreeEntanglement</defName>
+    <label>free entanglement manifold</label>
+    <targetTags>
+      <li>Map_SpaceHome</li>
+      <li>Map_PlayerHome</li>
+    </targetTags>
+    <workerClass>IncidentWorker_FreeEntanglement</workerClass>
+    <baseChance>0</baseChance>
+    <category>Misc</category>
+  </IncidentDef>
+
+</Defs>

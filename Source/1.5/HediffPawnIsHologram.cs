@@ -51,12 +51,12 @@ namespace SaveOurShip2
 
 		public List<Hediff> MissingParts()
 		{
-			return pawn.health.hediffSet.hediffs.Where(hediff => hediff is Hediff_MissingPart).ToList();
+			return pawn.health.hediffSet.hediffs.Where(hediff => (hediff is Hediff_MissingPart && (hediff.Part.def != BodyPartDefOf.Eye || pawn.Ideo == null || !pawn.Ideo.IdeoApprovesOfBlindness()))).ToList();
 		}
 
 		public List<Hediff> CureableHediffs()
 		{
-			return pawn.health.hediffSet.hediffs.Where(hediff => hediff.IsPermanent() || hediff.def.chronic || hediff.def.makesSickThought).ToList();
+			return pawn.health.hediffSet.hediffs.Where(hediff => (hediff.IsPermanent() && pawn.Ideo.RequiredScars == 0) || hediff.def.chronic || hediff.def.makesSickThought).ToList();
 		}
 
 		public override void PostRemoved()

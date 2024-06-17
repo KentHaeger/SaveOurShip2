@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <MapGeneratorDef Name="EmptySpaceMap">
+	<defName>EmptySpaceMap</defName>
+	<genSteps>
+		<li>EmptySpaceTerrain</li>
+		<li>FindPlayerStartSpotSpace</li>
+		<li>FogSpace</li>
+	</genSteps>
+  </MapGeneratorDef>
+  
+  <GenStepDef>
+    <defName>EmptySpaceTerrain</defName>
+    <order>10</order>
+    <genStep Class="GenStep_EmptySpace"/>
+  </GenStepDef>
+  
+  <GenStepDef>
+    <defName>FindPlayerStartSpotSpace</defName>
+    <order>600</order>
+    <genStep Class="GenStep_FindPlayerStartSpot"/>
+  </GenStepDef>
+  
+  <GenStepDef>
+    <defName>FogSpace</defName>
+    <order>1500</order>
+    <genStep Class="GenStep_Fog"/>
+  </GenStepDef>
+  
+  <MapGeneratorDef ParentName="MapCommonBase">
+    <defName>ShipEngineImpactSite</defName>
+	<genSteps>
+      <li>RocksFromGrid</li>
+      <li>ScatterDeepResourceLumps</li>
+      <li>ShipEngineImpactSite</li>
+    </genSteps>
+  </MapGeneratorDef>
+  
+  <GenStepDef>
+    <defName>ShipEngineImpactSite</defName>
+    <order>420</order>
+    <genStep Class="GenStep_ShipEngineImpactSite">
+      <count>1</count>
+      <nearMapCenter>true</nearMapCenter>
+    </genStep>
+  </GenStepDef>
+
+</Defs>

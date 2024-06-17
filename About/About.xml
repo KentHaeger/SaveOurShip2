@@ -3,9 +3,13 @@
 	<packageId>kentington.saveourship2</packageId>
 	<author>Kentington, Thain, SonicTHI</author>
 	<name>Save Our Ship 2</name>
-	<description>An unofficial expansion for RimWorld. Build space ships that you can live on and launch them into space. Once there, continue your story of survival - overcoming new challenges and reaping new rewards. Complete with a new ending and tons of new features.\n\nFor more info, details on mod compatibility and known issues see:\nhttps://bit.ly/3swfRxC</description>
+	<description>An unofficial expansion for RimWorld. Build space ships that you can live on and launch them into space. Once there, continue your story of survival - overcoming new challenges and reaping new rewards. Complete with a new ending and tons of new features.</description>
 	<url/>
 	<supportedVersions>
+		<li>1.0</li>
+		<li>1.1</li>
+		<li>1.2</li>
+		<li>1.3</li>
 		<li>1.4</li>
 		<li>1.5</li>
 	</supportedVersions>
@@ -40,17 +44,14 @@
 		<li>mlie.yayoscombat3</li>
 		<li>majorhoff.rimthreaded</li>
 		<li>user19990313777.runtimegc</li>
-		<li>erdelf.MinifyEverything</li>
 		<li>dhultgren.useminifiedbuildings</li>
 		<li>impassablemapmaker.kv.rw</li>
 		<li>lukakama.rimworldrealfow</li>
-		<li>merthsoft.designatorshapes</li>
 		<li>saakra.empire</li>
 		<li>automatic.traderships</li>
 		<li>vesper.egihologramsandprojectors</li>
 		<li>vanillaexpanded.helixienGas</li>
 		<li>vanillaexpanded.vee</li>
-		<li>oskarpotocki.vfe.deserters</li>
 		<li>windowsxp.realisticplanets</li>
 		<li>powerlunatic.flawlesselectronics</li>
 		<li>limetreesnake.maintenance</li>

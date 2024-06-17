@@ -111,7 +111,7 @@ namespace SaveOurShip2
 
 			int chance;
 			if (scanSites && !scanShips)
-				chance = Rand.RangeInclusive(1, 3);
+				chance = Rand.RangeInclusive(1, 6);
 			else if (!scanSites && scanShips)
 				chance = Rand.RangeInclusive(3, 15);
 			else
@@ -156,21 +156,7 @@ namespace SaveOurShip2
 					Find.LetterStack.ReceiveLetter(quest.name, quest.description, LetterDefOf.PositiveEvent, null, null, quest, null, null);
 				}
 			}
-			else if (chance > 3 && chance < 7) //tradeship, already has faction, navy resolves in SpawnEnemyShip
-			{
-				IncidentParms parms = new IncidentParms();
-				parms.target = parent.Map;
-				parms.forced = true;
-				bool tradeShip = Find.Storyteller.TryFire(new FiringIncident(IncidentDefOf.OrbitalTraderArrival, null, parms));
-				if (tradeShip)
-				{
-					if (worker != null)
-						Find.LetterStack.ReceiveLetter(TranslatorFormattedStringExtensions.Translate("SoS.TraderScan"), TranslatorFormattedStringExtensions.Translate("SoS.TraderScanDesc", worker), LetterDefOf.PositiveEvent);
-					else
-						Find.LetterStack.ReceiveLetter(TranslatorFormattedStringExtensions.Translate("SoS.TraderScan"), TranslatorFormattedStringExtensions.Translate("SoS.TraderScanDesc", "its AI"), LetterDefOf.PositiveEvent);
-				}
-			}
-			else if (chance == 7) //premade sites, very low chance
+			else if (chance == 3) //premade sites, very low chance
 			{
 				DerelictShip ship = new DerelictShip();
 				int rarity = Rand.RangeInclusive(1, 2);
@@ -200,11 +186,11 @@ namespace SaveOurShip2
 				else
 					Find.LetterStack.ReceiveLetter("SoS.DerelictScan".Translate(), "SoS.DerelictScanDesc".Translate("its AI", ship.derelictShip), LetterDefOf.PositiveEvent);
 			}
-			else if (chance > 7 && chance < 12) //ship wreck
+			else if (chance > 3 && chance < 8) //ship wreck
 			{
 				DerelictShip ship = new DerelictShip();
 				int rarity = Rand.RangeInclusive(1, 2);
-				if (chance == 11)
+				if (chance == 7)
 					ship.wreckLevel = 2;
 				else
 					ship.wreckLevel = 3;
@@ -230,6 +216,20 @@ namespace SaveOurShip2
 					Find.LetterStack.ReceiveLetter("SoS.DerelictScan".Translate(), "SoS.DerelictScanDesc".Translate(worker, ship.derelictShip), LetterDefOf.PositiveEvent);
 				else
 					Find.LetterStack.ReceiveLetter("SoS.DerelictScan".Translate(), "SoS.DerelictScanDesc".Translate("its AI", ship.derelictShip), LetterDefOf.PositiveEvent);
+			}
+			else if (chance > 7 && chance < 12) //tradeship, already has faction, navy resolves in SpawnEnemyShip
+			{
+				IncidentParms parms = new IncidentParms();
+				parms.target = parent.Map;
+				parms.forced = true;
+				bool tradeShip = Find.Storyteller.TryFire(new FiringIncident(IncidentDefOf.OrbitalTraderArrival, null, parms));
+				if (tradeShip)
+				{
+					if (worker != null)
+						Find.LetterStack.ReceiveLetter(TranslatorFormattedStringExtensions.Translate("SoS.TraderScan"), TranslatorFormattedStringExtensions.Translate("SoS.TraderScanDesc", worker), LetterDefOf.PositiveEvent);
+					else
+						Find.LetterStack.ReceiveLetter(TranslatorFormattedStringExtensions.Translate("SoS.TraderScan"), TranslatorFormattedStringExtensions.Translate("SoS.TraderScanDesc", "its AI"), LetterDefOf.PositiveEvent);
+				}
 			}
 			else //random ship
 			{

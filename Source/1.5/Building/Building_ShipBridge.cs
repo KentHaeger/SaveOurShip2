@@ -303,7 +303,7 @@ namespace SaveOurShip2
 				List<int> shipStuck = new List<int>();
 				if (mapComp.ShipsOnMap.Count > 1)
 				{
-					shipStuck = mapComp.ShipsOnMap.Keys.Where(s => mapComp.ShipsOnMap[s].IsStuckAndNotAssisted()).ToList();
+					shipStuck = mapComp.ShipsOnMap.Keys.Where(s => mapComp.ShipsOnMap[s].IsStuckAndNotAssisted() && mapComp.ShipsOnMap[s].BuildingCount > 4).ToList();
 					if (shipStuck.Any())
 						wrecksOnMap = true;
 				}
@@ -874,8 +874,8 @@ namespace SaveOurShip2
 											mapComp.StartShipEncounter(passingShip);
 										},
 										icon = ContentFinder<Texture2D>.Get("UI/IncomingShip_Icon_Pirate"),
-										defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.AttackShip") + " " + passingShip.FullTitle,
-										defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.AttackShipDesc") + " " + passingShip.FullTitle
+										defaultLabel = "SoSAttackShip".Translate(passingShip.FullTitle),
+										defaultDesc = "SoSAttackShipDesc".Translate(passingShip.FullTitle)
 									};
 									yield return attackPirateShip;
 								}
@@ -889,8 +889,8 @@ namespace SaveOurShip2
 											mapComp.StartShipEncounter(passingShip);
 										},
 										icon = ContentFinder<Texture2D>.Get("UI/IncomingShip_Icon_Trader"),
-										defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.AttackShip") + " " + passingShip.FullTitle,
-										defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.AttackShipPirate") + " " + passingShip.FullTitle
+										defaultLabel = "SoSPirateShip".Translate(passingShip.FullTitle),
+										defaultDesc = "SoSPirateShipDesc".Translate(passingShip.FullTitle)
 									};
 									yield return attackTradeShip;
 								}
@@ -904,8 +904,8 @@ namespace SaveOurShip2
 											mapComp.StartShipEncounter(passingShip);
 										},
 										icon = ContentFinder<Texture2D>.Get("UI/IncomingShip_Icon_Pirate"),
-										defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.AttackShip") + " " + passingShip.FullTitle,
-										defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.AttackShipEngage") + " " + passingShip.FullTitle
+										defaultLabel = "SoSAttackShip".Translate(passingShip.FullTitle),
+										defaultDesc = "SoSAttackShipDesc".Translate(passingShip.FullTitle)
 									};
 									yield return attackAttackableShip;
 								}
@@ -919,8 +919,8 @@ namespace SaveOurShip2
 											mapComp.StartShipEncounter(passingShip);
 										},
 										icon = ContentFinder<Texture2D>.Get("UI/IncomingShip_Icon_Quest"),
-										defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.ApproachShip") + " " + passingShip.FullTitle,
-										defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.ApproachShip") + " " + passingShip.FullTitle
+										defaultLabel = "SoSInvestigateDerelict".Translate(passingShip.FullTitle),
+										defaultDesc = "SoSInvestigateDerelictDesc".Translate(passingShip.FullTitle)
 									};
 									yield return approachDerelictShip;
 								}
@@ -1015,6 +1015,7 @@ namespace SaveOurShip2
 								Ship.CreateShipSketchIfFuelPct(1f, playerShipMap, 0, true);
 							else
 								ShipCountdown.InitiateCountdown(this);
+							QuestUtility.SendQuestTargetSignals(base.Map.Parent.questTags, "LaunchedShip");
 						}
 					},
 					hotKey = KeyBindingDefOf.Misc1,
@@ -1170,7 +1171,7 @@ namespace SaveOurShip2
 		}
 		private void Success(Pawn pawn)
 		{
-			if (ShipName == "Psychic Amplifier")
+			if (ShipName == ResourceBank.ShipDefOf.MechPsychicAmp.label || ShipName == ResourceBank.ShipDefOf.MechPsychicAmp.label.Translate())
 			{
 				Find.LetterStack.ReceiveLetter(TranslatorFormattedStringExtensions.Translate("SoS.PsychicAmplifierCaptured"), TranslatorFormattedStringExtensions.Translate("SoS.PsychicAmplifierCapturedDesc"), LetterDefOf.PositiveEvent);
 				ShipInteriorMod2.WorldComp.Unlocks.Add("ArchotechSpore");
@@ -1196,18 +1197,18 @@ namespace SaveOurShip2
 		private void Failure(Pawn pawn)
 		{
 			if (pawn.Faction == Faction.OfPlayer)
-				Messages.Message("Hack failed", null, MessageTypeDefOf.CautionInput);
+				Messages.Message("SoSHackFailed".Translate(), null, MessageTypeDefOf.CautionInput);
 		}
 		private void CriticalFailure(Pawn pawn)
 		{
 			if (pawn.Faction == Faction.OfPlayer)
-				Messages.Message("Hack failed", null, MessageTypeDefOf.CautionInput);
+				Messages.Message("SoSHackFailed".Translate(), null, MessageTypeDefOf.CautionInput);
 		}
 		public override IEnumerable<FloatMenuOption> GetFloatMenuOptions(Pawn selPawn)
 		{
 			List<FloatMenuOption> options = new List<FloatMenuOption>();
 			if (Faction != Faction.OfPlayer)
-				options.Add(new FloatMenuOption("Hack", delegate { Job capture = new Job(ResourceBank.JobDefOf.HackEnemyShip, this); selPawn.jobs.TryTakeOrderedJob(capture); }));
+				options.Add(new FloatMenuOption("SoSHackBridge".Translate(), delegate { Job capture = new Job(ResourceBank.JobDefOf.HackEnemyShip, this); selPawn.jobs.TryTakeOrderedJob(capture); }));
 			else if (AllComps != null)
 			{
 				for (int i = 0; i < AllComps.Count; i++)

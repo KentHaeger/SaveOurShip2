@@ -47,7 +47,7 @@ namespace SaveOurShip2
 				float debugY = 350f;
 				Rect rect1 = new Rect(20, debugY, 280, 35);
 				Widgets.DrawMenuSection(rect1);
-				Widgets.Label(rect1.ContractedBy(7), "SOS2 " + ShipInteriorMod2.SOS2EXPversion + " | Ships: " + mapComp.ShipsOnMap?.Count + " | Cells: " + mapComp.MapShipCells.Keys.Count);
+				Widgets.Label(rect1.ContractedBy(7), "SOS2 " + ShipInteriorMod2.SOS2version + " | Ships: " + mapComp.ShipsOnMap?.Count + " | Cells: " + mapComp.MapShipCells.Keys.Count);
 
 				if (mapComp.MapShipCells.NullOrEmpty())
 					return;
@@ -165,7 +165,7 @@ namespace SaveOurShip2
 			if (shuttlesToDisplay < playerMapComp.ShuttleMissions.Count)
             {
 				baseY += 30;
-				string str = "(" + (playerMapComp.ShuttleMissions.Count - shuttlesToDisplay) + " " + "SoS.ShuttlesMore".Translate() + ")";
+				string str = "(" + (playerMapComp.ShuttleMissions.Count - shuttlesToDisplay) + "SoSMoreShuttles".Translate()+")";
 				int strSize = 5 + str.Length * 6;
 				Rect rect2 = new Rect(screenHalf - 380 - strSize, baseY - 40, 10 + strSize, 25);
 				Widgets.DrawMenuSection(rect2);
@@ -228,7 +228,7 @@ namespace SaveOurShip2
 			if (shuttlesToDisplay < enemyMapComp.ShuttleMissions.Count)
 			{
 				baseY += 30;
-				string str = "(" + (enemyMapComp.ShuttleMissions.Count - shuttlesToDisplay) + " " + "SoS.ShuttlesMore".Translate() + ")";
+				string str = "(" + (enemyMapComp.ShuttleMissions.Count - shuttlesToDisplay) + "SoSMoreShuttles".Translate() + ")";
 				int strSize = 5 + str.Length * 6;
 				Rect rect2 = new Rect(screenHalf + 785, baseY - 40, 10 + strSize, 25);
 				Widgets.DrawMenuSection(rect2);
@@ -350,9 +350,9 @@ namespace SaveOurShip2
 			rect.x = offset;
 			rect.height = Text.LineHeight;
 			if (bridge.powerCap > 0)
-				Widgets.Label(rect, "Energy: " + bridge.power + " / " + bridge.powerCap);
+				Widgets.Label(rect,  + bridge.power + " / " + bridge.powerCap);
 			else
-				Widgets.Label(rect, "<color=red>Energy: N/A</color>");
+				Widgets.Label(rect, "<color=red>"+"SoSCombatNoEnergy".Translate()+"</color>");
 		}
 		private static void DrawHeat(float offset, float baseY, Building_ShipBridge bridge)
 		{
@@ -362,9 +362,9 @@ namespace SaveOurShip2
 			rect.x = offset;
 			rect.height = Text.LineHeight;
 			if (bridge.heatCap > 0)
-				Widgets.Label(rect, "Heat: " + Mathf.Floor(bridge.heat) + " / " + bridge.heatCap);
+				Widgets.Label(rect, "SoSCombatHeat".Translate() + Mathf.Floor(bridge.heat) + " / " + bridge.heatCap);
 			else
-				Widgets.Label(rect, "<color=red>Heat: N/A</color>");
+				Widgets.Label(rect, "<color=red>" + "SoSCombatNoHeat".Translate() + "</color>");
 		}
 		private static void DrawShuttleHealth(float offset, float baseY, VehiclePawn shuttle)
 		{
@@ -373,7 +373,7 @@ namespace SaveOurShip2
 			rect.y += 5;
 			rect.x = offset;
 			rect.height = Text.LineHeight;
-			Widgets.Label(rect, "Hull: " + Mathf.Round(shuttle.statHandler.GetStatValue(VehicleStatDefOf.BodyIntegrity) * 100f) + "%");
+			Widgets.Label(rect, "SoSCombatHull".Translate() + Mathf.Round(shuttle.statHandler.GetStatValue(VehicleStatDefOf.BodyIntegrity) * 100f) + "%");
 		}
 		private static void DrawShuttleHeat(float offset, float baseY, VehiclePawn shuttle)
 		{
@@ -390,7 +390,7 @@ namespace SaveOurShip2
 			rect.y += 5;
 			rect.x = offset;
 			rect.height = Text.LineHeight;
-			Widgets.Label(rect, "Shields: " + (heatMax == 0 ? "N/A" : (Mathf.Round((1f - heatCurrent / heatMax) * 100f) + "%")));
+			Widgets.Label(rect, "SoSCombatShields".Translate() + (heatMax == 0 ? "SoSCombatNone".Translate().ToString() : (Mathf.Round((1f - heatCurrent / heatMax) * 100f) + "%")));
 		}
 		public static Rect FillableBarWithDepletion(Rect rect, float fillPercent, float fillDepletion, Texture2D fillTex, Texture2D depletionTex)
 		{
@@ -1219,7 +1219,7 @@ namespace SaveOurShip2
 			if (map.IsSpace())
 			{
 				__result.disabled = true;
-				__result.disabledReason = "SoS.SettleSpaceSites".Translate();
+				__result.disabledReason = "SoSCantSettleSpaceSites".Translate();
 			}
 		}
 	}
@@ -1629,7 +1629,7 @@ namespace SaveOurShip2
 				diaOption.resolveTree = true;
 				diaNode.options.Add(diaOption);
 
-				if (skill * 2 < bounty)
+				if (bounty >= 40)
 				{
 					diaOption.Disable(TranslatorFormattedStringExtensions.Translate("SoS.TradeTradeDecline", __instance.TraderName));
 				}
@@ -1780,10 +1780,12 @@ namespace SaveOurShip2
 				newResult.Add(TranslatorFormattedStringExtensions.Translate("ShipReportMissingPart") + ": " + ThingDefOf.Ship_SensorCluster.label);
 			if (!ship.HasMannedBridge())
 				newResult.Add(TranslatorFormattedStringExtensions.Translate("SoS.ReportNeedPilot"));
+			if (!ship.Powered())
+				newResult.Add("SoSNoPowerSupply".Translate());
 			//do not allow kidnapping other fac pawns/animals
 			foreach (Pawn p in ship.PawnsOnShip())
 			{
-				if (p.Faction != Faction.OfPlayer && !p.IsPrisoner)
+				if (p.Faction != Faction.OfPlayer && !p.IsPrisoner && !p.InContainerEnclosed)
 				{
 					newResult.Add(TranslatorFormattedStringExtensions.Translate("SoS.LaunchFailPawns", p.Name?.ToStringShort ?? p.KindLabel ?? ""));
 				}
@@ -2384,6 +2386,15 @@ namespace SaveOurShip2
 		}
 	}
 
+	[HarmonyPatch(typeof(GridsUtility), "GetFirstBlight")]
+	public static class DisableForMoveBlight
+    {
+		public static bool Prefix()
+        {
+			return !ShipInteriorMod2.MoveShipFlag;
+        }
+    }
+
 	[HarmonyPatch(typeof(Designator_Deconstruct), "CanDesignateThing")]
 	public static class ChangeReason
 	{
@@ -2613,7 +2624,7 @@ namespace SaveOurShip2
 						pawn.CanReserveAndReach(current, PathEndMode.OnCell, Danger.Deadly, 1, -1, null, true) &&
 						findCryptonestFor(current, pawn, true) != null)
 					{
-						string text2 = "SoS.CarryToCryptonest".Translate();
+						string text2 = "SoSCarryToCryptonest";
 						JobDef jDef = DefDatabase<JobDef>.GetNamed("CarryToCryptonest");
 						Action action2 = delegate {
 							Building_CryptosleepCasket building_CryptosleepCasket =
@@ -2864,7 +2875,7 @@ namespace SaveOurShip2
 	{
 		public static bool Prefix(Pawn generated, Pawn other)
 		{
-			if (!generated.RaceProps.Humanlike || !other.RaceProps.Humanlike || generated.kindDef.defName.Contains("Space") || other.kindDef.defName.Contains("Space"))
+			if (!generated.RaceProps.Humanlike || !other.RaceProps.Humanlike || generated.kindDef.defName.Contains("Space") || other.kindDef.defName.Contains("Space") || generated.story.Childhood == ResourceBank.BackstoryDefOf.SoSHologram || other.story.Childhood == ResourceBank.BackstoryDefOf.SoSHologram)
 			{
 				return false;
 			}
@@ -3071,7 +3082,19 @@ namespace SaveOurShip2
 		}
 	}
 
-	[HarmonyPatch(typeof(Recipe_InstallArtificialBodyPart), "GetPartsToApplyOn")]
+	[HarmonyPatch(typeof(SurgeryOutcomeSuccess), "Apply")]
+	public static class FormgelsCanTotallyUseBionics
+    {
+		public static void Postfix(ref bool __result, Pawn patient)
+        {
+			if (ShipInteriorMod2.IsHologram(patient))
+            {
+				__result = true;
+            }
+        }
+    }
+
+	/*[HarmonyPatch(typeof(Recipe_InstallArtificialBodyPart), "GetPartsToApplyOn")]
 	public static class FormgelsCannotUseBionics
 	{
 		public static void Postfix(ref IEnumerable<BodyPartRecord> __result, Pawn pawn)
@@ -3109,7 +3132,7 @@ namespace SaveOurShip2
 			if (ShipInteriorMod2.IsHologram(pawn))
 				__result = new List<BodyPartRecord>();
 		}
-	}
+	}*/
 
 	[HarmonyPatch(typeof(Recipe_RemoveBodyPart), "GetPartsToApplyOn")]
 	public static class FormgelsHaveNoOrgans
@@ -4968,6 +4991,7 @@ namespace SaveOurShip2
 			if (__instance.ShouldBeDead() && __instance.hediffSet.GetFirstHediff<HediffPawnIsHologram>() != null)
 			{
 				__instance.hediffSet.GetFirstHediff<HediffPawnIsHologram>().consciousnessSource.GetComp<CompBuildingConsciousness>().HologramDestroyed(true);
+				__instance.Notify_Resurrected();
 				__result = true;
 			}
         }
@@ -4986,78 +5010,42 @@ namespace SaveOurShip2
         }
 	}
 
-	//TEMPORARY until I talk to Phil and see how to fix this properly
-	[HarmonyPatch(typeof(CompUpgradeTree), "CompTickRare")]
-	public static class TEMPStopRedErrorOnTakeoff
-    {
-		public static bool Prefix(CompUpgradeTree __instance)
-        {
-			return __instance.parent.Map != null;
-        }
-    }
-
-	[HarmonyPatch(typeof(GenGridVehicles), "Walkable")]
-	public static class TEMPFixShuttleSpawnFail
-    {
-		public static bool Prefix()
-        {
-			return false;
-        }
-
-		public static void Postfix(IntVec3 cell, VehicleDef vehicleDef, Map map, ref bool __result)
-        {
-			try
-			{
-				__result = ComponentCache.GetCachedMapComponent<VehicleMapping>(map)[vehicleDef].VehiclePathGrid.Walkable(cell);
-			}
-			catch (Exception e)
-            {
-				Log.Error("[SoS2] Temporary patch prevented shuttle spawn from failing. Exception was: " + e);
-				__result = true;
-            }
+	[HarmonyPatch(typeof(AutoBuildRoofAreaSetter), "TryGenerateAreaNow", new Type[] { typeof(Room) })]
+	public static class NoRoofInSpace
+	{
+		public static bool Prefix(Room room)
+		{
+			return !room.Map.IsSpace();
 		}
-    }
+	}
 
-	[HarmonyPatch(typeof(VehiclePawn), "GetFloatMenuOptions")]
-	public static class TEMPFixVFPawnBoarding
+	[HarmonyPatch(typeof(DateNotifier), "AnyPlayerHomeSeasonsAreMeaningful")]
+	public static class NoSeasonSpam
     {
-		public static void Postfix(Pawn selPawn, VehiclePawn __instance, ref IEnumerable<FloatMenuOption> __result)
+		public static void Postfix(ref bool __result)
         {
-			if(selPawn.Faction != __instance.Faction)
-				__result=new List<FloatMenuOption>();
+			if (Find.Maps.Any(map => map.IsSpace()))
+				__result = false;
         }
     }
 
-	[HarmonyPatch(typeof(PawnUtility), "IsTravelingInTransportPodWorldObject")]
-	public static class TEMPFixVFPrisonerFactionRandomize //Temporary until this fix is integrated into VF
-    {
-		public static void Postfix(Pawn pawn, ref bool __result)
-        {
-			if (ThingOwnerUtility.AnyParentIs<VehiclePawn>(pawn) || ThingOwnerUtility.AnyParentIs<AerialVehicleInFlight>(pawn))
-				__result = true;
-        }
-    }
-
-	/*causes lag
 	[HarmonyPatch(typeof(ShipLandingBeaconUtility), "GetLandingZones")]
 	public static class RoyaltyShuttlesLandOnBays
 	{
 		public static void Postfix(Map map, ref List<ShipLandingArea> __result)
 		{
-			foreach (Building landingSpot in map.listerBuildings.AllBuildingsColonistOfDef(ResourceBank.ThingDefOf.ShipShuttleBay))
-			{
-				ShipLandingArea area = new ShipLandingArea(landingSpot.OccupiedRect(), map);
-				area.RecalculateBlockingThing();
-				__result.Add(area);
-			}
-			foreach (Building landingSpot in map.listerBuildings.AllBuildingsColonistOfDef(ResourceBank.ThingDefOf.ShipShuttleBayLarge))
-			{
-				ShipLandingArea area = new ShipLandingArea(landingSpot.OccupiedRect(), map);
-				area.RecalculateBlockingThing();
-				__result.Add(area);
-			}
+			foreach (SpaceShipCache ship in map.GetComponent<ShipMapComp>().ShipsOnMap.Values)
+            {
+				foreach (CompShipBay bay in ship.Bays)
+                {
+					ShipLandingArea area = new ShipLandingArea(bay.parent.OccupiedRect(), map);
+					area.RecalculateBlockingThing();
+					__result.Add(area);
+				}
+            }
 		}
-	}*/
+	}
+
 	/*[HarmonyPatch(typeof(ActiveDropPod),"PodOpen")]
 	public static class ActivePodFix{
 		public static bool Prefix (ref ActiveDropPod __instance)

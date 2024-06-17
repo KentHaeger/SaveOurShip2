@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <ThoughtDef>
+    <defName>PsychicPurr</defName>
+    <durationDays>0.5</durationDays>
+    <stackLimit>1</stackLimit>
+    <stackedEffectMultiplier>0.5</stackedEffectMultiplier>
+    <nullifyingTraits>
+      <li>Psychopath</li>
+    </nullifyingTraits>
+    <effectMultiplyingStat>PsychicSensitivity</effectMultiplyingStat>
+    <stages>
+      <li>
+        <label>psychic purr</label>
+        <description>The archocat's purr gives me a sense of love and connection.</description>
+        <baseMoodEffect>4</baseMoodEffect>
+      </li>
+    </stages>
+  </ThoughtDef>
+  
+  <ThoughtDef>
+    <defName>ArchotechToldSecret</defName>
+    <thoughtClass>Thought_MemorySocial</thoughtClass>
+    <durationDays>20</durationDays>
+    <stackLimit>300</stackLimit>
+    <stackLimitForSameOtherPawn>10</stackLimitForSameOtherPawn>
+    <stackedEffectMultiplier>0.9</stackedEffectMultiplier>
+    <stages>
+      <li>
+        <label>told awful secret</label>
+        <baseOpinionOffset>-50</baseOpinionOffset>
+      </li>
+    </stages>
+  </ThoughtDef>
+</Defs>

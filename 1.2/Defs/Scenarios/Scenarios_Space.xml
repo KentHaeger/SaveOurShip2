@@ -1,0 +1,207 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <ScenarioDef Name="SoSDerelict">
+    <defName>SoSDerelict</defName>
+    <label>Derelict Ship</label>
+    <description>The three of you awake in your cryptosleep sarcophagi, stirred from slumber by an automated warning. A storm of micrometeorites has torn several breaches in your ship's hull and destroyed its Johnson-Tanaka drive. Trapped in orbit above an unknown rimworld, you must patch up your damaged ship and make long-term survival plans.</description>
+    <scenario>
+      <summary>Three survivors aboard a damaged starship.</summary>
+      <playerFaction>
+        <def>PlayerFaction</def>
+        <factionDef>PlayerColony</factionDef>
+      </playerFaction>
+      <parts>
+
+        <!-- Config pages -->
+        <li Class="ScenPart_ConfigPage_ConfigureStartingPawns">
+          <def>ConfigPage_ConfigureStartingPawns</def>
+          <pawnCount>3</pawnCount>
+          <pawnChoiceCount>8</pawnChoiceCount>
+        </li>
+
+        <!-- Player starting stuff spawn method-->
+        <li Class="ScenPart_PlayerPawnsArriveMethod">
+          <def>PlayerPawnsArriveMethod</def>
+          <method>DropPods</method>
+          <visible>false</visible>
+        </li>
+		
+		<li Class="ScenPart_StartInSpace">
+          <def>StartInSpace</def>
+          <enemyShipDef>0</enemyShipDef>
+          <visible>true</visible>
+        </li>
+
+        <!-- Player pawns modifiers -->
+        <li Class="ScenPart_ForcedHediff">
+          <def>ForcedHediff</def>
+          <visible>false</visible>
+          <context>PlayerStarter</context>
+          <chance>1</chance>
+          <hediff>CryptosleepSickness</hediff>
+          <hideOffMap>true</hideOffMap>
+          <severityRange>1~1</severityRange>
+        </li>
+        
+        <!-- Player starting things -->
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>Silver</thingDef>
+          <count>800</count>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>MealSurvivalPack</thingDef>
+          <count>50</count>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>MedicineIndustrial</thingDef>
+          <count>30</count>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>ComponentIndustrial</thingDef>
+          <count>30</count>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>Gun_BoltActionRifle</thingDef>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>Gun_Revolver</thingDef>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>MeleeWeapon_Knife</thingDef>
+          <stuff>Plasteel</stuff>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>Apparel_FlakPants</thingDef>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>Apparel_FlakVest</thingDef>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>Apparel_AdvancedHelmet</thingDef>
+          <stuff>Plasteel</stuff>
+        </li>
+		
+        <!-- Game start dialog -->
+        <li Class="ScenPart_GameStartDialog">
+          <def>GameStartDialog</def>
+          <text>The three of you awake in your cryptosleep sarcophagi, stirred from slumber by an automated warning. A storm of micrometeorites has torn several breaches in your ship's hull and destroyed its Johnson-Tanaka drive. Trapped in orbit above an unknown rimworld, you must patch up your damaged ship and make long-term survival plans.\n\nPerhaps you can acquire resources by scanning for orbital sites. You could also turn your sensors towards the planet's surface to scout a potential landing site for your ship. One way or another, you will need to reinvent the technologies needed to properly repair it.</text>
+          <closeSound>GameStartSting</closeSound>
+        </li>
+        
+      </parts>
+    </scenario>
+  </ScenarioDef>
+
+  <ScenarioDef Name="SoSDungeon">
+    <defName>SoSDungeon</defName>
+    <label>Derelict Station</label>
+    <description>You left home to join a crew bound for the stars, signed up for a long-duration mining operation out on the Rim.\n\nAt least, that's what you thought you signed up for.\n\nUpon awakening in your cryptosleep casket to the sound of warning klaxons, you find yourself at the center of an asteroid. The mining base is abandoned. The life support and artificial ecosystem have run amok, filling the habitation spheres with wild plant life. How long have you been buried in here?</description>
+    <scenario>
+      <summary>Three survivors aboard a damaged asteroid base.</summary>
+      <playerFaction>
+        <def>PlayerFaction</def>
+        <factionDef>PlayerColony</factionDef>
+      </playerFaction>
+      <parts>
+
+        <!-- Config pages -->
+        <li Class="ScenPart_ConfigPage_ConfigureStartingPawns">
+          <def>ConfigPage_ConfigureStartingPawns</def>
+          <pawnCount>3</pawnCount>
+          <pawnChoiceCount>8</pawnChoiceCount>
+        </li>
+
+        <!-- Player starting stuff spawn method-->
+        <li Class="ScenPart_PlayerPawnsArriveMethod">
+          <def>PlayerPawnsArriveMethod</def>
+          <method>DropPods</method>
+          <visible>false</visible>
+        </li>
+		
+		<li Class="ScenPart_StartInSpace">
+          <def>StartInSpaceDungeon</def>
+          <enemyShipDef>0</enemyShipDef>
+          <visible>true</visible>
+        </li>
+
+        <!-- Player pawns modifiers -->
+        <li Class="ScenPart_ForcedHediff">
+          <def>ForcedHediff</def>
+          <visible>false</visible>
+          <context>PlayerStarter</context>
+          <chance>1</chance>
+          <hediff>CryptosleepSickness</hediff>
+          <hideOffMap>true</hideOffMap>
+          <severityRange>1~1</severityRange>
+        </li>
+        
+        <!-- Player starting things -->
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>Silver</thingDef>
+          <count>800</count>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>MealSurvivalPack</thingDef>
+          <count>50</count>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>MedicineIndustrial</thingDef>
+          <count>30</count>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>ComponentIndustrial</thingDef>
+          <count>30</count>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>Gun_BoltActionRifle</thingDef>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>Gun_Revolver</thingDef>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>MeleeWeapon_Knife</thingDef>
+          <stuff>Plasteel</stuff>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>Apparel_FlakPants</thingDef>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>Apparel_FlakVest</thingDef>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>Apparel_AdvancedHelmet</thingDef>
+          <stuff>Plasteel</stuff>
+        </li>
+		
+        <!-- Game start dialog -->
+        <li Class="ScenPart_GameStartDialog">
+          <def>GameStartDialog</def>
+          <text>You left home to join a crew bound for the stars, signed up for a long-duration mining operation out on the Rim.\n\nAt least, that's what you thought you signed up for.\n\nUpon awakening in your cryptosleep casket to the sound of warning klaxons, you find yourself at the center of an asteroid. The mining base is abandoned. The life support and artificial ecosystem have run amok, filling the habitation spheres with wild plant life. How long have you been buried in here?\n\nThe power must have kicked back online after a tunnel collapse. One of the two reactors are down, the other is burning through the last of its fuel. With power dwindling, you might choose to put the remaining reactor into overdrive to ensure constant power. Or maybe try the backup chemfuel generators.\n\nThis far out on the Rim, rescue is unlikely. And you have a feeling you're not alone...</text>
+          <closeSound>GameStartSting</closeSound>
+        </li>
+        
+      </parts>
+    </scenario>
+  </ScenarioDef>
+</Defs>

@@ -1,0 +1,211 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <ThingDef ParentName="ArmorMachineableBase">
+    <defName>Apparel_SpaceSuitBody</defName>
+    <label>EVA suit</label>
+    <description>A suit designed to keep the occupant alive in outer space. Includes small thrusters for movement.</description>
+    <techLevel>Spacer</techLevel>
+    <recipeMaker>
+      <unfinishedThingDef>UnfinishedTechArmor</unfinishedThingDef>
+      <researchPrerequisite>ShipSpaceSuits</researchPrerequisite>
+      <recipeUsers Inherit="False">
+        <li>FabricationBench</li>
+      </recipeUsers>
+    </recipeMaker>
+    <graphicData>
+      <texPath>Things/Pawn/Humanlike/Apparel/EVA/EVA_Lite</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+    </graphicData>
+    <statBases>
+      <WorkToMake>17000</WorkToMake>
+      <MaxHitPoints>340</MaxHitPoints>
+      <Mass>10</Mass>
+      <ArmorRating_Blunt>0.4</ArmorRating_Blunt>
+      <ArmorRating_Sharp>0.4</ArmorRating_Sharp>
+      <ArmorRating_Heat>0.75</ArmorRating_Heat>
+      <Insulation_Cold>100</Insulation_Cold>
+      <Insulation_Heat>25</Insulation_Heat>
+    </statBases>
+    <equippedStatOffsets>
+      <MoveSpeed>-0.25</MoveSpeed>
+      <WorkSpeedGlobal>-0.075</WorkSpeedGlobal>
+    </equippedStatOffsets>
+    <thingCategories>
+      <li>Apparel</li>
+    </thingCategories>
+	<stuffCategories>
+      <li>Fabric</li>
+      <li>Leathery</li>
+    </stuffCategories>
+	<costStuffCount>70</costStuffCount>
+    <costList>
+      <ComponentSpacer>2</ComponentSpacer>
+      <Plasteel>10</Plasteel>
+    </costList>
+		<generateCommonality>2</generateCommonality>
+		<apparel>
+			<bodyPartGroups>
+				<li>Torso</li>
+        <li>Neck</li>
+				<li>Shoulders</li>
+				<li>Arms</li>
+				<li>Legs</li>
+				<li>Hands</li>
+				<li>Feet</li>
+			</bodyPartGroups>
+			<wornGraphicPath>Things/Pawn/Humanlike/Apparel/EVA/EVA_Lite</wornGraphicPath>
+			<layers>
+				<li>Middle</li>
+				<li>Shell</li>
+			</layers>
+			<tags>
+        <li>Spacer</li>
+        <li>EVA</li>
+      </tags>
+      <defaultOutfitTags>
+      </defaultOutfitTags>
+    </apparel>
+  </ThingDef>
+  
+	<ThingDef ParentName="ArmorHelmetMakeableBase">
+    <defName>Apparel_SpaceSuitHelmet</defName>
+    <label>EVA helmet</label>
+    <description>A helmet designed to keep the occupant alive in outer space.</description>
+    <techLevel>Spacer</techLevel>
+    <recipeMaker>
+      <unfinishedThingDef>UnfinishedTechArmor</unfinishedThingDef>
+      <researchPrerequisite>ShipSpaceSuits</researchPrerequisite>
+      <recipeUsers Inherit="False">
+        <li>FabricationBench</li>
+      </recipeUsers>
+    </recipeMaker>
+    <graphicData>
+      <texPath>Things/Pawn/Humanlike/Apparel/EVA/EVA_Helmet</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+    </graphicData>
+    <statBases>
+      <WorkToMake>16000</WorkToMake>
+      <MaxHitPoints>160</MaxHitPoints>
+      <Mass>2.7</Mass>
+      <ArmorRating_Blunt>0.4</ArmorRating_Blunt>
+      <ArmorRating_Sharp>0.4</ArmorRating_Sharp>
+      <ArmorRating_Heat>0.75</ArmorRating_Heat>
+      <Insulation_Cold>50</Insulation_Cold>
+      <Insulation_Heat>25</Insulation_Heat>
+    </statBases>
+    <equippedStatOffsets>
+      <MoveSpeed>-0.04</MoveSpeed>
+    </equippedStatOffsets>
+    <costList>
+      <ComponentSpacer>1</ComponentSpacer>
+      <Plasteel>15</Plasteel>
+	  <Gold>15</Gold>
+    </costList>
+		<generateCommonality>2</generateCommonality>
+		<apparel>
+			<bodyPartGroups>
+				<li>FullHead</li>
+			</bodyPartGroups>
+			<wornGraphicPath>Things/Pawn/Humanlike/Apparel/EVA/EVA_Helmet</wornGraphicPath>
+			<layers>
+				<li>Overhead</li>
+			</layers>
+			<tags>
+        <li>Spacer</li>
+        <li>EVA</li>
+      </tags>
+      <defaultOutfitTags>
+      </defaultOutfitTags>
+    </apparel>
+  </ThingDef>
+  
+  <ThingDef ParentName="ArmorMachineableBase">
+    <defName>Apparel_SpaceSuitBodyHeavy</defName>
+    <label>heavy EVA suit</label>
+    <description>A pressure-sealed suit of powered armor, designed to keep the occupant alive in outer space. Includes small thrusters for movement.</description>
+    <techLevel>Spacer</techLevel>
+    <recipeMaker>
+      <unfinishedThingDef>UnfinishedTechArmor</unfinishedThingDef>
+      <researchPrerequisite>ShipSpaceSuitsHeavy</researchPrerequisite>
+      <skillRequirements>
+        <Crafting>11</Crafting>
+      </skillRequirements>
+      <recipeUsers Inherit="False">
+        <li>FabricationBench</li>
+      </recipeUsers>
+    </recipeMaker>
+    <graphicData>
+      <texPath>Things/Pawn/Humanlike/Apparel/EVA/EVA_Heavy</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+    </graphicData>
+    <statBases>
+      <WorkToMake>70000</WorkToMake>
+      <MaxHitPoints>340</MaxHitPoints>
+      <Mass>20</Mass>
+      <ArmorRating_Blunt>0.45</ArmorRating_Blunt>
+      <ArmorRating_Sharp>1.08</ArmorRating_Sharp>
+      <ArmorRating_Heat>0.75</ArmorRating_Heat>
+      <Insulation_Cold>100</Insulation_Cold>
+      <Insulation_Heat>25</Insulation_Heat>
+      <EquipDelay>15</EquipDelay>
+    </statBases>
+    <equippedStatOffsets>
+      <MoveSpeed>-0.4</MoveSpeed>
+      <WorkSpeedGlobal>-0.1</WorkSpeedGlobal>
+    </equippedStatOffsets>
+    <thingCategories>
+      <li>Apparel</li>
+    </thingCategories>
+    <costList>
+      <ComponentSpacer>6</ComponentSpacer>
+      <Plasteel>100</Plasteel>
+      <Uranium>20</Uranium>
+    </costList>
+		<generateCommonality>2</generateCommonality>
+		<apparel>
+			<bodyPartGroups>
+				<li>Torso</li>
+        <li>Neck</li>
+				<li>Shoulders</li>
+				<li>Arms</li>
+				<li>Legs</li>
+				<li>Hands</li>
+				<li>Feet</li>
+			</bodyPartGroups>
+			<wornGraphicPath>Things/Pawn/Humanlike/Apparel/EVA/EVA_Heavy</wornGraphicPath>
+			<layers>
+				<li>Middle</li>
+				<li>Shell</li>
+			</layers>
+			<tags>
+        <li>Spacer</li>
+        <li>EVA</li>
+      </tags>
+      <defaultOutfitTags>
+      </defaultOutfitTags>
+    </apparel>
+    <colorGenerator Class="ColorGenerator_Options">
+      <options>
+        <li>
+          <weight>10</weight>
+          <only>RGBA(0.33,0.33,0.33,1)</only>
+        </li>
+        <li>
+          <weight>10</weight>
+          <only>RGBA(0.65,0.65,0.65,1)</only>
+        </li>
+        <li>
+          <weight>6</weight>
+          <min>RGBA(0.3,0.3,0.3,1)</min>
+          <max>RGBA(0.5,0.5,0.5,1)</max>
+        </li>
+        <li>
+          <weight>10</weight>
+          <only>RGBA(0.9,0.9,0.9,1)</only>
+        </li>
+      </options>
+    </colorGenerator>
+  </ThingDef>
+  
+</Defs>

@@ -1,0 +1,215 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <ScenarioDef Name="SoSDerelict">
+    <defName>SoSDerelict</defName>
+    <label>Derelict Ship</label>
+    <description>The three of you awake in your cryptosleep sarcophagi, stirred from slumber by an automated warning. A storm of micrometeorites has torn several breaches in your ship's hull and destroyed its Johnson-Tanaka drive. Trapped in orbit above an unknown rimworld, you must patch up your damaged ship and make long-term survival plans.</description>
+    <scenario>
+      <summary>Three survivors aboard a damaged starship.</summary>
+      <playerFaction>
+        <def>PlayerFaction</def>
+        <factionDef>PlayerColony</factionDef>
+      </playerFaction>
+      <parts>
+
+        <!-- Config pages -->
+        <li Class="ScenPart_ConfigPage_ConfigureStartingPawns">
+          <def>ConfigPage_ConfigureStartingPawns</def>
+          <pawnCount>3</pawnCount>
+          <pawnChoiceCount>8</pawnChoiceCount>
+        </li>
+
+        <!-- Player starting stuff spawn method-->
+        <li Class="ScenPart_PlayerPawnsArriveMethod">
+          <def>PlayerPawnsArriveMethod</def>
+          <method>DropPods</method>
+          <visible>false</visible>
+        </li>
+		
+		<li Class="ScenPart_StartInSpace">
+          <def>StartInSpace</def>
+          <visible>true</visible>
+        </li>
+
+        <!-- Player pawns modifiers -->
+        <li Class="ScenPart_ForcedHediff">
+          <def>ForcedHediff</def>
+          <visible>false</visible>
+          <context>PlayerStarter</context>
+          <chance>1</chance>
+          <hediff>CryptosleepSickness</hediff>
+          <hideOffMap>true</hideOffMap>
+          <severityRange>1~1</severityRange>
+        </li>
+        
+        <!-- Player starting things -->
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>Silver</thingDef>
+          <count>800</count>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>MealSurvivalPack</thingDef>
+          <count>50</count>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>MedicineIndustrial</thingDef>
+          <count>30</count>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>ComponentIndustrial</thingDef>
+          <count>30</count>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>Gun_BoltActionRifle</thingDef>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>Gun_Revolver</thingDef>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>MeleeWeapon_Knife</thingDef>
+          <stuff>Plasteel</stuff>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>Apparel_FlakPants</thingDef>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>Apparel_FlakVest</thingDef>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>Apparel_AdvancedHelmet</thingDef>
+          <stuff>Plasteel</stuff>
+        </li>
+        <li Class="ScenPart_StartingAnimal">
+          <def>StartingAnimal</def>
+          <count>1</count>
+          <bondToRandomPlayerPawnChance>1.0</bondToRandomPlayerPawnChance>
+        </li>
+		
+        <!-- Game start dialog -->
+        <li Class="ScenPart_GameStartDialog">
+          <def>GameStartDialog</def>
+          <text>The three of you awake in your cryptosleep sarcophagi, stirred from slumber by an automated warning. A storm of micrometeorites has torn several breaches in your ship's hull and destroyed its Johnson-Tanaka drive. Trapped in orbit above an unknown rimworld, you must patch up your damaged ship and make long-term survival plans.\n\nPerhaps you can acquire resources by scanning for orbital sites. You could also send a shuttle down to the planet's surface to scout a potential landing site for your ship. One way or another, you will need to reinvent the technologies needed to properly repair it.</text>
+          <closeSound>GameStartSting</closeSound>
+        </li>
+        
+      </parts>
+    </scenario>
+  </ScenarioDef>
+
+  <ScenarioDef Name="SoSDungeon">
+    <defName>SoSDungeon</defName>
+    <label>Derelict Station</label>
+    <description>It was supposed to be a simple repair job. Your ships pulled into the ramshackle station, haggled with the locals, and waited their turn. In hindsight, you should have noticed it was built around a largely undisturbed asteroid.\n\nWhen the bugs burst out, both the station's crew and clients were massacred. You waited in your cryptosleep sarcophagi until they retreated to their hives. Now you'll need to complete the repairs yourself. Find some EVA suits. Find a working ship bridge. Grab every battery you can. Then pick a ship, get it into working order, and escape before the bugs get you.\n\nOf course, if you're feeling brave, you could always defeat the insects and claim the whole station for yourself...</description>
+    <scenario>
+      <summary>Three survivors aboard a damaged and infested station.</summary>
+      <playerFaction>
+        <def>PlayerFaction</def>
+        <factionDef>PlayerColony</factionDef>
+      </playerFaction>
+      <parts>
+
+        <!-- Config pages -->
+        <li Class="ScenPart_ConfigPage_ConfigureStartingPawns">
+          <def>ConfigPage_ConfigureStartingPawns</def>
+          <pawnCount>3</pawnCount>
+          <pawnChoiceCount>8</pawnChoiceCount>
+        </li>
+
+        <!-- Player starting stuff spawn method-->
+        <li Class="ScenPart_PlayerPawnsArriveMethod">
+          <def>PlayerPawnsArriveMethod</def>
+          <method>DropPods</method>
+          <visible>false</visible>
+        </li>
+		
+		<li Class="ScenPart_StartInSpace">
+          <def>StartInSpaceDungeon</def>
+          <visible>true</visible>
+        </li>
+
+        <!-- Player pawns modifiers -->
+        <li Class="ScenPart_ForcedHediff">
+          <def>ForcedHediff</def>
+          <visible>false</visible>
+          <context>PlayerStarter</context>
+          <chance>1</chance>
+          <hediff>CryptosleepSickness</hediff>
+          <hideOffMap>true</hideOffMap>
+          <severityRange>1~1</severityRange>
+        </li>
+        
+        <!-- Player starting things -->
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>Silver</thingDef>
+          <count>800</count>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>MealSurvivalPack</thingDef>
+          <count>50</count>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>MedicineIndustrial</thingDef>
+          <count>30</count>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>ComponentIndustrial</thingDef>
+          <count>30</count>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>Gun_BoltActionRifle</thingDef>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>Gun_Revolver</thingDef>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>MeleeWeapon_Knife</thingDef>
+          <stuff>Plasteel</stuff>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>Apparel_FlakPants</thingDef>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>Apparel_FlakVest</thingDef>
+        </li>
+        <li Class="ScenPart_StartingThing_Defined">
+          <def>StartingThing_Defined</def>
+          <thingDef>Apparel_AdvancedHelmet</thingDef>
+          <stuff>Plasteel</stuff>
+        </li>
+        <li Class="ScenPart_StartingAnimal">
+          <def>StartingAnimal</def>
+          <count>1</count>
+          <bondToRandomPlayerPawnChance>1.0</bondToRandomPlayerPawnChance>
+        </li>
+		
+        <!-- Game start dialog -->
+        <li Class="ScenPart_GameStartDialog">
+          <def>GameStartDialog</def>
+          <text>It was supposed to be a simple repair job. Your ship pulled into the ramshackle station, haggled with the locals, and waited its turn. In hindsight, you should have noticed it was built around a largely undisturbed asteroid.\n\nWhen the bugs burst out, both the station's crew and clients were massacred. You waited in your cryptosleep sarcophagi until they retreated to their hives. Now you'll need to complete the repairs yourself. Find some EVA suits. Find a working ship bridge. Grab every battery you can. Then pick a ship, get it into working order, and escape before the bugs get you.\n\nOf course, if you're feeling brave, you could always defeat the insects and claim the whole station for yourself...</text>
+          <closeSound>GameStartSting</closeSound>
+        </li>
+        
+      </parts>
+    </scenario>
+  </ScenarioDef>
+</Defs>

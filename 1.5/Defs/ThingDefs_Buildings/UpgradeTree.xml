@@ -1418,7 +1418,7 @@
 			<damageDef>ShipLaserSmall</damageDef>
 			<damageAmountBase>5</damageAmountBase>
 			<speed>800</speed>
-			<explosionRadius>0</explosionRadius>
+			<explosionRadius>1</explosionRadius>
 			<soundHitThickRoof>Artillery_HitThickRoof</soundHitThickRoof>
 		</projectile>
 		<altitudeLayer>MetaOverlays</altitudeLayer>

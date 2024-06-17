@@ -133,7 +133,7 @@ namespace SaveOurShip2
 					while (totalMechPoints > 0)
 					{
 						PawnKindDef pawnKindDef = (from kind in DefDatabase<PawnKindDef>.AllDefsListForReading
-												   where kind.RaceProps.IsMechanoid
+												   where kind.RaceProps.IsMechanoid && kind.combatPower > 0 && MechClusterGenerator.MechKindSuitableForCluster(kind)
 												   select kind).RandomElementByWeight((PawnKindDef kind) => 1f / kind.combatPower);
 						Pawn mech = PawnGenerator.GeneratePawn(pawnKindDef);
 						mech.SetFaction(Faction.OfMechanoids);

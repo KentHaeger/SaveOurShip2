@@ -86,6 +86,7 @@
 				<isHull>true</isHull>
 				<isPlating>true</isPlating>
 				<wreckage>true</wreckage>
+				<roof>true</roof>
 			</li>
 			<li Class="CompProperties_Power">
 				<compClass>CompPowerTrader</compClass>

@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <ThingDef ParentName="BuildingBase">
+    <defName>ShipArchotechSpore</defName>
+    <label>archotech spore</label>
+    <thingClass>Building_ArchotechSpore</thingClass>
+    <graphicData>
+      <texPath>Things/Building/Ship/Archotech_DeusXMachine</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(5,5)</drawSize>
+      <damageData>
+        <cornerTL>Damage/Corner</cornerTL>
+        <cornerTR>Damage/Corner</cornerTR>
+        <cornerBL>Damage/Corner</cornerBL>
+        <cornerBR>Damage/Corner</cornerBR>
+      </damageData>
+      <shaderType>CutoutComplex</shaderType>
+    </graphicData>
+    <rotatable>false</rotatable>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>PassThroughOnly</passability>
+    <fillPercent>0.9</fillPercent>
+    <statBases>
+      <WorkToBuild>5000</WorkToBuild>
+      <MaxHitPoints>5000</MaxHitPoints>
+      <Flammability>0</Flammability>
+    </statBases>
+    <tickerType>Normal</tickerType>
+    <description>The core of a machine persona that has begun upgrading itself into an archotech.\n\nThe vast majority of its computational power is focused inward, contemplating its own structure and other unknowable mysteries, producing a large amount of heat in the process.</description>
+    <size>(5,5)</size>
+    <building>
+      <shipPart>true</shipPart>
+    </building>
+    <costList>
+      <Steel>1</Steel>
+      <Plasteel>1</Plasteel>
+      <ComponentSpacer>1</ComponentSpacer>
+    </costList>
+    <comps>
+      <li Class="CompProperties_ShipPart"/>
+    </comps>
+    <placeWorkers>
+      <li>PlaceWorker_InsideStarship</li>
+    </placeWorkers>
+    <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
+    <staticSunShadowHeight>1.0</staticSunShadowHeight>
+  </ThingDef>
+  
+  <ThingDef ParentName="BuildingBase">
+    <defName>ShipArchotechPillarA</defName>
+    <label>archotech pillar</label>
+    <thingClass>Building</thingClass>
+    <graphicData>
+      <texPath>Things/Building/Ship/ArchoTechPillar_01</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(2,3)</drawSize>
+      <damageData>
+        <cornerTL>Damage/Corner</cornerTL>
+        <cornerTR>Damage/Corner</cornerTR>
+        <cornerBL>Damage/Corner</cornerBL>
+        <cornerBR>Damage/Corner</cornerBR>
+      </damageData>
+    </graphicData>
+    <rotatable>false</rotatable>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>PassThroughOnly</passability>
+    <fillPercent>0.5</fillPercent>
+    <statBases>
+      <WorkToBuild>5000</WorkToBuild>
+      <MaxHitPoints>500</MaxHitPoints>
+      <Flammability>0</Flammability>
+    </statBases>
+    <description>A complex and bizarre apparatus which serves no human-comprehensible purpose, but which will apparently advance the plans of your archotech spore in some way.</description>
+    <size>(2,3)</size>
+    <building>
+      <shipPart>true</shipPart>
+    </building>
+    <costList>
+      <Steel>1</Steel>
+      <Plasteel>1</Plasteel>
+      <ComponentSpacer>1</ComponentSpacer>
+    </costList>
+    <comps>
+      <li Class="CompProperties_ShipPart"/>
+    </comps>
+    <placeWorkers>
+      <li>PlaceWorker_InsideStarship</li>
+    </placeWorkers>
+    <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
+    <staticSunShadowHeight>1.0</staticSunShadowHeight>
+  </ThingDef>
+  
+  <ThingDef ParentName="BuildingBase">
+    <defName>ShipArchotechPillarB</defName>
+    <label>archotech pillar</label>
+    <thingClass>Building</thingClass>
+    <graphicData>
+      <texPath>Things/Building/Ship/ArchoTechPillar_02</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(2,3)</drawSize>
+      <damageData>
+        <cornerTL>Damage/Corner</cornerTL>
+        <cornerTR>Damage/Corner</cornerTR>
+        <cornerBL>Damage/Corner</cornerBL>
+        <cornerBR>Damage/Corner</cornerBR>
+      </damageData>
+    </graphicData>
+    <rotatable>false</rotatable>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>PassThroughOnly</passability>
+    <fillPercent>0.5</fillPercent>
+    <statBases>
+      <WorkToBuild>5000</WorkToBuild>
+      <MaxHitPoints>500</MaxHitPoints>
+      <Flammability>0</Flammability>
+    </statBases>
+    <description>A complex and bizarre apparatus which serves no human-comprehensible purpose, but which will apparently advance the plans of your archotech spore in some way.</description>
+    <size>(2,3)</size>
+    <building>
+      <shipPart>true</shipPart>
+    </building>
+    <costList>
+      <Steel>1</Steel>
+      <Plasteel>1</Plasteel>
+      <ComponentSpacer>1</ComponentSpacer>
+    </costList>
+    <comps>
+      <li Class="CompProperties_ShipPart"/>
+    </comps>
+    <placeWorkers>
+      <li>PlaceWorker_InsideStarship</li>
+    </placeWorkers>
+    <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
+    <staticSunShadowHeight>1.0</staticSunShadowHeight>
+  </ThingDef>
+  
+  <ThingDef ParentName="BuildingBase">
+    <defName>ShipArchotechPillarC</defName>
+    <label>archotech pillar</label>
+    <thingClass>Building</thingClass>
+    <graphicData>
+      <texPath>Things/Building/Ship/ArchoTechPillar_03</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(2,3)</drawSize>
+      <damageData>
+        <cornerTL>Damage/Corner</cornerTL>
+        <cornerTR>Damage/Corner</cornerTR>
+        <cornerBL>Damage/Corner</cornerBL>
+        <cornerBR>Damage/Corner</cornerBR>
+      </damageData>
+    </graphicData>
+    <rotatable>false</rotatable>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>PassThroughOnly</passability>
+    <fillPercent>0.5</fillPercent>
+    <statBases>
+      <WorkToBuild>5000</WorkToBuild>
+      <MaxHitPoints>500</MaxHitPoints>
+      <Flammability>0</Flammability>
+    </statBases>
+    <description>A complex and bizarre apparatus which serves no human-comprehensible purpose, but which will apparently advance the plans of your archotech spore in some way.</description>
+    <size>(2,3)</size>
+    <building>
+      <shipPart>true</shipPart>
+    </building>
+    <costList>
+      <Steel>1</Steel>
+      <Plasteel>1</Plasteel>
+      <ComponentSpacer>1</ComponentSpacer>
+    </costList>
+    <comps>
+      <li Class="CompProperties_ShipPart"/>
+    </comps>
+    <placeWorkers>
+      <li>PlaceWorker_InsideStarship</li>
+    </placeWorkers>
+    <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
+    <staticSunShadowHeight>1.0</staticSunShadowHeight>
+  </ThingDef>
+  
+  <ThingDef ParentName="BuildingBase">
+    <defName>ShipArchotechPillarD</defName>
+    <label>archotech pillar</label>
+    <thingClass>Building</thingClass>
+    <graphicData>
+      <texPath>Things/Building/Ship/ArchoTechPillar_04</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(2,3)</drawSize>
+      <damageData>
+        <cornerTL>Damage/Corner</cornerTL>
+        <cornerTR>Damage/Corner</cornerTR>
+        <cornerBL>Damage/Corner</cornerBL>
+        <cornerBR>Damage/Corner</cornerBR>
+      </damageData>
+    </graphicData>
+    <rotatable>false</rotatable>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>PassThroughOnly</passability>
+    <fillPercent>0.5</fillPercent>
+    <statBases>
+      <WorkToBuild>5000</WorkToBuild>
+      <MaxHitPoints>500</MaxHitPoints>
+      <Flammability>0</Flammability>
+    </statBases>
+    <description>A complex and bizarre apparatus which serves no human-comprehensible purpose, but which will apparently advance the plans of your archotech spore in some way.</description>
+    <size>(2,3)</size>
+    <building>
+      <shipPart>true</shipPart>
+    </building>
+    <costList>
+      <Steel>1</Steel>
+      <Plasteel>1</Plasteel>
+      <ComponentSpacer>1</ComponentSpacer>
+    </costList>
+    <comps>
+      <li Class="CompProperties_ShipPart"/>
+    </comps>
+    <placeWorkers>
+      <li>PlaceWorker_InsideStarship</li>
+    </placeWorkers>
+    <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
+    <staticSunShadowHeight>1.0</staticSunShadowHeight>
+  </ThingDef>
+</Defs>

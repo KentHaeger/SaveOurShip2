@@ -16,6 +16,7 @@ namespace SaveOurShip2
 		protected override IEnumerable<Toil> MakeNewToils()
 		{
 			this.EndOnDespawnedOrNull(TargetIndex.A);
+			this.FailOn(() => { return !TargetThingA.TryGetComp<CompPowerTrader>().PowerOn; });
 			Toil getToHolodeck = Toils_Goto.GotoCell(TargetIndex.B, PathEndMode.OnCell);
 			getToHolodeck.AddFinishAction(delegate
 			{
@@ -77,9 +78,12 @@ namespace SaveOurShip2
 					}
 				}
 			}
-			if (pawn.needs != null && pawn.needs.comfort != null)
+			if (pawn.needs != null)
 			{
-				pawn.needs.comfort.ComfortUsed(0.5f);
+				if(pawn.needs.comfort != null)
+					pawn.needs.comfort.ComfortUsed(0.5f);
+				if (pawn.needs.outdoors != null)
+					pawn.needs.outdoors.CurLevel += 0.5f;
 			}
 			CompHolodeck deck = TargetThingA.TryGetComp<CompHolodeck>();
 			if(deck.CurSkill!=null && pawn.skills!=null && pawn.skills.GetSkill(deck.CurSkill)!=null)

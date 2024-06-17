@@ -26,7 +26,7 @@ namespace SaveOurShip2
 				Pawn actor = work.actor;
 				Building building = (Building)actor.CurJob.targetA.Thing;
 				scannerComp.Used(actor);
-				actor.skills.Learn(SkillDefOf.Intellectual, 0.035f);
+				actor.skills?.Learn(SkillDefOf.Intellectual, 0.035f);
 				actor.GainComfortFromCellIfPossible();
 			};
 			//work.PlaySustainerOrSound(scannerComp.Props.soundWorking, 1f);

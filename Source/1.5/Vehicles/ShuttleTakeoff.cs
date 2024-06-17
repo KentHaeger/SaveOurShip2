@@ -107,7 +107,7 @@ namespace SaveOurShip2.Vehicles
             return new FloatMenuOption("SoS.ShuttleMissionFloatReturn".Translate(), delegate { LaunchShuttleToCombatManager(vehicle, ShuttleMission.BOARD); });
         }
 
-        public static void LaunchShuttleToCombatManager(VehiclePawn vehicle, ShuttleMission mission)
+        public static void LaunchShuttleToCombatManager(VehiclePawn vehicle, ShuttleMission mission, bool fromEnemy=false)
         {
             vehicle.CompVehicleLauncher.inFlight = true;
             vehicle.CompVehicleLauncher.launchProtocol.OrderProtocol(LaunchProtocol.LaunchType.Takeoff);
@@ -115,7 +115,12 @@ namespace SaveOurShip2.Vehicles
             vehicleSkyfaller_Leaving.vehicle = vehicle;
             vehicleSkyfaller_Leaving.createWorldObject = false;
             GenSpawn.Spawn(vehicleSkyfaller_Leaving, vehicle.Position, vehicle.Map, vehicle.CompVehicleLauncher.launchProtocol.CurAnimationProperties.forcedRotation ?? vehicle.Rotation);
-            ((ShuttleTakeoff)vehicle.CompVehicleLauncher.launchProtocol).TempMissionRef = ShipInteriorMod2.FindPlayerShipMap().GetComponent<ShipMapComp>().RegisterShuttleMission(vehicle, mission);
+            Map map;
+            if (fromEnemy)
+                map = vehicle.Map;
+            else
+                map = ShipInteriorMod2.FindPlayerShipMap();
+            ((ShuttleTakeoff)vehicle.CompVehicleLauncher.launchProtocol).TempMissionRef = map.GetComponent<ShipMapComp>().RegisterShuttleMission(vehicle, mission);
             CameraJumper.TryHideWorld();
             vehicle.EventRegistry[VehicleEventDefOf.AerialVehicleLaunch].ExecuteEvents();
         }

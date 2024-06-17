@@ -16,7 +16,6 @@ namespace SaveOurShip2
 		static readonly float HEAT_PURGE_RATIO = 20;
 
 		public bool purging = false;
-		bool start = false;
 		bool hiss = false;
 		public ShipMapComp mapComp;
 		public CompRefuelable fuelComp;
@@ -65,21 +64,6 @@ namespace SaveOurShip2
 			}
 			if (purging)
 			{
-				if (!start)
-				{
-					foreach (CompShipHeatShield shield in myNet.Shields.Where(s => !s.shutDown))
-					{
-						shield.flickComp.SwitchIsOn = false;
-					}
-					foreach (Building_ShipCloakingDevice cloak in mapComp.Cloaks)
-					{
-						if (cloak.active && cloak.Map == parent.Map)
-						{
-							cloak.flickComp.SwitchIsOn = false;
-						}
-					}
-					start = true;
-				}
 				if (CanPurge() && fuelComp.Fuel > 0 && RemHeatFromNetwork(Props.heatPurge * HEAT_PURGE_RATIO))
 				{
 					fuelComp.ConsumeFuel(Props.heatPurge);
@@ -100,7 +84,20 @@ namespace SaveOurShip2
 		{
 			purging = true;
 			hiss = false;
-			start = false;
+
+			foreach (CompShipHeatShield shield in myNet.Shields.Where(s => !s.shutDown))
+			{
+				shield.flickComp.SwitchIsOn = false;
+				shield.shutDown = true;
+			}
+			foreach (Building_ShipCloakingDevice cloak in mapComp.Cloaks)
+			{
+				if (cloak.active && cloak.Map == parent.Map)
+				{
+					cloak.flickComp.SwitchIsOn = false;
+					cloak.active = false;
+				}
+			}
 		}
 		public bool CanPurge()
 		{

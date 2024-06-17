@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <ThingDef ParentName="BuildingBase">
+    <defName>ShipHullTileMech</defName>
+    <label>mechanoid hull plating</label>
+    <thingClass>Building</thingClass>
+    <category>Building</category>
+    <graphicData>
+      <texPath>Things/Building/Ship/HullPlateTransparent</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+    </graphicData>
+	<seeThroughFog>true</seeThroughFog>
+    <uiIconPath>Things/Building/Ship/HullPlate</uiIconPath>
+    <building>
+			<ai_chillDestination>false</ai_chillDestination>
+			<isInert>true</isInert>
+      <isEdifice>false</isEdifice>
+      <shipPart>true</shipPart>
+      <blueprintGraphicData>
+        <texPath>Things/Building/Ship/HullPlate</texPath>
+      </blueprintGraphicData>
+    </building>
+	<coversFloor>false</coversFloor>
+    <altitudeLayer>LowPlant</altitudeLayer>
+    <passability>Standable</passability>
+	<placingDraggableDimensions>2</placingDraggableDimensions>
+    <statBases>
+      <MaxHitPoints>200</MaxHitPoints>
+      <WorkToBuild>900</WorkToBuild>
+      <Flammability>0.0</Flammability>
+      <Beauty>1</Beauty>
+    </statBases>
+    <description>Spaceworthy hull plating built by mechanoids.</description>
+    <costList>
+      <Steel>3</Steel>
+	  <Plasteel>1</Plasteel>
+    </costList>
+    <comps>
+      <li Class="CompProperties_ShipPart"/>
+	  <li Class="CompProperties_RoofMe">
+		<mechanoid>true</mechanoid>
+	  </li>
+    </comps>
+    <placeWorkers>
+      <li>PlaceWorker_InsideShipRoom</li>
+    </placeWorkers>
+    <rotatable>false</rotatable>
+    <selectable>false</selectable>
+    <neverMultiSelect>true</neverMultiSelect>
+    <soundImpactDefault>BulletImpact_Metal</soundImpactDefault>
+    <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
+    <constructEffect>ConstructMetal</constructEffect>
+    <designationHotKey>Misc1</designationHotKey>
+	<fillPercent>0.0</fillPercent>
+    <leaveResourcesWhenKilled>false</leaveResourcesWhenKilled>
+  </ThingDef>
+  
+  <ThingDef ParentName="BuildingBase">
+    <defName>Ship_BeamMech</defName>
+    <label>mechanoid ship hull</label>
+    <thingClass>Building</thingClass>
+    <graphicData>
+      <texPath>Things/Building/Linked/ShipBeam/ShipBeam_Mechanoid_Atlas</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <linkType>Basic</linkType>
+      <linkFlags>
+        <li>Wall</li>
+		<li>Rock</li>
+      </linkFlags>
+      <damageData>
+        <cornerTL>Damage/Corner</cornerTL>
+        <cornerTR>Damage/Corner</cornerTR>
+        <cornerBL>Damage/Corner</cornerBL>
+        <cornerBR>Damage/Corner</cornerBR>
+        <edgeTop>Damage/Edge</edgeTop>
+        <edgeBot>Damage/Edge</edgeBot>
+        <edgeLeft>Damage/Edge</edgeLeft>
+        <edgeRight>Damage/Edge</edgeRight>
+      </damageData>
+    </graphicData>
+	<uiIconPath>Things/Building/Ship/ShipBeamModular_north</uiIconPath>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>Impassable</passability>
+    <blockWind>true</blockWind>
+    <castEdgeShadows>true</castEdgeShadows>
+    <fillPercent>1</fillPercent>
+    <blockLight>true</blockLight>
+    <canOverlapZones>false</canOverlapZones>
+    <statBases>
+      <WorkToBuild>1600</WorkToBuild>
+      <MaxHitPoints>1000</MaxHitPoints>
+      <Flammability>0</Flammability>
+    </statBases>
+    <tickerType>Normal</tickerType>
+    <description>The outer structural elements of a mechanoid ship's hull. Includes conduits for power and coolant.</description>
+    <placingDraggableDimensions>1</placingDraggableDimensions>
+    <comps>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTransmitter</compClass>
+        <transmitsPower>true</transmitsPower>
+      </li>
+      <li Class="CompProperties_ShipPart"/>
+	  <li Class="CompProperties_RoofMe">
+		<mechanoid>true</mechanoid>
+	  </li>
+      <li Class="CompProperties_ShipHeat">
+        <compClass>CompShipHeat</compClass>
+      </li>
+    </comps>
+    <placeWorkers>
+	
+    </placeWorkers>
+    <building>
+      <shipPart>true</shipPart>
+      <blueprintGraphicData>
+        <texPath>Things/Building/Linked/Wall_Blueprint_Atlas</texPath>
+      </blueprintGraphicData>
+    </building>
+    <costList>
+      <Steel>16</Steel>
+      <Plasteel>4</Plasteel>
+	  <ComponentIndustrial>1</ComponentIndustrial>
+    </costList>
+    <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
+    <staticSunShadowHeight>1.0</staticSunShadowHeight>
+    <designationHotKey>Misc1</designationHotKey>
+    <holdsRoof>true</holdsRoof>
+	<leaveResourcesWhenKilled>false</leaveResourcesWhenKilled>
+    <killedLeavings>
+      <ChunkSlagSteel>1</ChunkSlagSteel>
+    </killedLeavings>
+  </ThingDef>
+  
+  <ThingDef ParentName="BuildingBase">
+    <defName>Ship_Corner_OneOne_Mech</defName>
+    <label>hull corner (1x1)</label>
+    <thingClass>Building</thingClass>
+    <graphicData>
+      <texPath>Things/Building/Ship/ShipAngle1x1Mech</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <damageData>
+        <cornerTL>Damage/Corner</cornerTL>
+        <cornerTR>Damage/Corner</cornerTR>
+        <cornerBL>Damage/Corner</cornerBL>
+        <cornerBR>Damage/Corner</cornerBR>
+        <edgeTop>Damage/Edge</edgeTop>
+        <edgeBot>Damage/Edge</edgeBot>
+        <edgeLeft>Damage/Edge</edgeLeft>
+        <edgeRight>Damage/Edge</edgeRight>
+      </damageData>
+    </graphicData>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>Impassable</passability>
+    <blockWind>true</blockWind>
+    <castEdgeShadows>true</castEdgeShadows>
+    <fillPercent>1</fillPercent>
+    <blockLight>true</blockLight>
+    <canOverlapZones>false</canOverlapZones>
+    <statBases>
+      <WorkToBuild>800</WorkToBuild>
+      <MaxHitPoints>500</MaxHitPoints>
+      <Flammability>0</Flammability>
+    </statBases>
+    <description>Angled armor for a ship's outer hull.</description>
+    <placingDraggableDimensions>1</placingDraggableDimensions>
+    <comps>
+      <li Class="CompProperties_ShipPart"/>
+    </comps>
+    <placeWorkers>
+	
+    </placeWorkers>
+    <rotatable>true</rotatable>
+    <building>
+      <shipPart>true</shipPart>
+    </building>
+    <costList>
+      <Steel>8</Steel>
+      <Plasteel>2</Plasteel>
+    </costList>
+    <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
+    <staticSunShadowHeight>1.0</staticSunShadowHeight>
+    <holdsRoof>true</holdsRoof>
+	<leaveResourcesWhenKilled>false</leaveResourcesWhenKilled>
+	<killedLeavings><ChunkSlagSteel>1</ChunkSlagSteel></killedLeavings>
+  </ThingDef>
+  
+  <ThingDef ParentName="BuildingBase">
+    <defName>Ship_Corner_OneTwo_Mech</defName>
+    <label>hull corner (1x2)</label>
+    <thingClass>Building</thingClass>
+    <graphicData>
+      <texPath>Things/Building/Ship/ShipAngle1x2Mech</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <damageData>
+        <cornerTL>Damage/Corner</cornerTL>
+        <cornerTR>Damage/Corner</cornerTR>
+        <cornerBL>Damage/Corner</cornerBL>
+        <cornerBR>Damage/Corner</cornerBR>
+        <edgeTop>Damage/Edge</edgeTop>
+        <edgeBot>Damage/Edge</edgeBot>
+        <edgeLeft>Damage/Edge</edgeLeft>
+        <edgeRight>Damage/Edge</edgeRight>
+      </damageData>
+      <drawSize>(1,2)</drawSize>
+    </graphicData>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>Impassable</passability>
+    <blockWind>true</blockWind>
+    <castEdgeShadows>true</castEdgeShadows>
+    <fillPercent>1</fillPercent>
+    <blockLight>true</blockLight>
+    <canOverlapZones>false</canOverlapZones>
+    <statBases>
+      <WorkToBuild>800</WorkToBuild>
+      <MaxHitPoints>1000</MaxHitPoints>
+      <Flammability>0</Flammability>
+    </statBases>
+    <description>Angled armor for a ship's outer hull.</description>
+    <placingDraggableDimensions>1</placingDraggableDimensions>
+    <comps>
+      <li Class="CompProperties_ShipPart"/>
+    </comps>
+    <placeWorkers>
+	
+    </placeWorkers>
+    <rotatable>true</rotatable>
+    <building>
+      <shipPart>true</shipPart>
+    </building>
+    <costList>
+      <Steel>16</Steel>
+      <Plasteel>4</Plasteel>
+    </costList>
+    <size>(1,2)</size>
+    <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
+    <staticSunShadowHeight>1.0</staticSunShadowHeight>
+    <holdsRoof>true</holdsRoof>
+	<leaveResourcesWhenKilled>false</leaveResourcesWhenKilled>
+	<killedLeavings><ChunkSlagSteel>1</ChunkSlagSteel></killedLeavings>
+  </ThingDef>
+  
+  <ThingDef ParentName="BuildingBase">
+    <defName>Ship_Corner_OneThree_Mech</defName>
+    <label>hull corner (1x3)</label>
+    <thingClass>Building</thingClass>
+    <graphicData>
+      <texPath>Things/Building/Ship/ShipAngle1x3Mech</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <damageData>
+        <cornerTL>Damage/Corner</cornerTL>
+        <cornerTR>Damage/Corner</cornerTR>
+        <cornerBL>Damage/Corner</cornerBL>
+        <cornerBR>Damage/Corner</cornerBR>
+        <edgeTop>Damage/Edge</edgeTop>
+        <edgeBot>Damage/Edge</edgeBot>
+        <edgeLeft>Damage/Edge</edgeLeft>
+        <edgeRight>Damage/Edge</edgeRight>
+      </damageData>
+      <drawSize>(1,3)</drawSize>
+    </graphicData>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>Impassable</passability>
+    <blockWind>true</blockWind>
+    <castEdgeShadows>true</castEdgeShadows>
+    <fillPercent>1</fillPercent>
+    <blockLight>true</blockLight>
+    <canOverlapZones>false</canOverlapZones>
+    <statBases>
+      <WorkToBuild>800</WorkToBuild>
+      <MaxHitPoints>1500</MaxHitPoints>
+      <Flammability>0</Flammability>
+    </statBases>
+    <description>Angled armor for a ship's outer hull.</description>
+    <placingDraggableDimensions>1</placingDraggableDimensions>
+    <comps>
+      <li Class="CompProperties_ShipPart"/>
+    </comps>
+    <placeWorkers>
+	
+    </placeWorkers>
+    <rotatable>true</rotatable>
+    <building>
+      <shipPart>true</shipPart>
+    </building>
+    <costList>
+      <Steel>24</Steel>
+      <Plasteel>6</Plasteel>
+    </costList>
+    <size>(1,3)</size>
+    <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
+    <staticSunShadowHeight>1.0</staticSunShadowHeight>
+    <holdsRoof>true</holdsRoof>
+	<leaveResourcesWhenKilled>false</leaveResourcesWhenKilled>
+	<killedLeavings><ChunkSlagSteel>1</ChunkSlagSteel></killedLeavings>		
+  </ThingDef>
+  
+  <ThingDef ParentName="BuildingBase">
+    <defName>Ship_Corner_OneTwoFlip_Mech</defName>
+    <label>hull corner (1x2)</label>
+    <thingClass>Building</thingClass>
+    <graphicData>
+      <texPath>Things/Building/Ship/ShipAngle1x2FlipMech</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <damageData>
+        <cornerTL>Damage/Corner</cornerTL>
+        <cornerTR>Damage/Corner</cornerTR>
+        <cornerBL>Damage/Corner</cornerBL>
+        <cornerBR>Damage/Corner</cornerBR>
+        <edgeTop>Damage/Edge</edgeTop>
+        <edgeBot>Damage/Edge</edgeBot>
+        <edgeLeft>Damage/Edge</edgeLeft>
+        <edgeRight>Damage/Edge</edgeRight>
+      </damageData>
+      <drawSize>(1,2)</drawSize>
+    </graphicData>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>Impassable</passability>
+    <blockWind>true</blockWind>
+    <castEdgeShadows>true</castEdgeShadows>
+    <fillPercent>1</fillPercent>
+    <blockLight>true</blockLight>
+    <canOverlapZones>false</canOverlapZones>
+    <statBases>
+      <WorkToBuild>800</WorkToBuild>
+      <MaxHitPoints>1000</MaxHitPoints>
+      <Flammability>0</Flammability>
+    </statBases>
+    <description>Angled armor for a ship's outer hull.</description>
+    <placingDraggableDimensions>1</placingDraggableDimensions>
+    <comps>
+      <li Class="CompProperties_ShipPart"/>
+    </comps>
+    <placeWorkers>
+	
+    </placeWorkers>
+    <rotatable>true</rotatable>
+    <building>
+      <shipPart>true</shipPart>
+    </building>
+    <costList>
+      <Steel>16</Steel>
+      <Plasteel>4</Plasteel>
+    </costList>
+    <size>(1,2)</size>
+    <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
+    <staticSunShadowHeight>1.0</staticSunShadowHeight>
+    <holdsRoof>true</holdsRoof>
+	<leaveResourcesWhenKilled>false</leaveResourcesWhenKilled>
+	<killedLeavings><ChunkSlagSteel>1</ChunkSlagSteel></killedLeavings>
+  </ThingDef>
+  
+  <ThingDef ParentName="BuildingBase">
+    <defName>Ship_Corner_OneThreeFlip_Mech</defName>
+    <label>hull corner (1x3)</label>
+    <thingClass>Building</thingClass>
+    <graphicData>
+      <texPath>Things/Building/Ship/ShipAngle1x3FlipMech</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <damageData>
+        <cornerTL>Damage/Corner</cornerTL>
+        <cornerTR>Damage/Corner</cornerTR>
+        <cornerBL>Damage/Corner</cornerBL>
+        <cornerBR>Damage/Corner</cornerBR>
+        <edgeTop>Damage/Edge</edgeTop>
+        <edgeBot>Damage/Edge</edgeBot>
+        <edgeLeft>Damage/Edge</edgeLeft>
+        <edgeRight>Damage/Edge</edgeRight>
+      </damageData>
+      <drawSize>(1,3)</drawSize>
+    </graphicData>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>Impassable</passability>
+    <blockWind>true</blockWind>
+    <castEdgeShadows>true</castEdgeShadows>
+    <fillPercent>1</fillPercent>
+    <blockLight>true</blockLight>
+    <canOverlapZones>false</canOverlapZones>
+    <statBases>
+      <WorkToBuild>800</WorkToBuild>
+      <MaxHitPoints>1500</MaxHitPoints>
+      <Flammability>0</Flammability>
+    </statBases>
+    <description>Angled armor for a ship's outer hull.</description>
+    <placingDraggableDimensions>1</placingDraggableDimensions>
+    <comps>
+      <li Class="CompProperties_ShipPart"/>
+    </comps>
+    <placeWorkers>
+	
+    </placeWorkers>
+    <rotatable>true</rotatable>
+    <building>
+      <shipPart>true</shipPart>
+    </building>
+    <costList>
+      <Steel>24</Steel>
+      <Plasteel>6</Plasteel>
+    </costList>
+    <size>(1,3)</size>
+    <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
+    <staticSunShadowHeight>1.0</staticSunShadowHeight>
+    <holdsRoof>true</holdsRoof>
+	<leaveResourcesWhenKilled>false</leaveResourcesWhenKilled>
+	<killedLeavings><ChunkSlagSteel>1</ChunkSlagSteel></killedLeavings>
+  </ThingDef>
+</Defs>

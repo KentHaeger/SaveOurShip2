@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <WorkGiverDef>
+    <defName>ScanSpace</defName>
+    <label>scan for orbital sites</label>
+    <giverClass>WorkGiver_OperateScannerSpace</giverClass>
+    <workType>Research</workType>
+    <priorityInType>69</priorityInType>
+    <verb>scan</verb>
+    <gerund>scanning at</gerund>
+    <requiredCapacities>
+      <li>Manipulation</li>
+    </requiredCapacities>
+  </WorkGiverDef>
+  
+  <WorkGiverDef>
+    <defName>LoadTorpedoTube</defName>
+    <label>Load torpedo</label>
+    <giverClass>WorkGiver_LoadTorpedoTube</giverClass>
+    <workType>Hauling</workType>
+    <verb>load</verb>
+    <gerund>loading</gerund>
+    <priorityInType>210</priorityInType>
+    <requiredCapacities>
+      <li>Manipulation</li>
+    </requiredCapacities>
+  </WorkGiverDef>
+
+</Defs>

@@ -1,16 +1,15 @@
-## SAVE OUR SHIP 2 EXPERIMENTAL
+Save Our Ship 2 is an unofficial expansion for RimWorld. Build a liveable spaceship and continue your colonists' stories in orbit - engaging in ship-to-ship combat with pirates, searching derelicts for treasure, and perhaps even discovering a phenomenal cosmic secret or two! SoS2 includes two custom endings: build the Johnson-Tanaka drive to transport your colonists to a different rimworld for a New Game+ experience, or evolve one your colonists to machine godhood using the Archotech Spore.
 
-**[Save Our Ship 2](https://steamcommunity.com/sharedfiles/filedetails/?id=1909914131) is an unofficial expansion for RimWorld. Build space ships that you can live on and launch them into space. Once there continue your story of survival overcoming new challenges and reaping new rewards.**
+Newly upgraded with tons of new features and stability upgrades for 1.5 and beyond, SOS2.7 is the best version of Save Our Ship yet. SOS2 is being maintained by community volunteers with occasional updates by the original devs!
 
-### **THE 1.5 VERSION IS STILL IN BETA AND HAS ISSUES, USE IT AT YOUR OWN RISK!**
+Requires Harmony (https://github.com/pardeike/Harmony) and Vehicle Framework (https://github.com/SmashPhil/Vehicle-Framework).
 
-**SOS2 EXPERIMENTAL** (SOS2EXP) is the stable and maintained version of SOS2 for RimWorld 1.5. It includes over two years worth of bugfixes, performance optimizations, mechanics changes and some new features that might need more testing. A working version for RimWorld 1.4 is included but will not receive any further updates. An updated version of the Creation kit is available [here](https://github.com/SonicTHI/SaveOurShip2CreationKit).
+Developed by Kentington and Thain
 
-**While this version is officially endorsed, it is not maintained by RHX media and you use it at your own risk.** The original creators occasionally still contribute to this project but neither they or anyone else (**except yourself**) is responsible for your pawns, saves, PC, etc.
+Contributors: SonicTHI, Owlchemist, Oskar Potocki, Thamuzz1331, Trollam, Boris, K', Sarg, Karim, Saakra, Revolus, MatthewTeply, dkargin, HG, DianaWinters, UrbanMonkey, M.A.G.Gen., Epicguru, sdanchenko, m00nl1ght-dev
 
-___
-### **[The project wiki](https://github.com/SonicTHI/SaveOurShip2Experimental/wiki) contains information on how to install, troubleshoot and utilize SOS2EXP!**
-___
-**CONTRIBUTION / CODE SUBMISSIONS / PULL REQUESTS / MOD CONFLICT RESOLUTIONS:**
+Shipwrights: Oninnaise, VVither_Skeleton, (Insert Boi here), AlfadorZero, choppytehbear, Dammerung, Foxtrot, Inert, Jameson, Moonshine Dusk
 
-**First time submitters: do not make unsolicited pull requests. Submit an issue or contact me in #save-our-ship on [Radian Helix Media discord](https://discord.gg/GK7nqgu) first - read the server rules!.**
+OG Testing Squad: Buns Buns Cat, Phsarjk, i am has yes, Fuji, Reviire, Ian, Generic Scout, Waipa, Xanthos, BUTTERSKY, firethestars, Haldicar, jamhax, Jenden, maraworf, Red_Bunny, rostock, sprocket, El Jojo, Zahc, Dutchman, Zero Jackal, Tiberiumkyle, swordspell, Shabm, Kasodus, Red_Bunny, melandor, Madman, Jenden, Insert Witty Joke, Ifailatgaming, Capitão Escarlate, Bunkier, Bumblybear, Bubbadoge, Abraxas, Rage Nova, twsta, transcendant, thecaffiend, Manifold Paradox, WhiteGiverMa, Gago, Nerevarest
+
+Historical branch with earlier commit history is available here: https://github.com/KentHaeger/SaveOurShip2Historical

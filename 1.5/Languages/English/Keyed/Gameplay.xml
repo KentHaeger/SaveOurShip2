@@ -10,19 +10,17 @@
 	<SoS.MoveStop>Stop orbital movement</SoS.MoveStop>
 	<SoS.MoveStopDesc>Reverse burn into geosynchronous orbit.</SoS.MoveStopDesc>
 	<SoS.AbandonHome>Abandon ship</SoS.AbandonHome>
-	<SoS.AbandonHomeDesc>Abandon your ship, any colonists on it will be lost.</SoS.AbandonHomeDesc>
-	<SoS.SettleSpaceSites>Cannot settle space sites</SoS.SettleSpaceSites>
+	<SoS.AbandonHomeDesc>Abandon your ship - any colonists on it will be lost!</SoS.AbandonHomeDesc>
 	<SoS.LeaveGraveyard>Abandon wreck</SoS.LeaveGraveyard>
 	<SoS.LeaveGraveyardDesc>Leave the wreck to its fate.</SoS.LeaveGraveyardDesc>
 	<SoS.ForceExitAndRemoveMapCountdown>Entering atmosphere in {0}.</SoS.ForceExitAndRemoveMapCountdown>
 	<SoS.BurnUpPlayer>Orbit failure!</SoS.BurnUpPlayer>
-	<SoS.BurnUpPlayerDesc>With the loss of the last ship bridge this map can no longer maintain its orbit and will enter the atmosphere in {0} days! \n\nEverything on it will be destroyed!</SoS.BurnUpPlayerDesc>
+	<SoS.BurnUpPlayerDesc>With the loss of the last ship bridge this map can no longer maintain its orbit and will enter the atmosphere in {0} days! \n\nEverything on it will be destroyed! Build a new ship bridge to prevent this.</SoS.BurnUpPlayerDesc>
 	<SoS.BurnUpPlayerPrevented>Building a ship bridge has allowed you to stabilize the orbit.</SoS.BurnUpPlayerPrevented>
 	<SoS.BurnUpCountdown>Entering atmosphere in {0}!</SoS.BurnUpCountdown>
 	<SoS.BurnUpCountdownTip>This map will enter atmosphere in {0}. Everything on it will be destroyed.</SoS.BurnUpCountdownTip>
 	<!-- combat -->
 	<SoS.CombatTooltip>Shows the enemy ship's distance from your ship, all projectiles and shuttles currently in flight.\n\nRED: laser/canon range\nGREEN: plasma range\nBLUE: railgun range.\nPURPLE: torpedo range\nSmall colored bars: inaccurate maximum range for large weapons</SoS.CombatTooltip>
-	<SoS.ShipFleet>Ship fleet</SoS.ShipFleet>
 	<SoS.CombatRetreat>Retreat</SoS.CombatRetreat>
 	<SoS.CombatRetreatDesc>Try to move away from the enemy ship</SoS.CombatRetreatDesc>
 	<SoS.CombatStop>Stop</SoS.CombatStop>
@@ -39,10 +37,10 @@
 	<SoS.CombatPodDestroyedPlayer>Your shuttle was destroyed by enemy point defense! If any crew survived, their ejector seats will take them back to your ship.</SoS.CombatPodDestroyedPlayer>
 	<SoS.CombatPodDestroyedEnemy>Enemy shuttle was destroyed by your point defense!</SoS.CombatPodDestroyedEnemy>
 	<SoS.WithdrawShip>Withdraw ship</SoS.WithdrawShip>
-	<SoS.WithdrawShipDesc>Withdraw this ship from the battle</SoS.WithdrawShipDesc>
+	<SoS.WithdrawShipDesc>Withdraw this ship from the battle.</SoS.WithdrawShipDesc>
 	<SoS.WithdrawShipLast>Last ship can not withdraw</SoS.WithdrawShipLast>
-	<SoS.CombatConfirmWithdraw>Withdraw this ship to the graveyard? If you lose or flee, the enemy ship will attack your graveyard.</SoS.CombatConfirmWithdraw>
-	<SoS.WrecksPreventMove>Can not move with wrecks on map!</SoS.WrecksPreventMove>
+	<SoS.CombatConfirmWithdraw>Withdraw this ship to the graveyard? If you lose or flee, the enemy ship will attack your graveyard. Please note that the withdrawal will not take effect until the game is unpaused.</SoS.CombatConfirmWithdraw>
+	<SoS.WrecksPreventMove>Cannot move with wrecks on map!</SoS.WrecksPreventMove>
 	<SoS.RemoveWrecks>Remove wrecks</SoS.RemoveWrecks>
 	<SoS.RemoveWrecksDesc>Remove all wrecks from your map, they will be destroyed.</SoS.RemoveWrecksDesc>
 	<SoS.RemoveWrecksConfirm>Remove all wrecks from your map?\n\nThis will remove any ship or wreck that can not move on its own! They will be destroyed by the debris field.</SoS.RemoveWrecksConfirm>
@@ -65,12 +63,6 @@
 	<SoS.EnemyShipRetreating>Enemy ship is attempting to retreat!</SoS.EnemyShipRetreating>
 	<SoS.EnemyShipRetreated>Enemy ship has escaped!</SoS.EnemyShipRetreated>
 	<SoS.EnemyShipAdrift>Enemy ship has started to drift and is slowly losing orbit!</SoS.EnemyShipAdrift>
-	<SoS.AttackShip>Attack</SoS.AttackShip>
-	<SoS.AttackShipDesc>Attack the</SoS.AttackShipDesc>
-	<SoS.AttackShipPirate>Attempt an act of space piracy against</SoS.AttackShipPirate>
-	<SoS.AttackShipEngage>Attempt to engage</SoS.AttackShipEngage>
-	<SoS.ApproachShip>Approach</SoS.ApproachShip>
-	<SoS.ApproachShipDesc>Approach to investigate</SoS.ApproachShipDesc>
 	<!-- salvage/capture -->
 	<SoS.ReturnShip>Return</SoS.ReturnShip>
 	<SoS.ReturnShipDesc>Move this ship back to your stable orbit</SoS.ReturnShipDesc>
@@ -91,7 +83,7 @@
 	<SoS.SalvageStablizeFuel>Stabilization requires {0} fuel!</SoS.SalvageStablizeFuel>
 	<SoS.SalvageStablizeDesc>Stabilize the orbit of {0}. This requires enough salvage bays and will consume fuel in your engines.</SoS.SalvageStablizeDesc>
 	<SoS.SalvageStablizeConfirm>Stabilize the orbit of {0}. This requires enough salvage bays and will consume {1} chemfuel equivalent in your engines.</SoS.SalvageStablizeConfirm>
-	<SoS.SalvageDisabled>In ship battle or enemy pawns present!</SoS.SalvageDisabled>
+	<SoS.SalvageDisabled>Cannot salvage: in ship battle, or enemy pawns are present!</SoS.SalvageDisabled>
 	<SoS.SalvageAbandonConfirm>Are you sure you want to discard the target?\nEverything connected to or on it will burn up in the atmosphere!</SoS.SalvageAbandonConfirm>
 	<SoS.SalvageBridge>Can not move intact ships with the salvage bay, capture or destroy the bridge.</SoS.SalvageBridge>
 	<SoS.SalvageFailMass>Not enough salvage bays on ships that can move. {0}/{1}</SoS.SalvageFailMass>
@@ -112,11 +104,11 @@
 	<SoS.TradeTradeWith>Ask to trade with them.</SoS.TradeTradeWith>
 	<SoS.TradeTradeDecline>{0} does not want to trade with you due to your notoriety.</SoS.TradeTradeDecline>
 	<SoS.PirateTradeDemand>Demand they hand over their cargo (This is an act of piracy!)</SoS.PirateTradeDemand>
-	<SoS.TradeTryingToFlee> has closed comms and is trying to flee!</SoS.TradeTryingToFlee>
+	<SoS.TradeTryingToFlee>{0} has closed comms and is trying to flee!</SoS.TradeTryingToFlee>
 	<SoS.TradeAttack>After them!</SoS.TradeAttack>
 	<SoS.TradeFlee>Let them go.</SoS.TradeFlee>
 	<SoS.TradePayBounty>Pay your bounty (cost: {0} silver)</SoS.TradePayBounty>
-	<SoS.NotEnoughForBounty>need {0} silver near trade beacons</SoS.NotEnoughForBounty>
+	<SoS.NotEnoughForBounty>You need {0} silver near trade beacons</SoS.NotEnoughForBounty>
 	<SoS.PirateHail>A pirate ship is attempting to hail you.\n</SoS.PirateHail>
 	<SoS.PirateHailPirate>Surely they know of your notoriety.</SoS.PirateHailPirate>
 	<SoS.PirateHailNormal>If you do not answer they will most likely attack.</SoS.PirateHailNormal>
@@ -218,7 +210,6 @@
 	<SoS.UnfoldExtending>Extending</SoS.UnfoldExtending>
 	<SoS.UnfoldRetracting>Retracting</SoS.UnfoldRetracting>
 	<SoS.UnfoldBlocked>Must place free of obstructions or other extendables.</SoS.UnfoldBlocked>
-	<SoS.UnDockWarning>Warning: Moving a ship while docked will release all docking clamps.</SoS.UnDockWarning>
 	<!-- heat -->
     <SoS.HeatStored>Grid heat stored/capacity: {0} HU / {1} HU ({2})</SoS.HeatStored>
 	<SoS.HeatWithPower>Use power for heating</SoS.HeatWithPower>
@@ -229,17 +220,10 @@
 	<SoS.HeatPurgeDesc>Begin venting coolant from heatsinks. All shields, weapons, and cloaks on this heat network will shut down, and heatsinks will vent heat five times as quickly.\n\nThis process depletes coolant and reduces the overall capacity of the heat network, and cannot be canceled once it has begun. Outside of combat, depleted capacity will slowly recover.</SoS.HeatPurgeDesc>
 	<SoS.HeatPurgeVenting>Already venting</SoS.HeatPurgeVenting>
 	<SoS.HeatPurgeNotEnough>Not enough heat in network for purge</SoS.HeatPurgeNotEnough>
-	<SoS.CloakBroken>Cloak disengaged due to heat depleetion</SoS.CloakBroken>
+	<SoS.CloakBroken>Cloak disengaged due to heat depletion</SoS.CloakBroken>
 	<SoS.HeatCritical>DANGER! Heat level critical!</SoS.HeatCritical>
-	<SoS.HeatNotConnected>Not connected to a thermal networ</SoS.HeatNotConnected>
+	<SoS.HeatNotConnected>Not connected to a thermal network</SoS.HeatNotConnected>
 	<SoS.HeatTurretEnergy>Energy to fire:</SoS.HeatTurretEnergy>
-	<SoS.ExpelSuperheatedAir>Expel superheated air</SoS.ExpelSuperheatedAir>
-	<SoS.ExpelSuperheatedAirDesc>Use this vent to expel superheated air from the room. The process will damage your ship's life-support system(s) for one point per tile in the room, split evenly.\n\nAny non-EVA-capable pawns in the room will suffer explosive decompression!</SoS.ExpelSuperheatedAirDesc>
-	<SoS.AirNotSuperheated>Air is not superheated</SoS.AirNotSuperheated>
-	<SoS.NoLifeSupport>No active life support</SoS.NoLifeSupport>
-	<SoS.BreakCloakAtHeat>Break cloak at depletion level</SoS.BreakCloakAtHeat>
-	<SoS.BreakCloakAtHeatDesc>When the ship's coolant depletion reaches this percentage, disable cloaking device(s) so that it can recover.</SoS.BreakCloakAtHeatDesc>
-	<SoS.CloakBrokenAtHeat>Cloaking devices deactivated due to coolant depletion!</SoS.CloakBrokenAtHeat>
 	<!-- turret -->
 	<SoS.TurretNotInShipCombat>Warning: Turret will not fire because you are not in ship combat.</SoS.TurretNotInShipCombat>
 	<SoS.TurretInPointDefense>Warning: Turret will not target the enemy ship because it is set to Point Defense mode</SoS.TurretInPointDefense>
@@ -263,10 +247,10 @@
 	<SoS.CannotFireDueToAmmo>{0} cannot fire: not enough ammo</SoS.CannotFireDueToAmmo>
 	<!-- shield -->
 	<SoS.ShieldRadius>Radius current/set: {0}/{1}</SoS.ShieldRadius>
-	<SoS.ShieldRadiusReset>Reset shield radius</SoS.ShieldRadiusReset>
-	<SoS.ShieldRadiusResetDesc>Reset shield radius to 40.</SoS.ShieldRadiusResetDesc>
-	<SoS.ShieldRadiusDec>Decrease shield radius</SoS.ShieldRadiusDec>
-	<SoS.ShieldRadiusInc>Increase shield radius</SoS.ShieldRadiusInc>
+	<SoS.ResetShieldRadius>Reset shield radius</SoS.ResetShieldRadius>
+	<SoS.ResetShieldRadiusDesc>Reset shield radius to 40.</SoS.ResetShieldRadiusDesc>
+	<SoS.DecShieldRadius>Decrease shield radius</SoS.DecShieldRadius>
+	<SoS.IncShieldRadius>Increase shield radius</SoS.IncShieldRadius>
 	<SoS.FoamFill>Fill destroyed</SoS.FoamFill>
 	<SoS.FoamFillDesc>Fill destroyed areas of your ship with hullfoam from its distributors.</SoS.FoamFillDesc>
 	<SoS.FoamFillDisabled>Nothing to fill or no fuel in distributors.</SoS.FoamFillDisabled>
@@ -287,11 +271,6 @@
 	<SoS.BlueprintPlace2Desc>Place ship hull blueprints. Construct this before placing interior blueprints!</SoS.BlueprintPlace2Desc>
 	<SoS.BlueprintPlace3>Ship interior blueprints</SoS.BlueprintPlace3>
 	<SoS.BlueprintPlace3Desc>Place ship interior blueprints. Construct frame and hull blueprints before placing these!</SoS.BlueprintPlace3Desc>
-	<!-- restore -->
-	<SoS.RestoreHull>Restore hull</SoS.RestoreHull>
-	<SoS.RestoreHullDesc>Construct new hull in place of wreckage</SoS.RestoreHullDesc>
-	<SoS.AlreadyRestoring>Already restoring this area!</SoS.AlreadyRestoring>
-	<SoS.MustDesignateWreckage>Must designate wrecked starship hull</SoS.MustDesignateWreckage>
 	<!-- pawns/eva -->
 	<SoS.DamagedReactorHurtsPawn>{0} is suffering radiation burns from a damaged reactor!</SoS.DamagedReactorHurtsPawn>
 	<SoS.EVACapable>EVA capable.</SoS.EVACapable>
@@ -299,8 +278,6 @@
 	<SoS.Atmosphere>Breathable Atmosphere</SoS.Atmosphere>
 	<SoS.AtmosphereNonBreathable>Non-Breathable Atmosphere</SoS.AtmosphereNonBreathable>
 	<SoS.AtmosphereBreach>Breach detected!</SoS.AtmosphereBreach>
-	<SoS.CocoonPlaceFail>Unable to place cryptosleep cocoon!</SoS.CocoonPlaceFail>
-	<SoS.CocoonMalnourished>User is already malnourished</SoS.CocoonMalnourished>
 	<!-- holo/spore -->
 	<SoS.SpawnHologram>Spawn formgel</SoS.SpawnHologram>
 	<SoS.SpawnHologramDesc>Assemble a formgel through which this consciousness can affect the world</SoS.SpawnHologramDesc>
@@ -353,8 +330,8 @@
 	<SoS.ArchotechMoodLowDesc>Your archotech spore's mood is low, and it may decide to start playing "pranks" on your crew.\n\nThe spore's mood can be improved slowly by having colonists meditate nearby, or quickly by sacrificing prisoners to it.</SoS.ArchotechMoodLowDesc>
 	<SoS.ArchotechMoodLowNoRoyDesc>Your archotech spore's mood is low, and it may decide to start playing "pranks" on your crew.\n\nThe spore's mood can be improved by sacrificing prisoners' brains to it.</SoS.ArchotechMoodLowNoRoyDesc>
 	<!-- archoanimals -->
-	<SoS.ArchoAnimalSuddenDeath>By some cosmic event an archo animal appeared for a brief moment only to vanish soon after. Maybe it is a sign of things to come.</SoS.ArchoAnimalSuddenDeath>
-	<SoS.ArchoAnimalSporeDeath>Without an Archotech to guide it, {0} has perished.</SoS.ArchoAnimalSporeDeath>
+	<SoS.ArchoAnimalSuddenDeath>By some cosmic event an archoanimal appeared for a brief moment only to vanish soon after. Maybe it is a sign of things to come.</SoS.ArchoAnimalSuddenDeath>
+	<SoS.ArchoAnimalSporeDeath>Without an archotech spore to guide it, {0} has perished.</SoS.ArchoAnimalSporeDeath>
 	<SoS.CraftArchocat>Spawn archocat</SoS.CraftArchocat>
 	<SoS.CraftArchomutt>Spawn archomutt</SoS.CraftArchomutt>
 	<SoS.CraftArchostrich>Spawn archostrich</SoS.CraftArchostrich>
@@ -371,7 +348,6 @@
 	<SoS.MechanitesInHomeArea>Mechanites!</SoS.MechanitesInHomeArea>
     <SoS.MechanitesInHomeAreaDesc>Disassembler mechanites have infested the home area.</SoS.MechanitesInHomeAreaDesc>
 	<!-- shuttles -->
-	<SoS.ShuttlesMore>more shuttles</SoS.ShuttlesMore>
 	<SoS.ShuttleMissionFloatBoard>Mission: Boarding Party</SoS.ShuttleMissionFloatBoard>
 	<SoS.ShuttleMissionFloatBoardWarn>Mission: Boarding Party (WARNING!)</SoS.ShuttleMissionFloatBoardWarn>
 	<SoS.ShuttleMissionFloatIntercept>Mission: Intercept Torpedoes/Fighters</SoS.ShuttleMissionFloatIntercept>
@@ -408,17 +384,57 @@
 	<SoS.NoHardpoints>Shuttle does not have enough hardpoints for this turret.</SoS.NoHardpoints>
 	<SoS.NotEnoughCargoSpace>This upgrade would reduce cargo capacity below zero.</SoS.NotEnoughCargoSpace>
 	<SoS.HoverJump>Local flight</SoS.HoverJump>
-	<SoS.HoverJumpDesc>Launch and land in the same tile, at the cost of 5 fuel</SoS.HoverJumpDesc>
-	<SoS.NotEnoughFuel>Not enough fuel</SoS.NotEnoughFuel>
-	<SoS.UnderRoof>Cannot launch under roof</SoS.UnderRoof>
+	<SoS.HoverJump.Desc>Launch and land in the same tile, at the cost of 5 fuel</SoS.HoverJump.Desc>
 	<SoS.TargetShuttles>Set shuttle target</SoS.TargetShuttles>
 	<SoS.TargetShuttlesDesc>Choose where shuttles on strafing and bombing missions should aim</SoS.TargetShuttlesDesc>
-	<SoS.ShuttleToggleShield>Toggle shield</SoS.ShuttleToggleShield>
-	<SoS.ShuttleToggleShieldDesc>Turn this shield on or off</SoS.ShuttleToggleShieldDesc>
-	
-	<!-- obsolete/unused
 	<SoS.ToggleField>Toggle hull access</SoS.ToggleField>
 	<SoS.ToggleFieldDesc>Allow pawns and vehicles to pass through this region of permeable hull.</SoS.ToggleFieldDesc>
+	<!-- Temporary fix for VehFW to show fule cost. This key wa missing, also resulting strin is crooped, so got to have the number at the start so it is not lost -->
+	<VF_VehicleFuelCost>{0} Fuel cost</VF_VehicleFuelCost>
+	<SoSRestoreHull>Restore hull</SoSRestoreHull>
+	<SoSRestoreHullDesc>Construct new hull in place of wreckage</SoSRestoreHullDesc>
+	<SoSAlreadyRestoring>Already restoring this area!</SoSAlreadyRestoring>
+	<SoSMustDesignateWreckage>Must designate wrecked starship hull</SoSMustDesignateWreckage>
+	<SoS.UnDockWarning>Warning: Moving a ship while docked will release all docking clamps.</SoS.UnDockWarning>
+	<SoS.ExpelSuperheatedAir>Expel superheated air</SoS.ExpelSuperheatedAir>
+	<SoS.ExpelSuperheatedAirDesc>Use this vent to expel superheated air from the room. The process will damage your ship's life-support system(s) based on the size of the room, split evenly between systems (currently {0} each).\n\nAny non-EVA-capable pawns in the room will suffer explosive decompression!</SoS.ExpelSuperheatedAirDesc>
+	<SoS.AirNotSuperheated>Air is not superheated</SoS.AirNotSuperheated>
+	<SoS.NoLifeSupport>No active life support</SoS.NoLifeSupport>
+	<SoS.BreakCloakAtHeat>Break cloak at depletion level</SoS.BreakCloakAtHeat>
+	<SoS.BreakCloakAtHeatDesc>When the ship's coolant depletion reaches this percentage, disable cloaking device(s) so that it can recover.</SoS.BreakCloakAtHeatDesc>
+	<SoS.CloakBrokenAtHeat>Cloaking devices deactivated due to coolant depletion!</SoS.CloakBrokenAtHeat>
+	<SoS.NotEnoughFuelToLaunchShuttle>Not enough fuel to launch shuttle</SoS.NotEnoughFuelToLaunchShuttle>
+	<SoS.CannotLaunchUnderRoof>Shuttle is under a roof and is not on a shuttle bay</SoS.CannotLaunchUnderRoof>
+	<SoSBreachAirlock>Breach airlock</SoSBreachAirlock>
+	<SoSHackAirlock>Hack airlock</SoSHackAirlock>
+	<SoSAttackShip>Attack {0}</SoSAttackShip>
+	<SoSAttackShipDesc>Begin ship combat against the {0}.</SoSAttackShipDesc>
+	<SoSPirateShip>Pirate {0}</SoSPirateShip>
+	<SoSPirateShipDesc>Attempt an act of space piracy against {0}. This will begin ship combat and raise your ship's notoriety!</SoSPirateShipDesc>
+	<SoSInvestigateDerelict>Investigate {0}</SoSInvestigateDerelict>
+	<SoSInvestigateDerelictDesc>Move in to investigate the {0}. You will be able to launch shuttles to the derelict, and once it has been cleared of hostiles (if any) you may salvage it.</SoSInvestigateDerelictDesc>
+	<SoSHackFailed>Failed to hack the enemy bridge!</SoSHackFailed>
+	<SoSHackBridge>Hack bridge</SoSHackBridge>
+	<SoSCantPlaceCocoon>Unable to place cryptosleep cocoon!</SoSCantPlaceCocoon>
+	<SoSAlreadyMalnourished>User is already malnourished</SoSAlreadyMalnourished>
+	<SoSToggleShield>Toggle shield</SoSToggleShield>
+	<SoSToggleShieldDesc>Toggle this shield on or off</SoSToggleShieldDesc>
+	<SoSCantVentCloaked>Cannot vent: Cloaked</SoSCantVentCloaked>
+	<SoSMoreShuttles> more shuttles</SoSMoreShuttles>
+	<SoSCombatEnergy>Energy: </SoSCombatEnergy>
+	<SoSCombatNoEnergy>Energy: N/A</SoSCombatNoEnergy>
+	<SoSCombatHeat>Heat: </SoSCombatHeat>
+	<SoSCombatNoHeat>Heat: N/A</SoSCombatNoHeat>
+	<SoSCombatHull>Hull: </SoSCombatHull>
+	<SoSCombatShields>Shields: </SoSCombatShields>
+	<SoSCombatNone>N/A</SoSCombatNone>
+	<SoSCantSettleSpaceSites>Cannot settle space sites</SoSCantSettleSpaceSites>
+	<SoSNoPowerSupply>Ship has no internal power supply</SoSNoPowerSupply>
+	<SoSCarryToCryptonest>Carry to cryptonest</SoSCarryToCryptonest>
+	<SoSConsciousness>Consciousness: {0}</SoSConsciousness>
+	<SoSAIName>AI name: {0}</SoSAIName>
+	
+	<!-- obsolete/unused
 	<SoS.PirateTradeEmpire>Our act of piracy against the Empire has not gone unnoticed!</SoS.PirateTradeEmpire>
 	<SoS.MoveFailPawns>Player pawn in {0}, ship move aborted.</SoS.MoveFailPawns>
 	<SoS.TargetEnd>Stop targeting</SoS.TargetEnd>

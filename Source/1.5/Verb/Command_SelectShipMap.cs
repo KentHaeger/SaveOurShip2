@@ -7,6 +7,7 @@ using Verse;
 using Verse.Sound;
 using RimWorld.Planet;
 using RimWorld;
+using Vehicles;
 
 namespace SaveOurShip2
 {
@@ -57,6 +58,8 @@ namespace SaveOurShip2
 				{
 					foreach (Thing t in targetMap.thingGrid.ThingsAt(vec))
 					{
+						if (t is Pawn)
+							break;
 						if (mass > 500)
 							break;
 						if (count > 25)

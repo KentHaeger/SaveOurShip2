@@ -21,8 +21,8 @@ namespace SaveOurShip2
 			soundDragSustain = SoundDefOf.Designate_DragStandard;
 			soundDragChanged = SoundDefOf.Designate_DragStandard_Changed;
 			soundSucceeded = SoundDefOf.Designate_SmoothSurface; 
-			defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.RestoreHull");
-			defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.RestoreHullDesc");
+			defaultLabel = "SoSRestoreHull".Translate();
+			defaultDesc = "SoSRestoreHullDesc".Translate();
 			icon = ContentFinder<Texture2D>.Get("UI/RestoreHull");
 		}
 
@@ -37,10 +37,10 @@ namespace SaveOurShip2
 			if (things.Any(thing => thing.def == ResourceBank.ThingDefOf.ShipHullTileWrecked || thing.def == ResourceBank.ThingDefOf.Ship_Beam_Wrecked || thing.def == ResourceBank.ThingDefOf.ShipAirlockWrecked || thing.def == ResourceBank.ThingDefOf.ShipHullfoamTile || thing.def == ResourceBank.ThingDefOf.HullFoamWall))
 			{
 				if (things.Any(thing => thing.def.IsFrame || thing is Blueprint))
-					return "SoS.AlreadyRestoring".Translate();
+					return "SoSAlreadyRestoring".Translate();
 				return AcceptanceReport.WasAccepted;
 			}
-            return "SoS.MustDesignateWreckage".Translate();
+            return "SoSMustDesignateWreckage".Translate();
         }
 
         public override void DesignateThing(Thing t)

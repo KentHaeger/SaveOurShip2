@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+<RoomRoleDef>
+    <defName>ShipFramework</defName>
+    <label>ship framework</label>
+    <workerClass>RoomRoleWorker_ShipFramework</workerClass>
+</RoomRoleDef>
+
+<RoomRoleDef>
+    <defName>ShipInside</defName>
+    <label>ship</label>
+    <workerClass>RoomRoleWorker_ShipInside</workerClass>
+</RoomRoleDef>
+
+</Defs>

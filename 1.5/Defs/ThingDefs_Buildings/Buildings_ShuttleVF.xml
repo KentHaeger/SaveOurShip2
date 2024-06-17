@@ -457,7 +457,7 @@
 								<speed Class="SmashTools.LinearCurve">
 									<points>
 										<li>(0.2, 45)</li>
-										<li>(0.7, 40</li>
+										<li>(0.7, 40)</li>
 										<li>(0.71, 70)</li>
 										<li>(1, 65)</li>
 									</points>

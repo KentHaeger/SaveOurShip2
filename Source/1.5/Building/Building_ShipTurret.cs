@@ -472,7 +472,6 @@ namespace SaveOurShip2
 
 		protected void BeginBurst()
 		{
-			//cant fire spinals opposite of heading
 			if (spinalComp != null)
 			{
 				SpinalRecalc();
@@ -485,14 +484,8 @@ namespace SaveOurShip2
 				{
 					if (mapComp.HasShipMapAI)
 					{
-						if (mapComp.Retreating)
-							return;
-						else
+						if (!mapComp.Retreating)
 							mapComp.Heading *= -1;
-					}
-					else
-					{
-						return;
 					}
 				}
 			}

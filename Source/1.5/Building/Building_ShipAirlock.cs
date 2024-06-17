@@ -40,11 +40,11 @@ namespace SaveOurShip2
 			{
 				if (!hacked && !failed && !pawn.skills.GetSkill(SkillDefOf.Intellectual).TotallyDisabled && pawn.health.capacities.GetLevel(PawnCapacityDefOf.Manipulation) > 0)
 				{
-					options.Add(new FloatMenuOption("Hack", delegate { Job hackAirlock = new Job(ResourceBank.JobDefOf.HackAirlock, this); pawn.jobs.TryTakeOrderedJob(hackAirlock); }));
+					options.Add(new FloatMenuOption("SoSHackAirlock".Translate(), delegate { Job hackAirlock = new Job(ResourceBank.JobDefOf.HackAirlock, this); pawn.jobs.TryTakeOrderedJob(hackAirlock); }));
 				}
 				if (!hacked && !pawn.skills.GetSkill(SkillDefOf.Construction).TotallyDisabled && pawn.health.capacities.GetLevel(PawnCapacityDefOf.Manipulation) > 0)
 				{
-					options.Add(new FloatMenuOption("Breach", delegate { Job breachAirlock = new Job(ResourceBank.JobDefOf.BreachAirlock, this); pawn.jobs.TryTakeOrderedJob(breachAirlock); }));
+					options.Add(new FloatMenuOption("SoSBreachAirlock".Translate(), delegate { Job breachAirlock = new Job(ResourceBank.JobDefOf.BreachAirlock, this); pawn.jobs.TryTakeOrderedJob(breachAirlock); }));
 				}
 			}
 			return options;

@@ -14,7 +14,7 @@ namespace SaveOurShip2
 		{
 			get { return props as CompProps_RCSThruster; }
 		}
-		public bool active => powerComp != null && powerComp.PowerOn;
+		public bool active => powerComp == null || powerComp.PowerOn;
 		public ShipMapComp mapComp;
 		public CompPowerTrader powerComp;
 		public IntVec3 ventTo;

@@ -25,7 +25,7 @@ namespace SaveOurShip2
 			//manual stupidity prevention, good idea to eventually add all mod issues into it, clearly not fool proof enough yet
 			if (VersionControl.CurrentMinor < ShipInteriorMod2.SOS2ReqCurrentMinor || VersionControl.CurrentBuild < ShipInteriorMod2.SOS2ReqCurrentBuild)
 			{
-				string error = "SOS2EXP " + ShipInteriorMod2.SOS2EXPversion + " requires Rimworld 1."+ ShipInteriorMod2.SOS2ReqCurrentMinor + "."+ ShipInteriorMod2.SOS2ReqCurrentBuild + " or greater!";
+				string error = "SOS2 " + ShipInteriorMod2.SOS2version + " requires Rimworld 1."+ ShipInteriorMod2.SOS2ReqCurrentMinor + "."+ ShipInteriorMod2.SOS2ReqCurrentBuild + " or greater!";
 				Log.Error(error);
 				string errorLong = error + "\n\nUpdate your game!";
 				LongEventHandler.QueueLongEvent(() => Find.WindowStack.Add(new Dialog_MessageBox(errorLong, "Quit", delegate(){ Root.Shutdown(); }, null, null, "ERROR: ".Colorize(Color.red), false, null, null, WindowLayer.Super)), null, false, null);
@@ -34,7 +34,7 @@ namespace SaveOurShip2
 			}
 			if (!ModLister.HasActiveModWithName("Harmony"))
 			{
-				string error = "ERROR: SOS2EXP requires Harmony! Download and enable it!";
+				string error = "ERROR: SOS2 requires Harmony! Download and enable it!";
 				Log.Error(error);
 				string errorLong = error + "\n\nIt must be loaded at the top of the list, before Core!";
 				LongEventHandler.QueueLongEvent(() => Find.WindowStack.Add(new Dialog_MessageBox(errorLong, null, null, null, null, "ERROR: ".Colorize(Color.red), false, null, null, WindowLayer.Super)), null, false, null);
@@ -42,7 +42,7 @@ namespace SaveOurShip2
 			}
 			if (!ModLister.HasActiveModWithName("Vehicle Framework"))
 			{
-				string error = "ERROR: SOS2EXP requires Vehicle Framework! Download and enable it!";
+				string error = "ERROR: SOS2 requires Vehicle Framework! Download and enable it!";
 				Log.Error(error);
 				string errorLong = error + "\n\nIt must be loaded before SOS2!";
 				LongEventHandler.QueueLongEvent(() => Find.WindowStack.Add(new Dialog_MessageBox(errorLong, null, null, null, null, "ERROR: ".Colorize(Color.red), false, null, null, WindowLayer.Super)), null, false, null);
@@ -130,14 +130,14 @@ namespace SaveOurShip2
 		{
 			base.GetSettings<ModSettings_SoS>();
 		}
-		public const string SOS2EXPversion = "V101f42";
+		public const string SOS2version = "SteamV2.7.1";
 		public const int SOS2ReqCurrentMinor = 5;
 		public const int SOS2ReqCurrentBuild = 4062;
 
 		public const float altitudeNominal = 1000f; //nominal altitude for ship map background render
 		public const float altitudeLand = 110f; //min altitude for ship map background render
 		public const float crittersleepBodySize = 0.7f;
-		public const float pctFuelLocal = 0.02f;
+		public const float pctFuelLocal = 0.0f;
 		public const float pctFuelMap = 0.05f;
 		public const float pctFuelSpace = 0.5f; //check is 1 since we dont want ships to crash right after takeoff
 		public const float pctFuelLand = 0.1f;
@@ -191,7 +191,7 @@ namespace SaveOurShip2
 			//small column
 			options.columnWidthInt = 300;
 
-			options.Label("SoS.Settings.ShowVersionUI".Translate(SOS2EXPversion));
+			options.Label("SoS.Settings.ShowVersionUI".Translate(SOS2version));
 
 			options.Gap();
 			options.CheckboxLabeled("SoS.Settings.RenderPlanet".Translate(), ref renderPlanet, "SoS.Settings.RenderPlanet.Desc".Translate());
@@ -262,7 +262,7 @@ namespace SaveOurShip2
 		}
 		public static void DefsLoaded()
 		{
-			Log.Message("SOS2EXP " + SOS2EXPversion + " active");
+			Log.Message("SOS2 " + SOS2version + " active");
 			randomPlants = DefDatabase<ThingDef>.AllDefs.Where(t => t.plant != null && !t.defName.Contains("Anima")).ToList();
 
 			foreach (ShipDef ship in DefDatabase<ShipDef>.AllDefs.Where(d => d.saveSysVer < 2 && !d.neverRandom).ToList())
@@ -362,6 +362,8 @@ namespace SaveOurShip2
 				"AncientComplex_Standard",
 				//bt
 				"OpportunitySite_AncientComplex_Mechanitor",
+				//Anomaly
+				"CreepJoinerArrival",
 				//mod
 				"VFEA_OpportunitySite_SealedVault",
 				"VFEM_OpportunitySite_LootedVault"
@@ -1849,8 +1851,26 @@ namespace SaveOurShip2
 		public static bool CanPlaceShipOnVec(IntVec3 v, Map map, bool excludePlayer = false)
 		{
 			RoofDef roof = map.roofGrid.RoofAt(v);
-			if (v.InNoBuildEdgeArea(map) || (roof != null && roof.isThickRoof) || !v.GetTerrain(map).affordances.Contains(TerrainAffordanceDefOf.Heavy) || v.Fogged(map) || v.GetThingList(map).Any(t => t is Building b && (!excludePlayer || b.Faction != Faction.OfPlayer)))
+			if (v.InNoBuildEdgeArea(map))
+			{
+				Log.Error("[SoS2] Ship unable to land on cell " + v + ": it is outside the build area");
 				return false;
+			}
+			else if (roof != null && roof.isThickRoof)
+            {
+				Log.Error("[SoS2] Ship unable to land on cell " + v + ": it is under a mountain");
+				return false;
+			}
+			else if (!v.GetTerrain(map).affordances.Contains(TerrainAffordanceDefOf.Heavy))
+            {
+				Log.Error("[SoS2] Ship unable to land on cell " + v + ": it does not support heavy buildings");
+				return false;
+			}
+			else if (v.GetThingList(map).Any(t => t is Building b && b.def.passability!=Traversability.Standable && (!excludePlayer || b.Faction != Faction.OfPlayer)))
+            {
+				Log.Error("[SoS2] Ship unable to land on cell " + v + ": it contains a non-player building");
+				return false;
+			}
 			return true;
 		}
 		public static void LaunchShip(Building core) //make new spacehome, move ship to it and transit to orbit
@@ -1936,6 +1956,7 @@ namespace SaveOurShip2
 			List<IntVec3> fireExplosions = new List<IntVec3>();
 			List<CompEngineTrail> nukeExplosions = new List<CompEngineTrail>();
 			List<Pawn> pawns = new List<Pawn>();
+			List<Plant> plants = new List<Plant>();
 			int rotb = 4 - rotNum;
 
 			// Transforms vector from initial position to final according to desired movement/rotation.
@@ -2067,6 +2088,8 @@ namespace SaveOurShip2
 								return;
 							}*/
 						}
+						else if (t is Plant plant)
+							plants.Add(plant);
 						toMoveThings.Add(t);
 					}
 				}
@@ -2077,6 +2100,18 @@ namespace SaveOurShip2
 						toMoveThings.Add(carriedt);
 					}
 					//p.CurJob.Clear();
+				}
+				foreach(Plant plant in plants)
+                {
+					try
+					{
+						if(plant.Spawned)
+							plant.DeSpawn();
+					}
+					catch (Exception e)
+					{
+						Log.Error("[SoS2] Error despawning plant: " + e);
+					}
 				}
 
 				if (sourceMap.zoneManager.ZoneAt(pos) != null && !zonesToCopy.Contains(sourceMap.zoneManager.ZoneAt(pos)))
@@ -2115,13 +2150,29 @@ namespace SaveOurShip2
 			{
 				z.Delete();
 			}*/
+			IEnumerable<CompEngineTrail> engines = ship.Engines.Where(e => e.flickComp.SwitchIsOn && !e.Props.energy && !e.Props.reactionless && e.refuelComp.Fuel > 0 && (!targetMapIsSpace || e.Props.takeOff));
+			foreach (CompEngineTrail engine in engines)
+			{
+				if (targetMapIsSpace && !sourceMapIsSpace)
+				{
+					if (engine.parent.Rotation.AsByte == 0)
+						fireExplosions.Add(engine.parent.Position + new IntVec3(0, 0, -3));
+					else if (engine.parent.Rotation.AsByte == 1)
+						fireExplosions.Add(engine.parent.Position + new IntVec3(-3, 0, 0));
+					else if (engine.parent.Rotation.AsByte == 2)
+						fireExplosions.Add(engine.parent.Position + new IntVec3(0, 0, 3));
+					else
+						fireExplosions.Add(engine.parent.Position + new IntVec3(3, 0, 0));
+				}
+			}
 			if (!targetMapIsSpace)
 			{
 				foreach (IntVec3 pos in targetArea) //check since placeworker ignores this
 				{
 					if (pos.Fogged(targetMap))
 					{
-						return;
+						Log.Message("Tried to land ship in fogged area - oops");
+						targetMap.fogGrid.FloodUnfogAdjacent(pos);
 					}
 				}
 				foreach (IntVec3 pos in targetArea)
@@ -2140,7 +2191,7 @@ namespace SaveOurShip2
 					}
 				}
 			}
-			if (adjustment != IntVec3.Zero) //find adjacent ships
+			if (targetMap.IsSpace() && adjustment != IntVec3.Zero) //find adjacent ships
 			{
 				foreach (IntVec3 pos in targetArea)
 				{
@@ -2279,7 +2330,8 @@ namespace SaveOurShip2
 			}
 			foreach (Thing spawnThing in toMoveThings)
 			{
-				ReSpawnThingOnMap(spawnThing, targetMap, adjustment, rotb, fac);
+				if(!(spawnThing is Plant))
+					ReSpawnThingOnMap(spawnThing, targetMap, adjustment, rotb, fac);
 			}
 			if (devMode)
 				watch.Record("moveThings");
@@ -2317,23 +2369,21 @@ namespace SaveOurShip2
 			{
 				float fuelNeeded = ship.MassActual;
 				float fuelStored = 0f;
-				List<CompEngineTrail> engines = new List<CompEngineTrail>();
-				foreach (CompEngineTrail engine in ship.Engines.Where(e => e.flickComp.SwitchIsOn && !e.Props.energy && !e.Props.reactionless && e.refuelComp.Fuel > 0 && (!targetMapIsSpace || e.Props.takeOff)))
+				foreach (CompEngineTrail engine in engines)
 				{
 					fuelStored += engine.refuelComp.Fuel;
 					if (engine.PodFueled)
 					{
 						fuelStored += engine.refuelComp.Fuel;
-						if (ModsConfig.BiotechActive && !sourceMapIsSpace)
+						/*if (ModsConfig.BiotechActive && !sourceMapIsSpace)
 						{
 							foreach (IntVec3 v in engine.ExhaustArea)
 							{
 								if (Rand.Chance(0.8f))
 									v.Pollute(sourceMap, true);
 							}
-						}
+						}*/
 					}
-					engines.Add(engine);
 				}
 				if (sourceMapIsSpace)
 				{
@@ -2357,21 +2407,8 @@ namespace SaveOurShip2
 				{
 					fuelNeeded *= pctFuelSpace;
 				}
-				foreach (CompEngineTrail engine in engines)
-				{
+				foreach(CompEngineTrail engine in engines)
 					engine.refuelComp.ConsumeFuel(fuelNeeded * engine.refuelComp.Fuel / fuelStored);
-					if (targetMapIsSpace)
-					{
-						if (engine.parent.Rotation.AsByte == 0)
-							fireExplosions.Add(engine.parent.Position + new IntVec3(0, 0, -3));
-						else if (engine.parent.Rotation.AsByte == 1)
-							fireExplosions.Add(engine.parent.Position + new IntVec3(-3, 0, 0));
-						else if (engine.parent.Rotation.AsByte == 2)
-							fireExplosions.Add(engine.parent.Position + new IntVec3(0, 0, 3));
-						else
-							fireExplosions.Add(engine.parent.Position + new IntVec3(3, 0, 0));
-					}
-				}
 				if (devMode)
 					watch.Record("takeoffEffects");
 			}
@@ -2433,6 +2470,10 @@ namespace SaveOurShip2
 			catch (Exception e)
 			{
 				Log.Warning("" + e);
+			}
+			foreach(Plant plant in plants)
+            {
+				ReSpawnThingOnMap(plant, targetMap, adjustment, rotb, fac);
 			}
 			if (devMode)
 				watch.Record("moveTerrain");
@@ -2578,7 +2619,7 @@ namespace SaveOurShip2
 			if (fac != null && !(spawnThing is Pawn) && spawnThing.def.CanHaveFaction)
 				spawnThing.SetFaction(fac);
 
-			spawnThing.SpawnSetup(targetMap, true);
+			spawnThing.SpawnSetup(targetMap, !spawnThing.def.HasModExtension<SoSSpawnOverride>());
 
 			if(spawnThing is Pawn pawn)
 				pawn.pather.ResetToCurrentPosition();

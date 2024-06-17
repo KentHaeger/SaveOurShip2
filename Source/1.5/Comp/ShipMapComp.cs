@@ -393,19 +393,16 @@ namespace SaveOurShip2
 			fuel = 0;
 			foreach (SpaceShipCache ship in ShipsOnMap.Values)
 			{
-				if (ship.CanFire() && ship.HasMannedBridge() && ship.HasRCS())
+				foreach (CompEngineTrail engine in ship.Engines.Where(e => e.FuelUse > 0))
 				{
-					foreach (CompEngineTrail engine in ship.Engines.Where(e => e.FuelUse > 0))
-					{
+					fuel += engine.refuelComp.Fuel;
+					if (engine.PodFueled)
 						fuel += engine.refuelComp.Fuel;
-						if (engine.PodFueled)
-							fuel += engine.refuelComp.Fuel;
-						engines.Add(engine);
-					}
-					foreach (CompShipBay bay in ship.Bays.Where(t => t is CompShipBaySalvage))
-					{
-						maxMass += ((CompShipBaySalvage)bay).SalvageWeight;
-					}
+					engines.Add(engine);
+				}
+				foreach (CompShipBay bay in ship.Bays.Where(t => t is CompShipBaySalvage))
+				{
+					maxMass += ((CompShipBaySalvage)bay).SalvageWeight;
 				}
 			}
 			return engines;
@@ -609,6 +606,11 @@ namespace SaveOurShip2
 			if (ShipsOnMap.ContainsKey(index))
 			{
 				Log.Warning("SOS2: ".Colorize(Color.cyan) + map + " Ship ".Colorize(Color.green) + index + " Removed from cache.");
+				foreach(IntVec3 cell in ShipsOnMap[index].Area)
+                {
+					if (MapShipCells.ContainsKey(cell))
+						MapShipCells.Remove(cell);
+                }
 				ShipsOnMap.Remove(index);
 			}
 		}
@@ -616,7 +618,9 @@ namespace SaveOurShip2
 		{
 			if (MapShipCells.ContainsKey(vec))
 			{
-				return MapShipCells[vec].Item1;
+				int index = MapShipCells[vec].Item1;
+				if(ShipsOnMap.ContainsKey(index))
+					return index;
 			}
 			return -1;
 		}
@@ -650,7 +654,7 @@ namespace SaveOurShip2
 		{
 			foreach (IAttackTarget item in map.attackTargetsCache.TargetsHostileToFaction(faction))
 			{
-				if (GenHostility.IsActiveThreatTo(item, faction) && !(item.Thing is VehiclePawn))
+				if (GenHostility.IsActiveThreatTo(item, faction) && !(item.Thing is VehiclePawn) && !(item.Thing is Building_Turret))
 				{
 					return false;
 				}
@@ -749,6 +753,7 @@ namespace SaveOurShip2
 			attackedTradeship = false;
 			//target or create map + spawn ships
 			ShipCombatOriginMap = map;
+			targetMapComp = null;
 			if (targetMap == null)
 				ShipCombatTargetMap = SpawnEnemyShipMap(passingShip, fac, fleet, bounty);
 			else
@@ -756,6 +761,7 @@ namespace SaveOurShip2
 			//if ship is derelict switch to "encounter"
 			if (TargetMapComp.ShipMapState == ShipMapState.isGraveyard)
 			{
+				Log.Message("Can't attack graveyards");
 				ShipCombatTargetMap = null; //td no ship combat vs no ship maps, for now
 				targetMapComp = null;
 				return;
@@ -972,7 +978,7 @@ namespace SaveOurShip2
 			//post ship spawn - map name
 			if (fleet)
 			{
-				mp.Name = "SoS.ShipFleet".Translate() + " " + newMap.uniqueID;
+				mp.Name = "Ship fleet " + newMap.uniqueID;
 			}
 			else
 			{
@@ -1456,7 +1462,7 @@ namespace SaveOurShip2
 		}
 		public void SlowTick(int tick)
 		{
-			foreach (SpaceShipCache ship in ShipsOnMap.Values)
+			foreach (SpaceShipCache ship in ShipsOnMap.Values.ToList())
 			{
 				ship.SlowTick();
 			}
@@ -1747,7 +1753,7 @@ namespace SaveOurShip2
 									shuttles.Add(vehicle);
 							}
 							List<VehiclePawn> shuttlesToBeFilled = new List<VehiclePawn>(shuttles);
-							IEnumerable<Pawn> pawnsToBoard = ship.PawnsOnShip(ship.Faction).Where(pawn => (pawn.CurJob == null || pawn.CurJob.def != ResourceBank.JobDefOf.ManShipBridge));
+							IEnumerable<Pawn> pawnsToBoard = ship.PawnsOnShip(ship.Faction).Where(pawn => !(pawn is VehiclePawn) && (pawn.CurJob == null || pawn.CurJob.def != ResourceBank.JobDefOf.ManShipBridge));
 							Log.Message("[SoS2] Planning shuttle missions. Found " + shuttlesToBeFilled.Count + " combat-ready shuttles and " + pawnsToBoard.Count() + " potential pilots.");
 							foreach (Pawn p in pawnsToBoard)
 							{
@@ -1797,7 +1803,7 @@ namespace SaveOurShip2
 								}
 							}
 							List<VehiclePawn> shuttlesToBeFilled = new List<VehiclePawn>(shuttles);
-							IEnumerable<Pawn> pawnsToBoard = ship.PawnsOnShip(ship.Faction).Where(pawn => (pawn.CurJob == null || pawn.CurJob.def != ResourceBank.JobDefOf.ManShipBridge) && pawn.kindDef.combatPower > 40);
+							IEnumerable<Pawn> pawnsToBoard = ship.PawnsOnShip(ship.Faction).Where(pawn => !(pawn is VehiclePawn) && (pawn.CurJob == null || pawn.CurJob.def != ResourceBank.JobDefOf.ManShipBridge) && pawn.kindDef.combatPower > 40);
 							Log.Message("[SoS2] Planning boarding missions. Found " + shuttlesToBeFilled.Count + " boarding-ready shuttles and " + pawnsToBoard.Count() + " potential boarders.");
 							foreach (Pawn p in pawnsToBoard)
 							{
@@ -2436,6 +2442,8 @@ namespace SaveOurShip2
 						//if origin has grave with a ship, grave starts combat with enemy
 						if (OriginMapComp.GraveComp.MapRootListAll.Any() && !OriginMapComp.attackedTradeship)
 						{
+							OriginMapComp.GraveComp.ShipMapState = ShipMapState.nominal;
+							targetMapComp.ShipMapState = ShipMapState.nominal;
 							OriginMapComp.GraveComp.LastAttackTick = Find.TickManager.TicksGame;
 							OriginMapComp.GraveComp.NextTargetMap = OriginMapComp.ShipCombatTargetMap;
 						}
@@ -2461,6 +2469,8 @@ namespace SaveOurShip2
 			}
 			foreach (ShuttleMissionData mission in OriginMapComp.TargetMapComp.ShuttleMissions.ListFullCopy())
 			{
+				if (mission.shuttle.Faction != Faction.OfPlayer && mission.mission == ShuttleMission.BOARD)
+					mission.mission = ShuttleMission.RETURN;
 				DeRegisterShuttleMission(mission);
 			}
 
@@ -2513,8 +2523,11 @@ namespace SaveOurShip2
         }
 		public ShuttleMissionData RegisterShuttleMission(VehiclePawn shuttle, ShuttleMission mission)
         {
-			if(shuttle.Spawned)
+			if (shuttle.Spawned)
+			{
+				map.GetComponent<VehicleReservationManager>().ClearReservedFor(shuttle);
 				shuttle.DeSpawn();
+			}
 			ShuttlesOnMissions.TryAddOrTransfer(shuttle);
 			ShuttleMissionData data = new ShuttleMissionData();
 			data.shuttle = shuttle;
@@ -2532,7 +2545,7 @@ namespace SaveOurShip2
 			if (!destroyed)
             {
 				Map mapToSpawnIn;
-				if (OriginMapComp.ShipMapState == ShipMapState.nominal)
+				if (OriginMapComp.ShipMapState == ShipMapState.nominal && mission.shuttle.Faction==Faction.OfPlayer)
 					mapToSpawnIn = OriginMapComp.map;
 				else
 				{
@@ -2574,13 +2587,16 @@ namespace SaveOurShip2
 				else //enemy shuttles - never returns?
 				{
 					IntVec3 vec = IntVec3.Zero;
-					foreach (var bay in mapToSpawnInComp.Bays)
+					if (mapToSpawnInComp != originMapComp) //Don't land in player shuttle bays, it's rude
 					{
-						vec = bay.CanFitShuttleSize(mission.shuttle);
-						if (vec != IntVec3.Zero)
+						foreach (var bay in mapToSpawnInComp.Bays)
 						{
-							bay.ReserveArea(vec, mission.shuttle);
-							break;
+							vec = bay.CanFitShuttleSize(mission.shuttle);
+							if (vec != IntVec3.Zero)
+							{
+								bay.ReserveArea(vec, mission.shuttle);
+								break;
+							}
 						}
 					}
 
@@ -2605,10 +2621,14 @@ namespace SaveOurShip2
 							{
 								IntVec3 v = ship.OuterCells().RandomElement();
 								vec = FindTargetForPod(mission, v);
-								if (vec != null)
+								if (vec != IntVec3.Invalid)
 									break;
 								i++;
 							}
+						}
+						if(vec==IntVec3.Invalid)
+                        {
+							CellFinder.TryFindRandomCell(map, (IntVec3 cell) => { return !map.roofGrid.Roofed(cell); }, out vec);
 						}
 					}
 
@@ -2675,9 +2695,8 @@ namespace SaveOurShip2
 			{
 				var result = IntVec3.Invalid;
 				CellFinder.TryFindRandomCellNear(v, map, 9, (IntVec3 cell) => { return cell.Standable(map) && !map.roofGrid.Roofed(cell); }, out result);
-				if (result == IntVec3.Invalid)
-					return v; //Fallback, hope this won't have to be used
-				return result;
+				if (result != IntVec3.Invalid)
+					return result;
 			}
 			else //Restricted boarding fallback, pods punch holes in player ship
 			{
@@ -2693,7 +2712,7 @@ namespace SaveOurShip2
 					}
 				}
 			}
-			return IntVec3.Zero;
+			return IntVec3.Invalid;
 		}
 		public bool AnyBridgeIn(Room room)
 		{
