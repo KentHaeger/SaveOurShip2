@@ -50,7 +50,7 @@ namespace SaveOurShip2
 		public CompPowerTrader powerComp;
 		Sustainer sustainer;
 
-		public bool CanFire()
+		public virtual bool CanFire()
 		{
 			if (flickComp.SwitchIsOn && powerComp.PowerOn)
 			{
@@ -70,7 +70,7 @@ namespace SaveOurShip2
 			}
 			return false;
 		}
-		public bool CanFire(Rot4 rot)
+		public virtual bool CanFire(Rot4 rot)
 		{
 			if (flickComp.SwitchIsOn && powerComp.PowerOn)
 			{
