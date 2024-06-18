@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,19 +22,8 @@ namespace SaveOurShip2
 		IntVec3 pos; //needed because no predestroy
 		Map map; //needed because no predestroy
 
-		public bool disabled;
-		public bool Disabled
-		{
-			get
-			{
-				if (mapComp!=null && mapComp.Cloaks.Any(c => c.active))
-				{
-					disabled = true;
-				}
-				disabled = false;
-				return disabled;
-			}
-		}
+		public bool Disabled => mapComp?.Cloaks.Any(c => c.active) != true;
+
 		public override void PostSpawnSetup(bool respawningAfterLoad)
 		{
 			base.PostSpawnSetup(respawningAfterLoad);
@@ -174,7 +163,7 @@ namespace SaveOurShip2
 		public override string CompInspectStringExtra()
 		{
 			string toReturn = base.CompInspectStringExtra();
-			if (disabled)
+			if (Disabled)
 			{
 				toReturn += "\n<color=red>"+"SoSCantVentCloaked".Translate()+"</color>";
 			}
