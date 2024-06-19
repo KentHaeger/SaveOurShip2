@@ -25,15 +25,14 @@ namespace SaveOurShip2
 		// the backing field is updated in CompTick
 		// used to keep CompInspectStringExtra faster
 		public bool disabled;
-        public bool Disabled
-        {
-            get
-            {
-                disabled = mapComp?.Cloaks.Any(c => c.active) == true;
+		public bool Disabled
+		{
+			get
+			{
+				disabled = mapComp?.Cloaks.Any(c => c.active) == true;
 				return disabled;
-            }
-        }
-
+			}
+		}
 		public override void PostSpawnSetup(bool respawningAfterLoad)
 		{
 			base.PostSpawnSetup(respawningAfterLoad);
