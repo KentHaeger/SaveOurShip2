@@ -400,6 +400,7 @@
 	<SoS.ExpelSuperheatedAirDesc>Use this vent to expel superheated air from the room. The process will damage your ship's life-support system(s) based on the size of the room, split evenly between systems (currently {0} each).\n\nAny non-EVA-capable pawns in the room will suffer explosive decompression!</SoS.ExpelSuperheatedAirDesc>
 	<SoS.AirNotSuperheated>Air is not superheated</SoS.AirNotSuperheated>
 	<SoS.NoLifeSupport>No active life support</SoS.NoLifeSupport>
+	<SoS.HeatDepletionLevel>Depletion level: {0}</SoS.HeatDepletionLevel>
 	<SoS.BreakCloakAtHeat>Break cloak at depletion level</SoS.BreakCloakAtHeat>
 	<SoS.BreakCloakAtHeatDesc>When the ship's coolant depletion reaches this percentage, disable cloaking device(s) so that it can recover.</SoS.BreakCloakAtHeatDesc>
 	<SoS.CloakBrokenAtHeat>Cloaking devices deactivated due to coolant depletion!</SoS.CloakBrokenAtHeat>
