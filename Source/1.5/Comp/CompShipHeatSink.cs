@@ -22,7 +22,17 @@ namespace SaveOurShip2
 		IntVec3 pos; //needed because no predestroy
 		Map map; //needed because no predestroy
 
-		public bool Disabled => mapComp?.Cloaks.Any(c => c.active) != true;
+		// the backing field is updated in CompTick
+		// used to keep CompInspectStringExtra faster
+		public bool disabled;
+        public bool Disabled
+        {
+            get
+            {
+                disabled = mapComp?.Cloaks.Any(c => c.active) == true;
+				return disabled;
+            }
+        }
 
 		public override void PostSpawnSetup(bool respawningAfterLoad)
 		{
@@ -163,7 +173,7 @@ namespace SaveOurShip2
 		public override string CompInspectStringExtra()
 		{
 			string toReturn = base.CompInspectStringExtra();
-			if (Disabled)
+			if (disabled)
 			{
 				toReturn += "\n<color=red>"+"SoSCantVentCloaked".Translate()+"</color>";
 			}
