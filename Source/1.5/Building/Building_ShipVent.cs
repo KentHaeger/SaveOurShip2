@@ -3,6 +3,7 @@ using Verse;
 using System.Collections.Generic;
 using RimWorld;
 using Verse.Sound;
+using System;
 using System.Linq;
 
 namespace SaveOurShip2
@@ -114,7 +115,8 @@ namespace SaveOurShip2
 				int pointsOfDamage = 0;
 				if (ship.LifeSupports.Count > 0)
 				{
-					pointsOfDamage = room.CellCount / ship.LifeSupports.Count / 2;
+					// Minimun damage disallows free heat dumping
+					pointsOfDamage = Math.Max(2, room.CellCount / ship.LifeSupports.Count / 2);
 				}
 				Command_Action expelSuperheatedAir = new Command_Action
 				{
