@@ -15,3 +15,5 @@ Shipwrights: Oninnaise, VVither_Skeleton, (Insert Boi here), AlfadorZero, choppy
 OG Testing Squad: Buns Buns Cat, Phsarjk, i am has yes, Fuji, Reviire, Ian, Generic Scout, Waipa, Xanthos, BUTTERSKY, firethestars, Haldicar, jamhax, Jenden, maraworf, Red_Bunny, rostock, sprocket, El Jojo, Zahc, Dutchman, Zero Jackal, Tiberiumkyle, swordspell, Shabm, Kasodus, Red_Bunny, melandor, Madman, Jenden, Insert Witty Joke, Ifailatgaming, Capitão Escarlate, Bunkier, Bumblybear, Bubbadoge, Abraxas, Rage Nova, twsta, transcendant, thecaffiend, Manifold Paradox, WhiteGiverMa, Gago, Nerevarest
 
 The previous community-maintained repository can be found at (https://github.com/SonicTHI/SaveOurShip2Experimental). All commit history has been preserved in the current repository.
+
+Thanks to the Gibberlings3 for providing modding-focused Community Commons license [templates](https://github.com/Gibberlings3/GitHub-Templates) and tutorials on ensuring that modding remains compliant with the law.
