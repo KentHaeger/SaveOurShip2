@@ -40,6 +40,9 @@ namespace SaveOurShip2
 		public bool heatGridDirty;
 		public bool loaded = false;
 
+		// Bed -> bool is breathable for fast access when rendering sleeping pawns with or without helmet
+		public Dictionary<Building_Bed, bool> BedsCache = new Dictionary<Building_Bed, bool>();
+
 		public ShipMapComp(Map map) : base(map)
 		{
 			grid = new int[map.cellIndices.NumGridCells];
@@ -1760,7 +1763,7 @@ namespace SaveOurShip2
 								if (shuttlesToBeFilled.Count > 0 && p.mindState.duty != null)
 								{
 									p.mindState.duty.transportersGroup = 0;
-									VehiclePawn myShuttle = shuttlesToBeFilled.Where(shuttle=>p.CanReserveAndReach(shuttle, PathEndMode.Touch, Danger.Deadly)).RandomElement();
+									VehiclePawn myShuttle = shuttlesToBeFilled.Where(shuttle => p.CanReserveAndReach(shuttle, PathEndMode.Touch, Danger.Deadly)).RandomElement();
 									if (myShuttle != null)
 									{
 										Job job = new Job(JobDefOf_Vehicles.Board, myShuttle);
@@ -1810,8 +1813,8 @@ namespace SaveOurShip2
 								if (shuttlesToBeFilled.Count > 0 && p.mindState.duty != null)
 								{
 									p.mindState.duty.transportersGroup = 1;
-									VehiclePawn myShuttle = shuttlesToBeFilled.Where(shuttle=>p.CanReserveAndReach(shuttle, PathEndMode.Touch, Danger.Deadly)).RandomElement();
-									if (myShuttle != null && myShuttle.NextAvailableHandler()!=null)
+									VehiclePawn myShuttle = shuttlesToBeFilled.Where(shuttle => p.CanReserveAndReach(shuttle, PathEndMode.Touch, Danger.Deadly)).RandomElement();
+									if (myShuttle != null && myShuttle.NextAvailableHandler() != null)
 									{
 										myShuttle.PromptToBoardVehicle(p, myShuttle.NextAvailableHandler());
 										if (myShuttle.NextAvailableHandler() == null)
@@ -1861,7 +1864,7 @@ namespace SaveOurShip2
 									var shuttleMapComp = shuttle.Map.GetComponent<ShipMapComp>(); //td wouldnt it always be this.?
 									if (ShipInteriorMod2.ShuttleHasLaser(shuttle))
 									{
-										if(Rand.Chance(InterceptMissionChance()))
+										if (Rand.Chance(InterceptMissionChance()))
 											((ShuttleTakeoff)shuttle.CompVehicleLauncher.launchProtocol).TempMissionRef = shuttleMapComp.RegisterShuttleMission(shuttle, ShuttleMission.INTERCEPT);
 										else
 											((ShuttleTakeoff)shuttle.CompVehicleLauncher.launchProtocol).TempMissionRef = shuttleMapComp.RegisterShuttleMission(shuttle, ShuttleMission.STRAFE);
@@ -1875,7 +1878,7 @@ namespace SaveOurShip2
 									shuttlesYetToLaunch.Remove(shuttle);
 								}
 							}
-							if(shuttlesYetToLaunch.Count==0)
+							if (shuttlesYetToLaunch.Count == 0)
 								startedPilotLoad = false; //Reset shuttles so that carriers can refuel their fighters
 						}
 					}
@@ -2132,6 +2135,11 @@ namespace SaveOurShip2
 						}
 					}
 				}
+			}
+
+			if (tick % 180 == 0)
+			{
+				BedsCache.Clear();
 			}
 		}
 

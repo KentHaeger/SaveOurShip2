@@ -5046,6 +5046,43 @@ namespace SaveOurShip2
 		}
 	}
 
+	// Draw headgear on sleeping pawn when sleeping in unbreathable atmosphere
+	[HarmonyPatch(typeof(PawnRenderNodeWorker_Apparel_Head), "HeadgearVisible")]
+	public static class DrawHelmetsInUnbreathable
+	{
+		public static bool Prefix(PawnDrawParms parms, ref bool __result)
+		{
+			if (parms.Portrait)
+			{
+				return true;
+			}
+			bool isSleepingAndVisible = parms.bed != null && !parms.bed.def.building.bed_showSleeperBody;
+			if (!isSleepingAndVisible || !parms.bed.Map.IsSpace())
+			{
+				return true;
+			}
+
+			ShipMapComp mapComp = parms.bed.Map.GetComponent<ShipMapComp>();
+			Room room = parms.bed.Position.GetRoom(parms.bed.Map);
+			bool isBreathable;
+			if (mapComp.BedsCache.ContainsKey(parms.bed))
+			{
+				isBreathable = mapComp.BedsCache[parms.bed];
+			}
+			else
+			{
+				isBreathable = !ShipInteriorMod2.ExposedToOutside(room) && mapComp.VecHasLS(parms.bed.Position);
+			}
+
+			if (!isBreathable)
+			{
+				__result = true;
+				return false;
+			}
+			return true;
+		}
+	}
+
 	/*[HarmonyPatch(typeof(ActiveDropPod),"PodOpen")]
 	public static class ActivePodFix{
 		public static bool Prefix (ref ActiveDropPod __instance)
