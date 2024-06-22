@@ -41,7 +41,8 @@ namespace SaveOurShip2
 		public bool loaded = false;
 
 		// Bed -> bool is breathable for fast access when rendering sleeping pawns with or without helmet
-		public Dictionary<Building_Bed, bool> BedsCache = new Dictionary<Building_Bed, bool>();
+		// Got to be static to avoid overhead of getting map component in rendering territory
+		public static Dictionary<Building_Bed, bool> bedsCache = new Dictionary<Building_Bed, bool>();
 
 		public ShipMapComp(Map map) : base(map)
 		{
@@ -213,6 +214,11 @@ namespace SaveOurShip2
 				Scribe_Collections.Look<Building_ShipBridge>(ref MapRootListAll, "MapRootListAll", LookMode.Reference); //td rem?
 				Scribe_Deep.Look(ref ShuttlesOnMissions, "ShuttlesOnMissions", this);
 				Scribe_Collections.Look<ShuttleMissionData>(ref ShuttleMissions, "ShuttleMissions", LookMode.Deep);
+			}
+			if (Scribe.mode == LoadSaveMode.LoadingVars)
+			{
+				// this cache has to be static - so clear it on load
+				bedsCache.Clear();
 			}
 		}
 		//SC only - both maps
@@ -2137,9 +2143,32 @@ namespace SaveOurShip2
 				}
 			}
 
-			if (tick % 180 == 0)
+			// Invalidate caches related to DrawHelmetsInUnbreathable Harmony patch
+			if (Find.CurrentMap == map && map.IsSpace())
 			{
-				BedsCache.Clear();
+				// Wait intervals are really big in order to have minimal performance impact
+				// Intended casee to cover is player starter ship or some ship in player fleet not having life support for days
+				// and so plyer casully sees crew sleeping in helmets in unbreathable atmosphere, which does not need frequent updates.
+				if (tick % 600 == 0)
+				{
+					bedsCache.Clear();
+					// When zoomed out, pawn graphics update really rare. So, manual invalidation for their cache.
+					// Notable more often than they do it themselves, but still decently rare
+					IEnumerable<Pawn> playerPawns = map.mapPawns.AllPawns.Where(p => p.Faction == Faction.OfPlayer && p.InBed());
+					foreach (Pawn p in playerPawns)
+					{
+						p.Drawer.renderer.SetAllGraphicsDirty();
+					}
+				}
+				// Non-player pawns are less important and also can be numerous like Dreadnaught crew, so more rare updates
+				if (tick % 1200 == 0)
+				{
+					IEnumerable<Pawn> nonPlayerPawns = map.mapPawns.AllPawns.Where(p => p.Faction != Faction.OfPlayer && p.InBed());
+					foreach (Pawn p in nonPlayerPawns)
+					{
+						p.Drawer.renderer.SetAllGraphicsDirty();
+					}
+				}
 			}
 		}
 

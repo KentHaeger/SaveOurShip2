@@ -5061,19 +5061,16 @@ namespace SaveOurShip2
 			{
 				return true;
 			}
-
-			ShipMapComp mapComp = parms.bed.Map.GetComponent<ShipMapComp>();
-			Room room = parms.bed.Position.GetRoom(parms.bed.Map);
 			bool isBreathable;
-			if (mapComp.BedsCache.ContainsKey(parms.bed))
+			if (ShipMapComp.bedsCache.ContainsKey(parms.bed))
 			{
-				isBreathable = mapComp.BedsCache[parms.bed];
+				isBreathable = ShipMapComp.bedsCache[parms.bed];
 			}
 			else
 			{
-				isBreathable = !ShipInteriorMod2.ExposedToOutside(room) && mapComp.VecHasLS(parms.bed.Position);
+				Room room = parms.bed.Position.GetRoom(parms.bed.Map);
+				isBreathable = !ShipInteriorMod2.ExposedToOutside(room) && parms.bed.Map.GetComponent<ShipMapComp>().VecHasLS(parms.bed.Position);
 			}
-
 			if (!isBreathable)
 			{
 				__result = true;
