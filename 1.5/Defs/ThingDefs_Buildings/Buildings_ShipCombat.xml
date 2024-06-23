@@ -130,6 +130,11 @@
 			<ComponentSpacer>12</ComponentSpacer>
 		</costList>
 		<seeThroughFog>true</seeThroughFog>
+        <modExtensions>
+            <li Class = "Vehicles.CustomCostDefModExtension">
+                <cost>10000</cost>
+            </li>
+        </modExtensions>
 	</ThingDef>
 	<ThingDef ParentName="BuildingBase">
 		<defName>ShipCombatShieldGeneratorMini</defName>
@@ -186,6 +191,11 @@
 			<ComponentSpacer>4</ComponentSpacer>
 		</costList>
 		<seeThroughFog>true</seeThroughFog>
+        <modExtensions>
+            <li Class = "Vehicles.CustomCostDefModExtension">
+                <cost>10000</cost>
+            </li>
+        </modExtensions>
 	</ThingDef>
 	<ThingDef ParentName="BuildingBase" Name="ShipHeatConduit">
 		<defName>ShipHeatConduit</defName>
@@ -409,6 +419,11 @@
 		<researchPrerequisites>
 			<li>ShipHeatsink</li>
 		</researchPrerequisites>
+        <modExtensions>
+            <li Class = "Vehicles.CustomCostDefModExtension">
+                <cost>10000</cost>
+            </li>
+        </modExtensions>
 	</ThingDef>
 	<ThingDef ParentName="ShipHeatsinkBase">
 		<defName>ShipHeatBankLarge</defName>
@@ -443,6 +458,11 @@
 		<researchPrerequisites>
 			<li>ShipHeatsink</li>
 		</researchPrerequisites>
+        <modExtensions>
+            <li Class = "Vehicles.CustomCostDefModExtension">
+                <cost>10000</cost>
+            </li>
+        </modExtensions>
 	</ThingDef>
 	<ThingDef ParentName="ShipHeatsinkBase">
 		<defName>ShipPurgePort</defName>
@@ -2039,6 +2059,11 @@
 		</researchPrerequisites>
 		<constructionSkillPrerequisite>6</constructionSkillPrerequisite>
 		<uiIconScale>0.9</uiIconScale>
+        <modExtensions>
+            <li Class = "Vehicles.CustomCostDefModExtension">
+                <cost>10000</cost>
+            </li>
+        </modExtensions>
 	</ThingDef>
 	<ThingDef ParentName="BuildingBase">
 		<defName>ShipSpinalAmplifier</defName>
@@ -2092,6 +2117,11 @@
 		</researchPrerequisites>
 		<constructionSkillPrerequisite>6</constructionSkillPrerequisite>
 		<uiIconScale>0.65</uiIconScale>
+        <modExtensions>
+            <li Class = "Vehicles.CustomCostDefModExtension">
+                <cost>10000</cost>
+            </li>
+        </modExtensions>
 	</ThingDef>
 	<ThingDef ParentName="ShipSpinalTurretBuilding">
 		<defName>ShipSpinalBarrelLaser</defName>

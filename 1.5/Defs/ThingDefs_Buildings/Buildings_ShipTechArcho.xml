@@ -762,6 +762,11 @@
 			<li>ArchotechReactor</li>
 		</researchPrerequisites>
 		<constructionSkillPrerequisite>12</constructionSkillPrerequisite>
+        <modExtensions>
+            <li Class = "Vehicles.CustomCostDefModExtension">
+                <cost>10000</cost>
+            </li>
+        </modExtensions>
 	</ThingDef>
 	<!-- combat -->
 	<ThingDef ParentName="ShipHeatsinkBase">
@@ -865,6 +870,11 @@
 			<ArchotechExoticParticles>12</ArchotechExoticParticles>
 		</costList>
 		<seeThroughFog>true</seeThroughFog>
+        <modExtensions>
+            <li Class = "Vehicles.CustomCostDefModExtension">
+                <cost>10000</cost>
+            </li>
+        </modExtensions>
 	</ThingDef>
 	<!-- spore -->
 	<DesignatorDropdownGroupDef>
@@ -992,6 +1002,11 @@
 		<isAltar>true</isAltar>
 		<hasInteractionCell>True</hasInteractionCell>
 		<interactionCellOffset>(0,0, -1)</interactionCellOffset>
+        <modExtensions>
+            <li Class = "Vehicles.CustomCostDefModExtension">
+                <cost>10000</cost>
+            </li>
+        </modExtensions>
 	</ThingDef>
 	<ThingDef ParentName="BuildingBase">
 		<defName>ArchotechUplink</defName>
@@ -1108,6 +1123,11 @@
 			<li>BuildingsMisc</li>
 		</thingCategories>
 		<tradeability>Sellable</tradeability>
+        <modExtensions>
+            <li Class = "Vehicles.CustomCostDefModExtension">
+                <cost>10000</cost>
+            </li>
+        </modExtensions>
 	</ThingDef>
 	<ThingDef ParentName="ShipPillar">
 		<defName>ShipArchotechPillarA</defName>
