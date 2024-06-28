@@ -3070,14 +3070,14 @@ namespace SaveOurShip2
 			}
 			return false;
 		}
-		
-		//shuttles //td could vehiclepawn be extended?
-		public static bool CanLaunchUnderRoof(VehiclePawn __instance)
-		{
-			var bay = __instance.Position.GetThingList(__instance.Map).Where(t => t.TryGetComp<CompShipBay>() != null).FirstOrDefault();
-			return bay != null && bay.TryGetComp<CompShipBay>().CanLaunchShuttle(__instance);
-		}
-		public static bool IsShuttle(VehiclePawn vehicle)
+
+        //shuttles //td could vehiclepawn be extended?
+        //parameters map and cell was added to allow RimNauts 2 to patch for custom roof
+        public static bool CanLaunchUnderRoof(Map map, IntVec3 cell, VehiclePawn vehiclePawn) {
+            var bay = cell.GetThingList(map).Where(t => t.TryGetComp<CompShipBay>() != null).FirstOrDefault();
+            return bay != null && bay.TryGetComp<CompShipBay>().CanLaunchShuttle(vehiclePawn);
+        }
+        public static bool IsShuttle(VehiclePawn vehicle)
 		{
 			return vehicle.CompVehicleLauncher != null && vehicle.CompVehicleLauncher.SpaceFlight;
 		}
