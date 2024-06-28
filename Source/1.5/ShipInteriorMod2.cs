@@ -3073,7 +3073,8 @@ namespace SaveOurShip2
 
         //shuttles //td could vehiclepawn be extended?
         //parameters map and cell was added to allow RimNauts 2 to patch for custom roof
-        public static bool CanLaunchUnderRoof(Map map, IntVec3 cell, VehiclePawn vehiclePawn) {
+        public static bool CanLaunchUnderRoof(Map map, IntVec3 cell, VehiclePawn vehiclePawn)
+        {
             var bay = cell.GetThingList(map).Where(t => t.TryGetComp<CompShipBay>() != null).FirstOrDefault();
             return bay != null && bay.TryGetComp<CompShipBay>().CanLaunchShuttle(vehiclePawn);
         }

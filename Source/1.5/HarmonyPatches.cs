@@ -4505,7 +4505,8 @@ namespace SaveOurShip2
 	[HarmonyPatch(typeof(CompVehicleLauncher), "CanLaunchWithCargoCapacity")]
 	public static class VFShuttleBayLaunch
     {
-		public static void Postfix(ref string disableReason, CompVehicleLauncher __instance, ref bool __result) {
+		public static void Postfix(ref string disableReason, CompVehicleLauncher __instance, ref bool __result)
+        {
             if (disableReason != Translator.Translate("CommandLaunchGroupFailUnderRoof")) return;
 
             VehiclePawn vehiclePawn = (VehiclePawn) __instance.parent;
