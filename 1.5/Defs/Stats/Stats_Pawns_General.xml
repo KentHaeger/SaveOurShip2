@@ -35,6 +35,7 @@
     <defaultBaseValue>1</defaultBaseValue>
     <hideAtValue>1</hideAtValue>
     <minValue>0</minValue>
+	<maxValue>7</maxValue>
     <toStringStyle>PercentZero</toStringStyle>
     <displayPriorityInCategory>2002</displayPriorityInCategory>
   </StatDef>
