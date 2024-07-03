@@ -1180,6 +1180,7 @@
 			<ComponentSpacer>8</ComponentSpacer>
 			<ArchotechPsychicCore>1</ArchotechPsychicCore>
 		</costList>
+		<resourcesFractionWhenDeconstructed>1</resourcesFractionWhenDeconstructed>
 		<comps>
 			<li Class="SaveOurShip2.CompProps_ShipCachePart">
 				<hermetic>true</hermetic>
@@ -1325,6 +1326,7 @@
 			<ComponentSpacer>8</ComponentSpacer>
 			<ArchotechMechaniteCore>1</ArchotechMechaniteCore>
 		</costList>
+		<resourcesFractionWhenDeconstructed>1</resourcesFractionWhenDeconstructed>
 		<comps>
 			<li Class="SaveOurShip2.CompProps_ShipCachePart">
 				<hermetic>true</hermetic>
@@ -1610,6 +1612,7 @@
 			<ComponentSpacer>6</ComponentSpacer>
 			<ArchotechMechaniteCore>1</ArchotechMechaniteCore>
 		</costList>
+		<resourcesFractionWhenDeconstructed>1</resourcesFractionWhenDeconstructed>
 		<altitudeLayer>Building</altitudeLayer>
 		<fillPercent>0.5</fillPercent>
 		<useHitPoints>True</useHitPoints>
