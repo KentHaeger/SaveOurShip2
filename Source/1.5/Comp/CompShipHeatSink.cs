@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,16 +22,14 @@ namespace SaveOurShip2
 		IntVec3 pos; //needed because no predestroy
 		Map map; //needed because no predestroy
 
+		// the backing field is updated in CompTick
+		// used to keep CompInspectStringExtra faster
 		public bool disabled;
 		public bool Disabled
 		{
 			get
 			{
-				if (mapComp!=null && mapComp.Cloaks.Any(c => c.active))
-				{
-					disabled = true;
-				}
-				disabled = false;
+				disabled = mapComp?.Cloaks.Any(c => c.active) == true;
 				return disabled;
 			}
 		}
