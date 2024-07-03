@@ -24,8 +24,8 @@ namespace SaveOurShip2
 		public float heatPerSecond = 0;
 		public SoundDef singleFireSound=null;
 		public bool antiEntropic = false;
-		public int heatVent = 0;
-		public int heatLoss = 0;
+		public float heatVent = 0;
+		public float heatLoss = 0;
 		public float heatPurge = 0;
 		public float heatMultiplier = 1.0f;
 		public Color color = Color.white;
