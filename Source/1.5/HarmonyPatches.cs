@@ -135,9 +135,13 @@ namespace SaveOurShip2
 					stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.StatsShipCombatRating", bridge.Ship.Threat));
 					stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.StatsShipMass", bridge.Ship.MassActual));
 					stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.StatsShipCombatThrust", bridge.Ship.ThrustRatio.ToString("F3")));
-					if(bridge.heatComp.myNet.Depletion > 0)
+					if (bridge.heatComp.myNet.Depletion > 0)
 					{
 						stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.StatsShipHeatMaximum", bridge.heatComp.myNet.StorageCapacityRaw));
+					}
+					if (bridge.heatCap == 0 || bridge.powerCap == 0)
+					{
+						stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.BridgeConnectTooltip"));
 					}
 
 					TooltipHandler.TipRegion(rect2, stringBuilder.ToString());

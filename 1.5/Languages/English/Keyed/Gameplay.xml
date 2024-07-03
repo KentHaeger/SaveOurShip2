@@ -182,6 +182,7 @@
 	<SoS.LandDesc>Land this ship near </SoS.LandDesc>
 	<SoS.Rebuild>Rebuild ship parts</SoS.Rebuild>
 	<SoS.RebuildDesc>Places blueprints for destroyed buildings on this ship.</SoS.RebuildDesc>
+	<SoS.BridgeConnectTooltip>Check that all pilot and tactical consoles, also drone cores and AI cores are conncted to heat and thermal networks.</SoS.BridgeConnectTooltip>
 	<!-- story -->
 	<SoS.QuestPillarA>Attack KSS Horizon</SoS.QuestPillarA>
 	<SoS.QuestPillarADesc>Attempt to engage the ancient terraforming station and recover an archotech pillar</SoS.QuestPillarADesc>
