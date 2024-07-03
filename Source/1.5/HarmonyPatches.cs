@@ -5041,6 +5041,34 @@ namespace SaveOurShip2
 		}
 	}
 
+	[HarmonyPatch(typeof(ShipLandingArea), "RecalculateBlockingThing")]
+	public static class ShipLandingAreaUnderShipRoof
+	{
+		public static bool Prefix(Map ___map, CellRect ___rect, ref bool ___blockedByRoof, ref Thing ___firstBlockingThing)
+		{
+			___blockedByRoof = false;
+			foreach (IntVec3 c in ___rect)
+			{
+				if (c.Roofed(___map) && ___map.roofGrid.RoofAt(c) == ResourceBank.RoofDefOf.RoofShip)
+				{
+					List<Thing> thingList = c.GetThingList(___map);
+					for (int i = 0; i < thingList.Count; i++)
+					{
+						if ((!(thingList[i] is Pawn && !(thingList[i] is VehiclePawn)) && (thingList[i].def.Fillage != FillCategory.None || thingList[i].def.IsEdifice() || thingList[i] is Skyfaller)) && thingList[i].TryGetComp<CompShipBay>() == null && !(thingList[i].TryGetComp<CompShipCachePart>()?.Props.isPlating ?? false))
+						{
+							___firstBlockingThing = thingList[i];
+							return false;
+						}
+					}
+				}
+				else
+					return true;
+			}
+			___firstBlockingThing = null;
+			return false;
+		}
+	}
+  
 	[HarmonyPatch(typeof(GameEnder), "CheckOrUpdateGameOver")]
 	public static class BuildingsArePeopleToo
     {
@@ -6089,34 +6117,6 @@ namespace SaveOurShip2
 			return true;
 		}
 	}
-
-	[HarmonyPatch(typeof(ShipLandingArea), "RecalculateBlockingThing")]
-	public static class ShipLandingAreaUnderShipRoof
-	{
-		public static bool Prefix(Map ___map, CellRect ___rect, ref bool ___blockedByRoof, ref Thing ___firstBlockingThing)
-		{
-			___blockedByRoof = false;
-			foreach (IntVec3 c in ___rect)
-			{
-				if (c.Roofed(___map) && ___map.roofGrid.RoofAt(c) == ResourceBank.RoofDefOf.RoofShip)
-				{
-					List<Thing> thingList = c.GetThingList(___map);
-					for (int i = 0; i < thingList.Count; i++)
-					{
-						if ((!(thingList[i] is Pawn) && (thingList[i].def.Fillage != FillCategory.None || thingList[i].def.IsEdifice() || thingList[i] is Skyfaller)) && thingList[i].def != ResourceBank.ThingDefOf.ShipShuttleBay && thingList[i].def != ResourceBank.ThingDefOf.ShipShuttleBayLarge && !(thingList[i].TryGetComp<CompShipCachePart>()?.Props.isPlating ?? false))
-						{
-							___firstBlockingThing = thingList[i];
-							return false;
-						}
-					}
-				}
-				else
-					return true;
-			}
-			___firstBlockingThing = null;
-			return false;
-		}
-	}                                                                                                      
 
 	[HarmonyPatch(typeof(Trigger_UrgentlyHungry), "ActivateOn")]
 	public static class MechsDontEat
