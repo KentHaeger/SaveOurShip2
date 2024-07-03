@@ -5053,6 +5053,40 @@ namespace SaveOurShip2
 		}
 	}
 
+	// Draw headgear on sleeping pawn when sleeping in unbreathable atmosphere
+	[HarmonyPatch(typeof(PawnRenderNodeWorker_Apparel_Head), "HeadgearVisible")]
+	public static class DrawHelmetsInUnbreathable
+	{
+		public static bool Prefix(PawnDrawParms parms, ref bool __result)
+		{
+			if (parms.Portrait)
+			{
+				return true;
+			}
+			bool isSleepingAndVisible = parms.bed != null && !parms.bed.def.building.bed_showSleeperBody;
+			if (!isSleepingAndVisible || !parms.bed.Map.IsSpace())
+			{
+				return true;
+			}
+			bool isBreathable;
+			if (ShipMapComp.bedsCache.ContainsKey(parms.bed))
+			{
+				isBreathable = ShipMapComp.bedsCache[parms.bed];
+			}
+			else
+			{
+				Room room = parms.bed.Position.GetRoom(parms.bed.Map);
+				isBreathable = !ShipInteriorMod2.ExposedToOutside(room) && parms.bed.Map.GetComponent<ShipMapComp>().VecHasLS(parms.bed.Position);
+			}
+			if (!isBreathable)
+			{
+				__result = true;
+				return false;
+			}
+			return true;
+		}
+	}
+  
 	[HarmonyPatch(typeof(ShipLandingArea), "RecalculateBlockingThing")]
 	public static class ShipLandingAreaUnderShipRoof
 	{

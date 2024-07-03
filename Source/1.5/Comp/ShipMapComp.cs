@@ -41,6 +41,9 @@ namespace SaveOurShip2
 		public bool breathableZoneDirty;
 		public bool loaded = false;
 
+		// Bed -> bool is breathable for fast access when rendering sleeping pawns with or without helmet
+		// Got to be static to avoid overhead of getting map component in rendering territory
+		public static Dictionary<Building_Bed, bool> bedsCache = new Dictionary<Building_Bed, bool>();
 		Area_Allowed breathableZone = null;
 
 		public ShipMapComp(Map map) : base(map)
@@ -235,6 +238,11 @@ namespace SaveOurShip2
 				Scribe_Collections.Look<Building_ShipBridge>(ref MapRootListAll, "MapRootListAll", LookMode.Reference); //td rem?
 				Scribe_Deep.Look(ref ShuttlesOnMissions, "ShuttlesOnMissions", this);
 				Scribe_Collections.Look<ShuttleMissionData>(ref ShuttleMissions, "ShuttleMissions", LookMode.Deep);
+			}
+			if (Scribe.mode == LoadSaveMode.LoadingVars)
+			{
+				// this cache has to be static - so clear it on load
+				bedsCache.Clear();
 			}
 		}
 		//SC only - both maps
@@ -1785,7 +1793,7 @@ namespace SaveOurShip2
 								if (shuttlesToBeFilled.Count > 0 && p.mindState.duty != null)
 								{
 									p.mindState.duty.transportersGroup = 0;
-									VehiclePawn myShuttle = shuttlesToBeFilled.Where(shuttle=>p.CanReserveAndReach(shuttle, PathEndMode.Touch, Danger.Deadly)).RandomElement();
+									VehiclePawn myShuttle = shuttlesToBeFilled.Where(shuttle => p.CanReserveAndReach(shuttle, PathEndMode.Touch, Danger.Deadly)).RandomElement();
 									if (myShuttle != null)
 									{
 										Job job = new Job(JobDefOf_Vehicles.Board, myShuttle);
@@ -1835,8 +1843,8 @@ namespace SaveOurShip2
 								if (shuttlesToBeFilled.Count > 0 && p.mindState.duty != null)
 								{
 									p.mindState.duty.transportersGroup = 1;
-									VehiclePawn myShuttle = shuttlesToBeFilled.Where(shuttle=>p.CanReserveAndReach(shuttle, PathEndMode.Touch, Danger.Deadly)).RandomElement();
-									if (myShuttle != null && myShuttle.NextAvailableHandler()!=null)
+									VehiclePawn myShuttle = shuttlesToBeFilled.Where(shuttle => p.CanReserveAndReach(shuttle, PathEndMode.Touch, Danger.Deadly)).RandomElement();
+									if (myShuttle != null && myShuttle.NextAvailableHandler() != null)
 									{
 										myShuttle.PromptToBoardVehicle(p, myShuttle.NextAvailableHandler());
 										if (myShuttle.NextAvailableHandler() == null)
@@ -1886,7 +1894,7 @@ namespace SaveOurShip2
 									var shuttleMapComp = shuttle.Map.GetComponent<ShipMapComp>(); //td wouldnt it always be this.?
 									if (ShipInteriorMod2.ShuttleHasLaser(shuttle))
 									{
-										if(Rand.Chance(InterceptMissionChance()))
+										if (Rand.Chance(InterceptMissionChance()))
 											((ShuttleTakeoff)shuttle.CompVehicleLauncher.launchProtocol).TempMissionRef = shuttleMapComp.RegisterShuttleMission(shuttle, ShuttleMission.INTERCEPT);
 										else
 											((ShuttleTakeoff)shuttle.CompVehicleLauncher.launchProtocol).TempMissionRef = shuttleMapComp.RegisterShuttleMission(shuttle, ShuttleMission.STRAFE);
@@ -1900,7 +1908,7 @@ namespace SaveOurShip2
 									shuttlesYetToLaunch.Remove(shuttle);
 								}
 							}
-							if(shuttlesYetToLaunch.Count==0)
+							if (shuttlesYetToLaunch.Count == 0)
 								startedPilotLoad = false; //Reset shuttles so that carriers can refuel their fighters
 						}
 					}
@@ -2155,6 +2163,34 @@ namespace SaveOurShip2
 							if (rcs.active && Rand.Chance(0.3f)) //td need better fx, not affected by wind
 								FleckMaker.ThrowHeatGlow(rcs.ventTo, rcs.parent.Map, 1f);
 						}
+					}
+				}
+			}
+
+			// Invalidate caches related to DrawHelmetsInUnbreathable Harmony patch
+			if (Find.CurrentMap == map && map.IsSpace())
+			{
+				// Wait intervals are really big in order to have minimal performance impact
+				// Intended casee to cover is player starter ship or some ship in player fleet not having life support for days
+				// and so plyer casully sees crew sleeping in helmets in unbreathable atmosphere, which does not need frequent updates.
+				if (tick % 600 == 0)
+				{
+					bedsCache.Clear();
+					// When zoomed out, pawn graphics update really rare. So, manual invalidation for their cache.
+					// Notable more often than they do it themselves, but still decently rare
+					IEnumerable<Pawn> playerPawns = map.mapPawns.AllPawns.Where(p => p.Faction == Faction.OfPlayer && p.InBed());
+					foreach (Pawn p in playerPawns)
+					{
+						p.Drawer.renderer.SetAllGraphicsDirty();
+					}
+				}
+				// Non-player pawns are less important and also can be numerous like Dreadnaught crew, so more rare updates
+				if (tick % 1200 == 0)
+				{
+					IEnumerable<Pawn> nonPlayerPawns = map.mapPawns.AllPawns.Where(p => p.Faction != Faction.OfPlayer && p.InBed());
+					foreach (Pawn p in nonPlayerPawns)
+					{
+						p.Drawer.renderer.SetAllGraphicsDirty();
 					}
 				}
 			}
