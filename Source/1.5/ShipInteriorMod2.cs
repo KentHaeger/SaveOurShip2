@@ -130,7 +130,7 @@ namespace SaveOurShip2
 		{
 			base.GetSettings<ModSettings_SoS>();
 		}
-		public const string SOS2version = "SteamV2.7.1";
+		public const string SOS2version = "SteamV2.7.2unstable";
 		public const int SOS2ReqCurrentMinor = 5;
 		public const int SOS2ReqCurrentBuild = 4062;
 
@@ -370,7 +370,6 @@ namespace SaveOurShip2
 			};
 			allowedToObserve = new string[]
 			{
-				"Settlement",
 				"MoonPillarSite",
 				"TribalPillarSite",
 				"ShipEngineImpactSite",

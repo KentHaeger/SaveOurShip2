@@ -178,7 +178,7 @@ namespace SaveOurShip2
 					ReCacheDockedShuttles();
 				foreach (CompFueledTravel comp in dockedShuttles)
 				{
-					if (compRefuelable.fuel > 0 && comp.FuelPercentOfTarget < 1)
+					if (compRefuelable.fuel > 0 && comp.FuelPercentOfTarget < 1 && !comp.Vehicle.ignition.Drafted)
 					{
 						comp.Refuel(1);
 						compRefuelable.ConsumeFuel(1);
