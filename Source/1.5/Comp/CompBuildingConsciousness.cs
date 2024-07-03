@@ -481,13 +481,13 @@ namespace SaveOurShip2
 		public override void PostSpawnSetup(bool respawningAfterLoad)
 		{
 			base.PostSpawnSetup(respawningAfterLoad);
-			parent.Map.GetComponent<ShipMapComp>().Spores.Add(this);
+			parent.Map.GetComponent<ShipMapComp>().Consciousness.Add(this);
 			compPower = parent.TryGetComp<CompPowerTrader>();
 		}
 
 		public override void PostDeSpawn(Map map)
 		{
-			map.GetComponent<ShipMapComp>().Spores.Remove(this);
+			map.GetComponent<ShipMapComp>().Consciousness.Remove(this);
 			if(Consciousness != null && !ShipInteriorMod2.MoveShipFlag)
 				Consciousness.health.AddHediff(HediffDef.Named("HologramDisconnected"));
 			base.PostDeSpawn(map);

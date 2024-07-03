@@ -433,6 +433,8 @@
 	<SoSCarryToCryptonest>Carry to cryptonest</SoSCarryToCryptonest>
 	<SoSConsciousness>Consciousness: {0}</SoSConsciousness>
 	<SoSAIName>AI name: {0}</SoSAIName>
+	<SoSNoMapObserve>This type of map cannot be observed from orbit. Its owners have likely deployed sensor scrambling technology.</SoSNoMapObserve>
+	<SoSBreathable>Breathable</SoSBreathable>
 	
 	<!-- obsolete/unused
 	<SoS.PirateTradeEmpire>Our act of piracy against the Empire has not gone unnoticed!</SoS.PirateTradeEmpire>

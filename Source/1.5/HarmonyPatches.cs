@@ -3252,19 +3252,14 @@ namespace SaveOurShip2
 	{
 		public static void Postfix(JobDriver_Meditate __instance)
 		{
-			int num = GenRadial.NumCellsInRadius(MeditationUtility.FocusObjectSearchRadius);
-			for (int i = 0; i < num; i++)
-			{
-				IntVec3 c = __instance.pawn.Position + GenRadial.RadialPattern[i];
-				if (c.InBounds(__instance.pawn.Map))
-				{
-					Building_ArchotechSpore spore = c.GetFirstThing<Building_ArchotechSpore>(__instance.pawn.Map);
-					if (spore != null)
-					{
-						spore.MeditationTick();
-					}
-				}
-			}
+			foreach(CompBuildingConsciousness consc in __instance.pawn.Map.GetComponent<ShipMapComp>().Consciousness)
+            {
+				Building_ArchotechSpore spore = consc.parent as Building_ArchotechSpore;
+				if(spore != null && __instance.pawn.Position.DistanceTo(spore.Position) <= MeditationUtility.FocusObjectSearchRadius)
+                {
+					spore.MeditationTick();
+                }
+            }
 		}
 	}
 
@@ -4507,7 +4502,13 @@ namespace SaveOurShip2
     {
 		public static void Postfix(ref string disableReason, CompVehicleLauncher __instance, ref bool __result)
         {
-			if (disableReason == Translator.Translate("CommandLaunchGroupFailUnderRoof") && ShipInteriorMod2.CanLaunchUnderRoof((VehiclePawn)__instance.parent))
+            if (disableReason != Translator.Translate("CommandLaunchGroupFailUnderRoof")) return;
+
+            VehiclePawn vehiclePawn = (VehiclePawn) __instance.parent;
+            Map map = vehiclePawn.Map;
+            IntVec3 cell = vehiclePawn.Position;
+
+            if (ShipInteriorMod2.CanLaunchUnderRoof(map, cell, vehiclePawn))
             {
 				__result = true;
 				disableReason = null;
@@ -4522,8 +4523,14 @@ namespace SaveOurShip2
 		{
 			if(__result==false)
 			{
-				if (__instance.vehicle.Spawned && ShipInteriorMod2.CanLaunchUnderRoof(__instance.vehicle))
-					__result = true;
+                if (!__instance.vehicle.Spawned) return;
+
+                VehiclePawn vehiclePawn = __instance.vehicle;
+                Map map = vehiclePawn.Map;
+                IntVec3 cell = vehiclePawn.Position;
+
+                if (ShipInteriorMod2.CanLaunchUnderRoof(map, cell, vehiclePawn))
+                    __result = true;
 			}
 		}
 	}
@@ -4565,7 +4572,7 @@ namespace SaveOurShip2
 				__result = PositionState.Valid; //bays are always valid
 				return;
 			}
-			else if (occupiedRect.Any(v => v.Roofed(map)) && ShipInteriorMod2.IsShuttle(__instance.vehicle))
+			else if (occupiedRect.Any(v => Ext_Vehicles.IsRoofed(v, map)) && ShipInteriorMod2.IsShuttle(__instance.vehicle))
 			{
 				__result = PositionState.Invalid; //roof is not (check due to our shuttles being able to roofpunch)
 				return;
@@ -4764,7 +4771,7 @@ namespace SaveOurShip2
 				ShipMapComp comp = map.GetComponent<ShipMapComp>();
 				if (comp != null)
 				{
-					foreach (CompBuildingConsciousness sporeConsc in comp.Spores)
+					foreach (CompBuildingConsciousness sporeConsc in comp.Consciousness)
 					{
 						Building_ArchotechSpore spore = sporeConsc.parent as Building_ArchotechSpore;
 						if (spore == null || spore.linkedPawns == null)
@@ -4792,7 +4799,7 @@ namespace SaveOurShip2
 					ShipMapComp comp = map.GetComponent<ShipMapComp>();
 					if (comp != null)
 					{
-						foreach (CompBuildingConsciousness sporeConsc in comp.Spores)
+						foreach (CompBuildingConsciousness sporeConsc in comp.Consciousness)
 						{
 							Building_ArchotechSpore spore = sporeConsc.parent as Building_ArchotechSpore;
 							if (spore == null || spore.linkedPawns == null)
@@ -5079,6 +5086,47 @@ namespace SaveOurShip2
 			return true;
 		}
 	}
+  
+	[HarmonyPatch(typeof(ShipLandingArea), "RecalculateBlockingThing")]
+	public static class ShipLandingAreaUnderShipRoof
+	{
+		public static bool Prefix(Map ___map, CellRect ___rect, ref bool ___blockedByRoof, ref Thing ___firstBlockingThing)
+		{
+			___blockedByRoof = false;
+			foreach (IntVec3 c in ___rect)
+			{
+				if (c.Roofed(___map) && ___map.roofGrid.RoofAt(c) == ResourceBank.RoofDefOf.RoofShip)
+				{
+					List<Thing> thingList = c.GetThingList(___map);
+					for (int i = 0; i < thingList.Count; i++)
+					{
+						if ((!(thingList[i] is Pawn && !(thingList[i] is VehiclePawn)) && (thingList[i].def.Fillage != FillCategory.None || thingList[i].def.IsEdifice() || thingList[i] is Skyfaller)) && thingList[i].TryGetComp<CompShipBay>() == null && !(thingList[i].TryGetComp<CompShipCachePart>()?.Props.isPlating ?? false))
+						{
+							___firstBlockingThing = thingList[i];
+							return false;
+						}
+					}
+				}
+				else
+					return true;
+			}
+			___firstBlockingThing = null;
+			return false;
+		}
+	}
+  
+	[HarmonyPatch(typeof(GameEnder), "CheckOrUpdateGameOver")]
+	public static class BuildingsArePeopleToo
+    {
+		public static void Postfix(GameEnder __instance)
+        {
+			foreach(Map map in Find.Maps)
+            {
+				if (map.GetComponent<ShipMapComp>()?.Consciousness.Count > 0)
+					__instance.gameEnding = false;
+            }
+        }
+    }
 
 	/*[HarmonyPatch(typeof(ActiveDropPod),"PodOpen")]
 	public static class ActivePodFix{
@@ -6115,34 +6163,6 @@ namespace SaveOurShip2
 			return true;
 		}
 	}
-
-	[HarmonyPatch(typeof(ShipLandingArea), "RecalculateBlockingThing")]
-	public static class ShipLandingAreaUnderShipRoof
-	{
-		public static bool Prefix(Map ___map, CellRect ___rect, ref bool ___blockedByRoof, ref Thing ___firstBlockingThing)
-		{
-			___blockedByRoof = false;
-			foreach (IntVec3 c in ___rect)
-			{
-				if (c.Roofed(___map) && ___map.roofGrid.RoofAt(c) == ResourceBank.RoofDefOf.RoofShip)
-				{
-					List<Thing> thingList = c.GetThingList(___map);
-					for (int i = 0; i < thingList.Count; i++)
-					{
-						if ((!(thingList[i] is Pawn) && (thingList[i].def.Fillage != FillCategory.None || thingList[i].def.IsEdifice() || thingList[i] is Skyfaller)) && thingList[i].def != ResourceBank.ThingDefOf.ShipShuttleBay && thingList[i].def != ResourceBank.ThingDefOf.ShipShuttleBayLarge && !(thingList[i].TryGetComp<CompShipCachePart>()?.Props.isPlating ?? false))
-						{
-							___firstBlockingThing = thingList[i];
-							return false;
-						}
-					}
-				}
-				else
-					return true;
-			}
-			___firstBlockingThing = null;
-			return false;
-		}
-	}                                                                                                      
 
 	[HarmonyPatch(typeof(Trigger_UrgentlyHungry), "ActivateOn")]
 	public static class MechsDontEat

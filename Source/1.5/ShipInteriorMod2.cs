@@ -130,7 +130,7 @@ namespace SaveOurShip2
 		{
 			base.GetSettings<ModSettings_SoS>();
 		}
-		public const string SOS2version = "SteamV2.7.1";
+		public const string SOS2version = "SteamV2.7.2unstable";
 		public const int SOS2ReqCurrentMinor = 5;
 		public const int SOS2ReqCurrentBuild = 4062;
 
@@ -370,7 +370,6 @@ namespace SaveOurShip2
 			};
 			allowedToObserve = new string[]
 			{
-				"Settlement",
 				"MoonPillarSite",
 				"TribalPillarSite",
 				"ShipEngineImpactSite",
@@ -3070,14 +3069,15 @@ namespace SaveOurShip2
 			}
 			return false;
 		}
-		
-		//shuttles //td could vehiclepawn be extended?
-		public static bool CanLaunchUnderRoof(VehiclePawn __instance)
-		{
-			var bay = __instance.Position.GetThingList(__instance.Map).Where(t => t.TryGetComp<CompShipBay>() != null).FirstOrDefault();
-			return bay != null && bay.TryGetComp<CompShipBay>().CanLaunchShuttle(__instance);
-		}
-		public static bool IsShuttle(VehiclePawn vehicle)
+
+        //shuttles //td could vehiclepawn be extended?
+        //parameters map and cell was added to allow RimNauts 2 to patch for custom roof
+        public static bool CanLaunchUnderRoof(Map map, IntVec3 cell, VehiclePawn vehiclePawn)
+        {
+            var bay = cell.GetThingList(map).Where(t => t.TryGetComp<CompShipBay>() != null).FirstOrDefault();
+            return bay != null && bay.TryGetComp<CompShipBay>().CanLaunchShuttle(vehiclePawn);
+        }
+        public static bool IsShuttle(VehiclePawn vehicle)
 		{
 			return vehicle.CompVehicleLauncher != null && vehicle.CompVehicleLauncher.SpaceFlight;
 		}

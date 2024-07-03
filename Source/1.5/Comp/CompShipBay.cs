@@ -140,7 +140,7 @@ namespace SaveOurShip2
 		public override void PostDraw()
 		{
 			base.PostDraw();
-			if ((Find.PlaySettings.showRoofOverlay || parent.GetRoom().Cells.Any(c => c.Fogged(parent.Map))) && parent.Position.Roofed(parent.Map))
+			if ((Find.PlaySettings.showRoofOverlay || parent.GetRoom() != null && parent.GetRoom().Cells.Any(c => c.Fogged(parent.Map))) && parent.Position.Roofed(parent.Map))
 			{
 				//roofedGraphic.Draw(new Vector3(parent.DrawPos.x, Altitudes.AltitudeFor(AltitudeLayer.MoteOverhead), parent.DrawPos.z), parent.Rotation, parent);
 
@@ -178,7 +178,7 @@ namespace SaveOurShip2
 					ReCacheDockedShuttles();
 				foreach (CompFueledTravel comp in dockedShuttles)
 				{
-					if (compRefuelable.fuel > 0 && comp.FuelPercentOfTarget < 1)
+					if (compRefuelable.fuel > 0 && comp.FuelPercentOfTarget < 1 && !comp.Vehicle.ignition.Drafted)
 					{
 						comp.Refuel(1);
 						compRefuelable.ConsumeFuel(1);
