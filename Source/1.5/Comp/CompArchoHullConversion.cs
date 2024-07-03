@@ -95,6 +95,17 @@ namespace SaveOurShip2
 						replacement.TryGetComp<CompAttachBase>().attachments.AddRange(new List<AttachableThing>(attachComp.attachments));
 						t.TryGetComp<CompAttachBase>().attachments.Clear();
 					}*/
+					CompTempControl tempComp = t.TryGetComp<CompTempControl>();
+                    if (tempComp != null) // ShipInside_PassiveVent or ShipInside_PassiveVentMechanoid atm, maintain temp and "use power" 
+                    {
+						replacement.TryGetComp<CompTempControl>().TargetTemperature = tempComp.TargetTemperature;
+                        ((Building_ShipVent)replacement).heatWithPower = ((Building_ShipVent)t).heatWithPower;
+					}
+					if (t.def.defName == "ShipAirlock" || t.def.defName == "ShipAirlockMech") //maintain "hold open"
+					{
+                        ((Building_ShipAirlock)replacement).holdOpenInt = ((Building_ShipAirlock)t).holdOpenInt;
+						
+					}
 					int shipIndex = mapComp.ShipIndexOnVec(parent.Position);
 					if (shipIndex > 0)
 					{
