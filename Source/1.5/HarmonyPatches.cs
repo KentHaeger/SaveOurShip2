@@ -4502,7 +4502,13 @@ namespace SaveOurShip2
     {
 		public static void Postfix(ref string disableReason, CompVehicleLauncher __instance, ref bool __result)
         {
-			if (disableReason == Translator.Translate("CommandLaunchGroupFailUnderRoof") && ShipInteriorMod2.CanLaunchUnderRoof((VehiclePawn)__instance.parent))
+            if (disableReason != Translator.Translate("CommandLaunchGroupFailUnderRoof")) return;
+
+            VehiclePawn vehiclePawn = (VehiclePawn) __instance.parent;
+            Map map = vehiclePawn.Map;
+            IntVec3 cell = vehiclePawn.Position;
+
+            if (ShipInteriorMod2.CanLaunchUnderRoof(map, cell, vehiclePawn))
             {
 				__result = true;
 				disableReason = null;
@@ -4517,8 +4523,14 @@ namespace SaveOurShip2
 		{
 			if(__result==false)
 			{
-				if (__instance.vehicle.Spawned && ShipInteriorMod2.CanLaunchUnderRoof(__instance.vehicle))
-					__result = true;
+                if (!__instance.vehicle.Spawned) return;
+
+                VehiclePawn vehiclePawn = __instance.vehicle;
+                Map map = vehiclePawn.Map;
+                IntVec3 cell = vehiclePawn.Position;
+
+                if (ShipInteriorMod2.CanLaunchUnderRoof(map, cell, vehiclePawn))
+                    __result = true;
 			}
 		}
 	}
@@ -4560,7 +4572,7 @@ namespace SaveOurShip2
 				__result = PositionState.Valid; //bays are always valid
 				return;
 			}
-			else if (occupiedRect.Any(v => v.Roofed(map)) && ShipInteriorMod2.IsShuttle(__instance.vehicle))
+			else if (occupiedRect.Any(v => Ext_Vehicles.IsRoofed(v, map)) && ShipInteriorMod2.IsShuttle(__instance.vehicle))
 			{
 				__result = PositionState.Invalid; //roof is not (check due to our shuttles being able to roofpunch)
 				return;
