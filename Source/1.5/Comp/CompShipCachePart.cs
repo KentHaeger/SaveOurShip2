@@ -102,6 +102,7 @@ namespace SaveOurShip2
 			base.PostSpawnSetup(respawningAfterLoad);
 			map = parent.Map;
 			mapComp = map.GetComponent<ShipMapComp>();
+			mapComp.breathableZoneDirty = true;
 			fac = parent.Faction;
 			cellsUnder = parent.OccupiedRect().ToHashSet();
 
@@ -317,6 +318,8 @@ namespace SaveOurShip2
 			}
 			if (areaDestroyed.Any())
 				ship.CheckForDetach(areaDestroyed);
+
+			mapComp.breathableZoneDirty = true;
 		}
 		public override void PostDeSpawn(Map map) //proper parts only - terrain, roof removal, foam replacers
 		{

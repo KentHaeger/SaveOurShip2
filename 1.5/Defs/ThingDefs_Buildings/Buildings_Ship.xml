@@ -1568,6 +1568,7 @@
 			<WorkToBuild>16000</WorkToBuild>
 			<MaxHitPoints>150</MaxHitPoints>
 			<Flammability>0</Flammability>
+			<Mass>250</Mass>
 		</statBases>
 		<tickerType>Normal</tickerType>
 		<description>A computer core capable of housing a superhumanlike AI who can pilot your ship, accurately fire its weapons, or guide it on interstellar journeys. Includes a mechanite breeding tank which allows the AI to manifest a formgel avatar.</description>

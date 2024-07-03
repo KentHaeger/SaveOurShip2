@@ -38,7 +38,10 @@ namespace SaveOurShip2
 
 		public int[] grid;
 		public bool heatGridDirty;
+		public bool breathableZoneDirty;
 		public bool loaded = false;
+
+		Area_Allowed breathableZone = null;
 
 		public ShipMapComp(Map map) : base(map)
 		{
@@ -54,7 +57,7 @@ namespace SaveOurShip2
 		public override void MapComponentUpdate()
 		{
 			base.MapComponentUpdate();
-			if (!heatGridDirty || (Find.TickManager.TicksGame % 60 != 0 && loaded))
+			if ((!heatGridDirty && !breathableZoneDirty) || (Find.TickManager.TicksGame % 60 != 0 && loaded))
 			{
 				return;
 			}
@@ -86,9 +89,31 @@ namespace SaveOurShip2
 			}
 			cachedNets = list;
 
+			if(map.IsSpace())
+            {
+				breathableZone = map.areaManager.AllAreas.FirstOrDefault(area => area.Label == "SoSBreathable".Translate()) as Area_Allowed;
+				if (breathableZone == null)
+				{
+					Log.Message("[SoS2] Creating breathable zone");
+					map.areaManager.TryMakeNewAllowed(out breathableZone);
+					breathableZone.labelInt = "SoSBreathable".Translate();
+				}
+				else
+					breathableZone.innerGrid.Clear();
+				foreach(SpaceShipCache ship in shipsOnMap.Values)
+                {
+					foreach(IntVec3 vec in ship.Area)
+                    {
+						if (VecHasLS(vec) && !ShipInteriorMod2.ExposedToOutside(vec.GetRoom(map)))
+							breathableZone.innerGrid.Set(vec, true);
+                    }
+                }
+            }
+
 			base.map.mapDrawer.WholeMapChanged(MapMeshFlagDefOf.Buildings);
 			base.map.mapDrawer.WholeMapChanged(MapMeshFlagDefOf.Things);
 			heatGridDirty = false;
+			breathableZoneDirty = false;
 			loaded = true;
 		}
 		void AccumulateToNetNew(HashSet<CompShipHeat> compBatch, ShipHeatNet net)
@@ -383,7 +408,7 @@ namespace SaveOurShip2
 		public List<CompShipHeatShield> Shields = new List<CompShipHeatShield>(); //workjob, hit detect
 		public List<Building_ShipCloakingDevice> Cloaks = new List<Building_ShipCloakingDevice>(); //td get this into shipcache?
 		public List<Building_ShipTurretTorpedo> TorpedoTubes = new List<Building_ShipTurretTorpedo>(); //workjob
-		public List<CompBuildingConsciousness> Spores = new List<CompBuildingConsciousness>(); //workjob
+		public List<CompBuildingConsciousness> Consciousness = new List<CompBuildingConsciousness>();
 		public List<CompShipBay> Bays = new List<CompShipBay>(); //landing checks
 		public HashSet<IntVec3> MapExtenderCells = new HashSet<IntVec3>(); //extender EVA checks
 		public List<CompEngineTrail> MaxSalvageWeightOnMap(out int maxMass, out float fuel) //for moving/stabilizing wrecks
@@ -1995,7 +2020,7 @@ namespace SaveOurShip2
 							MoveToMap = PrevMap;
 					}
 
-					if (MoveToMap != null && ShipInteriorMod2.CanShipLandOnMap(map, MoveToMap)) //ground map exists and has room
+					if (MoveToMap != null) //ground map exists
 					{
 						ShipInteriorMod2.MoveShip(ShipsOnMap.Values.First().Core, MoveToMap, MoveToVec);
 					}
@@ -2273,6 +2298,8 @@ namespace SaveOurShip2
 			float enginePower = float.MaxValue;
 			foreach (SpaceShipCache ship in ShipsOnMap.Values)
 			{
+				if (ship.BuildingCount < 5)
+					continue;
 				if (!ship.CanMove())
 					return 0;
 				float currPower = ship.ThrustToWeight();
@@ -2694,7 +2721,21 @@ namespace SaveOurShip2
 			if (!ModSettings_SoS.shipMapPhysics) //Default fallback, find landing spot next to ship's outer rooms
 			{
 				var result = IntVec3.Invalid;
-				CellFinder.TryFindRandomCellNear(v, map, 9, (IntVec3 cell) => { return cell.Standable(map) && !map.roofGrid.Roofed(cell); }, out result);
+				IntVec2 shuttleSize = mission.shuttle.def.Size;
+				CellFinder.TryFindRandomCellNear(v, map, 15, (IntVec3 cell) => { 
+					if (!cell.Standable(map) || map.roofGrid.Roofed(cell))
+						return false; 
+					for(int i = -shuttleSize.x / 2; i < shuttleSize.x /2; i++)
+                    {
+						for (int j = -shuttleSize.z / 2; j < shuttleSize.z / 2; j++)
+                        {
+							IntVec3 adj = v + new IntVec3(i, 0, j);
+							if (!adj.Standable(map) || map.roofGrid.Roofed(adj))
+								return false;
+                        }
+                    }
+					return true;
+				}, out result);
 				if (result != IntVec3.Invalid)
 					return result;
 			}

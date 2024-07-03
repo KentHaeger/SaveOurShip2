@@ -3252,19 +3252,14 @@ namespace SaveOurShip2
 	{
 		public static void Postfix(JobDriver_Meditate __instance)
 		{
-			int num = GenRadial.NumCellsInRadius(MeditationUtility.FocusObjectSearchRadius);
-			for (int i = 0; i < num; i++)
-			{
-				IntVec3 c = __instance.pawn.Position + GenRadial.RadialPattern[i];
-				if (c.InBounds(__instance.pawn.Map))
-				{
-					Building_ArchotechSpore spore = c.GetFirstThing<Building_ArchotechSpore>(__instance.pawn.Map);
-					if (spore != null)
-					{
-						spore.MeditationTick();
-					}
-				}
-			}
+			foreach(CompBuildingConsciousness consc in __instance.pawn.Map.GetComponent<ShipMapComp>().Consciousness)
+            {
+				Building_ArchotechSpore spore = consc.parent as Building_ArchotechSpore;
+				if(spore != null && __instance.pawn.Position.DistanceTo(spore.Position) <= MeditationUtility.FocusObjectSearchRadius)
+                {
+					spore.MeditationTick();
+                }
+            }
 		}
 	}
 
@@ -4764,7 +4759,7 @@ namespace SaveOurShip2
 				ShipMapComp comp = map.GetComponent<ShipMapComp>();
 				if (comp != null)
 				{
-					foreach (CompBuildingConsciousness sporeConsc in comp.Spores)
+					foreach (CompBuildingConsciousness sporeConsc in comp.Consciousness)
 					{
 						Building_ArchotechSpore spore = sporeConsc.parent as Building_ArchotechSpore;
 						if (spore == null || spore.linkedPawns == null)
@@ -4792,7 +4787,7 @@ namespace SaveOurShip2
 					ShipMapComp comp = map.GetComponent<ShipMapComp>();
 					if (comp != null)
 					{
-						foreach (CompBuildingConsciousness sporeConsc in comp.Spores)
+						foreach (CompBuildingConsciousness sporeConsc in comp.Consciousness)
 						{
 							Building_ArchotechSpore spore = sporeConsc.parent as Building_ArchotechSpore;
 							if (spore == null || spore.linkedPawns == null)
@@ -5045,6 +5040,19 @@ namespace SaveOurShip2
             }
 		}
 	}
+
+	[HarmonyPatch(typeof(GameEnder), "CheckOrUpdateGameOver")]
+	public static class BuildingsArePeopleToo
+    {
+		public static void Postfix(GameEnder __instance)
+        {
+			foreach(Map map in Find.Maps)
+            {
+				if (map.GetComponent<ShipMapComp>()?.Consciousness.Count > 0)
+					__instance.gameEnding = false;
+            }
+        }
+    }
 
 	/*[HarmonyPatch(typeof(ActiveDropPod),"PodOpen")]
 	public static class ActivePodFix{
