@@ -1760,6 +1760,11 @@
 		<designationHotKey>Misc5</designationHotKey>
 		<constructionSkillPrerequisite>8</constructionSkillPrerequisite>
 		<rotatable>false</rotatable>
+        <modExtensions>
+            <li Class = "Vehicles.CustomCostDefModExtension">
+                <cost>10000</cost>
+            </li>
+        </modExtensions>
 	</ThingDef>
 	<ThingDef ParentName="BuildingBase">
 		<defName>Ship_LifeSupport_Small</defName>
@@ -1814,6 +1819,11 @@
 		<designationHotKey>Misc5</designationHotKey>
 		<constructionSkillPrerequisite>8</constructionSkillPrerequisite>
 		<rotatable>false</rotatable>
+        <modExtensions>
+            <li Class = "Vehicles.CustomCostDefModExtension">
+                <cost>10000</cost>
+            </li>
+        </modExtensions>
 	</ThingDef>
 	<!-- power -->
 	<DesignatorDropdownGroupDef>
@@ -1940,6 +1950,11 @@
 		<researchPrerequisites>
 			<li>ShipCapacitor</li>
 		</researchPrerequisites>
+        <modExtensions>
+            <li Class = "Vehicles.CustomCostDefModExtension">
+                <cost>10000</cost>
+            </li>
+        </modExtensions>
 	</ThingDef>
 	<DesignatorDropdownGroupDef>
 		<defName>Ship_Reactors</defName>
@@ -2033,6 +2048,11 @@
 		<staticSunShadowHeight>1.0</staticSunShadowHeight>
 		<designationHotKey>Misc4</designationHotKey>
 		<constructionSkillPrerequisite>12</constructionSkillPrerequisite>
+        <modExtensions>
+            <li Class = "Vehicles.CustomCostDefModExtension">
+                <cost>10000</cost>
+            </li>
+        </modExtensions>
 	</ThingDef>
 	<ThingDef ParentName="BuildingBase">
 		<defName>Ship_Reactor_Small</defName>
@@ -2123,6 +2143,11 @@
 		<staticSunShadowHeight>1.0</staticSunShadowHeight>
 		<designationHotKey>Misc4</designationHotKey>
 		<constructionSkillPrerequisite>12</constructionSkillPrerequisite>
+        <modExtensions>
+            <li Class = "Vehicles.CustomCostDefModExtension">
+                <cost>10000</cost>
+            </li>
+        </modExtensions>
 	</ThingDef>
 	<!-- bays -->
 	<DesignatorDropdownGroupDef>
@@ -2454,6 +2479,11 @@
 		</researchPrerequisites>
 		<designationHotKey>Misc1</designationHotKey>
 		<size>(3,3)</size>
+        <modExtensions>
+            <li Class = "Vehicles.CustomCostDefModExtension">
+                <cost>10000</cost>
+            </li>
+        </modExtensions>
 	</ThingDef>
 	<!-- crypto -->
 	<DesignatorDropdownGroupDef>
@@ -2804,6 +2834,11 @@
 		</costList>
 		<terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
 		<constructionSkillPrerequisite>8</constructionSkillPrerequisite>
+        <modExtensions>
+            <li Class = "Vehicles.CustomCostDefModExtension">
+                <cost>10000</cost>
+            </li>
+        </modExtensions>
 	</ThingDef>
 	<!-- foam -->
 	<ThingDef ParentName="BuildingBase">
