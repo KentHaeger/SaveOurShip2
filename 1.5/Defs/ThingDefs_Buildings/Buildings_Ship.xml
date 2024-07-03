@@ -1321,6 +1321,7 @@
 		<altitudeLayer>Building</altitudeLayer>
 		<hasInteractionCell>True</hasInteractionCell>
 		<interactionCellOffset>(0,0,1)</interactionCellOffset>
+		<interactionCellIconReverse>true</interactionCellIconReverse>
 		<stealable>false</stealable>
 		<size>(3,1)</size>
 		<pathCost>30</pathCost>
@@ -1387,6 +1388,7 @@
 		<altitudeLayer>Building</altitudeLayer>
 		<hasInteractionCell>True</hasInteractionCell>
 		<interactionCellOffset>(0,0,1)</interactionCellOffset>
+		<interactionCellIconReverse>true</interactionCellIconReverse>
 		<stealable>false</stealable>
 		<size>(3,1)</size>
 		<pathCost>30</pathCost>
@@ -1453,6 +1455,7 @@
 		<altitudeLayer>Building</altitudeLayer>
 		<hasInteractionCell>True</hasInteractionCell>
 		<interactionCellOffset>(0,0,1)</interactionCellOffset>
+		<interactionCellIconReverse>true</interactionCellIconReverse>
 		<stealable>false</stealable>
 		<size>(3,1)</size>
 		<pathCost>30</pathCost>
