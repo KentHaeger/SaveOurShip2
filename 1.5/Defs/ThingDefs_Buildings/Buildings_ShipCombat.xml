@@ -765,7 +765,7 @@
 		<defName>ShipTurret_ACII</defName>
 		<label>large cannon turret</label>
 		<designatorDropdown>ShipTurrets_AC</designatorDropdown>
-		<description>A large turret that rapidly accelerates uranium slugs. Requires ammunition, but costs zero energy and very little heat to fire. Only useful at close range. Capable of ship ground defense.\n\nCan be safely placed in rooms as it sticks out on top of the ship.\nMust be connected to a pilot/tactical console or AI core via the heat network.\nRequires sufficient stored power and heat capacity to function.</description>
+		<description>A large turret that rapidly accelerates uranium slugs. Requires ammunition, but costs zero energy and very little heat to fire. Only useful at close range.\n\nCan be safely placed in rooms as it sticks out on top of the ship.\nMust be connected to a pilot/tactical console or AI core via the heat network.\nRequires sufficient stored power and heat capacity to function.</description>
 		<graphicData>
 			<texPath>Things/Building/Ship/HardpointYellow</texPath>
 			<drawSize>(3,3)</drawSize>

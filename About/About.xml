@@ -48,7 +48,6 @@ OG Testing Squad: Buns Buns Cat, Phsarjk, i am has yes, Fuji, Reviire, Ian, Gene
 		<li>oskarpotocki.vanillavehiclesexpandedtier3</li>
 	</loadAfter>
 	<incompatibleWith>
-		<li>ceteam.combatextended</li>
 		<li>rwmt.multiplayer</li>
 		<li>automatic.gunplay</li>
 		<li>mlie.yayoscombat3</li>
