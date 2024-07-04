@@ -856,8 +856,7 @@ namespace SaveOurShip2
 			}
 			else //using player ship combat rating
 			{
-				Difficulty = (float)ModSettings_SoS.difficultySoS;
-				CR = MapThreat() * Difficulty;
+				CR = MapThreat() * (float)ModSettings_SoS.difficultySoS;
 				if (CR < 30) //minimum rating
 					CR = 30;
 				else //reduce difficulty early or at low rating
@@ -971,6 +970,7 @@ namespace SaveOurShip2
 			mp.Theta = theta;
 			mp.Phi = phi;
 			var newMapComp = newMap.GetComponent<ShipMapComp>();
+			newMapComp.Difficulty = (float)ModSettings_SoS.difficultySoS;
 			newMapComp.ShipMapAI = ShipAI.normal;
 			if (passingShip is DerelictShip d)
 			{
