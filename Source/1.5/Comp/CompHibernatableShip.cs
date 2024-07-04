@@ -133,6 +133,8 @@ namespace SaveOurShip2
 				discharge.defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.CommandShipStartupDesc");
 				discharge.hotKey = KeyBindingDefOf.Misc1;
 				discharge.icon = ContentFinder<Texture2D>.Get("UI/Commands/DesirePower", true);
+				discharge.disabled = parent.Faction != Faction.OfPlayer;
+				discharge.disabledReason = TranslatorFormattedStringExtensions.Translate("SoS.CommandShipStartupDisableReason");
 				gizmos.Add(discharge);
 			}
 			return gizmos;
