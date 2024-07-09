@@ -74,7 +74,7 @@ namespace SaveOurShip2
 
 			Scribe_Values.Look(ref easyMode, "easyMode", false);
 			//Scribe_Values.Look(ref useVacuumPathfinding, "useVacuumPathfinding", true);
-			Scribe_Values.Look(ref renderPlanet, "renderPlanet", false);
+			Scribe_Values.Look(ref renderPlanet, "renderPlanet", true);
 			Scribe_Values.Look(ref useSplashScreen, "useSplashScreen", true);
 			Scribe_Values.Look(ref persistShipUI, "persistShipUI", false);
 			Scribe_Values.Look(ref archoRemove, "archoRemove", true);
@@ -96,7 +96,7 @@ namespace SaveOurShip2
 		public static bool
 			easyMode = false,
 			//useVacuumPathfinding = true,
-			renderPlanet = false,
+			renderPlanet = true,
 			useSplashScreen = true,
 			persistShipUI = false,
 			archoRemove = true,

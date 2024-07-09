@@ -636,11 +636,6 @@ namespace SaveOurShip2
 			camera.aspect = num;
 			camera.Render();
 
-			RenderTexture.active = ResourceBank.target;
-			ResourceBank.virtualPhoto.ReadPixels(new Rect(0, 0, 2048, 2048), 0, 0);
-			ResourceBank.virtualPhoto.Apply();
-			RenderTexture.active = null;
-
 			camera.targetTexture = oldTexture;
 			WorldCameraManager.WorldSkyboxCamera.targetTexture = oldSkyboxTexture;
 			worldRender.wantedMode = WorldRenderMode.None;

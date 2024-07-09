@@ -41,6 +41,10 @@ namespace SaveOurShip2
 			shipBarNeutral = GraphicDatabase.Get(typeof(Graphic_Single), "UI/Map_Icon_Neutral",
 			ShaderDatabase.Cutout, new Vector2(1, 1), Color.white, Color.white);
 
+			PlanetMaterial.mainTexture = target;
+			PlanetMaterial.color = Color.white;
+			PlanetMaterial.SetColor(ShaderPropertyIDs.ColorTwo, Color.white);
+
 		}
 		public static Graphic shipZeroEnemy;
 		public static Graphic shipOneEnemy;
@@ -62,9 +66,8 @@ namespace SaveOurShip2
 		public static Texture2D HeatTex = SolidColorMaterials.NewSolidColorTexture(new Color(0.5f, 0.1f, 0.1f));
 		public static Texture2D DepletionTex = SolidColorMaterials.NewSolidColorTexture(new Color(0.37f, 0.37f, 0.37f));
 		public static Texture2D Splash = ContentFinder<Texture2D>.Get("SplashScreen");
-		public static Texture2D virtualPhoto = new Texture2D(2048, 2048, TextureFormat.RGB24, false);
 		public static RenderTexture target = new RenderTexture(2048, 2048, 16);
-		public static Material PlanetMaterial = MaterialPool.MatFrom(virtualPhoto);
+		public static Material PlanetMaterial = new Material(ShaderDatabase.Cutout);
 
 
 		[DefOf]
