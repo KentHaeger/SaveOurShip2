@@ -715,9 +715,9 @@ namespace SaveOurShip2
 			{
 				if (t is Building b && b.def.CanHaveFaction && b.Faction != Faction.OfPlayer)
 					buildings.Add(b);
-				else if (t is VehiclePawn p)
+				else if (t is VehiclePawn p && p.Faction != Faction.OfPlayer)
 					shuttles.Add(p);
-				else if (t is Pawn pawn && pawn.IsNonMutantAnimal)
+				else if (t is Pawn pawn && pawn.IsNonMutantAnimal && pawn.Faction != Faction.OfPlayer)
 					animals.Add(pawn);
 				else if (t is DetachedShipPart)
 					things.Add(t);
