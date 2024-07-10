@@ -4765,6 +4765,19 @@ namespace SaveOurShip2
 		}
 	}
 
+	// Temporary patch preventing losing control of player pawn that eneters enemy shuttle
+	[HarmonyPatch(typeof(VehiclePawn), "Notify_Boarded")]
+	public static class VehicleBoarded
+	{
+		public static void Postfix(VehiclePawn __instance, Pawn pawnToBoard, ref bool __result)
+		{
+			if (pawnToBoard.Faction == Faction.OfPlayer && __instance.Faction != Faction.OfPlayer && __result)
+			{
+				__instance.SetFaction(Faction.OfPlayer);
+			}
+		}
+	}
+
 	[HarmonyPatch(typeof(Corpse), "PostCorpseDestroy")]
 	public static class PreserveSoul
     {
