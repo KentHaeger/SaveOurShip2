@@ -197,7 +197,10 @@ namespace SaveOurShip2
 				Faction.OfPlayer.def = playerFactionDef;
 				Faction.OfPlayer.Name = playerFactionName;
 				foreach (Ideo ideo in ideosAboardShip)
+				{
 					AddIdeo(ideo);
+					Faction.OfPlayer.ideos.ideosMinor.Add(ideo);
+				}
 				foreach (CustomXenotype xeno in xenosAboardShip)
 					Current.Game.customXenotypeDatabase.customXenotypes.Add(xeno);
 				foreach (CustomXenogerm xeno in customXenogermDatabase.CustomXenogermsForReading)
