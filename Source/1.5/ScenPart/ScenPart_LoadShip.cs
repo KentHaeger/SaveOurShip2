@@ -45,6 +45,7 @@ namespace SaveOurShip2
 		ReadingPolicyDatabase readingPolicyDatabase;
 		RelationshipRecords relationshipRecords;
 		int traveltime;
+		IntVec3 mapSize;
 
 		public override bool CanCoexistWith(ScenPart other)
 		{
@@ -183,6 +184,7 @@ namespace SaveOurShip2
 			Scribe_Collections.Look<CustomXenotype>(ref xenosAboardShip, "xenotypes", LookMode.Deep);
 			Scribe_Deep.Look<CustomXenogermDatabase>(ref customXenogermDatabase, false, "customXenogermDatabase");
 			Scribe_Deep.Look<TaleManager>(ref taleManager, false, "taleManager");
+			Scribe_Values.Look<IntVec3>(ref mapSize, "mapSize");
 			//Scribe_Deep.Look<PlayLog>(ref playLog, false, "playLog");
 			//er Accessing TicksAbs but gameStartAbsTick is not set yet (you most likely want to use GenTicks.TicksAbs instead).
 
@@ -334,10 +336,15 @@ namespace SaveOurShip2
 
 			if (scen.filename != FILENAME_NONE)
 			{
-				Map spaceMap = ShipInteriorMod2.GeneratePlayerShipMap(Find.World.info.initialMapSize); //td size might be an issue
-
 				Scribe.mode = LoadSaveMode.Inactive;
 				Scribe.loader.InitLoading(Path.Combine(Path.Combine(GenFilePaths.SaveDataFolderPath, "SoS2"), scen.filename + ".sos2"));
+
+				Scribe_Values.Look<IntVec3>(ref scen.mapSize, "mapSize");
+				if (scen.mapSize.x < 250 || scen.mapSize.z < 250)
+				{
+					scen.mapSize = new IntVec3(250, 1, 250);
+				}
+				Map spaceMap = ShipInteriorMod2.GeneratePlayerShipMap(scen.mapSize);
 
 				//GenerateShipSpaceMap
 				Scribe_Collections.Look<Thing>(ref scen.toLoad, "shipThings", LookMode.Deep);

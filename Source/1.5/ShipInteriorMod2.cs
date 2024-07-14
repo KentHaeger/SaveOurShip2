@@ -2838,6 +2838,8 @@ namespace SaveOurShip2
 				Scribe_Collections.Look<TerrainDef>(ref terrainDefs, "terrainDefs");
 				Scribe_Collections.Look<IntVec3>(ref roofPos, "roofPos");
 				Scribe_Collections.Look<RoofDef>(ref roofDefs, "roofDefs");
+				IntVec3 mapSize = map.Size;
+				Scribe_Values.Look<IntVec3>(ref mapSize, "mapSize");
 			}));
 
 			Log.Message("Saved ship with building " + core);
