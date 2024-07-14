@@ -2682,7 +2682,7 @@ namespace SaveOurShip2
 					if (pawn.jobs != null)
 					{
 						pawn.jobs.ClearQueuedJobs();
-						pawn.jobs.EndCurrentJob(JobCondition.Incompletable);
+						pawn.jobs.EndCurrentJob(JobCondition.Incompletable, false);
 					}
 					if (pawn is VehiclePawn vehicle)
 						vehicle.inventory.DropAllNearPawn(vehicle.Position);
