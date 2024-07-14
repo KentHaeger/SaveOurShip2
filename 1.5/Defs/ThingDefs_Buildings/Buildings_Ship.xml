@@ -2405,6 +2405,8 @@
 				<compClass>SaveOurShip2.CompShipBaySalvage</compClass>
 				<beam>true</beam>
 				<weight>10000</weight>
+				<borderSize>1</borderSize>
+				<graphicPath>Things/Building/Ship/Salvage_Bay_Roof</graphicPath>
 			</li>
 			<li Class="CompProperties_Power">
 				<compClass>CompPowerTrader</compClass>
