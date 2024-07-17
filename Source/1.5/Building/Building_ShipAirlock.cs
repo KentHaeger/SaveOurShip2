@@ -99,7 +99,7 @@ namespace SaveOurShip2
 		}
 		public bool Outerdoor()
 		{
-			if(Find.TickManager.TicksGame - outerdoorCheckTick < 240)
+			if(Find.TickManager.TicksGame - outerdoorCheckTick < 360)
 			{
 				return isOuterdoorCached;
 			}
