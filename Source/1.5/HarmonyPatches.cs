@@ -2251,18 +2251,20 @@ namespace SaveOurShip2
 				return false;
 			return true;
 		}
-	}
+	} */
 
-	[HarmonyPatch(typeof(ThingOwner), "TryDropAll")] prevents drops but other things not set
+	[HarmonyPatch(typeof(ThingOwner), "TryDropAll")] //prevents drops but other things not set
 	public static class DisableForMoveThingOwner
 	{
 		public static bool Prefix()
 		{
-			if (ShipInteriorMod2.AirlockBugFlag)
+			if (ShipInteriorMod2.MoveShipFlag)
+			{
 				return false;
+			}
 			return true;
 		}
-	}*/
+	}
 
 	[HarmonyPatch(typeof(CompAssignableToPawn), "PostSpawnSetup")] //beds?
 	public static class DisableForMoveAssignableOn
