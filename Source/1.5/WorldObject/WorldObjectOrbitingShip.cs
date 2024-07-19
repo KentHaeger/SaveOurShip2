@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Linq;
 using HarmonyLib;
+using Vehicles;
 
 namespace SaveOurShip2
 {
@@ -402,6 +403,20 @@ namespace SaveOurShip2
 						alsoRemoveWorldObject = false;
 						return false;
 					}
+				}
+
+				// Kill vehicles first, in order to avoid reservation issues when killing both normal pawns and vehicles using one pass
+				List<VehiclePawn> vehiclesToKill = new List<VehiclePawn>();
+				foreach (Thing t in Map.spawnedThings)
+				{
+					if (t is VehiclePawn v)
+					{
+						vehiclesToKill.Add(v);
+					}
+				}
+				foreach (VehiclePawn v in vehiclesToKill)
+				{
+					v.Kill(new DamageInfo(DamageDefOf.Bomb, 99999));
 				}
 
 				//kill off pawns to prevent reappearance, tell player
