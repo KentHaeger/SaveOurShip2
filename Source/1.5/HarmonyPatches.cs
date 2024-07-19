@@ -4765,6 +4765,19 @@ namespace SaveOurShip2
 		}
 	}
 
+	[HarmonyPatch(typeof(CompUpgradeTree), "ValidateListers")]
+	public static class DisableValidateListersOffMap
+	{
+		public static bool Prefix(CompUpgradeTree __instance)
+		{
+			if( __instance.Vehicle.Map == null)
+			{
+				return false;
+			}
+			return true;
+		}
+	}
+
 	[HarmonyPatch(typeof(Corpse), "PostCorpseDestroy")]
 	public static class PreserveSoul
     {
