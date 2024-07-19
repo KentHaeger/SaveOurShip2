@@ -105,6 +105,10 @@ namespace SaveOurShip2
 					breathableZone.innerGrid.Clear();
 				foreach(SpaceShipCache ship in shipsOnMap.Values)
                 {
+					if (ship.IsWreck)
+					{
+						continue;
+					}
 					foreach(IntVec3 vec in ship.Area)
                     {
 						if (VecHasLS(vec) && !ShipInteriorMod2.ExposedToOutside(vec.GetRoom(map)))
