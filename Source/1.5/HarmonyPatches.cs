@@ -2265,6 +2265,20 @@ namespace SaveOurShip2
 			return true;
 		}
 	}
+	
+	// Prevent killing occupant on ripscanner being moved despawn
+	[HarmonyPatch(typeof(Building_SubcoreScanner), "KillOccupant")] // additional 
+	public static class DisableForMoveSubcoreRipscanner
+	{
+		public static bool Prefix(Building_SubcoreScanner __instance)
+		{
+			if (ShipInteriorMod2.MoveShipFlag)
+			{
+				return false;
+			}
+			return true;
+		}
+	}
 
 	[HarmonyPatch(typeof(CompAssignableToPawn), "PostSpawnSetup")] //beds?
 	public static class DisableForMoveAssignableOn
