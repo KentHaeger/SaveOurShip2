@@ -28,7 +28,10 @@ namespace SaveOurShip2
 		protected override void Impact(Thing hitThing, bool blockedByShield = false)
 		{
 			thingHit = hitThing;
-			Position = hitThing.Position;
+			if (thingHit != null)
+			{
+				Position = hitThing.Position;
+			}
 			CompShipHeat heat = base.Launcher.TryGetComp<CompShipHeat>();
 			base.Impact(hitThing);
 			ShipCombatLaserMote obj = (ShipCombatLaserMote)(object)ThingMaker.MakeThing(ResourceBank.ThingDefOf.ShipCombatLaserMote);
