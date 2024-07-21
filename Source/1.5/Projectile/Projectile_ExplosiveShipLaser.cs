@@ -10,28 +10,8 @@ namespace SaveOurShip2
 {
 	class Projectile_ExplosiveShipLaser : Projectile_ExplosiveShip
 	{
-		// Projectile position can be inaccurate by several tiles if it travels several tiles per tick.
-		// To fix that, base.Position is changed as it is used as explosion center and ExactPosition is adjusted too - used in some visual/sound effects
-		// Maybe move this fix up in the class hierarchy after review and testing
-		protected Thing thingHit = null;
-		public override Vector3 ExactPosition
-		{
-			get
-			{
-				if(thingHit != null)
-				{
-					return thingHit.Position.ToVector3();
-				}
-				return base.ExactPosition;
-			}
-		}
 		protected override void Impact(Thing hitThing, bool blockedByShield = false)
 		{
-			thingHit = hitThing;
-			if (thingHit != null)
-			{
-				Position = hitThing.Position;
-			}
 			CompShipHeat heat = base.Launcher.TryGetComp<CompShipHeat>();
 			base.Impact(hitThing);
 			ShipCombatLaserMote obj = (ShipCombatLaserMote)(object)ThingMaker.MakeThing(ResourceBank.ThingDefOf.ShipCombatLaserMote);
