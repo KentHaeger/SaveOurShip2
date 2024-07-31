@@ -1218,6 +1218,7 @@
 					<drawSize>(7,16.5)</drawSize>
 				</graphicData-->
 				<energy>true</energy>
+				<reactionless>true</reactionless>
 				<thrust>1</thrust>
 			</li>
 		</comps>
@@ -1278,6 +1279,7 @@
 					<drawSize>(11,26.5)</drawSize>
 				</graphicData-->
 				<energy>true</energy>
+				<reactionless>true</reactionless>
 				<thrust>4</thrust>
 			</li>
 		</comps>
