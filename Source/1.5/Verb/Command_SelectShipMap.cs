@@ -64,6 +64,10 @@ namespace SaveOurShip2
 							break;
 						if (count > 25)
 							break;
+						if (t is Skyfaller)
+							break;
+						if (t is VehicleSkyfaller)
+							break;
 
 						if (!t.Destroyed && !(t is Building) && t.def != ResourceBank.ThingDefOf.DetachedShipPart && !things.Contains(t) && t.def.BaseMass < 500)
 						{
