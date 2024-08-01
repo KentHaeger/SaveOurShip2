@@ -4765,6 +4765,33 @@ namespace SaveOurShip2
 		}
 	}
 
+	// Additional null checks when loading
+	[HarmonyPatch(typeof(WorldHandling), "AllAerialVehicles_AliveOrDead")]
+	public static class AllAerialVehiclesOnLoad
+	{
+		public static bool Prefix()
+		{
+			if (Scribe.mode != LoadSaveMode.LoadingVars)
+			{
+				return true;
+			}
+			if (VehicleWorldObjectsHolder.Instance?.AerialVehicles == null)
+			{
+				return false;
+			}
+			foreach (AerialVehicleInFlight aerialVehicle in VehicleWorldObjectsHolder.Instance.AerialVehicles)
+			{
+				if (aerialVehicle?.vehicle == null)
+				{
+					continue;
+				}
+				// TODO: cannot replicate origianal addition, as it uses __result argument name. Waitign for Vehicle Framework to at least rename argument there.
+				//__result.AddRange(aerialVehicle.vehicle.AllPawnsAboard);
+			}
+			return false;
+		}
+	}
+
 	[HarmonyPatch(typeof(Corpse), "PostCorpseDestroy")]
 	public static class PreserveSoul
     {
