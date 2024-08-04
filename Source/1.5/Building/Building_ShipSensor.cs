@@ -42,6 +42,10 @@ namespace SaveOurShip2
 						Find.WorldTargeter.BeginTargeting(new Func<GlobalTargetInfo, bool>(ChoseWorldTarget), true, CompCryptoLaunchable.TargeterMouseAttachment);
 					}
 				});
+				if (observedMap != null && observedMap.Destroyed)
+				{
+					observedMap = null;
+				}
 				if (observedMap != null)
 				{
 					giz.Add(new Command_Action
