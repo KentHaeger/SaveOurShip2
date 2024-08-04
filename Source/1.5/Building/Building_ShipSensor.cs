@@ -72,6 +72,7 @@ namespace SaveOurShip2
 					{
 						GetOrGenerateMapUtility.GetOrGenerateMap(target.WorldObject.Tile, target.WorldObject.def);
 						GetOrGenerateMapUtility.UnfogMapFromEdge(observedMap.Map);
+						MapHelper.TryLinkMapToWorldObject(observedMap.Map, target.Tile);
 					}, "Generating map", false, delegate { });
 					return true;
 				}
