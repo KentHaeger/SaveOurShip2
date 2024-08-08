@@ -2682,7 +2682,7 @@ namespace SaveOurShip2
 					if (pawn.jobs != null)
 					{
 						pawn.jobs.ClearQueuedJobs();
-						pawn.jobs.EndCurrentJob(JobCondition.Incompletable);
+						pawn.jobs.EndCurrentJob(JobCondition.Incompletable, false);
 					}
 					if (pawn is VehiclePawn vehicle)
 						vehicle.inventory.DropAllNearPawn(vehicle.Position);
@@ -2838,6 +2838,8 @@ namespace SaveOurShip2
 				Scribe_Collections.Look<TerrainDef>(ref terrainDefs, "terrainDefs");
 				Scribe_Collections.Look<IntVec3>(ref roofPos, "roofPos");
 				Scribe_Collections.Look<RoofDef>(ref roofDefs, "roofDefs");
+				IntVec3 mapSize = map.Size;
+				Scribe_Values.Look<IntVec3>(ref mapSize, "mapSize");
 			}));
 
 			Log.Message("Saved ship with building " + core);
