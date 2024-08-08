@@ -655,6 +655,7 @@
 			<li Class="SaveOurShip2.CompProps_EngineTrail">
 				<thrust>12</thrust>
 				<fuelUse>1</fuelUse>
+				<reactionless>true</reactionless>
 			</li>
 		</comps>
 		<placeWorkers>
