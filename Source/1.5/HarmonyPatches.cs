@@ -1724,38 +1724,38 @@ namespace SaveOurShip2
 		}
 		public static void Postfix(Building root, ref List<Building> __result)
 		{
+			// Vanilla ship function. Called often in Vanilla Achievements Expanded mod.
+			// Because of that it is harmony-patched to use ship cache.
+			// In case someone hooks to building construction event before ship cache handles it,
+			// it is assumed that current building may be not part of the cache yet, so
+			// checking given building and adjacent tiles.
+			__result = new List<Building>();
 			if (root == null || root.Destroyed)
 			{
-				__result = new List<Building>();
 				return;
 			}
 
 			var map = root.Map;
+			var mapComp = map.GetComponent<ShipMapComp>();
 			var containedBuildings = new HashSet<Building>();
 			var cellsTodo = new HashSet<IntVec3>();
-			var cellsDone = new HashSet<IntVec3>();
 
-			cellsTodo.AddRange(GenAdj.CellsOccupiedBy(root));
+			cellsTodo.Add(root.Position);
 			cellsTodo.AddRange(GenAdj.CellsAdjacentCardinal(root));
 
-			while (cellsTodo.Count > 0)
+			HashSet<int> shipIndexes = new HashSet<int>();
+			foreach (IntVec3 cell in cellsTodo)
 			{
-				var current = cellsTodo.First();
-				cellsTodo.Remove(current);
-				cellsDone.Add(current);
-				var containedThings = current.GetThingList(map);
-				if (!containedThings.Any(t => (t as Building)?.def.building.shipPart ?? false))
-					continue;
-
-				foreach (var t in containedThings)
-				{
-					if (t is Building b && containedBuildings.Add(b))
-					{
-						cellsTodo.AddRange(GenAdj.CellsOccupiedBy(b).Concat(GenAdj.CellsAdjacentCardinal(b)).Where(cell => !cellsDone.Contains(cell)));
-					}
-				}
+				shipIndexes.Add(mapComp.ShipIndexOnVec(cell));
 			}
-			__result = containedBuildings.ToList();
+			foreach (int shipIndex in shipIndexes)
+			{
+				if (shipIndex == -1)
+				{
+					continue;
+				}
+				__result.AddRange(mapComp.ShipsOnMap[shipIndex].Buildings.ToList());
+			}
 		}
 	}
 		
