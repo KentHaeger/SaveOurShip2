@@ -215,7 +215,8 @@ namespace SaveOurShip2
 			if (decohere)
 			{
 				HologramRespawnTick = Find.TickManager.TicksGame + 60000;
-				GenExplosion.DoExplosion(Consciousness.Position, Consciousness.Map, 4.9f, FormgelSlime, Consciousness, postExplosionSpawnThingDef: ThingDefOf.Filth_Slime, postExplosionSpawnChance: 1f, postExplosionSpawnThingCount: 1);
+				if (Consciousness.Map != null) // can be in pawn lending quest
+					GenExplosion.DoExplosion(Consciousness.Position, Consciousness.Map, 4.9f, FormgelSlime, Consciousness, postExplosionSpawnThingDef: ThingDefOf.Filth_Slime, postExplosionSpawnChance: 1f, postExplosionSpawnThingCount: 1);
 				if (goneForGood && !Consciousness.Dead)
 					Consciousness.Kill(null);
 			}
