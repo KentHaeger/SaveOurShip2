@@ -4781,6 +4781,19 @@ namespace SaveOurShip2
 		}
 	}
 
+	[HarmonyPatch(typeof(CompVehicleLauncher), "CanLaunchWithCargoCapacity")]
+	public static class RotatedLaunchWarningFix
+	{
+		//Temporary fix clarifying the message on shuttle unable to launch
+		public static void Postfix(CompVehicleLauncher __instance, ref string disableReason)
+		{
+			if( disableReason == "VF_CannotLaunchImmobile".Translate(__instance.Vehicle.LabelShort) && __instance.Vehicle.Angle != 0)
+			{
+				disableReason = "VF_Fix_CannotLaunchRotated".Translate(__instance.Vehicle.LabelShort);
+      }
+    }
+  }
+  
 	[HarmonyPatch(typeof(CompUpgradeTree), "ValidateListers")]
 	public static class DisableValidateListersOffMap
 	{
