@@ -22,6 +22,8 @@ namespace SaveOurShip2
 		public bool hacked = false;
 		public bool failed = false;
 		public bool docked = false;
+		private bool isOuterdoorCached = false;
+		private int outerdoorCheckTick = 0;
 		public Building dockedTo;
 		public Building First;
 		public Building Second;
@@ -97,15 +99,22 @@ namespace SaveOurShip2
 		}
 		public bool Outerdoor()
 		{
+			if(Find.TickManager.TicksGame - outerdoorCheckTick < 360)
+			{
+				return isOuterdoorCached;
+			}
+			outerdoorCheckTick = Find.TickManager.TicksGame;
 			foreach (IntVec3 pos in GenAdj.CellsAdjacentCardinal(this))
 			{
 				Room room = pos.GetRoom(Map);
 				if (room != null && (room.OpenRoofCount > 0 || room.TouchesMapEdge))
 				{
-					return true;
+					isOuterdoorCached = true;
+					break;
 				}
 			}
-			return false;
+			isOuterdoorCached = false;
+			return isOuterdoorCached;
 		}
 		public IntVec3 VacuumSafeSpot()
 		{

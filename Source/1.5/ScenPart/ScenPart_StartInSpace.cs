@@ -176,6 +176,12 @@ namespace SaveOurShip2
 						{
 							spaceMap.areaManager.Home[v] = true;
 						}
+						// Fix to add ship buildings to listerBuildings* lists
+						// This is not allowed as early as during ship creation
+						if (b.Faction == Faction.OfPlayer)
+						{
+							b.SetFaction(Faction.OfPlayer);
+						}
 					}
 				}
 			}

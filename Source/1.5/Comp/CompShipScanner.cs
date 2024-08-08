@@ -165,7 +165,7 @@ namespace SaveOurShip2
 					NavyDef navy = ShipInteriorMod2.ValidRandomNavy(Faction.OfPlayer);
 					if (navy != null)
 					{
-						ship.derelictShip = navy.spaceShipDefs.Where(def => def.spaceSite && def.rarityLevel <= Rand.RangeInclusive(1, 2)).RandomElement();
+						ship.derelictShip = navy.spaceShipDefs.Where(def => def.spaceSite && !def.neverRandom && def.rarityLevel <= Rand.RangeInclusive(1, 2)).RandomElement();
 						ship.shipFaction = Find.FactionManager.AllFactions.Where(f => navy.factionDefs.Contains(f.def)).RandomElement();
 						ship.spaceNavyDef = navy;
 						if (ship.derelictShip.neverWreck)
@@ -176,7 +176,7 @@ namespace SaveOurShip2
 				}
 				if (ship.derelictShip == null)
 				{
-					ship.derelictShip = DefDatabase<ShipDef>.AllDefs.Where(def => def.spaceSite && def.rarityLevel <= rarity).RandomElement();
+					ship.derelictShip = DefDatabase<ShipDef>.AllDefs.Where(def => def.spaceSite && !def.neverRandom && def.rarityLevel <= rarity).RandomElement();
 					ship.shipFaction = Faction.OfAncientsHostile;
 				}
 				Log.Message("SOS2: ".Colorize(Color.cyan) + "Found ship with def: " + ship.derelictShip + " fac: " + ship.shipFaction + " navy: " + ship.spaceNavyDef);

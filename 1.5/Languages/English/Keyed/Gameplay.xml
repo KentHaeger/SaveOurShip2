@@ -392,6 +392,8 @@
 	<SoS.ToggleFieldDesc>Allow pawns and vehicles to pass through this region of permeable hull.</SoS.ToggleFieldDesc>
 	<!-- Temporary fix for VehFW to show fule cost. This key wa missing, also resulting strin is crooped, so got to have the number at the start so it is not lost -->
 	<VF_VehicleFuelCost>{0} Fuel cost</VF_VehicleFuelCost>
+	<!-- Temporary fix for Vehicke Framework message-->
+	<VF_Fix_CannotLaunchRotated>{0} cannot launch because it is rotated.</VF_Fix_CannotLaunchRotated>
 	<SoSRestoreHull>Restore hull</SoSRestoreHull>
 	<SoSRestoreHullDesc>Construct new hull in place of wreckage</SoSRestoreHullDesc>
 	<SoSAlreadyRestoring>Already restoring this area!</SoSAlreadyRestoring>

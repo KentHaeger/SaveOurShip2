@@ -105,6 +105,10 @@ namespace SaveOurShip2
 					breathableZone.innerGrid.Clear();
 				foreach(SpaceShipCache ship in shipsOnMap.Values)
                 {
+					if (ship.IsWreck)
+					{
+						continue;
+					}
 					foreach(IntVec3 vec in ship.Area)
                     {
 						if (VecHasLS(vec) && !ShipInteriorMod2.ExposedToOutside(vec.GetRoom(map)))
@@ -715,9 +719,9 @@ namespace SaveOurShip2
 			{
 				if (t is Building b && b.def.CanHaveFaction && b.Faction != Faction.OfPlayer)
 					buildings.Add(b);
-				else if (t is VehiclePawn p)
+				else if (t is VehiclePawn p && p.Faction != Faction.OfPlayer)
 					shuttles.Add(p);
-				else if (t is Pawn pawn && pawn.IsNonMutantAnimal)
+				else if (t is Pawn pawn && pawn.IsNonMutantAnimal && pawn.Faction != Faction.OfPlayer)
 					animals.Add(pawn);
 				else if (t is DetachedShipPart)
 					things.Add(t);
@@ -856,8 +860,7 @@ namespace SaveOurShip2
 			}
 			else //using player ship combat rating
 			{
-				Difficulty = (float)ModSettings_SoS.difficultySoS;
-				CR = MapThreat() * Difficulty;
+				CR = MapThreat() * (float)ModSettings_SoS.difficultySoS;
 				if (CR < 30) //minimum rating
 					CR = 30;
 				else //reduce difficulty early or at low rating
@@ -971,6 +974,7 @@ namespace SaveOurShip2
 			mp.Theta = theta;
 			mp.Phi = phi;
 			var newMapComp = newMap.GetComponent<ShipMapComp>();
+			newMapComp.Difficulty = (float)ModSettings_SoS.difficultySoS;
 			newMapComp.ShipMapAI = ShipAI.normal;
 			if (passingShip is DerelictShip d)
 			{

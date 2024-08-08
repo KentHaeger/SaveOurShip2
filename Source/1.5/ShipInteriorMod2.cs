@@ -85,7 +85,7 @@ namespace SaveOurShip2
 			Scribe_Values.Look(ref easyMode, "easyMode", false);
 			Scribe_Values.Look(ref shipMapPhysics, "shipMapPhysics", false);
 			//Scribe_Values.Look(ref useVacuumPathfinding, "useVacuumPathfinding", true);
-			Scribe_Values.Look(ref renderPlanet, "renderPlanet", false);
+			Scribe_Values.Look(ref renderPlanet, "renderPlanet", true);
 			Scribe_Values.Look(ref useSplashScreen, "useSplashScreen", true);
 			Scribe_Values.Look(ref persistShipUI, "persistShipUI", false);
 			Scribe_Values.Look(ref archoRemove, "archoRemove", false);
@@ -110,7 +110,7 @@ namespace SaveOurShip2
 			easyMode = false,
 			shipMapPhysics = false,
 			//useVacuumPathfinding = true,
-			renderPlanet = false,
+			renderPlanet = true,
 			useSplashScreen = true,
 			persistShipUI = false,
 			archoRemove = false,
@@ -2682,7 +2682,7 @@ namespace SaveOurShip2
 					if (pawn.jobs != null)
 					{
 						pawn.jobs.ClearQueuedJobs();
-						pawn.jobs.EndCurrentJob(JobCondition.Incompletable);
+						pawn.jobs.EndCurrentJob(JobCondition.Incompletable, false);
 					}
 					if (pawn is VehiclePawn vehicle)
 						vehicle.inventory.DropAllNearPawn(vehicle.Position);
@@ -2838,6 +2838,8 @@ namespace SaveOurShip2
 				Scribe_Collections.Look<TerrainDef>(ref terrainDefs, "terrainDefs");
 				Scribe_Collections.Look<IntVec3>(ref roofPos, "roofPos");
 				Scribe_Collections.Look<RoofDef>(ref roofDefs, "roofDefs");
+				IntVec3 mapSize = map.Size;
+				Scribe_Values.Look<IntVec3>(ref mapSize, "mapSize");
 			}));
 
 			Log.Message("Saved ship with building " + core);
@@ -3260,6 +3262,22 @@ namespace SaveOurShip2
 				}
 			}
 			return sb.ToString();
+		}
+	}
+
+	public class MapHelper
+	{
+		public static void TryLinkMapToWorldObject(Map map, int tile)
+		{
+			// For now, issue was found with Escape Ship map due to that map not being linked to world object
+			// So, fixing onlyy that case for now
+			WorldObject worldObject = Find.WorldObjects.ObjectsAt(tile).Where(t => t is EscapeShip).First();
+			if (worldObject != null && worldObject.Faction != Faction.OfPlayer)
+			{
+				// Link map to Escap ship object sho that it gets "Home" icon and when selected on world map, there is Abadon option 
+				map.info.parent = (MapParent)worldObject;
+				worldObject.SetFaction(Faction.OfPlayer);
+			}
 		}
 	}
 }

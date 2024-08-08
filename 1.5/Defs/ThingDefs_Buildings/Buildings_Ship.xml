@@ -1218,6 +1218,7 @@
 					<drawSize>(7,16.5)</drawSize>
 				</graphicData-->
 				<energy>true</energy>
+				<reactionless>true</reactionless>
 				<thrust>1</thrust>
 			</li>
 		</comps>
@@ -1278,6 +1279,7 @@
 					<drawSize>(11,26.5)</drawSize>
 				</graphicData-->
 				<energy>true</energy>
+				<reactionless>true</reactionless>
 				<thrust>4</thrust>
 			</li>
 		</comps>
@@ -2399,12 +2401,15 @@
 			<ComponentSpacer>12</ComponentSpacer>
 			<SoSEntanglementManifold>1</SoSEntanglementManifold>
 		</costList>
+		<resourcesFractionWhenDeconstructed>1</resourcesFractionWhenDeconstructed>
 		<comps>
 			<li Class="SaveOurShip2.CompProps_ShipCachePart"/>
 			<li Class="SaveOurShip2.CompProps_ShipBay">
 				<compClass>SaveOurShip2.CompShipBaySalvage</compClass>
 				<beam>true</beam>
 				<weight>10000</weight>
+				<borderSize>1</borderSize>
+				<graphicPath>Things/Building/Ship/Salvage_Bay_Roof</graphicPath>
 			</li>
 			<li Class="CompProperties_Power">
 				<compClass>CompPowerTrader</compClass>
