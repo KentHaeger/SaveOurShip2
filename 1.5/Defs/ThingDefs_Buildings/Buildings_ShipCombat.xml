@@ -710,7 +710,7 @@
 			<drawSize>(2,2)</drawSize>
 		</graphicData>
 		<projectile>
-			<explosionRadius>1.1</explosionRadius>
+			<explosionRadius>0.9</explosionRadius>
 			<damageDef>BombACI</damageDef>
 			<speed>100</speed>
 		</projectile>

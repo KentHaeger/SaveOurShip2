@@ -4765,6 +4765,18 @@ namespace SaveOurShip2
 		}
 	}
 
+	[HarmonyPatch(typeof(CompUpgradeTree), "ValidateListers")]
+	public static class DisableValidateListersOffMap
+	{
+		public static bool Prefix(CompUpgradeTree __instance)
+		{
+			if( __instance.Vehicle.Map == null)
+			{
+				return false;
+			}
+			return true;
+    }
+  }
 	// Temporary patch preventing losing control of player pawn that eneters enemy shuttle
 	[HarmonyPatch(typeof(VehiclePawn), "Notify_Boarded")]
 	public static class VehicleBoarded
