@@ -5104,7 +5104,8 @@ namespace SaveOurShip2
 					List<Thing> thingList = c.GetThingList(___map);
 					for (int i = 0; i < thingList.Count; i++)
 					{
-						if ((!(thingList[i] is Pawn && !(thingList[i] is VehiclePawn)) && (thingList[i].def.Fillage != FillCategory.None || thingList[i].def.IsEdifice() || thingList[i] is Skyfaller)) && thingList[i].TryGetComp<CompShipBay>() == null && !(thingList[i].TryGetComp<CompShipCachePart>()?.Props.isPlating ?? false))
+						bool isWallAttachment = (thingList[i] as Building)?.def?.building?.isAttachment ?? false;
+						if ((!(thingList[i] is Pawn && !(thingList[i] is VehiclePawn)) && (thingList[i].def.Fillage != FillCategory.None || thingList[i].def.IsEdifice() || thingList[i] is Skyfaller)) && thingList[i].TryGetComp<CompShipBay>() == null && !(thingList[i].TryGetComp<CompShipCachePart>()?.Props.isPlating ?? false) && !isWallAttachment)
 						{
 							___firstBlockingThing = thingList[i];
 							return false;
