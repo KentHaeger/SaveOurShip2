@@ -172,6 +172,7 @@
       <ComponentSpacer>4</ComponentSpacer>
 	  <AIPersonaCore>1</AIPersonaCore>
     </costList>
+    <resourcesFractionWhenDeconstructed>1</resourcesFractionWhenDeconstructed>
     <statBases>
       <WorkToBuild>80000</WorkToBuild>
       <MaxHitPoints>185</MaxHitPoints>
