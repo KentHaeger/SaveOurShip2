@@ -178,7 +178,7 @@ namespace SaveOurShip2
 					ReCacheDockedShuttles();
 				foreach (CompFueledTravel comp in dockedShuttles)
 				{
-					if (compRefuelable.fuel > 0 && comp.FuelPercentOfTarget < 1)
+					if (compRefuelable.fuel > 0 && comp.FuelPercentOfTarget < 1 && compRefuelable.Props.fuelFilter.Allows(comp.Props.fuelType))
 					{
 						comp.Refuel(1);
 						compRefuelable.ConsumeFuel(1);
@@ -206,7 +206,11 @@ namespace SaveOurShip2
 				if(shuttle!=null)
                 {
 					CompFueledTravel fueledTravel = shuttle.GetComp<CompFueledTravel>();
-					if (fueledTravel != null && fueledTravel.Props.fuelType == ResourceBank.ThingDefOf.ShuttleFuelPods)
+					if(fueledTravel == null)
+					{
+						return;
+					}
+					if (shuttle.def == ResourceBank.ThingDefOf.SoS2_Shuttle_Personal || fueledTravel.Props.fuelType == ResourceBank.ThingDefOf.ShuttleFuelPods)
 						dockedShuttles.Add(fueledTravel);
                 }
             }
