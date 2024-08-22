@@ -600,12 +600,9 @@ namespace SaveOurShip2
 			int rarity = Rand.RangeInclusive(1, 2);
 			Log.Message("Spawning ship from CR: " + CR + " tradeShip: " + tradeShip + " allowNavyExc: " + allowNavyExc + " randomFleet: " + randomFleet + " rarityLevel: " + rarity + " minZ: " + minZ + " maxZ: " + maxZ);
 			List<ShipDef> check = new List<ShipDef>();
-			if (randomFleet)
-			{
-				check = ships.Where(def => ValidShipDef(def, 0.7f * CR, 1.1f * CR, tradeShip, allowNavyExc, randomFleet, rarity, minZ, maxZ)).ToList();
-				if (check.Any())
-					return check.RandomElement();
-			}
+			check = ships.Where(def => ValidShipDef(def, 0.7f * CR, 1.1f * CR, tradeShip, allowNavyExc, randomFleet, rarity, minZ, maxZ)).ToList();
+			if (check.Any())
+				return check.RandomElement();
 			Log.Message("fallback 0");
 			check = ships.Where(def => ValidShipDef(def, 0.5f * CR, 1.3f * CR, tradeShip, allowNavyExc, randomFleet, rarity, minZ, maxZ)).ToList();
 			if (check.Any())
