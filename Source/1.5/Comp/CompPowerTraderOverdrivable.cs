@@ -255,7 +255,7 @@ namespace SaveOurShip2
 			base.PostSpawnSetup(respawningAfterLoad);
 			if (parent.def.Size.x < 3)
 			{
-				// Submods with even tininer reators - sesize exisiting texture to match micro-size
+				// Submods with even tininer reators - resize exisiting texture to match micro-size
 				// Scale relative to small reactor which has size 3
 				float scale = parent.def.Size.x / 3.0f;
 				turbineGraphicMicro = turbineGraphicMini.GetCopy(turbineGraphicMini.drawSize * scale, null);
