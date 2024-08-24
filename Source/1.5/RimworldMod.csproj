@@ -198,6 +198,7 @@
     <Compile Include="Comp\CompPowerPlantSolarShip.cs" />
     <Compile Include="Comp\CompPowerTraderOverdrivable.cs" />
     <Compile Include="Comp\CompRCSThruster.cs" />
+    <Compile Include="Comp\CompRefuelableElectric.cs" />
     <Compile Include="Comp\CompRefuelableOverdrivable.cs" />
     <Compile Include="Comp\CompResearchUnlock.cs" />
     <Compile Include="Comp\CompShipBaySalvage.cs" />
