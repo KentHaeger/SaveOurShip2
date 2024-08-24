@@ -5132,6 +5132,20 @@ namespace SaveOurShip2
         }
     }
 
+	// Electric engine (in Tiny submod) has 2 power comps, so need to disable post spawn setup for one of those
+	[HarmonyPatch(typeof(CompPowerBattery), "PostExposeData")]
+	public static class DoublePowerCompOnElectricEngineFix
+	{
+		public static bool Prefix(CompPower __instance)
+		{
+			if (__instance.parent.def.defName == "Ship_Engine_Electric_Tiny")
+			{
+				return false;
+			}
+			return true;
+		}
+	}
+
 	/*[HarmonyPatch(typeof(ActiveDropPod),"PodOpen")]
 	public static class ActivePodFix{
 		public static bool Prefix (ref ActiveDropPod __instance)
