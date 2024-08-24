@@ -11,10 +11,6 @@ namespace SaveOurShip2
 	class CompRefuelableElectric : CompRefuelable
 	{
 		public CompPowerBattery battery;
-		public override void Initialize(CompProperties props)
-		{
-			base.Initialize(props);
-		}
 		public override void PostSpawnSetup(bool respawningAfterLoad)
 		{
 			battery = parent.GetComp<CompPowerBattery>();
