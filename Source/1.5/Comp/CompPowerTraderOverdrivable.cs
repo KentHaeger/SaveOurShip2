@@ -260,7 +260,7 @@ namespace SaveOurShip2
 				float scale = parent.def.Size.x / 3.0f;
 				turbineGraphicMicro = turbineGraphicMini.GetCopy(turbineGraphicMini.drawSize * scale, null);
 				turbineGraphicMicroOverdrive = turbineGraphicMiniOverdrive.GetCopy(turbineGraphicMiniOverdrive.drawSize * scale, null);
-				turbineGraphicMicroSuperOverdrive = turbineGraphicMiniOverdrive.GetCopy(turbineGraphicMiniOverdrive.drawSize * scale, null);
+				turbineGraphicMicroSuperOverdrive = turbineGraphicMiniSuperOverdrive.GetCopy(turbineGraphicMiniOverdrive.drawSize * scale, null);
 				useMicroGraphics = true;
 			}
 			else if (parent.def.Size.x < 5) //Stupid to hardcode this but it's quicker than adding a whole new CompProperties
