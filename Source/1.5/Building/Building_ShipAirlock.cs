@@ -112,8 +112,8 @@ namespace SaveOurShip2
 					isOuterdoorCached = true;
 					break;
 				}
+				isOuterdoorCached = false;
 			}
-			isOuterdoorCached = false;
 			return isOuterdoorCached;
 		}
 		public IntVec3 VacuumSafeSpot()
