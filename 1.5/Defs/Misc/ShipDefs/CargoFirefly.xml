@@ -8,7 +8,7 @@
 		<sizeX>79</sizeX>
 		<sizeZ>50</sizeZ>
 		<label>Firefly class transport</label>
-		<combatPoints>103</combatPoints>
+		<combatPoints>64</combatPoints>
 		<cargoValue>500</cargoValue>
 		<neverAttacks>True</neverAttacks>
 		<tradeShip>True</tradeShip>

@@ -8,7 +8,7 @@
 		<sizeX>79</sizeX>
 		<sizeZ>50</sizeZ>
 		<label>Armed transport</label>
-		<combatPoints>275</combatPoints>
+		<combatPoints>235</combatPoints>
 		<core>
 			<shapeOrDef>ShipPilotSeatMini</shapeOrDef>
 			<x>6</x>

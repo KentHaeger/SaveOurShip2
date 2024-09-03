@@ -8,7 +8,7 @@
 		<sizeX>107</sizeX>
 		<sizeZ>44</sizeZ>
 		<label>Old destroyer</label>
-		<combatPoints>934</combatPoints>
+		<combatPoints>795</combatPoints>
 		<core>
 			<shapeOrDef>ShipPilotSeatMini</shapeOrDef>
 			<x>51</x>
