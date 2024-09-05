@@ -204,7 +204,6 @@ namespace SaveOurShip2
 			Scribe_Values.Look<int>(ref Heading, "Heading");
 			Scribe_Values.Look<int>(ref BurnTimer, "BurnTimer");
 			Scribe_Values.Look<int>(ref LastAttackTick, "LastShipBattleTick", 0);
-			Scribe_Values.Look<int>(ref LastStarshipBowTick, "LastStarshipBowTick", -StarhipBowTimeout);
 			Scribe_Values.Look<int>(ref LastBountyRaidTick, "LastBountyRaidTicks", 0);
 			Scribe_Collections.Look<Building_ShipAirlock>(ref Docked, "Docked", LookMode.Reference);
 			if (ShipMapState == ShipMapState.inCombat)
@@ -305,8 +304,6 @@ namespace SaveOurShip2
 		public bool attackedTradeship; //target was AI tradeship - notoriety gain
 		public bool callSlowTick = false; //call both slow ticks
 		public int LastAttackTick;
-		public const int StarhipBowTimeout = 1800000;
-		public int LastStarshipBowTick = -StarhipBowTimeout;
 		public int LastBountyRaidTick;
 		private bool shipCombatOrigin = false;
 		public bool ShipCombatOrigin //reset after battle
@@ -2248,7 +2245,18 @@ namespace SaveOurShip2
 			{
 				if (ShipIndexOnVec(p.Position) == -1)
 				{
-					pawns.Add(p);
+					bool pawnOnAirlockFloor = false;
+					foreach(Thing t in p.Position.GetThingList(map))
+					{
+						if( t.def == ResourceBank.ThingDefOf.ShipAirlockBeamTile)
+						{
+							pawnOnAirlockFloor = true;
+						}
+					}
+					if (!pawnOnAirlockFloor)
+					{
+						pawns.Add(p);
+					}
 				}
 			}
 			if (pawns.Any())
