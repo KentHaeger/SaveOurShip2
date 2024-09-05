@@ -968,8 +968,8 @@ namespace SaveOurShip2
 							VehicleDef def = DefDatabase<VehicleDef>.GetNamed(shape.shapeOrDef);
 							VehiclePawn vehicle = VehicleSpawner.GenerateVehicle(def, fac);
 							vehicle.CompFueledTravel?.Refuel(vehicle.CompFueledTravel.FuelCapacity);
-							SpawnShuttleUpgrades(vehicle, shipDef, wreckLevel, passingShip);
 							GenSpawn.Spawn(vehicle, adjPos, map);
+							SpawnShuttleUpgrades(vehicle, shipDef, wreckLevel, passingShip);
 							vehicle.ignition.Drafted = false;
 						}
 					}
