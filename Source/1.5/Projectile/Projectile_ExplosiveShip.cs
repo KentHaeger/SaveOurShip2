@@ -18,6 +18,12 @@ namespace SaveOurShip2
 			// that affects ship weapon projectiles with high speed, but lower explosion radius.
 			// To fix that, base.Position is changed as it is used as explosion center and ExactPosition is adjusted too - used in some visual/sound effects
 
+			// Only apply fix to ship-to-ship weapons, as simplified hit check is used. Just not change things wthin map for now. 
+			if (hitThing != null && Launcher != null && Launcher.Map == hitThing.Map)
+			{
+				base.Impact(hitThing, blockedByShield);
+				return;
+			}
 			// Because this is an issue fix placed where it fits, simply excluding torpedoes so that their
 			// proximity fuse is not affected
 			if (this is Projectile_ExplosiveShipTorpedo)
