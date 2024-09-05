@@ -2245,7 +2245,18 @@ namespace SaveOurShip2
 			{
 				if (ShipIndexOnVec(p.Position) == -1)
 				{
-					pawns.Add(p);
+					bool pawnOnAirlockFloor = false;
+					foreach(Thing t in p.Position.GetThingList(map))
+					{
+						if( t.def == ResourceBank.ThingDefOf.ShipAirlockBeamTile)
+						{
+							pawnOnAirlockFloor = true;
+						}
+					}
+					if (!pawnOnAirlockFloor)
+					{
+						pawns.Add(p);
+					}
 				}
 			}
 			if (pawns.Any())
