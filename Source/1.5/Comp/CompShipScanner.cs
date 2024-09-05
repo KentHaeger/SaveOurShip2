@@ -119,9 +119,11 @@ namespace SaveOurShip2
 
 			if (chance  < 3) //legacy site
 			{
-				bool hasBlackBoxQuest = Find.World.GetComponent<ShipWorldComp>().Unlocks.Contains("BlackBoxShipDefeated") || parent.Map.passingShipManager.passingShips.Any(ship=>ship is DerelictShip derelict && derelict.derelictShip.defName == "StarshipBowDungeon");
-				if (!hasBlackBoxQuest && chance == 1) //blackbox quest
+				ShipWorldComp worldComp = Find.World.GetComponent<ShipWorldComp>();
+				bool hasBlackBoxQuest = worldComp.Unlocks.Contains("BlackBoxShipDefeated") || parent.Map.passingShipManager.passingShips.Any(ship=>ship is DerelictShip derelict && derelict.derelictShip.defName == "StarshipBowDungeon");
+				if (!hasBlackBoxQuest && chance == 1 && Find.TickManager.TicksGame > worldComp.LastStarshipBowTick + ShipWorldComp.StarhipBowTimeout) //blackbox quest
 				{
+					worldComp.LastStarshipBowTick = Find.TickManager.TicksGame;
 					DerelictShip ship = new DerelictShip();
 					ship.wreckLevel = 5;
 					ship.derelictShip = DefDatabase<ShipDef>.GetNamed("StarshipBowDungeon");
