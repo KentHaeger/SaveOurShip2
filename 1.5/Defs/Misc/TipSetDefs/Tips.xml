@@ -34,7 +34,7 @@
 	  <li TKey="SoSTipShuttleIntercept">A shuttle equipped with lasers can be launched on interception missions during ship combat. It will attempt to destroy incoming torpedoes and dogfight enemy shuttlecraft.</li>
 	  <li TKey="SoSTipShuttleStrafe">A shuttle equipped with laser or plasma weaponry can be launched on strafing missions during ship combat. It will fire on the enemy ship but is vulnerable to point-defense.</li>
 	  <li TKey="SoSTipShuttleBombing">A shuttle equipped with torpedo tubes can be launched on bombing missions during ship combat. The shuttle itself will be vulnerable to point-defense, but its torpedoes will not be.</li>
-      <li TKey="SoSTipEngines">If an enemy ship's engines are intact, shuttles will take longer to reach it. This will them expose them to more fire from point-defense weapons.</li>
+      <li TKey="SoSTipEngines">If an enemy ship's engines are intact, shuttles will take longer to reach it. This will leave them exposed to more fire from point-defense weapons.</li>
 
       <!-- Shuttles -->
       <li TKey="SoSTipShuttles">Shuttlecraft come in four sizes. Only the smallest among them is powered by chemfuel; larger cargo shuttles require nuclear fuel.</li>
