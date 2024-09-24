@@ -960,7 +960,17 @@ namespace SaveOurShip2
 				faction.TryAffectGoodwillWith(Faction.OfPlayer, -150);
 
 			//spawn map
-			IntVec3 mapSize = new IntVec3(250, 1, 250);
+			int mapSizeInt = 250;
+			if (shipDef != null)
+			{
+				int shipSize = Math.Max(shipDef.sizeX, shipDef.sizeZ);
+				int adjustedSize = Mathf.FloorToInt((float)(shipSize + 20) / 25) * 25;
+				if (adjustedSize > 250 && adjustedSize <= 500)
+				{
+					mapSizeInt = adjustedSize;
+				}
+			}
+			IntVec3 mapSize = new IntVec3(mapSizeInt, 1, mapSizeInt);
 			if (fleet && CR > 2000 && ModSettings_SoS.enemyMapSize > 250)
 			{
 				int mapX = Math.Max(250, (ModSettings_SoS.enemyMapSize + 100) / 2);
