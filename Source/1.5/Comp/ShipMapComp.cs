@@ -2476,8 +2476,26 @@ namespace SaveOurShip2
 			else
 				OriginMapComp.ShipMapState = ShipMapState.isGraveyard;
 			OriginMapComp.ShipBuildingsOff();
-			OriginMapComp.ShipGraveyard?.Parent.GetComponent<TimedForcedExitShip>()?.StartForceExitAndRemoveMapCountdown(Rand.RangeInclusive(60000, 180000) - burnTimeElapsed);
-			tgtMapComp.ShipGraveyard?.Parent.GetComponent<TimedForcedExitShip>()?.StartForceExitAndRemoveMapCountdown(Rand.RangeInclusive(60000, 180000) - burnTimeElapsed);
+			int originBurnTimeBonus = 0;
+			int targetBurnTimeBonus = 0;
+			if (OriginMapComp.map.Size.x > 300)
+			{
+				originBurnTimeBonus = 180000;
+			}
+			else if (OriginMapComp.map.Size.x > 250)
+			{
+				originBurnTimeBonus = 60000;
+			}
+			if (tgtMap.Size.x > 300)
+			{
+				targetBurnTimeBonus = 180000;
+			}
+			else if (tgtMap.Size.x > 250)
+			{
+				targetBurnTimeBonus = 60000;
+			}
+			OriginMapComp.ShipGraveyard?.Parent.GetComponent<TimedForcedExitShip>()?.StartForceExitAndRemoveMapCountdown(Rand.RangeInclusive(60000, 180000) - burnTimeElapsed + originBurnTimeBonus);
+			tgtMapComp.ShipGraveyard?.Parent.GetComponent<TimedForcedExitShip>()?.StartForceExitAndRemoveMapCountdown(Rand.RangeInclusive(60000, 180000) - burnTimeElapsed + targetBurnTimeBonus);
 			if (loser != ShipCombatOriginMap)
 			{
 				if (fled) //target fled, remove target
