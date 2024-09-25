@@ -963,11 +963,10 @@ namespace SaveOurShip2
 			int mapSizeInt = 250;
 			if (shipDef != null)
 			{
-				int shipSize = Math.Max(shipDef.sizeX, shipDef.sizeZ);
-				int adjustedSize = Mathf.FloorToInt((float)(shipSize + 20) / 25) * 25;
-				if (adjustedSize > 250 && adjustedSize <= 500)
+				int requiredSize = Math.Max(shipDef.sizeX + shipDef.offsetX * 2, shipDef.sizeZ + shipDef.offsetZ * 2);
+				if (requiredSize > 250 && requiredSize <= 500)
 				{
-					mapSizeInt = adjustedSize;
+					mapSizeInt = requiredSize;
 				}
 			}
 			IntVec3 mapSize = new IntVec3(mapSizeInt, 1, mapSizeInt);
