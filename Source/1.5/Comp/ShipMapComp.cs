@@ -2460,6 +2460,28 @@ namespace SaveOurShip2
 					transporter.CancelLoad();
 			}
 		}
+
+		private int BonusBurnTimeForMap(Map map)
+		{
+			int buildingCount = map.listerBuildings.allBuildingsNonColonist.Count + map.listerBuildings.allBuildingsColonist.Count;
+			// If large map is used, but not so many buildings there, does not qualify for longer time before burnup
+			if (buildingCount < 8000)
+			{
+				return 0;
+			}
+			if (map.Size.x > 300)
+			{
+				return 180000;
+			}
+			else if (map.Size.x > 250)
+			{
+				return 60000;
+			}
+			else
+			{
+				return 0;
+			}
+		}
 		public void EndBattle(Map loser, bool fled, bool hack = false, int burnTimeElapsed = 0)
 		{
 			if (loser.GetComponent<ShipMapComp>().ShipMapState != ShipMapState.inCombat)
@@ -2476,26 +2498,8 @@ namespace SaveOurShip2
 			else
 				OriginMapComp.ShipMapState = ShipMapState.isGraveyard;
 			OriginMapComp.ShipBuildingsOff();
-			int originBurnTimeBonus = 0;
-			int targetBurnTimeBonus = 0;
-			if (OriginMapComp.map.Size.x > 300)
-			{
-				originBurnTimeBonus = 180000;
-			}
-			else if (OriginMapComp.map.Size.x > 250)
-			{
-				originBurnTimeBonus = 60000;
-			}
-			if (tgtMap.Size.x > 300)
-			{
-				targetBurnTimeBonus = 180000;
-			}
-			else if (tgtMap.Size.x > 250)
-			{
-				targetBurnTimeBonus = 60000;
-			}
-			OriginMapComp.ShipGraveyard?.Parent.GetComponent<TimedForcedExitShip>()?.StartForceExitAndRemoveMapCountdown(Rand.RangeInclusive(60000, 180000) - burnTimeElapsed + originBurnTimeBonus);
-			tgtMapComp.ShipGraveyard?.Parent.GetComponent<TimedForcedExitShip>()?.StartForceExitAndRemoveMapCountdown(Rand.RangeInclusive(60000, 180000) - burnTimeElapsed + targetBurnTimeBonus);
+			OriginMapComp.ShipGraveyard?.Parent.GetComponent<TimedForcedExitShip>()?.StartForceExitAndRemoveMapCountdown(Rand.RangeInclusive(60000, 180000) - burnTimeElapsed + BonusBurnTimeForMap(OriginMapComp.map));
+			tgtMapComp.ShipGraveyard?.Parent.GetComponent<TimedForcedExitShip>()?.StartForceExitAndRemoveMapCountdown(Rand.RangeInclusive(60000, 180000) - burnTimeElapsed + BonusBurnTimeForMap(tgtMap));
 			if (loser != ShipCombatOriginMap)
 			{
 				if (fled) //target fled, remove target
