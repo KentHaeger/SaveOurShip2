@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <LearningDesireDef>
+    <defName>AmiringSpace</defName>
+    <label>admiring space</label>
+    <description>Space is so beautiful. Many kids admire it and dream of future life among the stars. Requires some kind of telescope.</description>
+    <iconPath>UI/Icons/Learning/Radiotalking</iconPath>
+    <workerClass>SaveOurShip2.LearningGiver_AdmiringSpace</workerClass>
+    <jobDef>AdmiringSpace</jobDef>
+  </LearningDesireDef>
+</Defs>
