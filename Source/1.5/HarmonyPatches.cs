@@ -4918,17 +4918,18 @@ namespace SaveOurShip2
 			if (__instance.Pawn.Map != null && __instance.Pawn.Map.IsSpace())
 			{
 				learningOptions = learningOptions.Where((LearningDesireDef ld) => ld.defName != "NatureRunning" && ld.defName != "Skydreaming").ToList();
-				if (__instance.Pawn.Map.listerBuildings.allBuildingsColonist.Any((Building b) => b.def.defName == "Telescope" || b.def.defName == "TelescopeSpace"))
+				if ((__instance.Pawn.Map.listerBuildings.allBuildingsColonist.Any((Building b) => b.def.defName == "Telescope" || b.def.defName == "TelescopeSpace")) &&
+					!__instance.active.Any((LearningDesireDef ld) => ld.defName == "AdmiringSpace"))
 				{
-					learningOptions.Add(DefDatabase<LearningDesireDef>.AllDefsListForReading.First((LearningDesireDef ld) => ld.defName == "AmiringSpace"));
+					learningOptions.Add(DefDatabase<LearningDesireDef>.AllDefsListForReading.First((LearningDesireDef ld) => ld.defName == "AdmiringSpace"));
 				}
 			}
-			LearningDesireDef item = learningOptions.RandomElementByWeight((LearningDesireDef ld) => ld.selectionWeight);
+			LearningDesireDef newDesire = learningOptions.RandomElementByWeight((LearningDesireDef ld) => ld.selectionWeight);
 			if (__instance.active.Count >= 2)
 			{
 				__instance.active.RemoveAt(0);
 			}
-			__instance.active.Add(item);
+			__instance.active.Add(newDesire);
 			return false;
 		}
     }
