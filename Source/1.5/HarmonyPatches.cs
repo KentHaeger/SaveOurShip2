@@ -4908,6 +4908,32 @@ namespace SaveOurShip2
 		}
     }
 
+	// Biotech - when on space map, disomle kids learning options that don't work
+	[HarmonyPatch(typeof(Pawn_LearningTracker), "AddNewLearningDesire")]
+	public static class ProperLearningNeedsInSpace
+    {
+		public static bool Prefix(Pawn_LearningTracker __instance)
+        {
+			List<LearningDesireDef> learningOptions = DefDatabase<LearningDesireDef>.AllDefsListForReading.Where((LearningDesireDef ld) => !__instance.active.Contains(ld) && ld.Worker.CanGiveDesire).ToList();
+			if (__instance.Pawn.Map != null && __instance.Pawn.Map.IsSpace())
+			{
+				learningOptions = learningOptions.Where((LearningDesireDef ld) => ld.defName != "NatureRunning" && ld.defName != "Skydreaming").ToList();
+				if ((__instance.Pawn.Map.listerBuildings.allBuildingsColonist.Any((Building b) => b.def.defName == "Telescope" || b.def.defName == "TelescopeSpace")) &&
+					!__instance.active.Any((LearningDesireDef ld) => ld.defName == "AdmiringSpace"))
+				{
+					learningOptions.Add(DefDatabase<LearningDesireDef>.AllDefsListForReading.First((LearningDesireDef ld) => ld.defName == "AdmiringSpace"));
+				}
+			}
+			LearningDesireDef newDesire = learningOptions.RandomElementByWeight((LearningDesireDef ld) => ld.selectionWeight);
+			if (__instance.active.Count >= 2)
+			{
+				__instance.active.RemoveAt(0);
+			}
+			__instance.active.Add(newDesire);
+			return false;
+		}
+    }
+
 	// Biotech - disable "Summon diabolus available" letters for comm consoles on enemy ships
 	[HarmonyPatch(typeof(CompUseEffect_CallBossgroup), "PostSpawnSetup")]
 	public static class DisableMechSpawnAvailableLetter
