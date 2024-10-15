@@ -2212,9 +2212,8 @@ namespace SaveOurShip2
 			{
 				if (thing is Pawn pawn && (!pawn.Dead || !pawn.Downed))
 				{
-					pawn.pather.StopDead();
 					thing.Position = CellFinder.RandomClosewalkCellNear(thing.Position, targetMap, 50, (IntVec3 x) => !targetArea.Contains(x));
-					pawn.pather.nextCell = pawn.Position.RandomAdjacentCell8Way();
+					pawn.Notify_Teleported();
 				}
 				else if (!thing.Destroyed)
 					thing.Destroy();
