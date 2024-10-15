@@ -120,6 +120,14 @@ namespace SaveOurShip2
 			if (toDestroy.Count > 0)
 			{
 				ShipInteriorMod2.MoveShipFlag = true;
+				TerrainDef terrain = parent.Map.terrainGrid.TerrainAt(c);
+				bool nonShipTerrain = terrain != ResourceBank.TerrainDefOf.FakeFloorInsideShip && terrain != ResourceBank.TerrainDefOf.FakeFloorInsideShip &&
+									  terrain != ResourceBank.TerrainDefOf.FakeFloorInsideShipMech && terrain != ResourceBank.TerrainDefOf.ShipWreckageTerrain &&
+									  terrain != ResourceBank.TerrainDefOf.FakeFloorInsideShipFoam;
+				if (nonShipTerrain)
+				{
+					parent.Map.terrainGrid.RemoveTopLayer(c, false);
+				}
 				foreach (Thing t in toDestroy)
 				{
 					t.Destroy();
@@ -130,12 +138,11 @@ namespace SaveOurShip2
 					FleckMaker.ThrowSmoke(replacement.DrawPos, parent.Map, 2);
 				}
 				parent.Map.roofGrid.SetRoof(c, ResourceBank.RoofDefOf.RoofShip);
+				if (nonShipTerrain)
+				{
+					parent.Map.terrainGrid.SetTerrain(c, terrain);
+				}
 				ShipInteriorMod2.MoveShipFlag = false;
-				/*TerrainDef terrain = parent.Map.terrainGrid.TerrainAt(c);
-				parent.Map.terrainGrid.RemoveTopLayer(c, false);
-
-				if (terrain != ResourceBank.TerrainDefOf.FakeFloorInsideShip && terrain != ResourceBank.TerrainDefOf.FakeFloorInsideShip && terrain != ResourceBank.TerrainDefOf.FakeFloorInsideShipMech && terrain != ResourceBank.TerrainDefOf.ShipWreckageTerrain && terrain != ResourceBank.TerrainDefOf.FakeFloorInsideShipFoam)
-					parent.Map.terrainGrid.SetTerrain(c, terrain);*/
 			}
 		}
 
