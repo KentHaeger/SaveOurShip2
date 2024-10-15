@@ -103,8 +103,10 @@ namespace SaveOurShip2
 					}
 					if (t.def.defName == "ShipAirlock" || t.def.defName == "ShipAirlockMech") //maintain "hold open"
 					{
-                        ((Building_ShipAirlock)replacement).holdOpenInt = ((Building_ShipAirlock)t).holdOpenInt;
-						
+						((Building_ShipAirlock)replacement).holdOpenInt = ((Building_ShipAirlock)t).holdOpenInt;
+						bool forbidden = ((Building_ShipAirlock)t).GetComp<CompForbiddable>()?.Forbidden ?? false;
+						((Building_ShipAirlock)replacement).GetComp<CompForbiddable>().forbiddenInt = forbidden;
+
 					}
 					int shipIndex = mapComp.ShipIndexOnVec(parent.Position);
 					if (shipIndex > 0)
