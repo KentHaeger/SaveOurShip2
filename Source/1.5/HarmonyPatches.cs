@@ -5209,6 +5209,35 @@ namespace SaveOurShip2
         }
     }
 
+	// Space map does not have raw food sources by default, so no need to show "Need meal source" warning
+	[HarmonyPatch(typeof(Alert_NeedMealSource), "NeedMealSource")]
+	public static class SpaceMapDoesNotNeedStoveWarning
+	{
+		public static bool Prefix(Map map, ref bool __result)
+		{
+			if (map.IsSpace())
+			{
+				__result = false;
+				return false;
+			}
+			return true;
+		}
+	}
+
+	[HarmonyPatch(typeof(Alert_NeedBatteries), "NeedBatteries")]
+	public static class ShipCapacitorCountsAsBattery
+	{
+		public static bool Prefix(Map map, ref bool __result)
+		{
+			if (map.listerBuildings.ColonistsHaveBuilding((Thing building) => building is Building_ShipCapacitor))
+			{
+				__result = false;
+				return false;
+			}
+			return true;
+		}
+	}
+
 	/*[HarmonyPatch(typeof(ActiveDropPod),"PodOpen")]
 	public static class ActivePodFix{
 		public static bool Prefix (ref ActiveDropPod __instance)
