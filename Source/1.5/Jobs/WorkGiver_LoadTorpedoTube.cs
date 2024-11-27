@@ -21,6 +21,10 @@ namespace SaveOurShip2
 			{
 				return false;
 			}
+			if (pawn == null || building_Tube.Faction != pawn.Faction)
+			{
+				return false;
+			}
 			if (ForbidUtility.IsForbidden(t, pawn) || !ReservationUtility.CanReserveAndReach(pawn, t, (PathEndMode)2, DangerUtility.NormalMaxDanger(pawn), 1, -1, (ReservationLayerDef)null, false))
 			{
 				return false;
