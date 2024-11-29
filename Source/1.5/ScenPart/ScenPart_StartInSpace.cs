@@ -121,7 +121,7 @@ namespace SaveOurShip2
 
 		public static Map GenerateShipSpaceMap() //MapGenerator.GenerateMap override via patch
 		{
-			IntVec3 size = Find.World.info.initialMapSize;
+			IntVec3 size = new IntVec3(Find.GameInitData.mapSize, 1, Find.GameInitData.mapSize);
 			if (size.x < 250 || size.z < 250)
 				size = new IntVec3(250, 0, 250);
 
