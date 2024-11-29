@@ -5264,6 +5264,22 @@ namespace SaveOurShip2
 		}
 	}
 
+	// Need warm clothes alert is seasonal, reminds player to get warm clothes when winte is coming soon. Ans also tutorial-ish, tell new players what to do.
+	// Space map is not seasonal, it is always -100C. So this alert isn't really necessary and even reported annoying, so remove. 
+	[HarmonyPatch(typeof(Alert_NeedWarmClothes), "AnyColonistsNeedWarmClothes")]
+	public static class NoSeasonalWarmClothesInSpace
+	{
+		public static bool Prefix(Map map, ref bool __result)
+		{
+			if (map.IsSpace())
+			{
+				__result = false;
+				return false;
+			}
+			return true;
+		}
+	}
+
 	/*[HarmonyPatch(typeof(ActiveDropPod),"PodOpen")]
 	public static class ActivePodFix{
 		public static bool Prefix (ref ActiveDropPod __instance)

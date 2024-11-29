@@ -15,6 +15,7 @@ namespace SaveOurShip2
 		public int overdriveSetting = 0;
 		public float instability = 0;
 		bool useMiniatureGraphics = false;
+		bool useMicroGraphics = false;
 
 		private Texture2D cachedCommandTex1;
 		private Texture2D cachedCommandTex2;
@@ -27,6 +28,10 @@ namespace SaveOurShip2
 		private static Graphic turbineGraphicMini = GraphicDatabase.Get(typeof(Graphic_Single), "Things/Building/Ship/Reactor_Turbine_Mini", ShaderDatabase.Cutout, new Vector2(1.5f, 1.5f), Color.white, Color.white);
 		private static Graphic turbineGraphicMiniOverdrive = GraphicDatabase.Get(typeof(Graphic_Single), "Things/Building/Ship/Reactor_Turbine_Overdrive_Mini", ShaderDatabase.Cutout, new Vector2(1.5f, 1.5f), Color.white, Color.white);
 		private static Graphic turbineGraphicMiniSuperOverdrive = GraphicDatabase.Get(typeof(Graphic_Single), "Things/Building/Ship/Reactor_Turbine_Super_Overdrive_Mini", ShaderDatabase.Cutout, new Vector2(1.5f, 1.5f), Color.white, Color.white);
+
+		private static Graphic turbineGraphicMicro;
+		private static Graphic turbineGraphicMicroOverdrive;
+		private static Graphic turbineGraphicMicroSuperOverdrive;
 
 		Sustainer reactorSustainer;
 
@@ -76,7 +81,18 @@ namespace SaveOurShip2
 		public override void PostDraw()
 		{
 			base.PostDraw();
-			if (useMiniatureGraphics)
+			if (useMicroGraphics)
+			{
+				if ((refuelableComp != null && !refuelableComp.HasFuel) || (flickableComp != null && !flickableComp.SwitchIsOn))
+					turbineGraphicMicro.Draw(parent.DrawPos, parent.Rotation, parent);
+				else if (overdriveSetting < 2)
+					turbineGraphicMicro.Draw(parent.DrawPos, parent.Rotation, parent, Find.TickManager.TicksGame * 0.25f * (1 + overdriveSetting));
+				else if (overdriveSetting == 2)
+					turbineGraphicMicroOverdrive.Draw(parent.DrawPos, parent.Rotation, parent, Find.TickManager.TicksGame * 0.75f);
+				else
+					turbineGraphicMicroSuperOverdrive.Draw(parent.DrawPos, parent.Rotation, parent, Find.TickManager.TicksGame);
+			}
+			else if (useMiniatureGraphics)
 			{
 				if ((refuelableComp != null && !refuelableComp.HasFuel) || (flickableComp != null && !flickableComp.SwitchIsOn))
 					turbineGraphicMini.Draw(parent.DrawPos, parent.Rotation, parent);
@@ -237,8 +253,20 @@ namespace SaveOurShip2
 		public override void PostSpawnSetup(bool respawningAfterLoad)
 		{
 			base.PostSpawnSetup(respawningAfterLoad);
-			if (parent.def.Size.x < 5) //Stupid to hardcode this but it's quicker than adding a whole new CompProperties
+			if (parent.def.Size.x < 3)
+			{
+				// Submods with even tininer reators - resize exisiting texture to match micro-size
+				// Scale relative to small reactor which has size 3
+				float scale = parent.def.Size.x / 3.0f;
+				turbineGraphicMicro = turbineGraphicMini.GetCopy(turbineGraphicMini.drawSize * scale, null);
+				turbineGraphicMicroOverdrive = turbineGraphicMiniOverdrive.GetCopy(turbineGraphicMiniOverdrive.drawSize * scale, null);
+				turbineGraphicMicroSuperOverdrive = turbineGraphicMiniSuperOverdrive.GetCopy(turbineGraphicMiniOverdrive.drawSize * scale, null);
+				useMicroGraphics = true;
+			}
+			else if (parent.def.Size.x < 5) //Stupid to hardcode this but it's quicker than adding a whole new CompProperties
+			{
 				useMiniatureGraphics = true;
+			}
 		}
 	}
 }

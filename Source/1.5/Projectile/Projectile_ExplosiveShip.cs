@@ -67,6 +67,16 @@ namespace SaveOurShip2
 				{
 					break;
 				}
+				if (!newTile.InBounds(base.Map, 0))
+				{
+					break;
+				}
+				// Do not advance past destination cell
+				if (currentPosition.ToIntVec3() == DestinationCell)
+				{
+					break;
+				}
+
 				List<Thing> thingList = newTile.GetThingList(base.Map);
 				bool hitBuildingOrVehicle = false;
 				foreach (Thing t in thingList)
