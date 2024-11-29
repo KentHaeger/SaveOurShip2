@@ -470,7 +470,7 @@ namespace SaveOurShip2
 			return true;
 		}
 
-		protected void BeginBurst()
+		public virtual void BeginBurst()
 		{
 			if (spinalComp != null)
 			{
@@ -634,14 +634,14 @@ namespace SaveOurShip2
 			}
 		}
 
-		protected void BurstComplete()
+		public virtual void BurstComplete()
 		{
 			burstCooldownTicksLeft = BurstCooldownTime().SecondsToTicks();
 			if (GroundDefenseMode)
 				burstCooldownTicksLeft = (int)(burstCooldownTicksLeft * 1.5f);
 		}
 
-		protected float BurstCooldownTime()
+		public virtual float BurstCooldownTime()
 		{
 			if (def.building.turretBurstCooldownTime >= 0f)
 			{
