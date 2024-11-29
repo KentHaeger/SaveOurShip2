@@ -1950,7 +1950,7 @@ namespace SaveOurShip2
 			List<Room> roomsToTemp = new List<Room>();
 			List<IntVec3> fogToCopy = new List<IntVec3>();
 			List<Tuple<IntVec3, float>> posTemp = new List<Tuple<IntVec3, float>>();
-			List<Tuple<IntVec3, TerrainDef>> terrainToCopy = new List<Tuple<IntVec3, TerrainDef>>();
+			List<Tuple<IntVec3, TerrainDef, ColorDef>> terrainToCopy = new List<Tuple<IntVec3, TerrainDef, ColorDef>>();
 			List<Tuple<IntVec3, RoofDef>> roofToCopy = new List<Tuple<IntVec3, RoofDef>>();
 			List<IntVec3> fireExplosions = new List<IntVec3>();
 			List<CompEngineTrail> nukeExplosions = new List<CompEngineTrail>();
@@ -2119,14 +2119,16 @@ namespace SaveOurShip2
 				}
 				//store terrain
 				var sourceTerrain = sourceMap.terrainGrid.TerrainAt(pos);
+				ColorDef sourceColor = sourceMap.terrainGrid.ColorAt(pos);
 				if (sourceTerrain.layerable)
 				{
-					terrainToCopy.Add(new Tuple<IntVec3, TerrainDef>(adjustedPos, sourceTerrain));
+					terrainToCopy.Add(new Tuple<IntVec3, TerrainDef, ColorDef>(adjustedPos, sourceTerrain, sourceColor));
+
 					sourceMap.terrainGrid.RemoveTopLayer(pos, false);
 				}
 				else if (includeRock && IsRock(sourceTerrain))
 				{
-					terrainToCopy.Add(new Tuple<IntVec3, TerrainDef>(adjustedPos, sourceTerrain));
+					terrainToCopy.Add(new Tuple<IntVec3, TerrainDef, ColorDef>(adjustedPos, sourceTerrain, sourceColor));
 					sourceMap.terrainGrid.SetTerrain(pos, ResourceBank.TerrainDefOf.EmptySpace);
 				}
 				if (pos.Fogged(sourceMap))
@@ -2450,12 +2452,13 @@ namespace SaveOurShip2
 			//move terrain
 			try
 			{
-				foreach (Tuple<IntVec3, TerrainDef> tup in terrainToCopy)
+				foreach (Tuple<IntVec3, TerrainDef, ColorDef> tup in terrainToCopy)
 				{
 					var targetTile = targetMap.terrainGrid.TerrainAt(tup.Item1);
 					if (!targetTile.layerable || IsHull(targetTile))
 					{
 						targetMap.terrainGrid.SetTerrain(tup.Item1, tup.Item2);
+						targetMap.terrainGrid.SetTerrainColor(tup.Item1, tup.Item3);
 					}
 				}
 				if (includeRock)
