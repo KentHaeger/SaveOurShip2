@@ -3988,6 +3988,28 @@ namespace SaveOurShip2
 		}
 	}
 
+	// Disallow Royalty ending quest to be generated when there are no surface player home maps,
+	// as it will be attached to player space map, which is not right for quest assuming enemy raids.
+	[HarmonyPatch(typeof(IncidentWorker_GiveQuest), "TryExecuteWorker")]
+	public static class NoRoyaltyEndingForSpaceMap
+	{
+		public static bool Prefix(IncidentWorker_GiveQuest __instance, IncidentParms parms, ref bool __result)
+		{
+			QuestScriptDef quest = __instance.def.questScriptDef ?? parms.questScriptDef;
+			Map spaceHome = ShipInteriorMod2.FindPlayerShipMap();
+			if (quest.defName == "EndGame_RoyalAscent")
+			{
+				IEnumerable<Map> surfacePlayerMaps = Find.Maps.Where((Map x) => (x.IsPlayerHome && x != spaceHome));
+				if (!surfacePlayerMaps.Any())
+				{
+					__result = false;
+					return false;
+				}
+			}
+			return true;
+		}
+	}
+
 	[HarmonyPatch(typeof(QuestPart_EndGame), "Notify_QuestSignalReceived")] //change roy ending
 	public static class ReplaceEndGame
 	{
