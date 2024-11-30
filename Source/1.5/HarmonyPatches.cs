@@ -3160,13 +3160,24 @@ namespace SaveOurShip2
 	}
 
 	[HarmonyPatch(typeof(GenStep_Fog), "Generate")]
-	public static class UnfogVault
+	public static class UnfogVaultAndLandedShip
 	{
 		public static void Postfix(Map map)
 		{
 			foreach (Thing casket in map.listerThings.ThingsOfDef(ThingDef.Named("Ship_AvatarCasket")))
 			{
 				FloodFillerFog.FloodUnfog(casket.Position, map);
+			}
+			ShipMapComp mapComp = map.GetComponent<ShipMapComp>();
+			foreach (SpaceShipCache ship in mapComp.ShipsOnMap.Values.Where(s => !s.IsWreck))
+			{
+				if (ship.Name == "Charlon Whitestone")
+				{
+					foreach (IntVec3 tile in ship.Area)
+					{
+						map.fogGrid.Unfog(tile);
+					}
+				}
 			}
 		}
 	}
