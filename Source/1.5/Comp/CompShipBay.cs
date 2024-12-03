@@ -37,6 +37,7 @@ namespace SaveOurShip2
 		public CellRect bayRect;
 		Matrix4x4 matrix = new Matrix4x4();
 		public HashSet<IntVec3> reservedArea = new HashSet<IntVec3>();
+		private bool? needDrawRoof = null;
 		HashSet<CompFueledTravel> dockedShuttles = new HashSet<CompFueledTravel>();
 		CompRefuelable compRefuelable;
 		CompPowerTrader compPowerTrader;
@@ -140,7 +141,12 @@ namespace SaveOurShip2
 		public override void PostDraw()
 		{
 			base.PostDraw();
-			if ((Find.PlaySettings.showRoofOverlay || parent.GetRoom() != null && parent.GetRoom().Cells.Any(c => c.Fogged(parent.Map))) && parent.Position.Roofed(parent.Map))
+			// Get room is slow if not enclosed, so update flag rarely.
+			if (needDrawRoof == null || Find.TickManager.TicksGame % 60 == 0)
+			{
+				needDrawRoof = parent.GetRoom() != null && parent.GetRoom().Cells.Any(c => c.Fogged(parent.Map));
+			}
+			if ((Find.PlaySettings.showRoofOverlay || (needDrawRoof ?? false)) && parent.Position.Roofed(parent.Map))
 			{
 				//roofedGraphic.Draw(new Vector3(parent.DrawPos.x, Altitudes.AltitudeFor(AltitudeLayer.MoteOverhead), parent.DrawPos.z), parent.Rotation, parent);
 
