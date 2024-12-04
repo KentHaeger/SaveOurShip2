@@ -292,7 +292,6 @@
 			<li>
 				<statOffsets>
 					<HypoxiaResistance>1</HypoxiaResistance>
-					<ToxicEnvironmentResistance MayRequire="Ludeon.RimWorld.Biotech">0.5</ToxicEnvironmentResistance>
 				</statOffsets>
 			</li>
 		</stages>
