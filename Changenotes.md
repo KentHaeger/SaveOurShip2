@@ -53,8 +53,8 @@ Fixes:
 -With ship map physics enabled, docking extender floors will be correctly considered ship part and pawns won't fall off  to graveyard map from there.
 
 Nov 29 2024
--Fixed ship lasers missing targets/working unreliable in ground defense mode.
--Adaptive Storage Compatibility implemented: on ship move, TotalSlots property for adaptive containers won't be incorrectly changed to 1, but is preserved instead
--Removed Need Warm Clothes Alert for space maps
--Fixed an issue, when pawns tried to reload torpedoes on non-claimed-yet derelict, but failed with error in TryMakePreToilResrvations() and were standing still. Now, pawns will only reload torpedo tubes belonging to their faction.
--Support for mini reactor graphics.
+- Fixed ship lasers missing targets/working unreliable in ground defense mode.
+- Adaptive Storage Compatibility implemented: on ship move, TotalSlots property for adaptive containers won't be incorrectly changed to 1, but is preserved instead
+- Removed Need Warm Clothes Alert for space maps
+- Fixed an issue, when pawns tried to reload torpedoes on non-claimed-yet derelict, but failed with error in TryMakePreToilResrvations() and were standing still. Now, pawns will only reload torpedo tubes belonging to their faction.
+- Support for mini reactor graphics.
