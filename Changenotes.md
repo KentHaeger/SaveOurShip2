@@ -1,4 +1,5 @@
 Changes published Nov 24 2026
+
 New things and notable changes:
 - Quest shuttles can land on Shuttle Bays and Salvage Bays and don't need shuttle landing beacons in this case.
 - Larger than 250x250 player ship map is supported when moving to a new planet. Requires initiating move to a new planet command in new version.
