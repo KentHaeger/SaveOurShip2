@@ -88,4 +88,16 @@
 			</value>
 		</match>
 	</Operation>
+
+	<Operation Class="PatchOperationFindMod">
+		<mods>
+			<li>Combat Extended</li>
+		</mods>
+		<nomatch Class="PatchOperationAdd">
+			<xpath>Defs/HediffDef[defName="SoSArchotechLung"]/stages/li/statOffsets</xpath>
+			<value>
+				<ToxicEnvironmentResistance MayRequire="Ludeon.RimWorld.Biotech">0.5</ToxicEnvironmentResistance>
+			</value>
+		</nomatch>
+	</Operation>
 </Patch>
