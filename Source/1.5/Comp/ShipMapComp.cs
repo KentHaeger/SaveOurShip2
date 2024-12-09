@@ -2599,6 +2599,17 @@ namespace SaveOurShip2
 		}
 
 		//shuttles
+		public Rot4 GetShuttleLandingRotation(VehiclePawn vehicle)
+		{
+			if (vehicle.def.defName == "SoS2_Shuttle_Personal")
+			{
+				return Rot4.North;
+			}
+			else
+			{
+				return Rot4.East;
+			}
+		}
         public void GetChildHolders(List<IThingHolder> outChildren)
         {
 			foreach (VehiclePawn shuttle in ShuttlesOnMissions)
@@ -2667,7 +2678,7 @@ namespace SaveOurShip2
 							}
 						}
 						VehicleSkyfaller_Arriving vehicleSkyfaller_Arriving = (VehicleSkyfaller_Arriving)VehicleSkyfallerMaker.MakeSkyfaller(mission.shuttle.CompVehicleLauncher.Props.skyfallerIncoming, mission.shuttle);
-						GenSpawn.Spawn(vehicleSkyfaller_Arriving, target.Cell, mapToSpawnIn, Rot4.East);
+						GenSpawn.Spawn(vehicleSkyfaller_Arriving, target.Cell, mapToSpawnIn, GetShuttleLandingRotation(mission.shuttle));
 					},
 					(LocalTargetInfo info) => { var bay = info.Cell.GetThingList(mapToSpawnIn).Where(t => t.TryGetComp<CompShipBay>() != null)?.FirstOrDefault(); return bay==null || bay.TryGetComp<CompShipBay>().CanFitShuttleSize(mission.shuttle)!=IntVec3.Zero; }, null, null, mission.shuttle.VehicleDef.rotatable && !(mission.shuttle.CompVehicleLauncher.launchProtocol.LandingProperties?.forcedRotation).HasValue, forcedTargeting: true);
 				}
@@ -2707,21 +2718,24 @@ namespace SaveOurShip2
 							while (i < 10)
 							{
 								IntVec3 v = ship.OuterCells().RandomElement();
-								vec = FindTargetForPod(mission, v);
+								vec = FindTargetForPod(mission, mapToSpawnIn, v);
 								if (vec != IntVec3.Invalid)
+								{
 									break;
+								}
 								i++;
 							}
 						}
 						if(vec==IntVec3.Invalid)
                         {
+							Log.Warning("Fallback(2) to shuttle random cell arrival");
 							CellFinder.TryFindRandomCell(map, (IntVec3 cell) => { return !map.roofGrid.Roofed(cell); }, out vec);
 						}
 					}
 
 					Messages.Message("SoS.EnemyBoardingShuttleArrived".Translate(), MessageTypeDefOf.NegativeEvent);
 					VehicleSkyfaller_Arriving vehicleSkyfaller_Arriving = (VehicleSkyfaller_Arriving)VehicleSkyfallerMaker.MakeSkyfaller(mission.shuttle.CompVehicleLauncher.Props.skyfallerIncoming, mission.shuttle);
-					GenSpawn.Spawn(vehicleSkyfaller_Arriving, vec, mapToSpawnIn, Rot4.East);
+					GenSpawn.Spawn(vehicleSkyfaller_Arriving, vec, mapToSpawnIn, GetShuttleLandingRotation(mission.shuttle));
 				}
 			}
         }
@@ -2776,21 +2790,110 @@ namespace SaveOurShip2
 				return "Mission_" + uniqueID;
             }
 		}
-		public IntVec3 FindTargetForPod(ShuttleMissionData mission, IntVec3 v)
+
+		private bool AnyObstacleOrSkyfallersAtVehicleLocation(Map map, IntVec3 location, VehicleDef vehicle)
+		{
+			// Searching for skyfallers (this is not covered by Vehiclke Framework released version yet) at supposed target location.
+			// For example, for 3x3 shuttle, searc are is from coord - 1 coord + 1, inclusive, so delta is 1
+			int vehicleDeltaX = Mathf.FloorToInt(vehicle.Size.x / 2.0f);
+			int vehicleDeltaZ = Mathf.FloorToInt(vehicle.Size.z / 2.0f);
+			for (int x = location.x - vehicleDeltaX; x <= location.x + vehicleDeltaX; x++)
+			{
+				for (int z = location.z - vehicleDeltaZ; z <= location.z + vehicleDeltaZ; z++)
+				{
+					foreach (Thing t in map.thingGrid.ThingsAt(new IntVec3(x, 0, z)))
+					{
+						if (t is VehiclePawn)
+						{
+							return true;
+						}
+						// TODO: due to issue with VF Passability check, checking for landing obstacles manually.
+						else if (t.def.passability != Traversability.Standable)
+						{
+							return true;
+						}
+					}
+				}
+			}
+			// but also have to take into accout that skyfaller does not have the size of the vehicle arriving, it's only present in one tile.
+			// so have to pre-caheck up to 3 tiles away to take into account 7x7 shuttle.
+			int otherVehicleDelta = 3;
+			for (int x = location.x - vehicleDeltaX - otherVehicleDelta; x <= location.x + vehicleDeltaX + otherVehicleDelta; x++)
+			{
+				for (int z = location.z - vehicleDeltaZ - otherVehicleDelta; z <= location.z + vehicleDeltaZ + otherVehicleDelta; z++)
+				{
+					foreach (Thing t in map.thingGrid.ThingsAt(new IntVec3(x, 0, z)))
+					{
+
+						if (t is VehicleSkyfaller skyfaller)
+						{
+							int minDistanceX = Mathf.FloorToInt(skyfaller.vehicle.VehicleDef.Size.x / 2.0f) + vehicleDeltaX + 1;
+							int minDistanceZ = Mathf.FloorToInt(skyfaller.vehicle.VehicleDef.Size.z / 2.0f) + vehicleDeltaZ + 1;
+							if (Math.Abs(x - location.x) < minDistanceX || Math.Abs(z - location.z) < minDistanceZ)
+							{
+								return true;
+							}
+						}
+					}
+				}
+			}
+			return false;
+		}
+		public IntVec3 FindTargetForPod(ShuttleMissionData mission, Map targetMap, IntVec3 v)
 		{
 			if (!ModSettings_SoS.shipMapPhysics) //Default fallback, find landing spot next to ship's outer rooms
 			{
+				// New option - search moves in the direction opposite to engines exhaust (+random part) to avoid landing into engene exhaust.
+				// Not limited by radius, goes till map edge, so as long as there is decent space between map adge and lpayer ship, will find good drop locations.
+				// New option ignores given coordintes (v) for now.
+				ShipMapComp mapComp = targetMap.GetComponent<ShipMapComp>();
+				SpaceShipCache mainShip = mapComp.ShipsOnMap.Values.OrderByDescending(x => x.Threat).First();
+				IntVec3 location = mainShip.Core.Position;
+				Rot4 moveRot = mainShip.Engines.Any() ? mainShip.Engines.First().parent.Rotation : mainShip.Core.Rotation;
+				IntVec3 moveDirection = moveRot.AsVector2.ToVector3().ToIntVec3();
+
+				// To spread out boarding partym, randomize search start point.
+				// 3-way random: no shift and perpendicular shift in either of possible directions.
+				IntVec3 randomShift = moveDirection.RotatedBy(RotationDirection.Clockwise) * 10;
+				float random = Rand.Value;
+				if (random < 0.33)
+				{
+					randomShift = IntVec3.Zero;
+				}
+				else if (random < 0.67)
+				{
+					randomShift *= -1;
+				}
+				location += randomShift;
+
+				// Engenes rot is opposite to engine exhaust, so moving in that direction likely helps boardrs to avoid engine-death on arrival.
+				while (location.InBounds(map))
+				{
+					// Move in intended direction at 2 speed and drift randomly by 1 tile to produce somewhat random result
+					location += moveDirection * 2;
+					location += Rot4.Random.AsVector2.ToVector3().ToIntVec3();
+					if (location.InBounds(targetMap) && GenGridVehicles.Walkable(location, mission.shuttle.VehicleDef, targetMap) && mapComp.ShipIndexOnVec(location) == -1 &&
+						!AnyObstacleOrSkyfallersAtVehicleLocation(targetMap, location, mission.shuttle.VehicleDef))
+					{
+						if (mission.shuttle.VehicleDef.size.x > 1)
+						{
+							Log.Warning("- Found shuttle location:" + location);
+						}
+						return location;
+					}
+				}
+				// Old code left as very just-in-case fallback. Limited by radius, so somteimes the result will cause roof punching.
 				var result = IntVec3.Invalid;
 				IntVec2 shuttleSize = mission.shuttle.def.Size;
-				CellFinder.TryFindRandomCellNear(v, map, 15, (IntVec3 cell) => { 
-					if (!cell.Standable(map) || map.roofGrid.Roofed(cell))
+				CellFinder.TryFindRandomCellNear(v, targetMap, 15, (IntVec3 cell) => {
+					if (!cell.Standable(targetMap) || targetMap.roofGrid.Roofed(cell) || !GenGridVehicles.Walkable(cell, mission.shuttle.VehicleDef, targetMap))
 						return false; 
 					for(int i = -shuttleSize.x / 2; i < shuttleSize.x /2; i++)
                     {
 						for (int j = -shuttleSize.z / 2; j < shuttleSize.z / 2; j++)
                         {
 							IntVec3 adj = v + new IntVec3(i, 0, j);
-							if (!adj.Standable(map) || map.roofGrid.Roofed(adj))
+							if (!adj.Standable(targetMap) || targetMap.roofGrid.Roofed(adj))
 								return false;
                         }
                     }
