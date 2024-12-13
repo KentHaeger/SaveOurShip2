@@ -3160,13 +3160,24 @@ namespace SaveOurShip2
 	}
 
 	[HarmonyPatch(typeof(GenStep_Fog), "Generate")]
-	public static class UnfogVault
+	public static class UnfogVaultAndLandedShip
 	{
 		public static void Postfix(Map map)
 		{
 			foreach (Thing casket in map.listerThings.ThingsOfDef(ThingDef.Named("Ship_AvatarCasket")))
 			{
 				FloodFillerFog.FloodUnfog(casket.Position, map);
+			}
+			ShipMapComp mapComp = map.GetComponent<ShipMapComp>();
+			foreach (SpaceShipCache ship in mapComp.ShipsOnMap.Values.Where(s => !s.IsWreck))
+			{
+				if (ship.Name == "Charlon Whitestone")
+				{
+					foreach (IntVec3 tile in ship.Area)
+					{
+						map.fogGrid.Unfog(tile);
+					}
+				}
 			}
 		}
 	}
@@ -3187,7 +3198,7 @@ namespace SaveOurShip2
 	{
 		public static void Postfix(ref PawnKindDef kind, ref bool __result, Map map)
 		{
-			__result = DefDatabase<PawnKindDef>.AllDefs.Where((PawnKindDef x) => x.RaceProps.Animal && x.RaceProps.wildness < 0.35f && (!x.race.tradeTags?.Contains("AnimalInsectSpace") ?? true) && map.mapTemperature.SeasonAndOutdoorTemperatureAcceptableFor(x.race) && !x.RaceProps.Dryad).TryRandomElementByWeight((PawnKindDef k) => 0.420000017f - k.RaceProps.wildness, out kind);
+			__result = DefDatabase<PawnKindDef>.AllDefs.Where((PawnKindDef x) => x.RaceProps.Animal && x.RaceProps.wildness < 0.35f && (!x.race.tradeTags?.Contains("AnimalInsectSpace") ?? true) && map.mapTemperature.SeasonAndOutdoorTemperatureAcceptableFor(x.race) && x.race.tradeTags.Contains("AnimalFarm") && !x.RaceProps.Dryad).TryRandomElementByWeight((PawnKindDef k) => 0.420000017f - k.RaceProps.wildness, out kind);
 		}
 	}
 
@@ -3985,6 +3996,28 @@ namespace SaveOurShip2
 				parms.raidArrivalMode = PawnsArrivalModeDefOf.CenterDrop;
 			else if (map.GetComponent<ShipMapComp>().ShipsOnMap.Values.Any(s => s.Turrets.Any(t => t.heatComp.Props.groundDefense)))
 				parms.raidStrategy = RaidStrategyDefOf.ImmediateAttack;
+		}
+	}
+
+	// Disallow Royalty ending quest to be generated when there are no surface player home maps,
+	// as it will be attached to player space map, which is not right for quest assuming enemy raids.
+	[HarmonyPatch(typeof(IncidentWorker_GiveQuest), "TryExecuteWorker")]
+	public static class NoRoyaltyEndingForSpaceMap
+	{
+		public static bool Prefix(IncidentWorker_GiveQuest __instance, IncidentParms parms, ref bool __result)
+		{
+			QuestScriptDef quest = __instance.def.questScriptDef ?? parms.questScriptDef;
+			Map spaceHome = ShipInteriorMod2.FindPlayerShipMap();
+			if (quest.defName == "EndGame_RoyalAscent")
+			{
+				IEnumerable<Map> surfacePlayerMaps = Find.Maps.Where((Map x) => (x.IsPlayerHome && x != spaceHome));
+				if (!surfacePlayerMaps.Any())
+				{
+					__result = false;
+					return false;
+				}
+			}
+			return true;
 		}
 	}
 
