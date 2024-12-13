@@ -59,3 +59,15 @@ Nov 29 2024
 - Removed Need Warm Clothes Alert for space maps
 - Fixed an issue, when pawns tried to reload torpedoes on non-claimed-yet derelict, but failed with error in TryMakePreToilResrvations() and were standing still. Now, pawns will only reload torpedo tubes belonging to their faction.
 - Support for mini reactor graphics.
+
+Dec 13 2024
+- Archotech lung provides Toxic Environment resistance. That already existed on CE side when that mod is used.
+- On ship/station start, map size from games setiings will be used.
+- Some wrong animals like insects won't join on Animals join event on surface maps.
+- Floor color will be preserved on ship move.
+- Publicized turret stuff for Bioship addon.
+- Royalty ending quest (hosting a Stellarch on current map) won't be generated for space maps.
+- Charlon Whitestone (landed ship) will unfog on arrival, fixing parts of multi-layer walls never unfog.
+- Empire reward Destroyer will have dignified throneroom and bedroom for Archon title.
+- Heavy lags when Shutle bay or Salvage bay exposed to space fixed.
+- When Ship map physics option is off, enemy boarding parties will arrive correcly without roof punching.
