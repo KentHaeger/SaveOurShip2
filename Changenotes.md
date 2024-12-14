@@ -71,3 +71,6 @@ Dec 13 2024
 - Empire reward Destroyer will have dignified throneroom and bedroom for Archon title.
 - Heavy lags when Shutle bay or Salvage bay exposed to space fixed.
 - When Ship map physics option is off, enemy boarding parties will arrive correcly without roof punching.
+
+Ongoing
+- Tox gas immunity for EVA helmets. Different thing from tox environment resistance. That already existed on CE side when that mod is used.
