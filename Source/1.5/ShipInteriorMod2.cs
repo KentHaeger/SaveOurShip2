@@ -131,7 +131,7 @@ namespace SaveOurShip2
 		{
 			base.GetSettings<ModSettings_SoS>();
 		}
-		public const string SOS2version = "SteamV2.7.3unstable";
+		public const string SOS2version = "GithubV2.7.3";
 		public const int SOS2ReqCurrentMinor = 5;
 		public const int SOS2ReqCurrentBuild = 4062;
 
