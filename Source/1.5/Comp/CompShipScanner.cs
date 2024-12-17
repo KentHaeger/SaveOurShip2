@@ -105,6 +105,15 @@ namespace SaveOurShip2
 			}
 		}
 
+		private string GetContentPackDescription(ShipDef ship)
+		{
+			if (ship == null || ship.modContentPack.Name == "Save Our Ship 2")
+			{
+				return "";
+			}
+			return "SoS.ContentPackDescription".Translate(ship.modContentPack.Name);
+			
+		}
 		protected void FoundMinerals(Pawn worker)
 		{
 			this.daysWorkingSinceLastMinerals = 0f;
@@ -215,9 +224,9 @@ namespace SaveOurShip2
 				Log.Message("SOS2: ".Colorize(Color.cyan) + "Found ship with def: " + ship.derelictShip + " fac: " + ship.shipFaction + " navy: " + ship.spaceNavyDef);
 				parent.Map.passingShipManager.AddShip(ship);
 				if (worker != null)
-					Find.LetterStack.ReceiveLetter("SoS.DerelictScan".Translate(), "SoS.DerelictScanDesc".Translate(worker, ship.derelictShip), LetterDefOf.PositiveEvent);
+					Find.LetterStack.ReceiveLetter("SoS.DerelictScan".Translate(), "SoS.DerelictScanDesc".Translate(worker, ship.derelictShip) + GetContentPackDescription(ship.derelictShip), LetterDefOf.PositiveEvent);
 				else
-					Find.LetterStack.ReceiveLetter("SoS.DerelictScan".Translate(), "SoS.DerelictScanDesc".Translate("its AI", ship.derelictShip), LetterDefOf.PositiveEvent);
+					Find.LetterStack.ReceiveLetter("SoS.DerelictScan".Translate(), "SoS.DerelictScanDesc".Translate("its AI", ship.derelictShip) + GetContentPackDescription(ship.derelictShip), LetterDefOf.PositiveEvent);
 			}
 			else if (chance > 7 && chance < 12) //tradeship, already has faction, navy resolves in SpawnEnemyShip
 			{
@@ -255,10 +264,11 @@ namespace SaveOurShip2
 
 				Log.Message("SOS2: ".Colorize(Color.cyan) + "Found ship with def: " + ship.attackableShip + " fac: " + ship.shipFaction + " navy: " + ship.spaceNavyDef);
 				parent.Map.passingShipManager.AddShip(ship);
+
 				if (worker != null)
-					Find.LetterStack.ReceiveLetter("SoS.EnemyScan".Translate(), "SoS.EnemyScanDesc".Translate(worker, ship.attackableShip), LetterDefOf.PositiveEvent);
+					Find.LetterStack.ReceiveLetter("SoS.EnemyScan".Translate(), "SoS.EnemyScanDesc".Translate(worker, ship.attackableShip) + GetContentPackDescription(ship.attackableShip), LetterDefOf.PositiveEvent);
 				else
-					Find.LetterStack.ReceiveLetter("SoS.EnemyScan".Translate(), "SoS.EnemyScanDesc".Translate("its AI", ship.attackableShip), LetterDefOf.PositiveEvent);
+					Find.LetterStack.ReceiveLetter("SoS.EnemyScan".Translate(), "SoS.EnemyScanDesc".Translate("its AI", ship.attackableShip) + GetContentPackDescription(ship.attackableShip), LetterDefOf.PositiveEvent);
 			}
 		}
 
