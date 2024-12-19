@@ -186,11 +186,6 @@ namespace SaveOurShip2.Vehicles
             Scribe_Values.Look<float>(ref retreatAtHealth, "retreatAtHealth");
             Scribe_Values.Look<float>(ref serializedHeat, "heat");
             Scribe_Values.Look<float>(ref serializedShieldGenHealth, "shieldGenHealth");
-            if (Scribe.mode == LoadSaveMode.PostLoadInit)
-            {
-                PostSpawnNewComponents.ShieldGenHealth = serializedShieldGenHealth;
-                PostSpawnNewComponents.StoredHeat = serializedHeat;
-            }
         }
     }
 }
