@@ -72,5 +72,10 @@ Dec 13 2024
 - Heavy lags when Shutle bay or Salvage bay exposed to space fixed.
 - When Ship map physics option is off, enemy boarding parties will arrive correcly without roof punching.
 
-Ongoing
+Dec 24 2024
+- Fixed shield not appearing on player shuttle after save/load
+- Heatsink, cloaking device and shields temporary disabled for enemy shuttles - won't generate.
+- Fixed yellow log error on loading turrets - they were added with null upgrade key.
 - Tox gas immunity for EVA helmets. Different thing from tox environment resistance. That already existed on CE side when that mod is used.
+- Letters about found ships/derelicts will now mention submod name if found ship is not a part of Save Our Ship 2 content, but rather comes from ship pack.
+Shuttle fixes in this update were observed to reduce amount of vehicle errors dramatically. Like ship battle with enemy Strike Carrier and no shutlle log errors at all, from start to running a game with enemy shuttles left after battle.
