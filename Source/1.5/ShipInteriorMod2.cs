@@ -131,7 +131,7 @@ namespace SaveOurShip2
 		{
 			base.GetSettings<ModSettings_SoS>();
 		}
-		public const string SOS2version = "SteamV2.7.3unstable";
+		public const string SOS2version = "GithubV2.7.4";
 		public const int SOS2ReqCurrentMinor = 5;
 		public const int SOS2ReqCurrentBuild = 4062;
 
@@ -3233,10 +3233,11 @@ namespace SaveOurShip2
 				if (Rand.RangeInclusive(chance, 10) > 5) //shields
 				{
 					shields = true;
-					if (size > 2 || (size > 1 && Rand.Bool))
+					// TODO: Temporary disable spawning enemy shields
+					/*if (size > 2 || (size > 1 && Rand.Bool))
 						vehicle.CompUpgradeTree.FinishUnlock(vehicle.CompUpgradeTree.Props.def.GetNode("ShieldsHeavy"));
 					else
-						vehicle.CompUpgradeTree.FinishUnlock(vehicle.CompUpgradeTree.Props.def.GetNode("ShieldsBasic"));
+						vehicle.CompUpgradeTree.FinishUnlock(vehicle.CompUpgradeTree.Props.def.GetNode("ShieldsBasic"));*/
 				}
 				if (Rand.RangeInclusive(chance, 10) > 6) //armor
 				{
@@ -3259,10 +3260,12 @@ namespace SaveOurShip2
 				}
 				if (Rand.RangeInclusive(chance, 10) > 7) //util
 				{
-					if (size > 1 && Rand.Bool)
+					// TODO: Temporary disable spawning cloak and heatsink too
+
+					/*if (size > 1 && Rand.Bool)
 						vehicle.CompUpgradeTree.FinishUnlock(vehicle.CompUpgradeTree.Props.def.GetNode("CargoCloaking"));
 					else if (shields)
-						vehicle.CompUpgradeTree.FinishUnlock(vehicle.CompUpgradeTree.Props.def.GetNode("CargoHeatsink"));
+						vehicle.CompUpgradeTree.FinishUnlock(vehicle.CompUpgradeTree.Props.def.GetNode("CargoHeatsink"));*/
 				}
 			}
 		}

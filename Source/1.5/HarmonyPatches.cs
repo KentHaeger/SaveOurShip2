@@ -4765,24 +4765,16 @@ namespace SaveOurShip2
         {
 			foreach (ThingComp comp in CompsToAdd)
 			{
-				__instance.comps.Add(comp);
-				PostSpawnNewComponents.CompsToSpawn.Add(comp);
+				__instance.AddComp(comp);
 			}
-			__instance.RecacheComponents();
 		}
 	}
 
 	[HarmonyPatch(typeof(VehiclePawn), "SpawnSetup")]
 	public static class PostSpawnNewComponents
 	{
-		public static List<ThingComp> CompsToSpawn=new List<ThingComp>();
-		public static float ShieldGenHealth = 0;
-		public static float StoredHeat = 0;
-
 		public static bool Prefix(VehiclePawn __instance, bool respawningAfterLoad)
 		{
-			if(respawningAfterLoad)
-				CompsToSpawn = new List<ThingComp>();
 			return true;
 		}
 
@@ -4795,17 +4787,29 @@ namespace SaveOurShip2
 					net2.RebuildHeatNet();
 				return;
 			}
-			foreach (ThingComp comp in CompsToSpawn)
-				comp.PostSpawnSetup(true);
 			CompVehicleHeatNet net = __instance.GetComp<CompVehicleHeatNet>();
 			if (net != null)
 			{
+				if (__instance.Spawned)
+				{
+					net.PostSpawnSetup(true);
+				}
 				net.RebuildHeatNet();
-				net.myNet.AddHeat(StoredHeat);
 			}
 			VehicleComponent shieldGen = __instance.statHandler.components.FirstOrDefault(comp => comp.props.key == "shieldGenerator");
-			if (shieldGen != null && ShieldGenHealth != 1)
-				shieldGen.health = ShieldGenHealth;
+			if (shieldGen != null)
+			{
+				CompShipHeatShield compShield = __instance.TryGetComp<CompShipHeatShield>();
+				ShipMapComp mapComp = __instance.Map.GetComponent<ShipMapComp>();
+				if (mapComp != null && compShield != null)
+				{
+					if (__instance.Spawned)
+					{
+						compShield.PostSpawnSetup(true);
+					}
+					mapComp.Shields.Add(compShield);
+				}
+			}
 		}
 	}
 
