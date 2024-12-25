@@ -4757,7 +4757,6 @@ namespace SaveOurShip2
 
 		public static bool Prefix(VehiclePawn __instance)
         {
-			Log.Warning("+ NEW Comp list");
 			CompsToAdd = new List<ThingComp>();
 			return true;
 		}

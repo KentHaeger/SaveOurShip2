@@ -28,7 +28,11 @@ namespace SaveOurShip2.Vehicles
 
         public SoS2VehicleTurret(VehiclePawn vehicle, VehicleTurret reference) : base(vehicle, reference)
         {
-
+            if (reference is SoS2VehicleTurret)
+            {
+                isTorpedo = (reference as SoS2VehicleTurret).isTorpedo;
+                hardpoint = (reference as SoS2VehicleTurret).hardpoint;
+            }
         }
 
         public override void FireTurret()
