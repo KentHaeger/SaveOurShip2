@@ -4550,9 +4550,24 @@ namespace SaveOurShip2
     {
 		public static void Postfix(ref string disableReason, CompVehicleLauncher __instance, ref bool __result)
         {
-            if (disableReason != Translator.Translate("CommandLaunchGroupFailUnderRoof")) return;
+			//Temporary fix clarifying the message on shuttle unable to launch because of rotated
+			if (disableReason == "VF_CannotLaunchImmobile".Translate(__instance.Vehicle.LabelShort) && __instance.Vehicle.Angle != 0)
+			{
+				disableReason = "VF_Fix_CannotLaunchRotated".Translate(__instance.Vehicle.LabelShort);
+			}
 
-            VehiclePawn vehiclePawn = (VehiclePawn) __instance.parent;
+			// Somwehow, was allowed to launch overloaded.
+			VehiclePawn vehiclePawn = (VehiclePawn)__instance.parent;
+			float vehicleCapacity = vehiclePawn.GetStatValue(VehicleStatDefOf.CargoCapacity);
+			if (MassUtility.InventoryMass(vehiclePawn) > vehicleCapacity)
+			{
+				disableReason = "VF_CannotLaunchOverEncumbered".Translate(vehiclePawn.LabelShort);
+				__result = false;
+				return;
+			}
+
+			if (disableReason != Translator.Translate("CommandLaunchGroupFailUnderRoof")) return;
+
             Map map = vehiclePawn.Map;
             IntVec3 cell = vehiclePawn.Position;
 
@@ -4837,21 +4852,8 @@ namespace SaveOurShip2
 				//__result.AddRange(aerialVehicle.vehicle.AllPawnsAboard);
 			}
 			return false;
-    }
-  }
-  
-	[HarmonyPatch(typeof(CompVehicleLauncher), "CanLaunchWithCargoCapacity")]
-	public static class RotatedLaunchWarningFix
-	{
-		//Temporary fix clarifying the message on shuttle unable to launch
-		public static void Postfix(CompVehicleLauncher __instance, ref string disableReason)
-		{
-			if( disableReason == "VF_CannotLaunchImmobile".Translate(__instance.Vehicle.LabelShort) && __instance.Vehicle.Angle != 0)
-			{
-				disableReason = "VF_Fix_CannotLaunchRotated".Translate(__instance.Vehicle.LabelShort);
-      }
-    }
-  }
+		}
+	}
   
 	[HarmonyPatch(typeof(CompUpgradeTree), "ValidateListers")]
 	public static class DisableValidateListersOffMap
