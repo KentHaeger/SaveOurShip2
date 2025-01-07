@@ -44,10 +44,7 @@ namespace SaveOurShip2.Vehicles
             {
                 net = new CompVehicleHeatNet();
                 net.parent = vehicle;
-                if (!unlockingAfterLoad)
-                    vehicle.comps.Add(net);
-                else
-                    PostLoadNewComponents.CompsToAdd.Add(net);
+                vehicle.AddComp(net);
             }
             VehicleComponent shieldGenerator = vehicle.statHandler.componentsByKeys["shieldGenerator"];
             shieldGenerator.SetHealthModifier = 50;
@@ -55,10 +52,9 @@ namespace SaveOurShip2.Vehicles
             CompShipHeatShield myShield = new CompShipHeatShield();
             myShield.parent = vehicle;
             myShield.Initialize(shield);
+            vehicle.AddComp(myShield);
             if (!unlockingAfterLoad)
             {
-                vehicle.comps.Add(myShield);
-                vehicle.RecacheComponents();
                 if (vehicle.Spawned)
                 {
                     myShield.PostSpawnSetup(unlockingAfterLoad);
@@ -68,8 +64,6 @@ namespace SaveOurShip2.Vehicles
                         mapComp.Shields.Add(myShield);
                 }
             }
-            else
-                PostLoadNewComponents.CompsToAdd.Add(myShield);
         }
     }
 }

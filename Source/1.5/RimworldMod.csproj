@@ -263,6 +263,7 @@
     <Compile Include="Graphic\Graphic_SingleOnOffEmpty.cs" />
     <Compile Include="HarmonyPatches.cs" />
     <Compile Include="HediffPawnIsHologram.cs" />
+    <Compile Include="Jobs\JobDriver_AdmireSpace.cs" />
     <Compile Include="Jobs\JobDriver_BreachAirlock.cs" />
     <Compile Include="Jobs\JobDriver_CarryToCryptonest.cs" />
     <Compile Include="Jobs\JobDriver_DefendBreacher.cs" />
@@ -292,6 +293,7 @@
     <Compile Include="Jobs\JobGiver_LoadTorpedoes.cs" />
     <Compile Include="Jobs\JobGiver_ManShipBridge.cs" />
     <Compile Include="Jobs\JobGiver_RepairShields.cs" />
+    <Compile Include="Jobs\LearningGiver_AdmiringSpace.cs" />
     <Compile Include="Jobs\LordJob_AssaultShip.cs" />
     <Compile Include="Jobs\LordJob_DefendShip.cs" />
     <Compile Include="Jobs\LordToil_AssaultShip.cs" />
