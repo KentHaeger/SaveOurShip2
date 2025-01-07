@@ -509,6 +509,9 @@ namespace SaveOurShip2
 			}
 			return -1;
 		}
+
+		// Can override world tile selection in dev Launch sommmand, launching ship over specified tile
+		public static int worldTileOverride = -1;
 		public static int FindWorldTilePlayer() //slower, will find tile nearest to ship object pos
 		{
 			float bestAbsLatitude = float.MaxValue;
@@ -541,7 +544,14 @@ namespace SaveOurShip2
 			WorldObjectOrbitingShip orbiter = (WorldObjectOrbitingShip)WorldObjectMaker.MakeWorldObject(ResourceBank.WorldObjectDefOf.ShipOrbiting);
 			orbiter.SetNominalPos();
 			orbiter.SetFaction(Faction.OfPlayer);
-			orbiter.Tile = FindWorldTilePlayer();
+			if (worldTileOverride == -1)
+			{
+				orbiter.Tile = FindWorldTilePlayer();
+			}
+			else
+			{
+				orbiter.Tile = worldTileOverride;
+			}
 			Find.WorldObjects.Add(orbiter);
 			Map map = MapGenerator.GenerateMap(size, orbiter, orbiter.MapGeneratorDef,null,null,false);
 			//map.fogGrid.ClearAllFog();
