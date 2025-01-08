@@ -58,6 +58,7 @@
 				<texPath>Things/Building/Linked/Wall_Blueprint_Atlas</texPath>
 			</blueprintGraphicData>
 			<paintable>true</paintable>
+			<supportsWallAttachments>true</supportsWallAttachments>
 		</building>
 		<costList>
 			<Steel>13</Steel>
@@ -307,6 +308,7 @@
 				<texPath>Things/Building/Linked/Wall_Blueprint_Atlas</texPath>
 			</blueprintGraphicData>
 			<paintable>true</paintable>
+			<supportsWallAttachments>true</supportsWallAttachments>
 		</building>
 		<comps>
 			<li Class="SaveOurShip2.CompProps_ShipCachePart">
@@ -435,6 +437,7 @@
 				<texPath>Things/Building/Linked/Wall_Blueprint_Atlas</texPath>
 			</blueprintGraphicData>
 			<paintable>true</paintable>
+			<supportsWallAttachments>true</supportsWallAttachments>
 		</building>
 	</ThingDef>
 	<ThingDef ParentName="BuildingBase">
