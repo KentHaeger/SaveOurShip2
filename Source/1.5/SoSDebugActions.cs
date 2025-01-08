@@ -8,22 +8,33 @@ namespace SaveOurShip2
 {
 	public static class DebugToolsSOS2
 	{
-		[DebugAction("Map", null, false, false, false, false, 0, false, actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
-		// Using mod name to prevent conflict with this command expected to be added to base game 
-		private static void KillAllEnemiesOnMapSos2()
+		private static void DoEnemyPawnsAction(Action<Pawn> action)
 		{
-			List<Pawn> pawnsToKill = new List<Pawn>();
+			List<Pawn> pawnsToProcess = new List<Pawn>();
 			foreach (Pawn p in Find.CurrentMap.mapPawns.pawnsSpawned)
 			{
 				if (p.Faction.HostileTo(Faction.OfPlayer))
 				{
-					pawnsToKill.Add(p);
+					pawnsToProcess.Add(p);
 				}
 			}
-			foreach (Pawn p in pawnsToKill)
+			foreach (Pawn p in pawnsToProcess)
 			{
-				p.Kill(null);
+				action(p);
 			}
+		}
+
+		[DebugAction("Map", null, false, false, false, false, 0, false, actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
+		// Using mod name to prevent conflict with this command expected to be added to base game
+		private static void KillAllEnemiesOnMapSos2()
+		{
+			DoEnemyPawnsAction((Pawn p) => p.Kill(null));
+		}
+
+		[DebugAction("Map", null, false, false, false, false, 0, false, actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
+		private static void VanishAllEnemiesOnMapSos2()
+		{
+			DoEnemyPawnsAction((Pawn p) => p.Destroy(DestroyMode.Vanish));
 		}
 	}
 }
