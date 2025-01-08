@@ -116,7 +116,7 @@ namespace SaveOurShip2
 								batteries.RandomElement().AddEnergy(2);
 							}
 							if (myNet.Depletion > 0)
-								RemoveDepletionFromNetwork(Props.heatVent / 1000f);
+								RemoveDepletionFromNetwork(Props.heatVent * Props.antiEntropicRecoveryRate);
 						}
 						return;
 					}
