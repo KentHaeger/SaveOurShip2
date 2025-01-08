@@ -5209,6 +5209,34 @@ namespace SaveOurShip2
         }
     }
 
+	[HarmonyPatch(typeof(Placeworker_AttachedToWall), "AllowsPlacing")]
+	public static class AllowWallAttachmentsOnVentsAndSolarPanels
+	{
+		public static void Postfix(ref AcceptanceReport __result, BuildableDef checkingDef, IntVec3 loc, Rot4 rot, Map map)
+		{
+			// Don't override out of bouds and in fully occupied tile cases
+			if (__result == false && __result.Reason == "")
+			{
+				return;
+			}
+			List<Thing> thingList = (loc + GenAdj.CardinalDirections[rot.AsInt]).GetThingList(map);
+			foreach (Thing t in thingList)
+			{
+				if (t is Building_ShipVent)
+				{
+					// "active" side of vent is opposite
+					__result = t.Rotation != rot.Opposite;
+					return;
+				}
+				if (t.def.defName == "ShipInside_SolarGenerator" || t.def.defName == "ShipInside_SolarGeneratorMech" || t.def.defName == "ShipInside_SolarGeneratorArchotech")
+				{
+					__result = t.Rotation != rot;
+					return;
+				}
+			}
+		}
+	}
+
 	/*[HarmonyPatch(typeof(ActiveDropPod),"PodOpen")]
 	public static class ActivePodFix{
 		public static bool Prefix (ref ActiveDropPod __instance)
