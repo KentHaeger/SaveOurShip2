@@ -31,8 +31,11 @@ namespace SaveOurShip2.Vehicles
 			VehiclePawn vehicle = (VehiclePawn)parent;
 			if (mapComp?.ShipMapState == ShipMapState.inCombat && vehicle.handlers[0].handlers.Count > 0)
 			{
-                bool launchDisabled = vehicle.Map.roofGrid.Roofed(vehicle.Position) && !ShipInteriorMod2.CanLaunchUnderRoof(vehicle);
-				if (mapComp.IsPlayerShipMap)
+                Map map = vehicle.Map;
+                IntVec3 cell = vehicle.Position;
+
+                bool launchDisabled = map.roofGrid.Roofed(cell) && !ShipInteriorMod2.CanLaunchUnderRoof(map, cell, vehicle);
+                if (mapComp.IsPlayerShipMap)
 				{
 					Command_Action board = CommandBoard(vehicle);
 					if (launchDisabled)
@@ -183,11 +186,6 @@ namespace SaveOurShip2.Vehicles
             Scribe_Values.Look<float>(ref retreatAtHealth, "retreatAtHealth");
             Scribe_Values.Look<float>(ref serializedHeat, "heat");
             Scribe_Values.Look<float>(ref serializedShieldGenHealth, "shieldGenHealth");
-            if (Scribe.mode == LoadSaveMode.PostLoadInit)
-            {
-                PostSpawnNewComponents.ShieldGenHealth = serializedShieldGenHealth;
-                PostSpawnNewComponents.StoredHeat = serializedHeat;
-            }
         }
     }
 }

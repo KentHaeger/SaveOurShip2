@@ -58,7 +58,7 @@ namespace SaveOurShip2
 		{
 			var mapComp = pawn.Map.GetComponent<ShipMapComp>();
 			List<Thing> parents = new List<Thing>();
-			foreach (CompBuildingConsciousness consc in mapComp.Spores)
+			foreach (CompBuildingConsciousness consc in mapComp.Consciousness)
 				parents.Add(consc.parent);
 			return parents;
 		}

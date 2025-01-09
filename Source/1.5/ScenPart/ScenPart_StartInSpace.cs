@@ -121,7 +121,7 @@ namespace SaveOurShip2
 
 		public static Map GenerateShipSpaceMap() //MapGenerator.GenerateMap override via patch
 		{
-			IntVec3 size = Find.World.info.initialMapSize;
+			IntVec3 size = new IntVec3(Find.GameInitData.mapSize, 1, Find.GameInitData.mapSize);
 			if (size.x < 250 || size.z < 250)
 				size = new IntVec3(250, 0, 250);
 
@@ -175,6 +175,12 @@ namespace SaveOurShip2
 						foreach (IntVec3 v in b.OccupiedRect())
 						{
 							spaceMap.areaManager.Home[v] = true;
+						}
+						// Fix to add ship buildings to listerBuildings* lists
+						// This is not allowed as early as during ship creation
+						if (b.Faction == Faction.OfPlayer)
+						{
+							b.SetFaction(Faction.OfPlayer);
 						}
 					}
 				}

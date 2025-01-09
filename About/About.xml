@@ -19,7 +19,6 @@ Testing Squad: Buns Buns Cat, Phsarjk, i am has yes, Fuji, Reviire, Ian, Generic
 
 Submod Support: Ms Mommy Memner, I Forgot, Cruel Moose and thamuzz</description>
 	<url>https://github.com/KentHaeger/SaveOurShip2</url>
->>>>>>> Stashed changes
 	<supportedVersions>
 		<li>1.0</li>
 		<li>1.1</li>
@@ -53,7 +52,6 @@ Submod Support: Ms Mommy Memner, I Forgot, Cruel Moose and thamuzz</description>
 		<li>oskarpotocki.vanillavehiclesexpandedtier3</li>
 	</loadAfter>
 	<incompatibleWith>
-		<li>ceteam.combatextended</li>
 		<li>rwmt.multiplayer</li>
 		<li>automatic.gunplay</li>
 		<li>mlie.yayoscombat3</li>

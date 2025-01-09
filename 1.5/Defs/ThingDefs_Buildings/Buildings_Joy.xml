@@ -206,6 +206,7 @@
         <glowColor>(217,217,208,0)</glowColor>
       </li>
     </comps>
+    <tradeability>Sellable</tradeability>
     <tradeTags>
       <li>Television</li>
     </tradeTags>

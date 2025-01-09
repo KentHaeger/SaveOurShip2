@@ -87,6 +87,11 @@ namespace SaveOurShip2
 				if(!foundDrive)
 					yield return SettlementAbandonUtility.AbandonCommand(mapParent);
 			}
+			// Allow settling impact site after drive quest is done
+			if (ShipInteriorMod2.WorldComp.Unlocks.Contains("JTDriveToo"))
+			{
+				yield return SettleInExistingMapUtility.SettleCommand(mapParent.Map, requiresNoEnemies: true);
+			}
 		}
 	}
 }

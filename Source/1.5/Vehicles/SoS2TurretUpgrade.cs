@@ -26,12 +26,7 @@ namespace SaveOurShip2.Vehicles
             if(useShuttleFuel)
                 newTurret.shellCount = newTurret.turretDef.magazineCapacity;
 
-            newTurret.SetTarget(LocalTargetInfo.Invalid);
-            newTurret.ResetAngle();
-            newTurret.FillEvents_Def();
-            compTurrets.turrets.Add(newTurret);
-            compTurrets.RevalidateTurrets();
-            compTurrets.CheckDuplicateKeys();
+            vehicle.CompVehicleTurrets.AddTurret(newTurret, node.key);
         }
     }
 }

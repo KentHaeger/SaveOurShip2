@@ -8,10 +8,12 @@ namespace SaveOurShip2
 	{
 		private string ship = "shipdeftoload";
 		private Map Map;
-		public Dialog_LoadShipDef(string ship, Map map)
+		private bool isWreck;
+		public Dialog_LoadShipDef(string ship, Map map, bool isWreck = false)
 		{
 			curName = ship;
 			Map = map;
+			this.isWreck = isWreck;
 		}
 		protected override void SetName(string name)
 		{
@@ -22,14 +24,33 @@ namespace SaveOurShip2
 				Log.Error("Ship not found in database: " + name);
 				return;
 			}
-			AttackableShip shipa = new AttackableShip();
-			shipa.attackableShip = DefDatabase<ShipDef>.GetNamed(name);
-			if (shipa.attackableShip.navyExclusive)
+			if (!isWreck)
 			{
-				shipa.spaceNavyDef = DefDatabase<NavyDef>.AllDefs.Where(n => n.spaceShipDefs.Contains(shipa.attackableShip)).RandomElement();
-				shipa.shipFaction = Find.FactionManager.AllFactions.Where(f => shipa.spaceNavyDef.factionDefs.Contains(f.def)).RandomElement();
+				AttackableShip shipa = new AttackableShip();
+				shipa.attackableShip = DefDatabase<ShipDef>.GetNamed(name);
+				if (shipa.attackableShip.navyExclusive)
+				{
+					shipa.spaceNavyDef = DefDatabase<NavyDef>.AllDefs.Where(n => n.spaceShipDefs.Contains(shipa.attackableShip)).RandomElement();
+					shipa.shipFaction = Find.FactionManager.AllFactions.Where(f => shipa.spaceNavyDef.factionDefs.Contains(f.def)).RandomElement();
+				}
+				Map.passingShipManager.AddShip(shipa);
 			}
-			Map.passingShipManager.AddShip(shipa);
+			else
+			{
+				DerelictShip ship = new DerelictShip();
+				ship.wreckLevel = 3;
+				ship.derelictShip = DefDatabase<ShipDef>.GetNamed(name);
+				if (ship.derelictShip.navyExclusive)
+				{
+					ship.spaceNavyDef = DefDatabase<NavyDef>.AllDefs.Where(n => n.spaceShipDefs.Contains(ship.derelictShip)).RandomElement();
+					ship.shipFaction = Find.FactionManager.AllFactions.Where(f => ship.spaceNavyDef.factionDefs.Contains(f.def)).RandomElement();
+				}
+				else
+				{
+					ship.shipFaction = Faction.OfAncientsHostile;
+				}
+				Map.passingShipManager.AddShip(ship);
+			}
 		}
 	}
 }

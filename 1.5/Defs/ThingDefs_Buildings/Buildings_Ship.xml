@@ -1218,6 +1218,7 @@
 					<drawSize>(7,16.5)</drawSize>
 				</graphicData-->
 				<energy>true</energy>
+				<reactionless>true</reactionless>
 				<thrust>1</thrust>
 			</li>
 		</comps>
@@ -1278,6 +1279,7 @@
 					<drawSize>(11,26.5)</drawSize>
 				</graphicData-->
 				<energy>true</energy>
+				<reactionless>true</reactionless>
 				<thrust>4</thrust>
 			</li>
 		</comps>
@@ -1321,6 +1323,7 @@
 		<altitudeLayer>Building</altitudeLayer>
 		<hasInteractionCell>True</hasInteractionCell>
 		<interactionCellOffset>(0,0,1)</interactionCellOffset>
+		<interactionCellIconReverse>true</interactionCellIconReverse>
 		<stealable>false</stealable>
 		<size>(3,1)</size>
 		<pathCost>30</pathCost>
@@ -1387,6 +1390,7 @@
 		<altitudeLayer>Building</altitudeLayer>
 		<hasInteractionCell>True</hasInteractionCell>
 		<interactionCellOffset>(0,0,1)</interactionCellOffset>
+		<interactionCellIconReverse>true</interactionCellIconReverse>
 		<stealable>false</stealable>
 		<size>(3,1)</size>
 		<pathCost>30</pathCost>
@@ -1453,6 +1457,7 @@
 		<altitudeLayer>Building</altitudeLayer>
 		<hasInteractionCell>True</hasInteractionCell>
 		<interactionCellOffset>(0,0,1)</interactionCellOffset>
+		<interactionCellIconReverse>true</interactionCellIconReverse>
 		<stealable>false</stealable>
 		<size>(3,1)</size>
 		<pathCost>30</pathCost>
@@ -1568,6 +1573,7 @@
 			<WorkToBuild>16000</WorkToBuild>
 			<MaxHitPoints>150</MaxHitPoints>
 			<Flammability>0</Flammability>
+			<Mass>250</Mass>
 		</statBases>
 		<tickerType>Normal</tickerType>
 		<description>A computer core capable of housing a superhumanlike AI who can pilot your ship, accurately fire its weapons, or guide it on interstellar journeys. Includes a mechanite breeding tank which allows the AI to manifest a formgel avatar.</description>
@@ -1756,6 +1762,11 @@
 		<designationHotKey>Misc5</designationHotKey>
 		<constructionSkillPrerequisite>8</constructionSkillPrerequisite>
 		<rotatable>false</rotatable>
+        <modExtensions>
+            <li Class = "Vehicles.CustomCostDefModExtension">
+                <cost>10000</cost>
+            </li>
+        </modExtensions>
 	</ThingDef>
 	<ThingDef ParentName="BuildingBase">
 		<defName>Ship_LifeSupport_Small</defName>
@@ -1810,6 +1821,11 @@
 		<designationHotKey>Misc5</designationHotKey>
 		<constructionSkillPrerequisite>8</constructionSkillPrerequisite>
 		<rotatable>false</rotatable>
+        <modExtensions>
+            <li Class = "Vehicles.CustomCostDefModExtension">
+                <cost>10000</cost>
+            </li>
+        </modExtensions>
 	</ThingDef>
 	<!-- power -->
 	<DesignatorDropdownGroupDef>
@@ -1936,6 +1952,11 @@
 		<researchPrerequisites>
 			<li>ShipCapacitor</li>
 		</researchPrerequisites>
+        <modExtensions>
+            <li Class = "Vehicles.CustomCostDefModExtension">
+                <cost>10000</cost>
+            </li>
+        </modExtensions>
 	</ThingDef>
 	<DesignatorDropdownGroupDef>
 		<defName>Ship_Reactors</defName>
@@ -2029,6 +2050,11 @@
 		<staticSunShadowHeight>1.0</staticSunShadowHeight>
 		<designationHotKey>Misc4</designationHotKey>
 		<constructionSkillPrerequisite>12</constructionSkillPrerequisite>
+        <modExtensions>
+            <li Class = "Vehicles.CustomCostDefModExtension">
+                <cost>10000</cost>
+            </li>
+        </modExtensions>
 	</ThingDef>
 	<ThingDef ParentName="BuildingBase">
 		<defName>Ship_Reactor_Small</defName>
@@ -2119,6 +2145,11 @@
 		<staticSunShadowHeight>1.0</staticSunShadowHeight>
 		<designationHotKey>Misc4</designationHotKey>
 		<constructionSkillPrerequisite>12</constructionSkillPrerequisite>
+        <modExtensions>
+            <li Class = "Vehicles.CustomCostDefModExtension">
+                <cost>10000</cost>
+            </li>
+        </modExtensions>
 	</ThingDef>
 	<!-- bays -->
 	<DesignatorDropdownGroupDef>
@@ -2377,6 +2408,8 @@
 				<compClass>SaveOurShip2.CompShipBaySalvage</compClass>
 				<beam>true</beam>
 				<weight>10000</weight>
+				<borderSize>1</borderSize>
+				<graphicPath>Things/Building/Ship/Salvage_Bay_Roof</graphicPath>
 			</li>
 			<li Class="CompProperties_Power">
 				<compClass>CompPowerTrader</compClass>
@@ -2451,6 +2484,11 @@
 		</researchPrerequisites>
 		<designationHotKey>Misc1</designationHotKey>
 		<size>(3,3)</size>
+        <modExtensions>
+            <li Class = "Vehicles.CustomCostDefModExtension">
+                <cost>10000</cost>
+            </li>
+        </modExtensions>
 	</ThingDef>
 	<!-- crypto -->
 	<DesignatorDropdownGroupDef>
@@ -2801,6 +2839,11 @@
 		</costList>
 		<terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
 		<constructionSkillPrerequisite>8</constructionSkillPrerequisite>
+        <modExtensions>
+            <li Class = "Vehicles.CustomCostDefModExtension">
+                <cost>10000</cost>
+            </li>
+        </modExtensions>
 	</ThingDef>
 	<!-- foam -->
 	<ThingDef ParentName="BuildingBase">

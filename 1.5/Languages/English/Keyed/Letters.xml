@@ -30,6 +30,7 @@
 	<SoS.EnemyScanDesc>Using your ship's sensors, {0} has detected a nearby ship. The ship appears to be {1}. It does not respond to hails, but makes no move to attack. You can use your bridge to order an attack, or wait for it to leave peaceably.</SoS.EnemyScanDesc>
 	<SoS.DerelictScan>Derelict detected</SoS.DerelictScan>
 	<SoS.DerelictScanDesc>Using your ship's sensors, {0} has detected a nearby derelict. The ship appears to be {1}. It does not respond to hails and appears to be powered down. You can use your bridge to order an investigation, or wait for it to burn up in the atmosphere.</SoS.DerelictScanDesc>
+	<SoS.ContentPackDescription>\nThe ship was identified to be coming from: {0}</SoS.ContentPackDescription>
 	<SoS.FoundOrbitalSite>Starship bow detected!</SoS.FoundOrbitalSite>
 	<SoS.FoundSiteAI>its AI</SoS.FoundSiteAI>
 	<SoS.FoundSiteSpecial>Using your ship's sensors, {0} has detected a large, relatively intact piece of debris. It appears to be part of the very same ship which brought your original colonists to this world!\n\nThis could be your best chance to acquire a working Johnson-Tanaka drive, or even rescue any of your fellow travelers who remain in cryptosleep, but do not underestimate the dangers you will face here.</SoS.FoundSiteSpecial>
@@ -78,6 +79,7 @@
 	<SoS.HibernateWarningStandalone>The drive is ready to begin discharging its stored momentum. Once this is done, your colonists will be able to safely disassemble the drive and retrieve its Entanglement Manifold.\n\nThe process will take about 15 days, and the energy signature will be detectable from a long distance away. This sort of energy signature indicates interstellar flight capability, and will attract gangs of desperate raiders and swarms of deadly mechanoids.\n\nYou will be assaulted with an intensity you've never seen. Make sure your defenses are prepared first.</SoS.HibernateWarningStandalone>
     <SoS.CommandShipStartup>Begin discharge</SoS.CommandShipStartup>
     <SoS.CommandShipStartupDesc>Discharge the drive's stored momentum.</SoS.CommandShipStartupDesc>
+	<SoS.CommandShipStartupDisableReason>Claim the drive before discharging.</SoS.CommandShipStartupDisableReason>
 	<SoS.ImpactSiteLost>J-T drive destroyed</SoS.ImpactSiteLost>
 	<SoS.ImpactSiteLostDesc>An explosion rings out from the impact site.\n\nWithout properly completing the discharge process, the Johnson-Tanaka drive has torn itself apart. You'll need to find another drive to salvage.\n\nLuckily, the ancient ship had multiple engines - from its black box data, you are able to calculate another likely impact site.</SoS.ImpactSiteLostDesc>
 	<SoS.HibernateComplete>Discharge complete</SoS.HibernateComplete>

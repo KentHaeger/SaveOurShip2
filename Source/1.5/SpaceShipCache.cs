@@ -380,6 +380,8 @@ namespace SaveOurShip2
 		{
 			if (Engines.Any(e => e.Props.reactionless))
 				return true;
+			if (MassActual <= 2000 && Engines.Any(e => e.CanFire()))
+				return true;
 			return RCSs.Count > 0;
 		}
 		public float FuelNeeded(bool atmospheric)
