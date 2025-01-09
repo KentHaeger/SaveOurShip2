@@ -32,7 +32,10 @@ namespace SaveOurShip2
 			foreach (IntVec3 vec in interior)
 			{
 				Thing floor = ThingMaker.MakeThing(ResourceBank.ThingDefOf.ShipHullTile);
-				GenSpawn.Spawn(floor, vec, map);
+				if (vec.GetFirstBuilding(map) == null)
+				{
+					GenSpawn.Spawn(floor, vec, map);
+				}
 			}
 			foreach (IntVec3 vec in border)
 			{

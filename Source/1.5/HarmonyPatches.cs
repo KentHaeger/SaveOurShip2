@@ -3160,13 +3160,24 @@ namespace SaveOurShip2
 	}
 
 	[HarmonyPatch(typeof(GenStep_Fog), "Generate")]
-	public static class UnfogVault
+	public static class UnfogVaultAndLandedShip
 	{
 		public static void Postfix(Map map)
 		{
 			foreach (Thing casket in map.listerThings.ThingsOfDef(ThingDef.Named("Ship_AvatarCasket")))
 			{
 				FloodFillerFog.FloodUnfog(casket.Position, map);
+			}
+			ShipMapComp mapComp = map.GetComponent<ShipMapComp>();
+			foreach (SpaceShipCache ship in mapComp.ShipsOnMap.Values.Where(s => !s.IsWreck))
+			{
+				if (ship.Name == "Charlon Whitestone")
+				{
+					foreach (IntVec3 tile in ship.Area)
+					{
+						map.fogGrid.Unfog(tile);
+					}
+				}
 			}
 		}
 	}
@@ -3187,7 +3198,7 @@ namespace SaveOurShip2
 	{
 		public static void Postfix(ref PawnKindDef kind, ref bool __result, Map map)
 		{
-			__result = DefDatabase<PawnKindDef>.AllDefs.Where((PawnKindDef x) => x.RaceProps.Animal && x.RaceProps.wildness < 0.35f && (!x.race.tradeTags?.Contains("AnimalInsectSpace") ?? true) && map.mapTemperature.SeasonAndOutdoorTemperatureAcceptableFor(x.race)).TryRandomElementByWeight((PawnKindDef k) => 0.420000017f - k.RaceProps.wildness, out kind);
+			__result = DefDatabase<PawnKindDef>.AllDefs.Where((PawnKindDef x) => x.RaceProps.Animal && x.RaceProps.wildness < 0.35f && (!x.race.tradeTags?.Contains("AnimalInsectSpace") ?? true) && map.mapTemperature.SeasonAndOutdoorTemperatureAcceptableFor(x.race) && x.race.tradeTags.Contains("AnimalFarm") && !x.RaceProps.Dryad).TryRandomElementByWeight((PawnKindDef k) => 0.420000017f - k.RaceProps.wildness, out kind);
 		}
 	}
 
@@ -3988,6 +3999,28 @@ namespace SaveOurShip2
 		}
 	}
 
+	// Disallow Royalty ending quest to be generated when there are no surface player home maps,
+	// as it will be attached to player space map, which is not right for quest assuming enemy raids.
+	[HarmonyPatch(typeof(IncidentWorker_GiveQuest), "TryExecuteWorker")]
+	public static class NoRoyaltyEndingForSpaceMap
+	{
+		public static bool Prefix(IncidentWorker_GiveQuest __instance, IncidentParms parms, ref bool __result)
+		{
+			QuestScriptDef quest = __instance.def.questScriptDef ?? parms.questScriptDef;
+			Map spaceHome = ShipInteriorMod2.FindPlayerShipMap();
+			if (quest.defName == "EndGame_RoyalAscent")
+			{
+				IEnumerable<Map> surfacePlayerMaps = Find.Maps.Where((Map x) => (x.IsPlayerHome && x != spaceHome));
+				if (!surfacePlayerMaps.Any())
+				{
+					__result = false;
+					return false;
+				}
+			}
+			return true;
+		}
+	}
+
 	[HarmonyPatch(typeof(QuestPart_EndGame), "Notify_QuestSignalReceived")] //change roy ending
 	public static class ReplaceEndGame
 	{
@@ -4517,9 +4550,24 @@ namespace SaveOurShip2
     {
 		public static void Postfix(ref string disableReason, CompVehicleLauncher __instance, ref bool __result)
         {
-            if (disableReason != Translator.Translate("CommandLaunchGroupFailUnderRoof")) return;
+			//Temporary fix clarifying the message on shuttle unable to launch because of rotated
+			if (disableReason == "VF_CannotLaunchImmobile".Translate(__instance.Vehicle.LabelShort) && __instance.Vehicle.Angle != 0)
+			{
+				disableReason = "VF_Fix_CannotLaunchRotated".Translate(__instance.Vehicle.LabelShort);
+			}
 
-            VehiclePawn vehiclePawn = (VehiclePawn) __instance.parent;
+			// Somwehow, was allowed to launch overloaded.
+			VehiclePawn vehiclePawn = (VehiclePawn)__instance.parent;
+			float vehicleCapacity = vehiclePawn.GetStatValue(VehicleStatDefOf.CargoCapacity);
+			if (MassUtility.InventoryMass(vehiclePawn) > vehicleCapacity)
+			{
+				disableReason = "VF_CannotLaunchOverEncumbered".Translate(vehiclePawn.LabelShort);
+				__result = false;
+				return;
+			}
+
+			if (disableReason != Translator.Translate("CommandLaunchGroupFailUnderRoof")) return;
+
             Map map = vehiclePawn.Map;
             IntVec3 cell = vehiclePawn.Position;
 
@@ -4732,24 +4780,16 @@ namespace SaveOurShip2
         {
 			foreach (ThingComp comp in CompsToAdd)
 			{
-				__instance.comps.Add(comp);
-				PostSpawnNewComponents.CompsToSpawn.Add(comp);
+				__instance.AddComp(comp);
 			}
-			__instance.RecacheComponents();
 		}
 	}
 
 	[HarmonyPatch(typeof(VehiclePawn), "SpawnSetup")]
 	public static class PostSpawnNewComponents
 	{
-		public static List<ThingComp> CompsToSpawn=new List<ThingComp>();
-		public static float ShieldGenHealth = 0;
-		public static float StoredHeat = 0;
-
 		public static bool Prefix(VehiclePawn __instance, bool respawningAfterLoad)
 		{
-			if(respawningAfterLoad)
-				CompsToSpawn = new List<ThingComp>();
 			return true;
 		}
 
@@ -4762,17 +4802,29 @@ namespace SaveOurShip2
 					net2.RebuildHeatNet();
 				return;
 			}
-			foreach (ThingComp comp in CompsToSpawn)
-				comp.PostSpawnSetup(true);
 			CompVehicleHeatNet net = __instance.GetComp<CompVehicleHeatNet>();
 			if (net != null)
 			{
+				if (__instance.Spawned)
+				{
+					net.PostSpawnSetup(true);
+				}
 				net.RebuildHeatNet();
-				net.myNet.AddHeat(StoredHeat);
 			}
 			VehicleComponent shieldGen = __instance.statHandler.components.FirstOrDefault(comp => comp.props.key == "shieldGenerator");
-			if (shieldGen != null && ShieldGenHealth != 1)
-				shieldGen.health = ShieldGenHealth;
+			if (shieldGen != null)
+			{
+				CompShipHeatShield compShield = __instance.TryGetComp<CompShipHeatShield>();
+				ShipMapComp mapComp = __instance.Map.GetComponent<ShipMapComp>();
+				if (mapComp != null && compShield != null)
+				{
+					if (__instance.Spawned)
+					{
+						compShield.PostSpawnSetup(true);
+					}
+					mapComp.Shields.Add(compShield);
+				}
+			}
 		}
 	}
 
@@ -4800,21 +4852,8 @@ namespace SaveOurShip2
 				//__result.AddRange(aerialVehicle.vehicle.AllPawnsAboard);
 			}
 			return false;
-    }
-  }
-  
-	[HarmonyPatch(typeof(CompVehicleLauncher), "CanLaunchWithCargoCapacity")]
-	public static class RotatedLaunchWarningFix
-	{
-		//Temporary fix clarifying the message on shuttle unable to launch
-		public static void Postfix(CompVehicleLauncher __instance, ref string disableReason)
-		{
-			if( disableReason == "VF_CannotLaunchImmobile".Translate(__instance.Vehicle.LabelShort) && __instance.Vehicle.Angle != 0)
-			{
-				disableReason = "VF_Fix_CannotLaunchRotated".Translate(__instance.Vehicle.LabelShort);
-      }
-    }
-  }
+		}
+	}
   
 	[HarmonyPatch(typeof(CompUpgradeTree), "ValidateListers")]
 	public static class DisableValidateListersOffMap
@@ -4905,6 +4944,32 @@ namespace SaveOurShip2
 			{
 				__result = true;
 			}
+		}
+    }
+
+	// Biotech - when on space map, disomle kids learning options that don't work
+	[HarmonyPatch(typeof(Pawn_LearningTracker), "AddNewLearningDesire")]
+	public static class ProperLearningNeedsInSpace
+    {
+		public static bool Prefix(Pawn_LearningTracker __instance)
+        {
+			List<LearningDesireDef> learningOptions = DefDatabase<LearningDesireDef>.AllDefsListForReading.Where((LearningDesireDef ld) => !__instance.active.Contains(ld) && ld.Worker.CanGiveDesire).ToList();
+			if (__instance.Pawn.Map != null && __instance.Pawn.Map.IsSpace())
+			{
+				learningOptions = learningOptions.Where((LearningDesireDef ld) => ld.defName != "NatureRunning" && ld.defName != "Skydreaming").ToList();
+				if ((__instance.Pawn.Map.listerBuildings.allBuildingsColonist.Any((Building b) => b.def.defName == "Telescope" || b.def.defName == "TelescopeSpace")) &&
+					!__instance.active.Any((LearningDesireDef ld) => ld.defName == "AdmiringSpace"))
+				{
+					learningOptions.Add(DefDatabase<LearningDesireDef>.AllDefsListForReading.First((LearningDesireDef ld) => ld.defName == "AdmiringSpace"));
+				}
+			}
+			LearningDesireDef newDesire = learningOptions.RandomElementByWeight((LearningDesireDef ld) => ld.selectionWeight);
+			if (__instance.active.Count >= 2)
+			{
+				__instance.active.RemoveAt(0);
+			}
+			__instance.active.Add(newDesire);
+			return false;
 		}
     }
 
@@ -5208,6 +5273,51 @@ namespace SaveOurShip2
             }
         }
     }
+
+	// Space map does not have raw food sources by default, so no need to show "Need meal source" warning
+	[HarmonyPatch(typeof(Alert_NeedMealSource), "NeedMealSource")]
+	public static class SpaceMapDoesNotNeedStoveWarning
+	{
+		public static bool Prefix(Map map, ref bool __result)
+		{
+			if (map.IsSpace())
+			{
+				__result = false;
+				return false;
+			}
+			return true;
+		}
+	}
+
+	[HarmonyPatch(typeof(Alert_NeedBatteries), "NeedBatteries")]
+	public static class ShipCapacitorCountsAsBattery
+	{
+		public static bool Prefix(Map map, ref bool __result)
+		{
+			if (map.listerBuildings.ColonistsHaveBuilding((Thing building) => building is Building_ShipCapacitor))
+			{
+				__result = false;
+				return false;
+			}
+			return true;
+		}
+	}
+
+	// Need warm clothes alert is seasonal, reminds player to get warm clothes when winte is coming soon. Ans also tutorial-ish, tell new players what to do.
+	// Space map is not seasonal, it is always -100C. So this alert isn't really necessary and even reported annoying, so remove. 
+	[HarmonyPatch(typeof(Alert_NeedWarmClothes), "AnyColonistsNeedWarmClothes")]
+	public static class NoSeasonalWarmClothesInSpace
+	{
+		public static bool Prefix(Map map, ref bool __result)
+		{
+			if (map.IsSpace())
+			{
+				__result = false;
+				return false;
+			}
+			return true;
+		}
+	}
 
 	/*[HarmonyPatch(typeof(ActiveDropPod),"PodOpen")]
 	public static class ActivePodFix{

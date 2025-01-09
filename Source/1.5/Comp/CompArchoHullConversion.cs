@@ -103,8 +103,10 @@ namespace SaveOurShip2
 					}
 					if (t.def.defName == "ShipAirlock" || t.def.defName == "ShipAirlockMech") //maintain "hold open"
 					{
-                        ((Building_ShipAirlock)replacement).holdOpenInt = ((Building_ShipAirlock)t).holdOpenInt;
-						
+						((Building_ShipAirlock)replacement).holdOpenInt = ((Building_ShipAirlock)t).holdOpenInt;
+						bool forbidden = ((Building_ShipAirlock)t).GetComp<CompForbiddable>()?.Forbidden ?? false;
+						((Building_ShipAirlock)replacement).GetComp<CompForbiddable>().forbiddenInt = forbidden;
+
 					}
 					int shipIndex = mapComp.ShipIndexOnVec(parent.Position);
 					if (shipIndex > 0)
@@ -118,6 +120,14 @@ namespace SaveOurShip2
 			if (toDestroy.Count > 0)
 			{
 				ShipInteriorMod2.MoveShipFlag = true;
+				TerrainDef terrain = parent.Map.terrainGrid.TerrainAt(c);
+				bool nonShipTerrain = terrain != ResourceBank.TerrainDefOf.FakeFloorInsideShip && terrain != ResourceBank.TerrainDefOf.FakeFloorInsideShip &&
+									  terrain != ResourceBank.TerrainDefOf.FakeFloorInsideShipMech && terrain != ResourceBank.TerrainDefOf.ShipWreckageTerrain &&
+									  terrain != ResourceBank.TerrainDefOf.FakeFloorInsideShipFoam;
+				if (nonShipTerrain)
+				{
+					parent.Map.terrainGrid.RemoveTopLayer(c, false);
+				}
 				foreach (Thing t in toDestroy)
 				{
 					t.Destroy();
@@ -128,12 +138,11 @@ namespace SaveOurShip2
 					FleckMaker.ThrowSmoke(replacement.DrawPos, parent.Map, 2);
 				}
 				parent.Map.roofGrid.SetRoof(c, ResourceBank.RoofDefOf.RoofShip);
+				if (nonShipTerrain)
+				{
+					parent.Map.terrainGrid.SetTerrain(c, terrain);
+				}
 				ShipInteriorMod2.MoveShipFlag = false;
-				/*TerrainDef terrain = parent.Map.terrainGrid.TerrainAt(c);
-				parent.Map.terrainGrid.RemoveTopLayer(c, false);
-
-				if (terrain != ResourceBank.TerrainDefOf.FakeFloorInsideShip && terrain != ResourceBank.TerrainDefOf.FakeFloorInsideShip && terrain != ResourceBank.TerrainDefOf.FakeFloorInsideShipMech && terrain != ResourceBank.TerrainDefOf.ShipWreckageTerrain && terrain != ResourceBank.TerrainDefOf.FakeFloorInsideShipFoam)
-					parent.Map.terrainGrid.SetTerrain(c, terrain);*/
 			}
 		}
 

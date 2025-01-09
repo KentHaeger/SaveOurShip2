@@ -112,8 +112,8 @@ namespace SaveOurShip2
 					isOuterdoorCached = true;
 					break;
 				}
+				isOuterdoorCached = false;
 			}
-			isOuterdoorCached = false;
 			return isOuterdoorCached;
 		}
 		public IntVec3 VacuumSafeSpot()
@@ -193,7 +193,7 @@ namespace SaveOurShip2
 				}
 			}
 			//Glow when opened
-			if (OpenPct > 0 && ticks % 16 == 0 && Outerdoor())
+			if (this.Map.IsSpace() && OpenPct > 0 && ticks % 16 == 0 && Outerdoor())
 				Map.flecks.CreateFleck(FleckMaker.GetDataStatic(DrawPos, Map, FleckDefOf.LightningGlow, 3));
 		}
 		public override IEnumerable<Gizmo> GetGizmos()
