@@ -38,7 +38,13 @@ namespace SaveOurShip2
 
 		public int[] grid;
 		public bool heatGridDirty;
+		public bool breathableZoneDirty;
 		public bool loaded = false;
+
+		// Bed -> bool is breathable for fast access when rendering sleeping pawns with or without helmet
+		// Got to be static to avoid overhead of getting map component in rendering territory
+		public static Dictionary<Building_Bed, bool> bedsCache = new Dictionary<Building_Bed, bool>();
+		Area_Allowed breathableZone = null;
 
 		public ShipMapComp(Map map) : base(map)
 		{
@@ -54,7 +60,7 @@ namespace SaveOurShip2
 		public override void MapComponentUpdate()
 		{
 			base.MapComponentUpdate();
-			if (!heatGridDirty || (Find.TickManager.TicksGame % 60 != 0 && loaded))
+			if ((!heatGridDirty && !breathableZoneDirty) || (Find.TickManager.TicksGame % 60 != 0 && loaded))
 			{
 				return;
 			}
@@ -86,9 +92,35 @@ namespace SaveOurShip2
 			}
 			cachedNets = list;
 
+			if(map.IsSpace())
+            {
+				breathableZone = map.areaManager.AllAreas.FirstOrDefault(area => area.Label == "SoSBreathable".Translate()) as Area_Allowed;
+				if (breathableZone == null)
+				{
+					Log.Message("[SoS2] Creating breathable zone");
+					map.areaManager.TryMakeNewAllowed(out breathableZone);
+					breathableZone.labelInt = "SoSBreathable".Translate();
+				}
+				else
+					breathableZone.innerGrid.Clear();
+				foreach(SpaceShipCache ship in shipsOnMap.Values)
+                {
+					if (ship.IsWreck)
+					{
+						continue;
+					}
+					foreach(IntVec3 vec in ship.Area)
+                    {
+						if (VecHasLS(vec) && !ShipInteriorMod2.ExposedToOutside(vec.GetRoom(map)))
+							breathableZone.innerGrid.Set(vec, true);
+                    }
+                }
+            }
+
 			base.map.mapDrawer.WholeMapChanged(MapMeshFlagDefOf.Buildings);
 			base.map.mapDrawer.WholeMapChanged(MapMeshFlagDefOf.Things);
 			heatGridDirty = false;
+			breathableZoneDirty = false;
 			loaded = true;
 		}
 		void AccumulateToNetNew(HashSet<CompShipHeat> compBatch, ShipHeatNet net)
@@ -210,6 +242,11 @@ namespace SaveOurShip2
 				Scribe_Collections.Look<Building_ShipBridge>(ref MapRootListAll, "MapRootListAll", LookMode.Reference); //td rem?
 				Scribe_Deep.Look(ref ShuttlesOnMissions, "ShuttlesOnMissions", this);
 				Scribe_Collections.Look<ShuttleMissionData>(ref ShuttleMissions, "ShuttleMissions", LookMode.Deep);
+			}
+			if (Scribe.mode == LoadSaveMode.LoadingVars)
+			{
+				// this cache has to be static - so clear it on load
+				bedsCache.Clear();
 			}
 		}
 		//SC only - both maps
@@ -383,7 +420,7 @@ namespace SaveOurShip2
 		public List<CompShipHeatShield> Shields = new List<CompShipHeatShield>(); //workjob, hit detect
 		public List<Building_ShipCloakingDevice> Cloaks = new List<Building_ShipCloakingDevice>(); //td get this into shipcache?
 		public List<Building_ShipTurretTorpedo> TorpedoTubes = new List<Building_ShipTurretTorpedo>(); //workjob
-		public List<CompBuildingConsciousness> Spores = new List<CompBuildingConsciousness>(); //workjob
+		public List<CompBuildingConsciousness> Consciousness = new List<CompBuildingConsciousness>();
 		public List<CompShipBay> Bays = new List<CompShipBay>(); //landing checks
 		public HashSet<IntVec3> MapExtenderCells = new HashSet<IntVec3>(); //extender EVA checks
 		public List<CompEngineTrail> MaxSalvageWeightOnMap(out int maxMass, out float fuel) //for moving/stabilizing wrecks
@@ -682,9 +719,9 @@ namespace SaveOurShip2
 			{
 				if (t is Building b && b.def.CanHaveFaction && b.Faction != Faction.OfPlayer)
 					buildings.Add(b);
-				else if (t is VehiclePawn p)
+				else if (t is VehiclePawn p && p.Faction != Faction.OfPlayer)
 					shuttles.Add(p);
-				else if (t is Pawn pawn && pawn.IsNonMutantAnimal)
+				else if (t is Pawn pawn && pawn.IsNonMutantAnimal && pawn.Faction != Faction.OfPlayer)
 					animals.Add(pawn);
 				else if (t is DetachedShipPart)
 					things.Add(t);
@@ -823,8 +860,7 @@ namespace SaveOurShip2
 			}
 			else //using player ship combat rating
 			{
-				Difficulty = (float)ModSettings_SoS.difficultySoS;
-				CR = MapThreat() * Difficulty;
+				CR = MapThreat() * (float)ModSettings_SoS.difficultySoS;
 				if (CR < 30) //minimum rating
 					CR = 30;
 				else //reduce difficulty early or at low rating
@@ -924,7 +960,16 @@ namespace SaveOurShip2
 				faction.TryAffectGoodwillWith(Faction.OfPlayer, -150);
 
 			//spawn map
-			IntVec3 mapSize = new IntVec3(250, 1, 250);
+			int mapSizeInt = 250;
+			if (shipDef != null)
+			{
+				int requiredSize = Math.Max(shipDef.sizeX + shipDef.offsetX * 2, shipDef.sizeZ + shipDef.offsetZ * 2);
+				if (requiredSize > 250 && requiredSize <= 500)
+				{
+					mapSizeInt = requiredSize;
+				}
+			}
+			IntVec3 mapSize = new IntVec3(mapSizeInt, 1, mapSizeInt);
 			if (fleet && CR > 2000 && ModSettings_SoS.enemyMapSize > 250)
 			{
 				int mapX = Math.Max(250, (ModSettings_SoS.enemyMapSize + 100) / 2);
@@ -938,6 +983,7 @@ namespace SaveOurShip2
 			mp.Theta = theta;
 			mp.Phi = phi;
 			var newMapComp = newMap.GetComponent<ShipMapComp>();
+			newMapComp.Difficulty = (float)ModSettings_SoS.difficultySoS;
 			newMapComp.ShipMapAI = ShipAI.normal;
 			if (passingShip is DerelictShip d)
 			{
@@ -1760,7 +1806,7 @@ namespace SaveOurShip2
 								if (shuttlesToBeFilled.Count > 0 && p.mindState.duty != null)
 								{
 									p.mindState.duty.transportersGroup = 0;
-									VehiclePawn myShuttle = shuttlesToBeFilled.Where(shuttle=>p.CanReserveAndReach(shuttle, PathEndMode.Touch, Danger.Deadly)).RandomElement();
+									VehiclePawn myShuttle = shuttlesToBeFilled.Where(shuttle => p.CanReserveAndReach(shuttle, PathEndMode.Touch, Danger.Deadly)).RandomElement();
 									if (myShuttle != null)
 									{
 										Job job = new Job(JobDefOf_Vehicles.Board, myShuttle);
@@ -1810,8 +1856,8 @@ namespace SaveOurShip2
 								if (shuttlesToBeFilled.Count > 0 && p.mindState.duty != null)
 								{
 									p.mindState.duty.transportersGroup = 1;
-									VehiclePawn myShuttle = shuttlesToBeFilled.Where(shuttle=>p.CanReserveAndReach(shuttle, PathEndMode.Touch, Danger.Deadly)).RandomElement();
-									if (myShuttle != null && myShuttle.NextAvailableHandler()!=null)
+									VehiclePawn myShuttle = shuttlesToBeFilled.Where(shuttle => p.CanReserveAndReach(shuttle, PathEndMode.Touch, Danger.Deadly)).RandomElement();
+									if (myShuttle != null && myShuttle.NextAvailableHandler() != null)
 									{
 										myShuttle.PromptToBoardVehicle(p, myShuttle.NextAvailableHandler());
 										if (myShuttle.NextAvailableHandler() == null)
@@ -1861,7 +1907,7 @@ namespace SaveOurShip2
 									var shuttleMapComp = shuttle.Map.GetComponent<ShipMapComp>(); //td wouldnt it always be this.?
 									if (ShipInteriorMod2.ShuttleHasLaser(shuttle))
 									{
-										if(Rand.Chance(InterceptMissionChance()))
+										if (Rand.Chance(InterceptMissionChance()))
 											((ShuttleTakeoff)shuttle.CompVehicleLauncher.launchProtocol).TempMissionRef = shuttleMapComp.RegisterShuttleMission(shuttle, ShuttleMission.INTERCEPT);
 										else
 											((ShuttleTakeoff)shuttle.CompVehicleLauncher.launchProtocol).TempMissionRef = shuttleMapComp.RegisterShuttleMission(shuttle, ShuttleMission.STRAFE);
@@ -1875,7 +1921,7 @@ namespace SaveOurShip2
 									shuttlesYetToLaunch.Remove(shuttle);
 								}
 							}
-							if(shuttlesYetToLaunch.Count==0)
+							if (shuttlesYetToLaunch.Count == 0)
 								startedPilotLoad = false; //Reset shuttles so that carriers can refuel their fighters
 						}
 					}
@@ -1995,7 +2041,7 @@ namespace SaveOurShip2
 							MoveToMap = PrevMap;
 					}
 
-					if (MoveToMap != null && ShipInteriorMod2.CanShipLandOnMap(map, MoveToMap)) //ground map exists and has room
+					if (MoveToMap != null) //ground map exists
 					{
 						ShipInteriorMod2.MoveShip(ShipsOnMap.Values.First().Core, MoveToMap, MoveToVec);
 					}
@@ -2133,6 +2179,34 @@ namespace SaveOurShip2
 					}
 				}
 			}
+
+			// Invalidate caches related to DrawHelmetsInUnbreathable Harmony patch
+			if (Find.CurrentMap == map && map.IsSpace())
+			{
+				// Wait intervals are really big in order to have minimal performance impact
+				// Intended casee to cover is player starter ship or some ship in player fleet not having life support for days
+				// and so plyer casully sees crew sleeping in helmets in unbreathable atmosphere, which does not need frequent updates.
+				if (tick % 600 == 0)
+				{
+					bedsCache.Clear();
+					// When zoomed out, pawn graphics update really rare. So, manual invalidation for their cache.
+					// Notable more often than they do it themselves, but still decently rare
+					IEnumerable<Pawn> playerPawns = map.mapPawns.AllPawns.Where(p => p.Faction == Faction.OfPlayer && p.InBed());
+					foreach (Pawn p in playerPawns)
+					{
+						p.Drawer.renderer.SetAllGraphicsDirty();
+					}
+				}
+				// Non-player pawns are less important and also can be numerous like Dreadnaught crew, so more rare updates
+				if (tick % 1200 == 0)
+				{
+					IEnumerable<Pawn> nonPlayerPawns = map.mapPawns.AllPawns.Where(p => p.Faction != Faction.OfPlayer && p.InBed());
+					foreach (Pawn p in nonPlayerPawns)
+					{
+						p.Drawer.renderer.SetAllGraphicsDirty();
+					}
+				}
+			}
 		}
 
 		bool IsShuttleCombatReady(VehiclePawn shuttle)
@@ -2180,7 +2254,18 @@ namespace SaveOurShip2
 			{
 				if (ShipIndexOnVec(p.Position) == -1)
 				{
-					pawns.Add(p);
+					bool pawnOnAirlockFloor = false;
+					foreach(Thing t in p.Position.GetThingList(map))
+					{
+						if( t.def == ResourceBank.ThingDefOf.ShipAirlockBeamTile)
+						{
+							pawnOnAirlockFloor = true;
+						}
+					}
+					if (!pawnOnAirlockFloor)
+					{
+						pawns.Add(p);
+					}
 				}
 			}
 			if (pawns.Any())
@@ -2273,6 +2358,8 @@ namespace SaveOurShip2
 			float enginePower = float.MaxValue;
 			foreach (SpaceShipCache ship in ShipsOnMap.Values)
 			{
+				if (ship.BuildingCount < 5)
+					continue;
 				if (!ship.CanMove())
 					return 0;
 				float currPower = ship.ThrustToWeight();
@@ -2512,6 +2599,17 @@ namespace SaveOurShip2
 		}
 
 		//shuttles
+		public Rot4 GetShuttleLandingRotation(VehiclePawn vehicle)
+		{
+			if (vehicle.def.defName == "SoS2_Shuttle_Personal")
+			{
+				return Rot4.North;
+			}
+			else
+			{
+				return Rot4.East;
+			}
+		}
         public void GetChildHolders(List<IThingHolder> outChildren)
         {
 			foreach (VehiclePawn shuttle in ShuttlesOnMissions)
@@ -2580,7 +2678,7 @@ namespace SaveOurShip2
 							}
 						}
 						VehicleSkyfaller_Arriving vehicleSkyfaller_Arriving = (VehicleSkyfaller_Arriving)VehicleSkyfallerMaker.MakeSkyfaller(mission.shuttle.CompVehicleLauncher.Props.skyfallerIncoming, mission.shuttle);
-						GenSpawn.Spawn(vehicleSkyfaller_Arriving, target.Cell, mapToSpawnIn, Rot4.East);
+						GenSpawn.Spawn(vehicleSkyfaller_Arriving, target.Cell, mapToSpawnIn, GetShuttleLandingRotation(mission.shuttle));
 					},
 					(LocalTargetInfo info) => { var bay = info.Cell.GetThingList(mapToSpawnIn).Where(t => t.TryGetComp<CompShipBay>() != null)?.FirstOrDefault(); return bay==null || bay.TryGetComp<CompShipBay>().CanFitShuttleSize(mission.shuttle)!=IntVec3.Zero; }, null, null, mission.shuttle.VehicleDef.rotatable && !(mission.shuttle.CompVehicleLauncher.launchProtocol.LandingProperties?.forcedRotation).HasValue, forcedTargeting: true);
 				}
@@ -2620,21 +2718,24 @@ namespace SaveOurShip2
 							while (i < 10)
 							{
 								IntVec3 v = ship.OuterCells().RandomElement();
-								vec = FindTargetForPod(mission, v);
+								vec = FindTargetForPod(mission, mapToSpawnIn, v);
 								if (vec != IntVec3.Invalid)
+								{
 									break;
+								}
 								i++;
 							}
 						}
 						if(vec==IntVec3.Invalid)
                         {
+							Log.Warning("Fallback(2) to shuttle random cell arrival");
 							CellFinder.TryFindRandomCell(map, (IntVec3 cell) => { return !map.roofGrid.Roofed(cell); }, out vec);
 						}
 					}
 
 					Messages.Message("SoS.EnemyBoardingShuttleArrived".Translate(), MessageTypeDefOf.NegativeEvent);
 					VehicleSkyfaller_Arriving vehicleSkyfaller_Arriving = (VehicleSkyfaller_Arriving)VehicleSkyfallerMaker.MakeSkyfaller(mission.shuttle.CompVehicleLauncher.Props.skyfallerIncoming, mission.shuttle);
-					GenSpawn.Spawn(vehicleSkyfaller_Arriving, vec, mapToSpawnIn, Rot4.East);
+					GenSpawn.Spawn(vehicleSkyfaller_Arriving, vec, mapToSpawnIn, GetShuttleLandingRotation(mission.shuttle));
 				}
 			}
         }
@@ -2689,12 +2790,115 @@ namespace SaveOurShip2
 				return "Mission_" + uniqueID;
             }
 		}
-		public IntVec3 FindTargetForPod(ShuttleMissionData mission, IntVec3 v)
+
+		private bool AnyObstacleOrSkyfallersAtVehicleLocation(Map map, IntVec3 location, VehicleDef vehicle)
+		{
+			// Searching for skyfallers (this is not covered by Vehiclke Framework released version yet) at supposed target location.
+			// For example, for 3x3 shuttle, searc are is from coord - 1 coord + 1, inclusive, so delta is 1
+			int vehicleDeltaX = Mathf.FloorToInt(vehicle.Size.x / 2.0f);
+			int vehicleDeltaZ = Mathf.FloorToInt(vehicle.Size.z / 2.0f);
+			for (int x = location.x - vehicleDeltaX; x <= location.x + vehicleDeltaX; x++)
+			{
+				for (int z = location.z - vehicleDeltaZ; z <= location.z + vehicleDeltaZ; z++)
+				{
+					foreach (Thing t in map.thingGrid.ThingsAt(new IntVec3(x, 0, z)))
+					{
+						if (t is VehiclePawn)
+						{
+							return true;
+						}
+						// TODO: due to issue with VF Passability check, checking for landing obstacles manually.
+						else if (t.def.passability != Traversability.Standable)
+						{
+							return true;
+						}
+					}
+				}
+			}
+			// but also have to take into accout that skyfaller does not have the size of the vehicle arriving, it's only present in one tile.
+			// so have to pre-caheck up to 3 tiles away to take into account 7x7 shuttle.
+			int otherVehicleDelta = 3;
+			for (int x = location.x - vehicleDeltaX - otherVehicleDelta; x <= location.x + vehicleDeltaX + otherVehicleDelta; x++)
+			{
+				for (int z = location.z - vehicleDeltaZ - otherVehicleDelta; z <= location.z + vehicleDeltaZ + otherVehicleDelta; z++)
+				{
+					foreach (Thing t in map.thingGrid.ThingsAt(new IntVec3(x, 0, z)))
+					{
+
+						if (t is VehicleSkyfaller skyfaller)
+						{
+							int minDistanceX = Mathf.FloorToInt(skyfaller.vehicle.VehicleDef.Size.x / 2.0f) + vehicleDeltaX + 1;
+							int minDistanceZ = Mathf.FloorToInt(skyfaller.vehicle.VehicleDef.Size.z / 2.0f) + vehicleDeltaZ + 1;
+							if (Math.Abs(x - location.x) < minDistanceX || Math.Abs(z - location.z) < minDistanceZ)
+							{
+								return true;
+							}
+						}
+					}
+				}
+			}
+			return false;
+		}
+		public IntVec3 FindTargetForPod(ShuttleMissionData mission, Map targetMap, IntVec3 v)
 		{
 			if (!ModSettings_SoS.shipMapPhysics) //Default fallback, find landing spot next to ship's outer rooms
 			{
+				// New option - search moves in the direction opposite to engines exhaust (+random part) to avoid landing into engene exhaust.
+				// Not limited by radius, goes till map edge, so as long as there is decent space between map adge and lpayer ship, will find good drop locations.
+				// New option ignores given coordintes (v) for now.
+				ShipMapComp mapComp = targetMap.GetComponent<ShipMapComp>();
+				SpaceShipCache mainShip = mapComp.ShipsOnMap.Values.OrderByDescending(x => x.Threat).First();
+				IntVec3 location = mainShip.Core.Position;
+				Rot4 moveRot = mainShip.Engines.Any() ? mainShip.Engines.First().parent.Rotation : mainShip.Core.Rotation;
+				IntVec3 moveDirection = moveRot.AsVector2.ToVector3().ToIntVec3();
+
+				// To spread out boarding partym, randomize search start point.
+				// 3-way random: no shift and perpendicular shift in either of possible directions.
+				IntVec3 randomShift = moveDirection.RotatedBy(RotationDirection.Clockwise) * 10;
+				float random = Rand.Value;
+				if (random < 0.33)
+				{
+					randomShift = IntVec3.Zero;
+				}
+				else if (random < 0.67)
+				{
+					randomShift *= -1;
+				}
+				location += randomShift;
+
+				// Engenes rot is opposite to engine exhaust, so moving in that direction likely helps boardrs to avoid engine-death on arrival.
+				while (location.InBounds(map))
+				{
+					// Move in intended direction at 2 speed and drift randomly by 1 tile to produce somewhat random result
+					location += moveDirection * 2;
+					location += Rot4.Random.AsVector2.ToVector3().ToIntVec3();
+					if (location.InBounds(targetMap) && GenGridVehicles.Walkable(location, mission.shuttle.VehicleDef, targetMap) && mapComp.ShipIndexOnVec(location) == -1 &&
+						!AnyObstacleOrSkyfallersAtVehicleLocation(targetMap, location, mission.shuttle.VehicleDef))
+					{
+						if (mission.shuttle.VehicleDef.size.x > 1)
+						{
+							Log.Warning("- Found shuttle location:" + location);
+						}
+						return location;
+					}
+				}
+				// Old code left as very just-in-case fallback. Limited by radius, so somteimes the result will cause roof punching.
 				var result = IntVec3.Invalid;
-				CellFinder.TryFindRandomCellNear(v, map, 9, (IntVec3 cell) => { return cell.Standable(map) && !map.roofGrid.Roofed(cell); }, out result);
+				IntVec2 shuttleSize = mission.shuttle.def.Size;
+				CellFinder.TryFindRandomCellNear(v, targetMap, 15, (IntVec3 cell) => {
+					if (!cell.Standable(targetMap) || targetMap.roofGrid.Roofed(cell) || !GenGridVehicles.Walkable(cell, mission.shuttle.VehicleDef, targetMap))
+						return false; 
+					for(int i = -shuttleSize.x / 2; i < shuttleSize.x /2; i++)
+                    {
+						for (int j = -shuttleSize.z / 2; j < shuttleSize.z / 2; j++)
+                        {
+							IntVec3 adj = v + new IntVec3(i, 0, j);
+							if (!adj.Standable(targetMap) || targetMap.roofGrid.Roofed(adj))
+								return false;
+                        }
+                    }
+					return true;
+				}, out result);
 				if (result != IntVec3.Invalid)
 					return result;
 			}

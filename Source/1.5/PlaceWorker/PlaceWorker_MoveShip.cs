@@ -61,7 +61,7 @@ namespace SaveOurShip2
 						}
 					}
 				}
-				foreach (SketchEntity current in ship.conflictSketch?.Entities) //nothing allowed in this
+				foreach (SketchEntity current in ship.conflictSketch?.Entities) //no buildings allowed in this
 				{
 					IntVec3 vec = loc + current.pos;
 					if (!vec.InBounds(map))
@@ -69,7 +69,7 @@ namespace SaveOurShip2
 						result = false;
 						break;
 					}
-					if (vec.GetThingList(map).Any())
+					if (vec.GetFirstBuilding(map) != null)
 					{
 						result = false;
 						break;

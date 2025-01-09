@@ -80,6 +80,10 @@ namespace SaveOurShip2
 			{
 				stringBuilder.AppendLine(inspectString);
 			}
+			if (heatComp.myNet != null)
+			{
+				stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.HeatDepletionLevel", (heatComp.myNet.DepletionRatio).ToString("P0")));
+			}
 			if (active)
 			{
 				stringBuilder.AppendLine("Active");//TranslatorFormattedStringExtensions.Translate(

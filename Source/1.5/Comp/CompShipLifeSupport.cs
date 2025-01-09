@@ -37,5 +37,16 @@ namespace SaveOurShip2
 			base.PostExposeData();
 			Scribe_Values.Look<bool>(ref active, "active", false);
 		}
+
+		public override void ReceiveCompSignal(string signal)
+		{
+			if (parent.Map.IsSpace())
+			{
+				if (signal == "PowerTurnedOff" || signal == "FlickedOff")
+					parent.Map.GetComponent<ShipMapComp>().breathableZoneDirty = true;
+				else if (signal == "PowerTurnedOn" || signal == "FlickedOn")
+					parent.Map.GetComponent<ShipMapComp>().breathableZoneDirty = true;
+			}
+		}
 	}
 }

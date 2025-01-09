@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using RimWorld;
 using RimWorld.Planet;
 using Verse;
@@ -85,7 +86,7 @@ namespace SaveOurShip2
 			Scribe_Values.Look(ref easyMode, "easyMode", false);
 			Scribe_Values.Look(ref shipMapPhysics, "shipMapPhysics", false);
 			//Scribe_Values.Look(ref useVacuumPathfinding, "useVacuumPathfinding", true);
-			Scribe_Values.Look(ref renderPlanet, "renderPlanet", false);
+			Scribe_Values.Look(ref renderPlanet, "renderPlanet", true);
 			Scribe_Values.Look(ref useSplashScreen, "useSplashScreen", true);
 			Scribe_Values.Look(ref persistShipUI, "persistShipUI", false);
 			Scribe_Values.Look(ref archoRemove, "archoRemove", false);
@@ -110,7 +111,7 @@ namespace SaveOurShip2
 			easyMode = false,
 			shipMapPhysics = false,
 			//useVacuumPathfinding = true,
-			renderPlanet = false,
+			renderPlanet = true,
 			useSplashScreen = true,
 			persistShipUI = false,
 			archoRemove = false,
@@ -130,7 +131,7 @@ namespace SaveOurShip2
 		{
 			base.GetSettings<ModSettings_SoS>();
 		}
-		public const string SOS2version = "SteamV2.7.1";
+		public const string SOS2version = "GithubV2.7.4";
 		public const int SOS2ReqCurrentMinor = 5;
 		public const int SOS2ReqCurrentBuild = 4062;
 
@@ -183,6 +184,7 @@ namespace SaveOurShip2
 		public static List<ThingDef> randomPlants;
 		public static Dictionary<ThingDef, ThingDef> wreckDictionary;
 		public static Dictionary<ThingDef, ThingDef> archoConversions;
+		private static Type adaptiveStorageType;
 
 		public override void DoSettingsWindowContents(Rect inRect)
 		{
@@ -370,7 +372,6 @@ namespace SaveOurShip2
 			};
 			allowedToObserve = new string[]
 			{
-				"Settlement",
 				"MoonPillarSite",
 				"TribalPillarSite",
 				"ShipEngineImpactSite",
@@ -601,12 +602,9 @@ namespace SaveOurShip2
 			int rarity = Rand.RangeInclusive(1, 2);
 			Log.Message("Spawning ship from CR: " + CR + " tradeShip: " + tradeShip + " allowNavyExc: " + allowNavyExc + " randomFleet: " + randomFleet + " rarityLevel: " + rarity + " minZ: " + minZ + " maxZ: " + maxZ);
 			List<ShipDef> check = new List<ShipDef>();
-			if (randomFleet)
-			{
-				check = ships.Where(def => ValidShipDef(def, 0.7f * CR, 1.1f * CR, tradeShip, allowNavyExc, randomFleet, rarity, minZ, maxZ)).ToList();
-				if (check.Any())
-					return check.RandomElement();
-			}
+			check = ships.Where(def => ValidShipDef(def, 0.7f * CR, 1.1f * CR, tradeShip, allowNavyExc, randomFleet, rarity, minZ, maxZ)).ToList();
+			if (check.Any())
+				return check.RandomElement();
 			Log.Message("fallback 0");
 			check = ships.Where(def => ValidShipDef(def, 0.5f * CR, 1.3f * CR, tradeShip, allowNavyExc, randomFleet, rarity, minZ, maxZ)).ToList();
 			if (check.Any())
@@ -977,8 +975,8 @@ namespace SaveOurShip2
 							VehicleDef def = DefDatabase<VehicleDef>.GetNamed(shape.shapeOrDef);
 							VehiclePawn vehicle = VehicleSpawner.GenerateVehicle(def, fac);
 							vehicle.CompFueledTravel?.Refuel(vehicle.CompFueledTravel.FuelCapacity);
-							SpawnShuttleUpgrades(vehicle, shipDef, wreckLevel, passingShip);
 							GenSpawn.Spawn(vehicle, adjPos, map);
+							SpawnShuttleUpgrades(vehicle, shipDef, wreckLevel, passingShip);
 							vehicle.ignition.Drafted = false;
 						}
 					}
@@ -1934,6 +1932,7 @@ namespace SaveOurShip2
 			mapComp.ShipMapState = ShipMapState.inTransit;
 			CameraJumper.TryJump(map.Center, map);
 		}
+
 		//td change or make new for call on ship direct
 		public static void MoveShip(Building core, Map targetMap, IntVec3 adjustment, Faction fac = null, byte rotNum = 0, bool includeRock = false, bool clearArea = false)
 		{
@@ -1956,12 +1955,14 @@ namespace SaveOurShip2
 			List<Room> roomsToTemp = new List<Room>();
 			List<IntVec3> fogToCopy = new List<IntVec3>();
 			List<Tuple<IntVec3, float>> posTemp = new List<Tuple<IntVec3, float>>();
-			List<Tuple<IntVec3, TerrainDef>> terrainToCopy = new List<Tuple<IntVec3, TerrainDef>>();
+			List<Tuple<IntVec3, TerrainDef, ColorDef>> terrainToCopy = new List<Tuple<IntVec3, TerrainDef, ColorDef>>();
 			List<Tuple<IntVec3, RoofDef>> roofToCopy = new List<Tuple<IntVec3, RoofDef>>();
 			List<IntVec3> fireExplosions = new List<IntVec3>();
 			List<CompEngineTrail> nukeExplosions = new List<CompEngineTrail>();
 			List<Pawn> pawns = new List<Pawn>();
 			List<Plant> plants = new List<Plant>();
+			Dictionary<Thing, int> adaptiveStorageCapacities = new Dictionary<Thing, int>();
+			adaptiveStorageType = Type.GetType("AdaptiveStorage.ThingClass, AdaptiveStorageFramework", false);
 			int rotb = 4 - rotNum;
 
 			// Transforms vector from initial position to final according to desired movement/rotation.
@@ -2125,14 +2126,16 @@ namespace SaveOurShip2
 				}
 				//store terrain
 				var sourceTerrain = sourceMap.terrainGrid.TerrainAt(pos);
+				ColorDef sourceColor = sourceMap.terrainGrid.ColorAt(pos);
 				if (sourceTerrain.layerable)
 				{
-					terrainToCopy.Add(new Tuple<IntVec3, TerrainDef>(adjustedPos, sourceTerrain));
+					terrainToCopy.Add(new Tuple<IntVec3, TerrainDef, ColorDef>(adjustedPos, sourceTerrain, sourceColor));
+
 					sourceMap.terrainGrid.RemoveTopLayer(pos, false);
 				}
 				else if (includeRock && IsRock(sourceTerrain))
 				{
-					terrainToCopy.Add(new Tuple<IntVec3, TerrainDef>(adjustedPos, sourceTerrain));
+					terrainToCopy.Add(new Tuple<IntVec3, TerrainDef, ColorDef>(adjustedPos, sourceTerrain, sourceColor));
 					sourceMap.terrainGrid.SetTerrain(pos, ResourceBank.TerrainDefOf.EmptySpace);
 				}
 				if (pos.Fogged(sourceMap))
@@ -2221,9 +2224,8 @@ namespace SaveOurShip2
 			{
 				if (thing is Pawn pawn && (!pawn.Dead || !pawn.Downed))
 				{
-					pawn.pather.StopDead();
 					thing.Position = CellFinder.RandomClosewalkCellNear(thing.Position, targetMap, 50, (IntVec3 x) => !targetArea.Contains(x));
-					pawn.pather.nextCell = pawn.Position.RandomAdjacentCell8Way();
+					pawn.Notify_Teleported();
 				}
 				else if (!thing.Destroyed)
 					thing.Destroy();
@@ -2264,7 +2266,21 @@ namespace SaveOurShip2
 					try
 					{
 						if (spawnThing.Spawned)
+						{
+							// The issue with adaptive storage is when de-spawned and later spwned in new shiup location, storage buildings have
+							// TotalSlots proerty incottectly set to 1.
+							// Saving that property, then applying after ship move is not ideal, but fixes everthing that was found to be wrong when testng.
+							// Check with IsAssignableFrom is for derived types to be handled too, as their existence is supported by Adaptive Storage design.
+							if (spawnThing.def.building != null && spawnThing.def.building.maxItemsInCell > 1)
+							{
+								if (adaptiveStorageType != null && adaptiveStorageType.IsAssignableFrom(spawnThing.GetType()))
+								{
+									int totalSlots = (int)spawnThing.GetType().GetProperty("TotalSlots", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).GetValue(spawnThing);
+									adaptiveStorageCapacities.Add(spawnThing, totalSlots);
+								}
+							}
 							spawnThing.DeSpawn();
+						}
 					}
 					catch (Exception e)
 					{
@@ -2327,16 +2343,17 @@ namespace SaveOurShip2
 			}
 			foreach (Thing spawnThing in toMoveShipParts)
 			{
-				ReSpawnThingOnMap(spawnThing, targetMap, adjustment, rotb, fac);
+				ReSpawnThingOnMap(spawnThing, targetMap, adjustment, rotb, null, fac);
 			}
 			foreach (Thing spawnThing in toMoveBuildings)
 			{
-				ReSpawnThingOnMap(spawnThing, targetMap, adjustment, rotb, fac);
+				// adaptiveStorageCapacities only needed when respawning buldings
+				ReSpawnThingOnMap(spawnThing, targetMap, adjustment, rotb, adaptiveStorageCapacities, fac);
 			}
 			foreach (Thing spawnThing in toMoveThings)
 			{
 				if(!(spawnThing is Plant))
-					ReSpawnThingOnMap(spawnThing, targetMap, adjustment, rotb, fac);
+					ReSpawnThingOnMap(spawnThing, targetMap, adjustment, rotb, null, fac);
 			}
 			if (devMode)
 				watch.Record("moveThings");
@@ -2456,12 +2473,13 @@ namespace SaveOurShip2
 			//move terrain
 			try
 			{
-				foreach (Tuple<IntVec3, TerrainDef> tup in terrainToCopy)
+				foreach (Tuple<IntVec3, TerrainDef, ColorDef> tup in terrainToCopy)
 				{
 					var targetTile = targetMap.terrainGrid.TerrainAt(tup.Item1);
 					if (!targetTile.layerable || IsHull(targetTile))
 					{
 						targetMap.terrainGrid.SetTerrain(tup.Item1, tup.Item2);
+						targetMap.terrainGrid.SetTerrainColor(tup.Item1, tup.Item3);
 					}
 				}
 				if (includeRock)
@@ -2478,7 +2496,7 @@ namespace SaveOurShip2
 			}
 			foreach(Plant plant in plants)
             {
-				ReSpawnThingOnMap(plant, targetMap, adjustment, rotb, fac);
+				ReSpawnThingOnMap(plant, targetMap, adjustment, rotb, null, fac);
 			}
 			if (devMode)
 				watch.Record("moveTerrain");
@@ -2574,7 +2592,7 @@ namespace SaveOurShip2
 				Log.Message("SOS2: ".Colorize(Color.cyan) + sourceMap + " Ship move complete in ".Colorize(Color.green) + watch.MakeReport());
 			}
 		}
-		private static void ReSpawnThingOnMap(Thing spawnThing, Map targetMap, IntVec3 adjustment, int rotb, Faction fac=null)
+		private static void ReSpawnThingOnMap(Thing spawnThing, Map targetMap, IntVec3 adjustment, int rotb, Dictionary<Thing, int> adaptiveStorageCapacities, Faction fac = null)
 		{
 			if (spawnThing.Destroyed)
 				return;
@@ -2626,7 +2644,25 @@ namespace SaveOurShip2
 
 			spawnThing.SpawnSetup(targetMap, !spawnThing.def.HasModExtension<SoSSpawnOverride>());
 
-			if(spawnThing is Pawn pawn)
+			if (spawnThing.def.building != null && spawnThing.def.building.maxItemsInCell > 1)
+			{
+				if (adaptiveStorageType != null && adaptiveStorageType.IsAssignableFrom(spawnThing.GetType()))
+				{
+					if (adaptiveStorageCapacities.ContainsKey(spawnThing))
+					{
+						try
+						{
+							spawnThing.GetType().GetProperty("TotalSlots", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).SetValue(spawnThing, adaptiveStorageCapacities[spawnThing]);
+						}
+						catch (Exception e)
+						{
+							Log.Warning("Error applying adaptive storage capacity: " + e.Message);
+						}
+					}
+				}
+			}
+
+			if (spawnThing is Pawn pawn)
 				pawn.pather.ResetToCurrentPosition();
 		}
 		public static void AddPawnToLord(Map map, Pawn p)
@@ -2688,7 +2724,7 @@ namespace SaveOurShip2
 					if (pawn.jobs != null)
 					{
 						pawn.jobs.ClearQueuedJobs();
-						pawn.jobs.EndCurrentJob(JobCondition.Incompletable);
+						pawn.jobs.EndCurrentJob(JobCondition.Incompletable, false);
 					}
 					if (pawn is VehiclePawn vehicle)
 						vehicle.inventory.DropAllNearPawn(vehicle.Position);
@@ -2844,6 +2880,8 @@ namespace SaveOurShip2
 				Scribe_Collections.Look<TerrainDef>(ref terrainDefs, "terrainDefs");
 				Scribe_Collections.Look<IntVec3>(ref roofPos, "roofPos");
 				Scribe_Collections.Look<RoofDef>(ref roofDefs, "roofDefs");
+				IntVec3 mapSize = map.Size;
+				Scribe_Values.Look<IntVec3>(ref mapSize, "mapSize");
 			}));
 
 			Log.Message("Saved ship with building " + core);
@@ -3075,14 +3113,15 @@ namespace SaveOurShip2
 			}
 			return false;
 		}
-		
-		//shuttles //td could vehiclepawn be extended?
-		public static bool CanLaunchUnderRoof(VehiclePawn __instance)
-		{
-			var bay = __instance.Position.GetThingList(__instance.Map).Where(t => t.TryGetComp<CompShipBay>() != null).FirstOrDefault();
-			return bay != null && bay.TryGetComp<CompShipBay>().CanLaunchShuttle(__instance);
-		}
-		public static bool IsShuttle(VehiclePawn vehicle)
+
+        //shuttles //td could vehiclepawn be extended?
+        //parameters map and cell was added to allow RimNauts 2 to patch for custom roof
+        public static bool CanLaunchUnderRoof(Map map, IntVec3 cell, VehiclePawn vehiclePawn)
+        {
+            var bay = cell.GetThingList(map).Where(t => t.TryGetComp<CompShipBay>() != null).FirstOrDefault();
+            return bay != null && bay.TryGetComp<CompShipBay>().CanLaunchShuttle(vehiclePawn);
+        }
+        public static bool IsShuttle(VehiclePawn vehicle)
 		{
 			return vehicle.CompVehicleLauncher != null && vehicle.CompVehicleLauncher.SpaceFlight;
 		}
@@ -3199,10 +3238,11 @@ namespace SaveOurShip2
 				if (Rand.RangeInclusive(chance, 10) > 5) //shields
 				{
 					shields = true;
-					if (size > 2 || (size > 1 && Rand.Bool))
+					// TODO: Temporary disable spawning enemy shields
+					/*if (size > 2 || (size > 1 && Rand.Bool))
 						vehicle.CompUpgradeTree.FinishUnlock(vehicle.CompUpgradeTree.Props.def.GetNode("ShieldsHeavy"));
 					else
-						vehicle.CompUpgradeTree.FinishUnlock(vehicle.CompUpgradeTree.Props.def.GetNode("ShieldsBasic"));
+						vehicle.CompUpgradeTree.FinishUnlock(vehicle.CompUpgradeTree.Props.def.GetNode("ShieldsBasic"));*/
 				}
 				if (Rand.RangeInclusive(chance, 10) > 6) //armor
 				{
@@ -3225,10 +3265,12 @@ namespace SaveOurShip2
 				}
 				if (Rand.RangeInclusive(chance, 10) > 7) //util
 				{
-					if (size > 1 && Rand.Bool)
+					// TODO: Temporary disable spawning cloak and heatsink too
+
+					/*if (size > 1 && Rand.Bool)
 						vehicle.CompUpgradeTree.FinishUnlock(vehicle.CompUpgradeTree.Props.def.GetNode("CargoCloaking"));
 					else if (shields)
-						vehicle.CompUpgradeTree.FinishUnlock(vehicle.CompUpgradeTree.Props.def.GetNode("CargoHeatsink"));
+						vehicle.CompUpgradeTree.FinishUnlock(vehicle.CompUpgradeTree.Props.def.GetNode("CargoHeatsink"));*/
 				}
 			}
 		}
@@ -3265,6 +3307,22 @@ namespace SaveOurShip2
 				}
 			}
 			return sb.ToString();
+		}
+	}
+
+	public class MapHelper
+	{
+		public static void TryLinkMapToWorldObject(Map map, int tile)
+		{
+			// For now, issue was found with Escape Ship map due to that map not being linked to world object
+			// So, fixing onlyy that case for now
+			WorldObject worldObject = Find.WorldObjects.ObjectsAt(tile).Where(t => t is EscapeShip).First();
+			if (worldObject != null && worldObject.Faction != Faction.OfPlayer)
+			{
+				// Link map to Escap ship object sho that it gets "Home" icon and when selected on world map, there is Abadon option 
+				map.info.parent = (MapParent)worldObject;
+				worldObject.SetFaction(Faction.OfPlayer);
+			}
 		}
 	}
 }

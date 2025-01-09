@@ -130,6 +130,11 @@
 			<ComponentSpacer>12</ComponentSpacer>
 		</costList>
 		<seeThroughFog>true</seeThroughFog>
+        <modExtensions>
+            <li Class = "Vehicles.CustomCostDefModExtension">
+                <cost>10000</cost>
+            </li>
+        </modExtensions>
 	</ThingDef>
 	<ThingDef ParentName="BuildingBase">
 		<defName>ShipCombatShieldGeneratorMini</defName>
@@ -186,6 +191,11 @@
 			<ComponentSpacer>4</ComponentSpacer>
 		</costList>
 		<seeThroughFog>true</seeThroughFog>
+        <modExtensions>
+            <li Class = "Vehicles.CustomCostDefModExtension">
+                <cost>10000</cost>
+            </li>
+        </modExtensions>
 	</ThingDef>
 	<ThingDef ParentName="BuildingBase" Name="ShipHeatConduit">
 		<defName>ShipHeatConduit</defName>
@@ -409,6 +419,11 @@
 		<researchPrerequisites>
 			<li>ShipHeatsink</li>
 		</researchPrerequisites>
+        <modExtensions>
+            <li Class = "Vehicles.CustomCostDefModExtension">
+                <cost>10000</cost>
+            </li>
+        </modExtensions>
 	</ThingDef>
 	<ThingDef ParentName="ShipHeatsinkBase">
 		<defName>ShipHeatBankLarge</defName>
@@ -443,6 +458,11 @@
 		<researchPrerequisites>
 			<li>ShipHeatsink</li>
 		</researchPrerequisites>
+        <modExtensions>
+            <li Class = "Vehicles.CustomCostDefModExtension">
+                <cost>10000</cost>
+            </li>
+        </modExtensions>
 	</ThingDef>
 	<ThingDef ParentName="ShipHeatsinkBase">
 		<defName>ShipPurgePort</defName>
@@ -690,7 +710,7 @@
 			<drawSize>(2,2)</drawSize>
 		</graphicData>
 		<projectile>
-			<explosionRadius>1.1</explosionRadius>
+			<explosionRadius>0.9</explosionRadius>
 			<damageDef>BombACI</damageDef>
 			<speed>100</speed>
 		</projectile>
@@ -745,7 +765,7 @@
 		<defName>ShipTurret_ACII</defName>
 		<label>large cannon turret</label>
 		<designatorDropdown>ShipTurrets_AC</designatorDropdown>
-		<description>A large turret that rapidly accelerates uranium slugs. Requires ammunition, but costs zero energy and very little heat to fire. Only useful at close range. Capable of ship ground defense.\n\nCan be safely placed in rooms as it sticks out on top of the ship.\nMust be connected to a pilot/tactical console or AI core via the heat network.\nRequires sufficient stored power and heat capacity to function.</description>
+		<description>A large turret that rapidly accelerates uranium slugs. Requires ammunition, but costs zero energy and very little heat to fire. Only useful at close range.\n\nCan be safely placed in rooms as it sticks out on top of the ship.\nMust be connected to a pilot/tactical console or AI core via the heat network.\nRequires sufficient stored power and heat capacity to function.</description>
 		<graphicData>
 			<texPath>Things/Building/Ship/HardpointYellow</texPath>
 			<drawSize>(3,3)</drawSize>
@@ -2039,6 +2059,11 @@
 		</researchPrerequisites>
 		<constructionSkillPrerequisite>6</constructionSkillPrerequisite>
 		<uiIconScale>0.9</uiIconScale>
+        <modExtensions>
+            <li Class = "Vehicles.CustomCostDefModExtension">
+                <cost>10000</cost>
+            </li>
+        </modExtensions>
 	</ThingDef>
 	<ThingDef ParentName="BuildingBase">
 		<defName>ShipSpinalAmplifier</defName>
@@ -2092,6 +2117,11 @@
 		</researchPrerequisites>
 		<constructionSkillPrerequisite>6</constructionSkillPrerequisite>
 		<uiIconScale>0.65</uiIconScale>
+        <modExtensions>
+            <li Class = "Vehicles.CustomCostDefModExtension">
+                <cost>10000</cost>
+            </li>
+        </modExtensions>
 	</ThingDef>
 	<ThingDef ParentName="ShipSpinalTurretBuilding">
 		<defName>ShipSpinalBarrelLaser</defName>

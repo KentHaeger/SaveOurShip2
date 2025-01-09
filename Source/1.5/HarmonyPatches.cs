@@ -135,9 +135,13 @@ namespace SaveOurShip2
 					stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.StatsShipCombatRating", bridge.Ship.Threat));
 					stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.StatsShipMass", bridge.Ship.MassActual));
 					stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.StatsShipCombatThrust", bridge.Ship.ThrustRatio.ToString("F3")));
-					if(bridge.heatComp.myNet.Depletion > 0)
+					if (bridge.heatComp.myNet.Depletion > 0)
 					{
 						stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.StatsShipHeatMaximum", bridge.heatComp.myNet.StorageCapacityRaw));
+					}
+					if (bridge.heatCap == 0 || bridge.powerCap == 0)
+					{
+						stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.BridgeConnectTooltip"));
 					}
 
 					TooltipHandler.TipRegion(rect2, stringBuilder.ToString());
@@ -635,11 +639,6 @@ namespace SaveOurShip2
 			camera.targetTexture = ResourceBank.target;
 			camera.aspect = num;
 			camera.Render();
-
-			RenderTexture.active = ResourceBank.target;
-			ResourceBank.virtualPhoto.ReadPixels(new Rect(0, 0, 2048, 2048), 0, 0);
-			ResourceBank.virtualPhoto.Apply();
-			RenderTexture.active = null;
 
 			camera.targetTexture = oldTexture;
 			WorldCameraManager.WorldSkyboxCamera.targetTexture = oldSkyboxTexture;
@@ -1720,38 +1719,38 @@ namespace SaveOurShip2
 		}
 		public static void Postfix(Building root, ref List<Building> __result)
 		{
+			// Vanilla ship function. Called often in Vanilla Achievements Expanded mod.
+			// Because of that it is harmony-patched to use ship cache.
+			// In case someone hooks to building construction event before ship cache handles it,
+			// it is assumed that current building may be not part of the cache yet, so
+			// checking given building and adjacent tiles.
+			__result = new List<Building>();
 			if (root == null || root.Destroyed)
 			{
-				__result = new List<Building>();
 				return;
 			}
 
 			var map = root.Map;
+			var mapComp = map.GetComponent<ShipMapComp>();
 			var containedBuildings = new HashSet<Building>();
 			var cellsTodo = new HashSet<IntVec3>();
-			var cellsDone = new HashSet<IntVec3>();
 
-			cellsTodo.AddRange(GenAdj.CellsOccupiedBy(root));
+			cellsTodo.Add(root.Position);
 			cellsTodo.AddRange(GenAdj.CellsAdjacentCardinal(root));
 
-			while (cellsTodo.Count > 0)
+			HashSet<int> shipIndexes = new HashSet<int>();
+			foreach (IntVec3 cell in cellsTodo)
 			{
-				var current = cellsTodo.First();
-				cellsTodo.Remove(current);
-				cellsDone.Add(current);
-				var containedThings = current.GetThingList(map);
-				if (!containedThings.Any(t => (t as Building)?.def.building.shipPart ?? false))
-					continue;
-
-				foreach (var t in containedThings)
-				{
-					if (t is Building b && containedBuildings.Add(b))
-					{
-						cellsTodo.AddRange(GenAdj.CellsOccupiedBy(b).Concat(GenAdj.CellsAdjacentCardinal(b)).Where(cell => !cellsDone.Contains(cell)));
-					}
-				}
+				shipIndexes.Add(mapComp.ShipIndexOnVec(cell));
 			}
-			__result = containedBuildings.ToList();
+			foreach (int shipIndex in shipIndexes)
+			{
+				if (shipIndex == -1)
+				{
+					continue;
+				}
+				__result.AddRange(mapComp.ShipsOnMap[shipIndex].Buildings.ToList());
+			}
 		}
 	}
 		
@@ -2247,18 +2246,34 @@ namespace SaveOurShip2
 				return false;
 			return true;
 		}
-	}
+	} */
 
-	[HarmonyPatch(typeof(ThingOwner), "TryDropAll")] prevents drops but other things not set
+	[HarmonyPatch(typeof(ThingOwner), "TryDropAll")] //prevents drops but other things not set
 	public static class DisableForMoveThingOwner
 	{
 		public static bool Prefix()
 		{
-			if (ShipInteriorMod2.AirlockBugFlag)
+			if (ShipInteriorMod2.MoveShipFlag)
+			{
 				return false;
+			}
 			return true;
 		}
-	}*/
+	}
+	
+	// Prevent killing occupant on ripscanner being moved despawn
+	[HarmonyPatch(typeof(Building_SubcoreScanner), "KillOccupant")] // additional 
+	public static class DisableForMoveSubcoreRipscanner
+	{
+		public static bool Prefix(Building_SubcoreScanner __instance)
+		{
+			if (ShipInteriorMod2.MoveShipFlag)
+			{
+				return false;
+			}
+			return true;
+		}
+	}
 
 	[HarmonyPatch(typeof(CompAssignableToPawn), "PostSpawnSetup")] //beds?
 	public static class DisableForMoveAssignableOn
@@ -3145,13 +3160,24 @@ namespace SaveOurShip2
 	}
 
 	[HarmonyPatch(typeof(GenStep_Fog), "Generate")]
-	public static class UnfogVault
+	public static class UnfogVaultAndLandedShip
 	{
 		public static void Postfix(Map map)
 		{
 			foreach (Thing casket in map.listerThings.ThingsOfDef(ThingDef.Named("Ship_AvatarCasket")))
 			{
 				FloodFillerFog.FloodUnfog(casket.Position, map);
+			}
+			ShipMapComp mapComp = map.GetComponent<ShipMapComp>();
+			foreach (SpaceShipCache ship in mapComp.ShipsOnMap.Values.Where(s => !s.IsWreck))
+			{
+				if (ship.Name == "Charlon Whitestone")
+				{
+					foreach (IntVec3 tile in ship.Area)
+					{
+						map.fogGrid.Unfog(tile);
+					}
+				}
 			}
 		}
 	}
@@ -3172,7 +3198,7 @@ namespace SaveOurShip2
 	{
 		public static void Postfix(ref PawnKindDef kind, ref bool __result, Map map)
 		{
-			__result = DefDatabase<PawnKindDef>.AllDefs.Where((PawnKindDef x) => x.RaceProps.Animal && x.RaceProps.wildness < 0.35f && (!x.race.tradeTags?.Contains("AnimalInsectSpace") ?? true) && map.mapTemperature.SeasonAndOutdoorTemperatureAcceptableFor(x.race)).TryRandomElementByWeight((PawnKindDef k) => 0.420000017f - k.RaceProps.wildness, out kind);
+			__result = DefDatabase<PawnKindDef>.AllDefs.Where((PawnKindDef x) => x.RaceProps.Animal && x.RaceProps.wildness < 0.35f && (!x.race.tradeTags?.Contains("AnimalInsectSpace") ?? true) && map.mapTemperature.SeasonAndOutdoorTemperatureAcceptableFor(x.race) && x.race.tradeTags.Contains("AnimalFarm") && !x.RaceProps.Dryad).TryRandomElementByWeight((PawnKindDef k) => 0.420000017f - k.RaceProps.wildness, out kind);
 		}
 	}
 
@@ -3252,19 +3278,14 @@ namespace SaveOurShip2
 	{
 		public static void Postfix(JobDriver_Meditate __instance)
 		{
-			int num = GenRadial.NumCellsInRadius(MeditationUtility.FocusObjectSearchRadius);
-			for (int i = 0; i < num; i++)
-			{
-				IntVec3 c = __instance.pawn.Position + GenRadial.RadialPattern[i];
-				if (c.InBounds(__instance.pawn.Map))
-				{
-					Building_ArchotechSpore spore = c.GetFirstThing<Building_ArchotechSpore>(__instance.pawn.Map);
-					if (spore != null)
-					{
-						spore.MeditationTick();
-					}
-				}
-			}
+			foreach(CompBuildingConsciousness consc in __instance.pawn.Map.GetComponent<ShipMapComp>().Consciousness)
+            {
+				Building_ArchotechSpore spore = consc.parent as Building_ArchotechSpore;
+				if(spore != null && __instance.pawn.Position.DistanceTo(spore.Position) <= MeditationUtility.FocusObjectSearchRadius)
+                {
+					spore.MeditationTick();
+                }
+            }
 		}
 	}
 
@@ -3978,6 +3999,28 @@ namespace SaveOurShip2
 		}
 	}
 
+	// Disallow Royalty ending quest to be generated when there are no surface player home maps,
+	// as it will be attached to player space map, which is not right for quest assuming enemy raids.
+	[HarmonyPatch(typeof(IncidentWorker_GiveQuest), "TryExecuteWorker")]
+	public static class NoRoyaltyEndingForSpaceMap
+	{
+		public static bool Prefix(IncidentWorker_GiveQuest __instance, IncidentParms parms, ref bool __result)
+		{
+			QuestScriptDef quest = __instance.def.questScriptDef ?? parms.questScriptDef;
+			Map spaceHome = ShipInteriorMod2.FindPlayerShipMap();
+			if (quest.defName == "EndGame_RoyalAscent")
+			{
+				IEnumerable<Map> surfacePlayerMaps = Find.Maps.Where((Map x) => (x.IsPlayerHome && x != spaceHome));
+				if (!surfacePlayerMaps.Any())
+				{
+					__result = false;
+					return false;
+				}
+			}
+			return true;
+		}
+	}
+
 	[HarmonyPatch(typeof(QuestPart_EndGame), "Notify_QuestSignalReceived")] //change roy ending
 	public static class ReplaceEndGame
 	{
@@ -4507,7 +4550,13 @@ namespace SaveOurShip2
     {
 		public static void Postfix(ref string disableReason, CompVehicleLauncher __instance, ref bool __result)
         {
-			if (disableReason == Translator.Translate("CommandLaunchGroupFailUnderRoof") && ShipInteriorMod2.CanLaunchUnderRoof((VehiclePawn)__instance.parent))
+            if (disableReason != Translator.Translate("CommandLaunchGroupFailUnderRoof")) return;
+
+            VehiclePawn vehiclePawn = (VehiclePawn) __instance.parent;
+            Map map = vehiclePawn.Map;
+            IntVec3 cell = vehiclePawn.Position;
+
+            if (ShipInteriorMod2.CanLaunchUnderRoof(map, cell, vehiclePawn))
             {
 				__result = true;
 				disableReason = null;
@@ -4522,8 +4571,14 @@ namespace SaveOurShip2
 		{
 			if(__result==false)
 			{
-				if (__instance.vehicle.Spawned && ShipInteriorMod2.CanLaunchUnderRoof(__instance.vehicle))
-					__result = true;
+                if (!__instance.vehicle.Spawned) return;
+
+                VehiclePawn vehiclePawn = __instance.vehicle;
+                Map map = vehiclePawn.Map;
+                IntVec3 cell = vehiclePawn.Position;
+
+                if (ShipInteriorMod2.CanLaunchUnderRoof(map, cell, vehiclePawn))
+                    __result = true;
 			}
 		}
 	}
@@ -4565,7 +4620,7 @@ namespace SaveOurShip2
 				__result = PositionState.Valid; //bays are always valid
 				return;
 			}
-			else if (occupiedRect.Any(v => v.Roofed(map)) && ShipInteriorMod2.IsShuttle(__instance.vehicle))
+			else if (occupiedRect.Any(v => Ext_Vehicles.IsRoofed(v, map)) && ShipInteriorMod2.IsShuttle(__instance.vehicle))
 			{
 				__result = PositionState.Invalid; //roof is not (check due to our shuttles being able to roofpunch)
 				return;
@@ -4710,24 +4765,16 @@ namespace SaveOurShip2
         {
 			foreach (ThingComp comp in CompsToAdd)
 			{
-				__instance.comps.Add(comp);
-				PostSpawnNewComponents.CompsToSpawn.Add(comp);
+				__instance.AddComp(comp);
 			}
-			__instance.RecacheComponents();
 		}
 	}
 
 	[HarmonyPatch(typeof(VehiclePawn), "SpawnSetup")]
 	public static class PostSpawnNewComponents
 	{
-		public static List<ThingComp> CompsToSpawn=new List<ThingComp>();
-		public static float ShieldGenHealth = 0;
-		public static float StoredHeat = 0;
-
 		public static bool Prefix(VehiclePawn __instance, bool respawningAfterLoad)
 		{
-			if(respawningAfterLoad)
-				CompsToSpawn = new List<ThingComp>();
 			return true;
 		}
 
@@ -4740,17 +4787,94 @@ namespace SaveOurShip2
 					net2.RebuildHeatNet();
 				return;
 			}
-			foreach (ThingComp comp in CompsToSpawn)
-				comp.PostSpawnSetup(true);
 			CompVehicleHeatNet net = __instance.GetComp<CompVehicleHeatNet>();
 			if (net != null)
 			{
+				if (__instance.Spawned)
+				{
+					net.PostSpawnSetup(true);
+				}
 				net.RebuildHeatNet();
-				net.myNet.AddHeat(StoredHeat);
 			}
 			VehicleComponent shieldGen = __instance.statHandler.components.FirstOrDefault(comp => comp.props.key == "shieldGenerator");
-			if (shieldGen != null && ShieldGenHealth != 1)
-				shieldGen.health = ShieldGenHealth;
+			if (shieldGen != null)
+			{
+				CompShipHeatShield compShield = __instance.TryGetComp<CompShipHeatShield>();
+				ShipMapComp mapComp = __instance.Map.GetComponent<ShipMapComp>();
+				if (mapComp != null && compShield != null)
+				{
+					if (__instance.Spawned)
+					{
+						compShield.PostSpawnSetup(true);
+					}
+					mapComp.Shields.Add(compShield);
+				}
+			}
+		}
+	}
+
+	// Additional null checks when loading
+	[HarmonyPatch(typeof(WorldHandling), "AllAerialVehicles_AliveOrDead")]
+	public static class AllAerialVehiclesOnLoad
+	{
+		public static bool Prefix()
+		{
+			if (Scribe.mode != LoadSaveMode.LoadingVars)
+			{
+				return true;
+			}
+			if (VehicleWorldObjectsHolder.Instance?.AerialVehicles == null)
+			{
+				return false;
+			}
+			foreach (AerialVehicleInFlight aerialVehicle in VehicleWorldObjectsHolder.Instance.AerialVehicles)
+			{
+				if (aerialVehicle?.vehicle == null)
+				{
+					continue;
+				}
+				// TODO: cannot replicate origianal addition, as it uses __result argument name. Waitign for Vehicle Framework to at least rename argument there.
+				//__result.AddRange(aerialVehicle.vehicle.AllPawnsAboard);
+			}
+			return false;
+    }
+  }
+  
+	[HarmonyPatch(typeof(CompVehicleLauncher), "CanLaunchWithCargoCapacity")]
+	public static class RotatedLaunchWarningFix
+	{
+		//Temporary fix clarifying the message on shuttle unable to launch
+		public static void Postfix(CompVehicleLauncher __instance, ref string disableReason)
+		{
+			if( disableReason == "VF_CannotLaunchImmobile".Translate(__instance.Vehicle.LabelShort) && __instance.Vehicle.Angle != 0)
+			{
+				disableReason = "VF_Fix_CannotLaunchRotated".Translate(__instance.Vehicle.LabelShort);
+      }
+    }
+  }
+  
+	[HarmonyPatch(typeof(CompUpgradeTree), "ValidateListers")]
+	public static class DisableValidateListersOffMap
+	{
+		public static bool Prefix(CompUpgradeTree __instance)
+		{
+			if( __instance.Vehicle.Map == null)
+			{
+				return false;
+			}
+			return true;
+    }
+  }
+	// Temporary patch preventing losing control of player pawn that eneters enemy shuttle
+	[HarmonyPatch(typeof(VehiclePawn), "Notify_Boarded")]
+	public static class VehicleBoarded
+	{
+		public static void Postfix(VehiclePawn __instance, Pawn pawnToBoard, ref bool __result)
+		{
+			if (pawnToBoard.Faction == Faction.OfPlayer && __instance.Faction != Faction.OfPlayer && __result)
+			{
+				__instance.SetFaction(Faction.OfPlayer);
+			}
 		}
 	}
 
@@ -4764,7 +4888,7 @@ namespace SaveOurShip2
 				ShipMapComp comp = map.GetComponent<ShipMapComp>();
 				if (comp != null)
 				{
-					foreach (CompBuildingConsciousness sporeConsc in comp.Spores)
+					foreach (CompBuildingConsciousness sporeConsc in comp.Consciousness)
 					{
 						Building_ArchotechSpore spore = sporeConsc.parent as Building_ArchotechSpore;
 						if (spore == null || spore.linkedPawns == null)
@@ -4792,7 +4916,7 @@ namespace SaveOurShip2
 					ShipMapComp comp = map.GetComponent<ShipMapComp>();
 					if (comp != null)
 					{
-						foreach (CompBuildingConsciousness sporeConsc in comp.Spores)
+						foreach (CompBuildingConsciousness sporeConsc in comp.Consciousness)
 						{
 							Building_ArchotechSpore spore = sporeConsc.parent as Building_ArchotechSpore;
 							if (spore == null || spore.linkedPawns == null)
@@ -4818,6 +4942,32 @@ namespace SaveOurShip2
 			{
 				__result = true;
 			}
+		}
+    }
+
+	// Biotech - when on space map, disomle kids learning options that don't work
+	[HarmonyPatch(typeof(Pawn_LearningTracker), "AddNewLearningDesire")]
+	public static class ProperLearningNeedsInSpace
+    {
+		public static bool Prefix(Pawn_LearningTracker __instance)
+        {
+			List<LearningDesireDef> learningOptions = DefDatabase<LearningDesireDef>.AllDefsListForReading.Where((LearningDesireDef ld) => !__instance.active.Contains(ld) && ld.Worker.CanGiveDesire).ToList();
+			if (__instance.Pawn.Map != null && __instance.Pawn.Map.IsSpace())
+			{
+				learningOptions = learningOptions.Where((LearningDesireDef ld) => ld.defName != "NatureRunning" && ld.defName != "Skydreaming").ToList();
+				if ((__instance.Pawn.Map.listerBuildings.allBuildingsColonist.Any((Building b) => b.def.defName == "Telescope" || b.def.defName == "TelescopeSpace")) &&
+					!__instance.active.Any((LearningDesireDef ld) => ld.defName == "AdmiringSpace"))
+				{
+					learningOptions.Add(DefDatabase<LearningDesireDef>.AllDefsListForReading.First((LearningDesireDef ld) => ld.defName == "AdmiringSpace"));
+				}
+			}
+			LearningDesireDef newDesire = learningOptions.RandomElementByWeight((LearningDesireDef ld) => ld.selectionWeight);
+			if (__instance.active.Count >= 2)
+			{
+				__instance.active.RemoveAt(0);
+			}
+			__instance.active.Add(newDesire);
+			return false;
 		}
     }
 
@@ -5043,6 +5193,127 @@ namespace SaveOurShip2
 					__result.Add(area);
 				}
             }
+		}
+	}
+
+	// Draw headgear on sleeping pawn when sleeping in unbreathable atmosphere
+	[HarmonyPatch(typeof(PawnRenderNodeWorker_Apparel_Head), "HeadgearVisible")]
+	public static class DrawHelmetsInUnbreathable
+	{
+		public static bool Prefix(PawnDrawParms parms, ref bool __result)
+		{
+			if (parms.Portrait)
+			{
+				return true;
+			}
+			bool isSleepingAndVisible = parms.bed != null && !parms.bed.def.building.bed_showSleeperBody;
+			if (!isSleepingAndVisible || !parms.bed.Map.IsSpace())
+			{
+				return true;
+			}
+			bool isBreathable;
+			if (ShipMapComp.bedsCache.ContainsKey(parms.bed))
+			{
+				isBreathable = ShipMapComp.bedsCache[parms.bed];
+			}
+			else
+			{
+				Room room = parms.bed.Position.GetRoom(parms.bed.Map);
+				isBreathable = !ShipInteriorMod2.ExposedToOutside(room) && parms.bed.Map.GetComponent<ShipMapComp>().VecHasLS(parms.bed.Position);
+			}
+			if (!isBreathable)
+			{
+				__result = true;
+				return false;
+			}
+			return true;
+		}
+	}
+  
+	[HarmonyPatch(typeof(ShipLandingArea), "RecalculateBlockingThing")]
+	public static class ShipLandingAreaUnderShipRoof
+	{
+		public static bool Prefix(Map ___map, CellRect ___rect, ref bool ___blockedByRoof, ref Thing ___firstBlockingThing)
+		{
+			___blockedByRoof = false;
+			foreach (IntVec3 c in ___rect)
+			{
+				if (c.Roofed(___map) && ___map.roofGrid.RoofAt(c) == ResourceBank.RoofDefOf.RoofShip)
+				{
+					List<Thing> thingList = c.GetThingList(___map);
+					for (int i = 0; i < thingList.Count; i++)
+					{
+						bool isWallAttachment = (thingList[i] as Building)?.def?.building?.isAttachment ?? false;
+						if ((!(thingList[i] is Pawn && !(thingList[i] is VehiclePawn)) && (thingList[i].def.Fillage != FillCategory.None || thingList[i].def.IsEdifice() || thingList[i] is Skyfaller)) && thingList[i].TryGetComp<CompShipBay>() == null && !(thingList[i].TryGetComp<CompShipCachePart>()?.Props.isPlating ?? false) && !isWallAttachment)
+						{
+							___firstBlockingThing = thingList[i];
+							return false;
+						}
+					}
+				}
+				else
+					return true;
+			}
+			___firstBlockingThing = null;
+			return false;
+		}
+	}
+  
+	[HarmonyPatch(typeof(GameEnder), "CheckOrUpdateGameOver")]
+	public static class BuildingsArePeopleToo
+    {
+		public static void Postfix(GameEnder __instance)
+        {
+			foreach(Map map in Find.Maps)
+            {
+				if (map.GetComponent<ShipMapComp>()?.Consciousness.Count > 0)
+					__instance.gameEnding = false;
+            }
+        }
+    }
+
+	// Space map does not have raw food sources by default, so no need to show "Need meal source" warning
+	[HarmonyPatch(typeof(Alert_NeedMealSource), "NeedMealSource")]
+	public static class SpaceMapDoesNotNeedStoveWarning
+	{
+		public static bool Prefix(Map map, ref bool __result)
+		{
+			if (map.IsSpace())
+			{
+				__result = false;
+				return false;
+			}
+			return true;
+		}
+	}
+
+	[HarmonyPatch(typeof(Alert_NeedBatteries), "NeedBatteries")]
+	public static class ShipCapacitorCountsAsBattery
+	{
+		public static bool Prefix(Map map, ref bool __result)
+		{
+			if (map.listerBuildings.ColonistsHaveBuilding((Thing building) => building is Building_ShipCapacitor))
+			{
+				__result = false;
+				return false;
+			}
+			return true;
+		}
+	}
+
+	// Need warm clothes alert is seasonal, reminds player to get warm clothes when winte is coming soon. Ans also tutorial-ish, tell new players what to do.
+	// Space map is not seasonal, it is always -100C. So this alert isn't really necessary and even reported annoying, so remove. 
+	[HarmonyPatch(typeof(Alert_NeedWarmClothes), "AnyColonistsNeedWarmClothes")]
+	public static class NoSeasonalWarmClothesInSpace
+	{
+		public static bool Prefix(Map map, ref bool __result)
+		{
+			if (map.IsSpace())
+			{
+				__result = false;
+				return false;
+			}
+			return true;
 		}
 	}
 
@@ -6081,34 +6352,6 @@ namespace SaveOurShip2
 			return true;
 		}
 	}
-
-	[HarmonyPatch(typeof(ShipLandingArea), "RecalculateBlockingThing")]
-	public static class ShipLandingAreaUnderShipRoof
-	{
-		public static bool Prefix(Map ___map, CellRect ___rect, ref bool ___blockedByRoof, ref Thing ___firstBlockingThing)
-		{
-			___blockedByRoof = false;
-			foreach (IntVec3 c in ___rect)
-			{
-				if (c.Roofed(___map) && ___map.roofGrid.RoofAt(c) == ResourceBank.RoofDefOf.RoofShip)
-				{
-					List<Thing> thingList = c.GetThingList(___map);
-					for (int i = 0; i < thingList.Count; i++)
-					{
-						if ((!(thingList[i] is Pawn) && (thingList[i].def.Fillage != FillCategory.None || thingList[i].def.IsEdifice() || thingList[i] is Skyfaller)) && thingList[i].def != ResourceBank.ThingDefOf.ShipShuttleBay && thingList[i].def != ResourceBank.ThingDefOf.ShipShuttleBayLarge && !(thingList[i].TryGetComp<CompShipCachePart>()?.Props.isPlating ?? false))
-						{
-							___firstBlockingThing = thingList[i];
-							return false;
-						}
-					}
-				}
-				else
-					return true;
-			}
-			___firstBlockingThing = null;
-			return false;
-		}
-	}                                                                                                      
 
 	[HarmonyPatch(typeof(Trigger_UrgentlyHungry), "ActivateOn")]
 	public static class MechsDontEat

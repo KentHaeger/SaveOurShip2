@@ -858,6 +858,16 @@ namespace SaveOurShip2
 							};
 							loadshipdef.hotKey = KeyBindingDefOf.Misc11;
 							yield return loadshipdef;
+							Command_Action loadWreckDef = new Command_Action
+							{
+								groupable = false,
+								action = delegate
+								{
+									Find.WindowStack.Add(new Dialog_LoadShipDef("shipdeftoload", this.Map, isWreck : true));
+								},
+								defaultLabel = "Dev: load wreck from database",
+							};
+							yield return loadWreckDef;
 						}
 						//attack passing ship
 						if (Map.passingShipManager.passingShips.Any())

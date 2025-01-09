@@ -34,7 +34,8 @@
     <category>PawnMisc</category>
     <defaultBaseValue>1</defaultBaseValue>
     <hideAtValue>1</hideAtValue>
-    <minValue>0</minValue>
+    <minValue>0.25</minValue>
+    <maxValue>5</maxValue>
     <toStringStyle>PercentZero</toStringStyle>
     <displayPriorityInCategory>2002</displayPriorityInCategory>
   </StatDef>

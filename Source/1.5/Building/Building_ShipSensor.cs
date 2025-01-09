@@ -42,6 +42,10 @@ namespace SaveOurShip2
 						Find.WorldTargeter.BeginTargeting(new Func<GlobalTargetInfo, bool>(ChoseWorldTarget), true, CompCryptoLaunchable.TargeterMouseAttachment);
 					}
 				});
+				if (observedMap != null && observedMap.Destroyed)
+				{
+					observedMap = null;
+				}
 				if (observedMap != null)
 				{
 					giz.Add(new Command_Action
@@ -63,15 +67,24 @@ namespace SaveOurShip2
 		private bool ChoseWorldTarget(GlobalTargetInfo target)
 		{
 			PossiblyDisposeOfObservedMap();
-			if (target.WorldObject != null && target.WorldObject is MapParent p && ShipInteriorMod2.allowedToObserve.Contains(p.def.defName))
+			if (target.WorldObject != null && target.WorldObject is MapParent p)
 			{
-				observedMap = (MapParent)target.WorldObject;
-				LongEventHandler.QueueLongEvent(delegate
+				if (ShipInteriorMod2.allowedToObserve.Contains(p.def.defName))
 				{
-					GetOrGenerateMapUtility.GetOrGenerateMap(target.WorldObject.Tile, target.WorldObject.def);
-					GetOrGenerateMapUtility.UnfogMapFromEdge(observedMap.Map);
-				}, "Generating map",false, delegate { });
-				return true;
+					observedMap = (MapParent)target.WorldObject;
+					LongEventHandler.QueueLongEvent(delegate
+					{
+						GetOrGenerateMapUtility.GetOrGenerateMap(target.WorldObject.Tile, target.WorldObject.def);
+						GetOrGenerateMapUtility.UnfogMapFromEdge(observedMap.Map);
+						MapHelper.TryLinkMapToWorldObject(observedMap.Map, target.Tile);
+					}, "Generating map", false, delegate { });
+					return true;
+				}
+				else
+                {
+					Messages.Message("SoSNoMapObserve".Translate(), MessageTypeDefOf.RejectInput);
+					return false;
+                }
 			}
 			else if (target.WorldObject == null && !Find.World.Impassable(target.Tile))
 			{

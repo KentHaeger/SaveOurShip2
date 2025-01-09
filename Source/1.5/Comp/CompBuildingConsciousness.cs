@@ -215,7 +215,8 @@ namespace SaveOurShip2
 			if (decohere)
 			{
 				HologramRespawnTick = Find.TickManager.TicksGame + 60000;
-				GenExplosion.DoExplosion(Consciousness.Position, Consciousness.Map, 4.9f, FormgelSlime, Consciousness, postExplosionSpawnThingDef: ThingDefOf.Filth_Slime, postExplosionSpawnChance: 1f, postExplosionSpawnThingCount: 1);
+				if (Consciousness.Map != null) // can be in pawn lending quest
+					GenExplosion.DoExplosion(Consciousness.Position, Consciousness.Map, 4.9f, FormgelSlime, Consciousness, postExplosionSpawnThingDef: ThingDefOf.Filth_Slime, postExplosionSpawnChance: 1f, postExplosionSpawnThingCount: 1);
 				if (goneForGood && !Consciousness.Dead)
 					Consciousness.Kill(null);
 			}
@@ -481,13 +482,13 @@ namespace SaveOurShip2
 		public override void PostSpawnSetup(bool respawningAfterLoad)
 		{
 			base.PostSpawnSetup(respawningAfterLoad);
-			parent.Map.GetComponent<ShipMapComp>().Spores.Add(this);
+			parent.Map.GetComponent<ShipMapComp>().Consciousness.Add(this);
 			compPower = parent.TryGetComp<CompPowerTrader>();
 		}
 
 		public override void PostDeSpawn(Map map)
 		{
-			map.GetComponent<ShipMapComp>().Spores.Remove(this);
+			map.GetComponent<ShipMapComp>().Consciousness.Remove(this);
 			if(Consciousness != null && !ShipInteriorMod2.MoveShipFlag)
 				Consciousness.health.AddHediff(HediffDef.Named("HologramDisconnected"));
 			base.PostDeSpawn(map);

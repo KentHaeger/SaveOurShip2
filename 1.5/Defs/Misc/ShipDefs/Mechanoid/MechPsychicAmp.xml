@@ -11,6 +11,7 @@
 		<combatPoints>2461</combatPoints>
 		<neverRandom>True</neverRandom>
 		<neverAttacks>True</neverAttacks>
+		<neverFleet>True</neverFleet>
 		<navyExclusive>True</navyExclusive>
 		<core>
 			<shapeOrDef>Ship_ComputerCore</shapeOrDef>
