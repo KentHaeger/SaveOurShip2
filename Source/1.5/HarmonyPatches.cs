@@ -4006,11 +4006,16 @@ namespace SaveOurShip2
 	{
 		public static bool Prefix(IncidentWorker_GiveQuest __instance, IncidentParms parms, ref bool __result)
 		{
-			QuestScriptDef quest = __instance.def.questScriptDef ?? parms.questScriptDef;
+			// Just nulletproof null checks, in case in modded situation things are set up strangely at this point
+			QuestScriptDef quest = __instance?.def?.questScriptDef ?? parms?.questScriptDef;
+			if (quest == null)
+			{
+				return true;
+			}
 			Map spaceHome = ShipInteriorMod2.FindPlayerShipMap();
 			if (quest.defName == "EndGame_RoyalAscent")
 			{
-				IEnumerable<Map> surfacePlayerMaps = Find.Maps.Where((Map x) => (x.IsPlayerHome && x != spaceHome));
+				IEnumerable<Map> surfacePlayerMaps = Find.Maps.Where((Map x) => (x != null && x.IsPlayerHome && x != spaceHome));
 				if (!surfacePlayerMaps.Any())
 				{
 					__result = false;
