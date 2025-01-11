@@ -3198,7 +3198,21 @@ namespace SaveOurShip2
 	{
 		public static void Postfix(ref PawnKindDef kind, ref bool __result, Map map)
 		{
-			__result = DefDatabase<PawnKindDef>.AllDefs.Where((PawnKindDef x) => x.RaceProps.Animal && x.RaceProps.wildness < 0.35f && (!x.race.tradeTags?.Contains("AnimalInsectSpace") ?? true) && map.mapTemperature.SeasonAndOutdoorTemperatureAcceptableFor(x.race) && x.race.tradeTags.Contains("AnimalFarm") && !x.RaceProps.Dryad).TryRandomElementByWeight((PawnKindDef k) => 0.420000017f - k.RaceProps.wildness, out kind);
+			// Diagnostic code found SoS2_Shuttle_Superheavy_PawnKind when playing with VFE Insectid 2
+			/*IEnumerable<PawnKindDef> nullTags = DefDatabase<PawnKindDef>.AllDefs.Where((PawnKindDef x) => x.race.tradeTags == null);
+			foreach (PawnKindDef def in nullTags)
+			{
+				Log.Warning("Def with null trade tags:" + def.defName);
+			}*/
+
+			__result = DefDatabase<PawnKindDef>.AllDefs.Where(
+					(PawnKindDef x) => x.RaceProps.Animal &&
+					x.RaceProps.wildness < 0.35f &&
+					(!x.race?.tradeTags?.Contains("AnimalInsectSpace") ?? true) &&
+					map.mapTemperature.SeasonAndOutdoorTemperatureAcceptableFor(x.race) &&
+					(x.race.tradeTags?.Contains("AnimalFarm") ?? false) &&
+					!x.RaceProps.Dryad)
+				.TryRandomElementByWeight((PawnKindDef k) => 0.420000017f - k.RaceProps.wildness, out kind);
 		}
 	}
 
