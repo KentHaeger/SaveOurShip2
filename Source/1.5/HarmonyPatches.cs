@@ -3198,7 +3198,21 @@ namespace SaveOurShip2
 	{
 		public static void Postfix(ref PawnKindDef kind, ref bool __result, Map map)
 		{
-			__result = DefDatabase<PawnKindDef>.AllDefs.Where((PawnKindDef x) => x.RaceProps.Animal && x.RaceProps.wildness < 0.35f && (!x.race.tradeTags?.Contains("AnimalInsectSpace") ?? true) && map.mapTemperature.SeasonAndOutdoorTemperatureAcceptableFor(x.race) && x.race.tradeTags.Contains("AnimalFarm") && !x.RaceProps.Dryad).TryRandomElementByWeight((PawnKindDef k) => 0.420000017f - k.RaceProps.wildness, out kind);
+			// Diagnostic code found SoS2_Shuttle_Superheavy_PawnKind when playing with VFE Insectid 2
+			/*IEnumerable<PawnKindDef> nullTags = DefDatabase<PawnKindDef>.AllDefs.Where((PawnKindDef x) => x.race.tradeTags == null);
+			foreach (PawnKindDef def in nullTags)
+			{
+				Log.Warning("Def with null trade tags:" + def.defName);
+			}*/
+
+			__result = DefDatabase<PawnKindDef>.AllDefs.Where(
+					(PawnKindDef x) => x.RaceProps.Animal &&
+					x.RaceProps.wildness < 0.35f &&
+					(!x.race?.tradeTags?.Contains("AnimalInsectSpace") ?? true) &&
+					map.mapTemperature.SeasonAndOutdoorTemperatureAcceptableFor(x.race) &&
+					(x.race.tradeTags?.Contains("AnimalFarm") ?? false) &&
+					!x.RaceProps.Dryad)
+				.TryRandomElementByWeight((PawnKindDef k) => 0.420000017f - k.RaceProps.wildness, out kind);
 		}
 	}
 
@@ -4006,11 +4020,16 @@ namespace SaveOurShip2
 	{
 		public static bool Prefix(IncidentWorker_GiveQuest __instance, IncidentParms parms, ref bool __result)
 		{
-			QuestScriptDef quest = __instance.def.questScriptDef ?? parms.questScriptDef;
+			// Just nulletproof null checks, in case in modded situation things are set up strangely at this point
+			QuestScriptDef quest = __instance?.def?.questScriptDef ?? parms?.questScriptDef;
+			if (quest == null)
+			{
+				return true;
+			}
 			Map spaceHome = ShipInteriorMod2.FindPlayerShipMap();
 			if (quest.defName == "EndGame_RoyalAscent")
 			{
-				IEnumerable<Map> surfacePlayerMaps = Find.Maps.Where((Map x) => (x.IsPlayerHome && x != spaceHome));
+				IEnumerable<Map> surfacePlayerMaps = Find.Maps.Where((Map x) => (x != null && x.IsPlayerHome && x != spaceHome));
 				if (!surfacePlayerMaps.Any())
 				{
 					__result = false;
@@ -4550,9 +4569,24 @@ namespace SaveOurShip2
     {
 		public static void Postfix(ref string disableReason, CompVehicleLauncher __instance, ref bool __result)
         {
-            if (disableReason != Translator.Translate("CommandLaunchGroupFailUnderRoof")) return;
+			//Temporary fix clarifying the message on shuttle unable to launch because of rotated
+			if (disableReason == "VF_CannotLaunchImmobile".Translate(__instance.Vehicle.LabelShort) && __instance.Vehicle.Angle != 0)
+			{
+				disableReason = "VF_Fix_CannotLaunchRotated".Translate(__instance.Vehicle.LabelShort);
+			}
 
-            VehiclePawn vehiclePawn = (VehiclePawn) __instance.parent;
+			// Somwehow, was allowed to launch overloaded.
+			VehiclePawn vehiclePawn = (VehiclePawn)__instance.parent;
+			float vehicleCapacity = vehiclePawn.GetStatValue(VehicleStatDefOf.CargoCapacity);
+			if (MassUtility.InventoryMass(vehiclePawn) > vehicleCapacity)
+			{
+				disableReason = "VF_CannotLaunchOverEncumbered".Translate(vehiclePawn.LabelShort);
+				__result = false;
+				return;
+			}
+
+			if (disableReason != Translator.Translate("CommandLaunchGroupFailUnderRoof")) return;
+
             Map map = vehiclePawn.Map;
             IntVec3 cell = vehiclePawn.Position;
 
@@ -4837,21 +4871,8 @@ namespace SaveOurShip2
 				//__result.AddRange(aerialVehicle.vehicle.AllPawnsAboard);
 			}
 			return false;
-    }
-  }
-  
-	[HarmonyPatch(typeof(CompVehicleLauncher), "CanLaunchWithCargoCapacity")]
-	public static class RotatedLaunchWarningFix
-	{
-		//Temporary fix clarifying the message on shuttle unable to launch
-		public static void Postfix(CompVehicleLauncher __instance, ref string disableReason)
-		{
-			if( disableReason == "VF_CannotLaunchImmobile".Translate(__instance.Vehicle.LabelShort) && __instance.Vehicle.Angle != 0)
-			{
-				disableReason = "VF_Fix_CannotLaunchRotated".Translate(__instance.Vehicle.LabelShort);
-      }
-    }
-  }
+		}
+	}
   
 	[HarmonyPatch(typeof(CompUpgradeTree), "ValidateListers")]
 	public static class DisableValidateListersOffMap
@@ -5314,6 +5335,34 @@ namespace SaveOurShip2
 				return false;
 			}
 			return true;
+		}
+	}
+
+	[HarmonyPatch(typeof(Placeworker_AttachedToWall), "AllowsPlacing")]
+	public static class AllowWallAttachmentsOnVentsAndSolarPanels
+	{
+		public static void Postfix(ref AcceptanceReport __result, BuildableDef checkingDef, IntVec3 loc, Rot4 rot, Map map)
+		{
+			// Don't override out of bouds and in fully occupied tile cases
+			if (__result == false && __result.Reason == "")
+			{
+				return;
+			}
+			List<Thing> thingList = (loc + GenAdj.CardinalDirections[rot.AsInt]).GetThingList(map);
+			foreach (Thing t in thingList)
+			{
+				if (t is Building_ShipVent)
+				{
+					// "active" side of vent is opposite
+					__result = t.Rotation != rot.Opposite;
+					return;
+				}
+				if (t.def.defName == "ShipInside_SolarGenerator" || t.def.defName == "ShipInside_SolarGeneratorMech" || t.def.defName == "ShipInside_SolarGeneratorArchotech")
+				{
+					__result = t.Rotation != rot;
+					return;
+				}
+			}
 		}
 	}
 
