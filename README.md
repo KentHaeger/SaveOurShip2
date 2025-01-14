@@ -6,6 +6,8 @@ Requires Harmony (https://github.com/pardeike/Harmony) and Vehicle Framework (ht
 
 Developed by Kentington and Thain
 
+SoS2's return would not have been possible without the tireless work of community volunteers. Featuring user-created ship designs, major community maintenance updates, and more, SoS2 owes thanks to:
+
 2.7 Maintainer: Boris(Bqr1s on Github)
 
 Testers: Dreamingofstarlight(Lunarium), I Forgot, Sym/Grimmy, Clever Ape, Dragoncri, Epoch_soc, Doubleface1369, Stylish, Splinter, TheGruntBox, Zeah
