@@ -2561,6 +2561,20 @@ namespace SaveOurShip2
 				DeRegisterShuttleMission(mission);
 			}
 
+			if (loser != ShipInteriorMod2.FindPlayerShipMap())
+			{
+				// AI lost. Reset all their shuttles faction, so that thaey don't prevent buildings capture,
+				// becuse of being enemy pawns, which is totally not evident for the player.
+				foreach (VehiclePawn veh in loser.mapPawns.AllPawnsSpawned.Where(pawn => pawn is VehiclePawn veh))
+				{
+					if (veh.Faction.HostileTo(Faction.OfPlayer))
+					{
+						veh.DisembarkAll();
+						veh.SetFaction(null);
+						veh.ignition.Drafted = false;
+					}
+				}
+			}
 			//td temp
 			tgtMapComp.ShipCombatTargetMap = null;
 			tgtMapComp.originMapComp = null;
