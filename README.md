@@ -6,7 +6,7 @@ Requires Harmony (https://github.com/pardeike/Harmony) and Vehicle Framework (ht
 
 Developed by Kentington and Thain
 
-Latest update by: Boris (Bqr1s on Github)
+2.7 Maintainer: Boris(Bqr1s on Github)
 
 Testers: Dreamingofstarlight(Lunarium), I Forgot, Sym/Grimmy, Clever Ape, Dragoncri, Epoch_soc, Doubleface1369, Stylish, Splinter, TheGruntBox, Zeah
 
