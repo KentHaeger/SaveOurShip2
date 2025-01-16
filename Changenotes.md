@@ -79,3 +79,11 @@ Dec 24 2024
 - Tox gas immunity for EVA helmets. Different thing from tox environment resistance. That already existed on CE side when that mod is used.
 - Letters about found ships/derelicts will now mention submod name if found ship is not a part of Save Our Ship 2 content, but rather comes from ship pack.
 Shuttle fixes in this update were observed to reduce amount of vehicle errors dramatically. Like ship battle with enemy Strike Carrier and no shutlle log errors at all, from start to running a game with enemy shuttles left after battle.
+
+Jan 15 2017
+- Over-encumbered shuttles should correctly refuse to launch, except for caravans made with Form and Reform Vehicle caravan
+- Dev: Launch to specific tile command on ship bridge, when there is no player space map. Lets player pick a tile to be associated with the ship. Solar panels will work according to said tile latitude, quests and Ideology worksites will appear near that tile, also Vanilla drop pod launches to/from ship will likely be calculated using that tile.
+Incresed options for wall attachments: can place them on unpowered hull, also on inactive sides of vents and solar panels.
+- Kill all enemies on map and Vanish all enemies on map general dev commands now available.
+- XML-ized anti-entropic heatbank recovery rate.
+- On enemy ship/fleet defeat, their shuttles faction will be set tu null, so they will no longer prevent capturing enemy ship buildinds when non-vehicle pawns are deal with.
