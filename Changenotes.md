@@ -83,7 +83,7 @@ Shuttle fixes in this update were observed to reduce amount of vehicle errors dr
 Jan 15 2017
 - Over-encumbered shuttles should correctly refuse to launch, except for caravans made with Form and Reform Vehicle caravan
 - Dev: Launch to specific tile command on ship bridge, when there is no player space map. Lets player pick a tile to be associated with the ship. Solar panels will work according to said tile latitude, quests and Ideology worksites will appear near that tile, also Vanilla drop pod launches to/from ship will likely be calculated using that tile.
-Incresed options for wall attachments: can place them on unpowered hull, also on inactive sides of vents and solar panels.
+- More options for wall attachments: can place them on unpowered hull, also on inactive sides of vents and solar panels.
 - Kill all enemies on map and Vanish all enemies on map general dev commands now available.
 - XML-ized anti-entropic heatbank recovery rate.
 - On enemy ship/fleet defeat, their shuttles faction will be set to null, so they will no longer prevent capturing enemy ship buildings when non-vehicle pawns are deal with.
