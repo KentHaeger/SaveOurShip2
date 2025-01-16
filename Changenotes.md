@@ -86,4 +86,4 @@ Jan 15 2017
 Incresed options for wall attachments: can place them on unpowered hull, also on inactive sides of vents and solar panels.
 - Kill all enemies on map and Vanish all enemies on map general dev commands now available.
 - XML-ized anti-entropic heatbank recovery rate.
-- On enemy ship/fleet defeat, their shuttles faction will be set tu null, so they will no longer prevent capturing enemy ship buildinds when non-vehicle pawns are deal with.
+- On enemy ship/fleet defeat, their shuttles faction will be set to null, so they will no longer prevent capturing enemy ship buildings when non-vehicle pawns are deal with.
