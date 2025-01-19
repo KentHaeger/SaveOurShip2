@@ -3321,7 +3321,7 @@ namespace SaveOurShip2
 		{
 			// For now, issue was found with Escape Ship map due to that map not being linked to world object
 			// So, fixing onlyy that case for now
-			WorldObject worldObject = Find.WorldObjects.ObjectsAt(tile).Where(t => t is EscapeShip).First();
+			WorldObject worldObject = Find.WorldObjects.ObjectsAt(tile).FirstOrDefault(t => t is EscapeShip);
 			if (worldObject != null && worldObject.Faction != Faction.OfPlayer)
 			{
 				// Link map to Escap ship object sho that it gets "Home" icon and when selected on world map, there is Abadon option 
