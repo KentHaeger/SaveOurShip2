@@ -1922,8 +1922,8 @@
 		<fillPercent>0.40</fillPercent>
 		<tickerType>Normal</tickerType>
 		<statBases>
-			<MaxHitPoints>100</MaxHitPoints>
-			<WorkToBuild>800</WorkToBuild>
+			<MaxHitPoints>200</MaxHitPoints>
+			<WorkToBuild>4000</WorkToBuild>
 			<Mass>200</Mass>
 			<Flammability>0</Flammability>
 		</statBases>
