@@ -1028,6 +1028,23 @@ namespace SaveOurShip2
 						yield return returnShip;
 					}
 				}
+				Command_Action selectOuterdoors = new Command_Action
+				{
+					groupable = false,
+					action = delegate
+					{
+						Find.Selector.ClearSelection();
+						foreach (Building building in Ship.Buildings)
+						{
+							if (building is Building_ShipAirlock airlock && airlock.Outerdoor())
+								Find.Selector.Select(airlock, false);
+						}
+					},
+					icon = ContentFinder<Texture2D>.Get("Things/Building/Ship/Airlock_Mover"),
+					defaultLabel = "Select outer airlocks",
+					defaultDesc = "Select all outer airlocks for the current ship"
+				};
+				yield return selectOuterdoors;
 			}
 			else //launch
 			{
