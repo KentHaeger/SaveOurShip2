@@ -131,9 +131,12 @@ namespace SaveOurShip2
 		{
 			base.GetSettings<ModSettings_SoS>();
 		}
-		public const string SOS2version = "SteamV2.7.5";
+		public const string SOS2version = "GithubV2.7.5";
 		public const int SOS2ReqCurrentMinor = 5;
-		public const int SOS2ReqCurrentBuild = 4062;
+		// 1.5.4063 public build (4062 constant) was not enough as there is no AnomalyUtility.TryDuplicatePawn_NewTemp method to harmony patch it.
+		// Historical builds are not available, so for sure can be increased just to next build, 4066
+		// Should be increased further if on old game version clean modlist fails with error applying harmony patch.
+		public const int SOS2ReqCurrentBuild = 4066;
 
 		public const float altitudeNominal = 1000f; //nominal altitude for ship map background render
 		public const float altitudeLand = 110f; //min altitude for ship map background render
@@ -2013,6 +2016,31 @@ namespace SaveOurShip2
 			{
 				sourceMapComp.UndockAllFrom(shipIndex);
 			}
+			// Have to uninstall in separatre loop over tiles, as uninstalling can create minified thing it other tile if current on already contains items.
+			List<Building> toUninstall = new List<Building>();
+			List<MinifiedThing> toInstallAfterMove = new List<MinifiedThing>();
+			foreach (IntVec3 pos in sourceArea)
+			{
+				// Uninstall connected buildings which can't be "just moved"
+				foreach (Thing t in pos.GetThingList(sourceMap))
+				{
+					if (t is Building b)
+					{
+						if (b.def.defName == "CashRegister_CashRegister")
+						{
+							toUninstall.Add(b);
+						}
+					}
+				}
+			}
+			foreach (Building item in toUninstall)
+			{
+				IntVec3 oldPosition = item.Position;
+				MinifiedThing uninstalled = item.Uninstall();
+				// Force uninstalled to original posion in order to install it back in that position too
+				uninstalled.Position = oldPosition;
+				toInstallAfterMove.Add(uninstalled);
+			}
 			foreach (IntVec3 pos in sourceArea)
 			{
 				IntVec3 adjustedPos = Transform(pos);
@@ -2272,6 +2300,17 @@ namespace SaveOurShip2
 					{
 						if (spawnThing.Spawned)
 						{
+							// If it is a dining table in Gastronomy, it was reported that when actullly set to allow dining, broke ship launch
+							// With the use of that option on modded table.
+							ThingComp diningComp = (spawnThing as ThingWithComps)?.AllComps?.FirstOrDefault((ThingComp t) => t.GetType().Name == "CompCanDineAt");
+							if (diningComp != null)
+							{
+								MethodInfo tryRemoveDiningSpots = diningComp.GetType().GetMethod("TryRemoveDiningSpots", BindingFlags.NonPublic | BindingFlags.Instance);
+								if (tryRemoveDiningSpots != null)
+								{
+									tryRemoveDiningSpots.Invoke(diningComp, new object[] { });
+								}
+							}
 							// The issue with adaptive storage is when de-spawned and later spwned in new shiup location, storage buildings have
 							// TotalSlots proerty incottectly set to 1.
 							// Saving that property, then applying after ship move is not ideal, but fixes everthing that was found to be wrong when testng.
@@ -2359,6 +2398,13 @@ namespace SaveOurShip2
 			{
 				if(!(spawnThing is Plant))
 					ReSpawnThingOnMap(spawnThing, targetMap, adjustment, rotb, null, fac);
+			}
+			foreach (MinifiedThing minified in toInstallAfterMove)
+			{
+				Thing toInstall = minified.InnerThing;
+				GenSpawn.Spawn(toInstall, minified.Position, targetMap, toInstall.Rotation);
+				minified.InnerThing = null;
+				minified.Destroy();
 			}
 			if (devMode)
 				watch.Record("moveThings");
