@@ -87,3 +87,10 @@ Jan 15 2017
 - Kill all enemies on map and Vanish all enemies on map general dev commands now available.
 - XML-ized anti-entropic heatbank recovery rate.
 - On enemy ship/fleet defeat, their shuttles faction will be set to null, so they will no longer prevent capturing enemy ship buildings when non-vehicle pawns are deal with.
+
+in testing:
+- Gastronomy Compatibility handles dining tables and cash registers during ship move.
+- Ship Capacitor Array HP 100 => 200, still fragile but not the same as small ship capacitor. Build time increased to be times larger than for small one too.
+- EVA Helmets weights adjusted, now Heavy one is actually the heaviest, kids one is the lightest.
+- Buildings that are visible over roof, specifically ship weapons, also Small and Large heatsinks support roof
+- From ship bridge or core, can now select all outer airlocks for that ship, easy way of forbidding pawns to leave ship and risk walking into engine exhaust.
