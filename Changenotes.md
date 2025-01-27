@@ -94,3 +94,6 @@ in testing:
 - EVA Helmets weights adjusted, now Heavy one is actually the heaviest, kids one is the lightest.
 - Buildings that are visible over roof, specifically ship weapons, also Small and Large heatsinks support roof
 - From ship bridge or core, can now select all outer airlocks for that ship, easy way of forbidding pawns to leave ship and risk walking into engine exhaust.
+- Fix for linking landed ship object with map by Ruifung
+- Moon base won't have empty space around Moon surface when larger map is picked. Locked to 250x250 map size due to how scenario is implemented.
+- Message box with explanation will appear in case Load Ship scenario is used when there are no ships to load.
