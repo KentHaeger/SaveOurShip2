@@ -5227,7 +5227,11 @@ namespace SaveOurShip2
 			{
 				return true;
 			}
-			bool isSleepingAndVisible = parms.bed != null && !parms.bed.def.building.bed_showSleeperBody;
+			if (parms.bed == null)
+			{
+				return true;
+			}
+			bool isSleepingAndVisible = !parms.bed.def.building.bed_showSleeperBody;
 			if (!isSleepingAndVisible || !parms.bed.Map.IsSpace())
 			{
 				return true;

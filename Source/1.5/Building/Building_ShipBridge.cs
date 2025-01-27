@@ -1037,7 +1037,9 @@ namespace SaveOurShip2
 						foreach (Building building in Ship.Buildings)
 						{
 							if (building is Building_ShipAirlock airlock && airlock.Outerdoor())
+							{
 								Find.Selector.Select(airlock, false);
+							}
 						}
 					},
 					icon = ContentFinder<Texture2D>.Get("Things/Building/Ship/Airlock_Mover"),
