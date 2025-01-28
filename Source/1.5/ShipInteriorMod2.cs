@@ -1423,6 +1423,7 @@ namespace SaveOurShip2
 				List<Pawn> pawnsToKill = new List<Pawn>();
 				foreach (Pawn p in pawnsOnShip)
 				{
+					bool killPawn = false;
 					if (wreckLevel == 5 && !p.RaceProps.IsFlesh)
 					{
 						continue;
@@ -1431,15 +1432,28 @@ namespace SaveOurShip2
 					{
 						if (!p.RaceProps.IsFlesh && Rand.Chance(0.1f)) //small chance for derp mechs
 							continue;
-						HealthUtility.DamageUntilDead(p);
+						killPawn = true;
 					}
 					else if (wreckLevel == 2)
 					{
 						int chance = Rand.RangeInclusive(1, 3);
 						if (chance == 1)
-							HealthUtility.DamageUntilDead(p);
+							killPawn = true;
 						else if (chance == 2)
 							HealthUtility.DamageUntilDowned(p);
+					}
+					if (killPawn)
+					{
+						if (ModLister.HasActiveModWithName("Mechanoid Upgrades") && p.RaceProps.IsMechanoid)
+						{
+							// Compatibility fix: damage until dead will cause NREs on mechanoids with shield upgrade from that mod.
+							// This is slightly less optimal way to kill tho, there wom't be multiple injures shown.
+							p.Kill(null);
+						}
+						else
+						{
+							HealthUtility.DamageUntilDead(p);
+						}
 					}
 				}
 				//invaders - pick faction, spawn lord + pawns
@@ -2029,6 +2043,16 @@ namespace SaveOurShip2
 						if (b.def.defName == "CashRegister_CashRegister")
 						{
 							toUninstall.Add(b);
+						}
+						// Life support system moved to separate mod from questionable ethics. Uninstalling it does not work straight up,
+						// but unpowering disables well enough for ship move.
+						if (b.def.defName == "QE_LifeSupportSystem")
+						{
+							CompFlickable flickComp = b.TryGetComp<CompFlickable>();
+							if (flickComp != null && flickComp.SwitchIsOn)
+							{
+								flickComp.DoFlick();
+							}
 						}
 					}
 				}
