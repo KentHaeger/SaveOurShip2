@@ -25,11 +25,9 @@ namespace SaveOurShip2.Vehicles
                 CompShuttleAutoDoc comp = new CompShuttleAutoDoc();
                 comp.Initialize(props);
                 comp.parent = vehicle;
-                if (unlockingAfterLoad)
-                    PostLoadNewComponents.CompsToAdd.Add(comp);
-                else
+                vehicle.comps.Add(comp);
+                if (!unlockingAfterLoad)
                 {
-                    vehicle.comps.Add(comp);
                     vehicle.RecacheComponents();
                     comp.PostSpawnSetup(false);
                 }
