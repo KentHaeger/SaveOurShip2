@@ -325,7 +325,7 @@ namespace SaveOurShip2
 			float fuelNeeded = MassActual;
 			if (!HasRCS())
 			{
-				Messages.Message(TranslatorFormattedStringExtensions.Translate("SoS.MoveFailRCS", 1 + (fuelNeeded / 2000)), Core, MessageTypeDefOf.NeutralEvent);
+				Messages.Message(TranslatorFormattedStringExtensions.Translate("SoS.MoveFailRCS"), Core, MessageTypeDefOf.NeutralEvent);
 				return;
 			}
 			fuelNeeded *= fuelPercentNeeded;
@@ -351,7 +351,7 @@ namespace SaveOurShip2
 			float fuelNeeded = MassActual;
 			if (!HasRCS())
 			{
-				return TranslatorFormattedStringExtensions.Translate("SoS.MoveFailRCS", 1 + (fuelNeeded / 2000));
+				return TranslatorFormattedStringExtensions.Translate("SoS.MoveFailRCS");
 			}
 			fuelNeeded *= fuelPercentNeeded;
 			if (FuelNeeded(atmospheric) < fuelNeeded)

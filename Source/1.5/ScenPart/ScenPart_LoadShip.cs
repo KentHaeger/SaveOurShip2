@@ -142,6 +142,11 @@ namespace SaveOurShip2
 			var mostRecentFile = directory.GetFiles().OrderByDescending(f => f.LastWriteTime).FirstOrDefault();
 			if (mostRecentFile != null)
 				filename = Path.GetFileNameWithoutExtension(mostRecentFile.FullName);
+			if (!HasValidFilename())
+			{
+				Dialog_MessageBox window = new Dialog_MessageBox(TranslatorFormattedStringExtensions.Translate("SoS.NoShipsToLoad"));
+				Find.WindowStack.Add(window);
+			}
 		}
 		public void DoEarlyInit() //Scenario.GetFirstConfigPage call via patch
 		{

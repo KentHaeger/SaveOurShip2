@@ -121,13 +121,6 @@ namespace SaveOurShip2
 
 		public static Map GenerateShipSpaceMap() //MapGenerator.GenerateMap override via patch
 		{
-			IntVec3 size = new IntVec3(Find.GameInitData.mapSize, 1, Find.GameInitData.mapSize);
-			if (size.x < 250 || size.z < 250)
-				size = new IntVec3(250, 0, 250);
-
-			Map spaceMap = ShipInteriorMod2.GeneratePlayerShipMap(size);
-			Current.ProgramState = ProgramState.MapInitializing;
-
 			ScenPart_StartInSpace scen = (ScenPart_StartInSpace)Current.Game.Scenario.parts.FirstOrDefault(s => s is ScenPart_StartInSpace);
 
 			if (scen.startType == ShipStartFlags.Station && scen.spaceShipDef.defName == "0") //random dungeon
@@ -139,6 +132,15 @@ namespace SaveOurShip2
 			{
 				scen.spaceShipDef = DefDatabase<ShipDef>.AllDefs.Where(def => def.startingShip == true && def.startingDungeon == false && def.defName != "0").RandomElement();
 			}
+
+			IntVec3 mapSize = new IntVec3(Find.GameInitData.mapSize, 1, Find.GameInitData.mapSize);
+			// As moon base starts are whole 250x250 maps saved, they got to have map size locked for now to avoid having empty space around
+			if (mapSize.x < 250 || mapSize.z < 250 || scen.spaceShipDef.defName == "StartSiteMoonA" || scen.spaceShipDef.defName == "StartSiteMoonB") 
+				mapSize = new IntVec3(250, 1, 250);
+
+			Map spaceMap = ShipInteriorMod2.GeneratePlayerShipMap(mapSize);
+			Current.ProgramState = ProgramState.MapInitializing;
+
 			List<Building> cores = new List<Building>();
 			ShipInteriorMod2.GenerateShip(scen.spaceShipDef, spaceMap, null, Faction.OfPlayer, null, out cores, false, false, scen.damageStart ? 1 : 0, (spaceMap.Size.x - scen.spaceShipDef.sizeX) / 2, (spaceMap.Size.z - scen.spaceShipDef.sizeZ) / 2);
 

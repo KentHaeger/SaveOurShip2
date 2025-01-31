@@ -79,3 +79,24 @@ Dec 24 2024
 - Tox gas immunity for EVA helmets. Different thing from tox environment resistance. That already existed on CE side when that mod is used.
 - Letters about found ships/derelicts will now mention submod name if found ship is not a part of Save Our Ship 2 content, but rather comes from ship pack.
 Shuttle fixes in this update were observed to reduce amount of vehicle errors dramatically. Like ship battle with enemy Strike Carrier and no shutlle log errors at all, from start to running a game with enemy shuttles left after battle.
+
+Jan 15 2025
+- Over-encumbered shuttles should correctly refuse to launch, except for caravans made with Form and Reform Vehicle caravan
+- Dev: Launch to specific tile command on ship bridge, when there is no player space map. Lets player pick a tile to be associated with the ship. Solar panels will work according to said tile latitude, quests and Ideology worksites will appear near that tile, also Vanilla drop pod launches to/from ship will likely be calculated using that tile.
+- More options for wall attachments: can place them on unpowered hull, also on inactive sides of vents and solar panels.
+- Kill all enemies on map and Vanish all enemies on map general dev commands now available.
+- XML-ized anti-entropic heatbank recovery rate.
+- On enemy ship/fleet defeat, their shuttles faction will be set to null, so they will no longer prevent capturing enemy ship buildings when non-vehicle pawns are deal with.
+
+Jan 31 2025
+- Gastronomy Compatibility handles dining tables and cash registers during ship move.
+- Ship Capacitor Array HP 100 => 200, still fragile but not the same as small ship capacitor. Build time increased to be times larger than for small one too.
+- EVA Helmets weights adjusted, now Heavy one is actually the heaviest, kids one is the lightest.
+- Buildings that are visible over roof, specifically ship weapons, also Small and Large heatsinks support roof.
+- From ship bridge or core, can now select all outer airlocks for that ship, easy way of forbidding pawns to leave ship and risk walking into engine exhaust.
+- Fix for linking landed ship object with map by Ruifung.
+- Moon base won't have empty space around Moon surface when larger map is picked. Locked to 250x250 map size due to how scenario is implemented.
+- Message box with explanation will appear in case Load Ship scenario is used when there are no ships to load.
+- Compatibility with Mechanoid Upgrades.
+- Compatibility with Life Support System mod.
+- Need RCS thrusters message will correctly say that at least one is needed, not many.
