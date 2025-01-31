@@ -4784,26 +4784,6 @@ namespace SaveOurShip2
         }
     }
 
-    [HarmonyPatch(typeof(VehiclePawn),"PostLoad")]
-	public static class PostLoadNewComponents
-    {
-		public static List<ThingComp> CompsToAdd=new List<ThingComp>();
-
-		public static bool Prefix(VehiclePawn __instance)
-        {
-			CompsToAdd = new List<ThingComp>();
-			return true;
-		}
-
-		public static void Postfix(VehiclePawn __instance)
-        {
-			foreach (ThingComp comp in CompsToAdd)
-			{
-				__instance.AddComp(comp);
-			}
-		}
-	}
-
 	[HarmonyPatch(typeof(VehiclePawn), "SpawnSetup")]
 	public static class PostSpawnNewComponents
 	{
@@ -4843,6 +4823,25 @@ namespace SaveOurShip2
 					}
 					mapComp.Shields.Add(compShield);
 				}
+			}
+		}
+	}
+
+	[HarmonyPatch(typeof(VehicleAI), "AITick")]
+	public static class NoAITick
+	{
+		// Due to NRE because of type issues, have to disable this for upgradeable shuttles.
+		public static bool Prefix(VehicleAI __instance)
+		{
+			VehiclePawn pawn = __instance.vehicle;
+			string[] shuttleNames = { "SoS2_Shuttle", "SoS2_Shuttle_Heavy", "SoS2_Shuttle_Superheavy" };
+			if (shuttleNames.Contains(__instance.vehicle.def.defName))
+			{
+				return false;
+			}
+			else
+			{
+				return true;
 			}
 		}
 	}

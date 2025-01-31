@@ -36,15 +36,14 @@ namespace SaveOurShip2.Vehicles
             {
                 net = new CompVehicleHeatNet();
                 net.parent = vehicle;
-                vehicle.comps.Add(net);
+                vehicle.AddComp(net);
             }
             CompShipHeatSink mySink = new CompShipHeatSink();
             mySink.Initialize(sink);
             mySink.parent = vehicle;
-            vehicle.comps.Add(mySink);
+            vehicle.AddComp(mySink);
             if (!unlockingAfterLoad)
             {
-                vehicle.RecacheComponents();
                 mySink.PostSpawnSetup(unlockingAfterLoad);
             }
             net.RebuildHeatNet();
