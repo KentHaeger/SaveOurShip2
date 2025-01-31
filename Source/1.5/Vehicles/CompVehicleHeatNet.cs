@@ -30,7 +30,16 @@ namespace SaveOurShip2.Vehicles
 
         public override string CompInspectStringExtra()
         {
-            return "Heat stored: " + myNet.StorageUsed + "/" + myNet.StorageCapacity;
+            string result = "Vehicle heat net. Heat stored: " + myNet.StorageUsed + "/" + myNet.StorageCapacity;
+            if (Prefs.DevMode)
+            {
+                result += "; components: " + parent.GetComps<CompShipHeat>().Count();
+                foreach (CompShipHeat comp in parent.GetComps<CompShipHeat>())
+                {
+                    result += "\nComponent: " + comp.GetType().Name;
+                }
+            }
+            return result;
         }
     }
 }
