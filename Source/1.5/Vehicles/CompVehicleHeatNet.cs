@@ -4,17 +4,39 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Verse;
+using Vehicles;
+using UnityEngine;
 
 namespace SaveOurShip2.Vehicles
 {
     class CompVehicleHeatNet : ThingComp
     {
         public ShipHeatNet myNet;
+        public static string storedHeatLabel = "heatNetStroageUsed";
+        public float heatStoredLoaded;
 
         public override void PostSpawnSetup(bool respawningAfterLoad)
         {
             base.PostSpawnSetup(respawningAfterLoad);
             RebuildHeatNet();
+            if (respawningAfterLoad)
+            {
+                DistributeLodedHeat();
+            }
+        }
+
+        public void DistributeLodedHeat()
+		{
+            float totalCapacity = myNet.StorageCapacity;
+            if (Mathf.Abs(totalCapacity) < float.Epsilon)
+            {
+                totalCapacity = 1f;
+            }
+            float fraction = heatStoredLoaded / totalCapacity;
+            foreach (CompShipHeatSink sink in myNet.Sinks)
+			{
+                sink.heatStored = sink.Props.heatCapacity * fraction;
+            }
         }
 
         public void RebuildHeatNet()
@@ -28,9 +50,19 @@ namespace SaveOurShip2.Vehicles
             }
         }
 
+        public override void PostExposeData()
+        {
+            base.PostExposeData();
+            if (Scribe.mode == LoadSaveMode.Saving)
+			{
+                float heatStored = myNet.StorageUsed;
+                Scribe_Values.Look<float>(ref heatStored, storedHeatLabel);
+            }
+        }
+
         public override string CompInspectStringExtra()
         {
-            string result = "Vehicle heat net. Heat stored: " + myNet.StorageUsed + "/" + myNet.StorageCapacity;
+            string result = "Heat stored: " + myNet.StorageUsed + "/" + myNet.StorageCapacity;
             if (Prefs.DevMode)
             {
                 result += "; components: " + parent.GetComps<CompShipHeat>().Count();

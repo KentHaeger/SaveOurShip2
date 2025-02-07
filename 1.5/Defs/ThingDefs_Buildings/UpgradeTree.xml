@@ -580,7 +580,7 @@
 			<li>
 				<key>CargoHeatsink</key>
 				<label>Auxiliary Heatsink</label>
-				<description>Install an auxiliary heatsink to support shields.\n&lt;color=#bb8f04&gt;+250 heatsink, -100 cargo capacity&lt;/color&gt;</description>
+				<description>Install an auxiliary heatsink to support shields.\n&lt;color=#bb8f04&gt;+200 heatsink, -100 cargo capacity&lt;/color&gt;</description>
 				<icon>UI/ShuttleUpgrades/CargoHeatsink</icon>
 				<work>8000</work>
 				<gridCoordinate>(7,10)</gridCoordinate>
@@ -597,9 +597,9 @@
 					<li Class="SaveOurShip2.Vehicles.ShuttleHeatsinkUpgrade">
 						<sink>
 							<compClass>SaveOurShip2.CompShipHeatSink</compClass>
-							<heatCapacity>250</heatCapacity>
-							<heatVent>0.25</heatVent>
-							<heatLoss>0.25</heatLoss>
+							<heatCapacity>200</heatCapacity>
+							<heatVent>0.3</heatVent>
+							<heatLoss>0.3</heatLoss>
 						</sink>
 					</li>
 				</upgrades>
