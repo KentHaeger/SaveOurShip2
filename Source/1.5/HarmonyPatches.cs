@@ -4784,6 +4784,30 @@ namespace SaveOurShip2
         }
     }
 
+	[HarmonyPatch(typeof(VehiclePawn), "ExposeData")]
+	public static class VehicleExposeData
+	{
+		public static void Postfix(VehiclePawn __instance)
+		{
+			if (Scribe.mode == LoadSaveMode.LoadingVars)
+			{
+				float heatStored = 0f;
+				Scribe_Values.Look<float>(ref heatStored, CompVehicleHeatNet.storedHeatLabel, 0f);
+				if (heatStored != 0f)
+				{
+					CompVehicleHeatNet net = __instance.GetComp<CompVehicleHeatNet>();
+					if (net == null)
+					{
+						net = new CompVehicleHeatNet();
+						net.parent = __instance;
+						__instance.AllComps.Add(net);
+					}
+					net.heatStoredLoaded = heatStored;
+				}
+			}
+		}
+	}
+
 	[HarmonyPatch(typeof(VehiclePawn), "SpawnSetup")]
 	public static class PostSpawnNewComponents
 	{
