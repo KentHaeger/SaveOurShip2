@@ -3185,6 +3185,13 @@ namespace SaveOurShip2
 					foreach (IntVec3 tile in ship.Area)
 					{
 						map.fogGrid.Unfog(tile);
+						foreach (Thing t in map.thingGrid.ThingsAt(tile))
+						{
+							if (t is Filth || (t.def.thingCategories?.Contains(ThingCategoryDefOf.StoneChunks) ?? false))
+							{
+								t.Destroy(DestroyMode.Vanish);
+							}
+						}
 					}
 				}
 			}

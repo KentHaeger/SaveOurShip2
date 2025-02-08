@@ -18,7 +18,7 @@ namespace SaveOurShip2
 		public List<Building_ShipSensor> Sensors = new List<Building_ShipSensor>();
 		public bool MoveShipFlag = false;
 		public int nextUniqueMissionID = 0;
-		public const int StarhipBowTimeout = 1800000;
+		public const int StarhipBowTimeout = 720000; // 12 days
 		public int LastStarshipBowTick = -StarhipBowTimeout;
 
 		public ShipWorldComp(World world) : base(world)
