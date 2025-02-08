@@ -187,7 +187,6 @@ namespace SaveOurShip2
 		public static List<ThingDef> randomPlants;
 		public static Dictionary<ThingDef, ThingDef> wreckDictionary;
 		public static Dictionary<ThingDef, ThingDef> archoConversions;
-		private static Type adaptiveStorageType;
 
 		public override void DoSettingsWindowContents(Rect inRect)
 		{
@@ -1983,8 +1982,6 @@ namespace SaveOurShip2
 			List<CompEngineTrail> nukeExplosions = new List<CompEngineTrail>();
 			List<Pawn> pawns = new List<Pawn>();
 			List<Plant> plants = new List<Plant>();
-			Dictionary<Thing, int> adaptiveStorageCapacities = new Dictionary<Thing, int>();
-			adaptiveStorageType = Type.GetType("AdaptiveStorage.ThingClass, AdaptiveStorageFramework", false);
 			int rotb = 4 - rotNum;
 
 			// Transforms vector from initial position to final according to desired movement/rotation.
@@ -2335,18 +2332,6 @@ namespace SaveOurShip2
 									tryRemoveDiningSpots.Invoke(diningComp, new object[] { });
 								}
 							}
-							// The issue with adaptive storage is when de-spawned and later spwned in new shiup location, storage buildings have
-							// TotalSlots proerty incottectly set to 1.
-							// Saving that property, then applying after ship move is not ideal, but fixes everthing that was found to be wrong when testng.
-							// Check with IsAssignableFrom is for derived types to be handled too, as their existence is supported by Adaptive Storage design.
-							if (spawnThing.def.building != null && spawnThing.def.building.maxItemsInCell > 1)
-							{
-								if (adaptiveStorageType != null && adaptiveStorageType.IsAssignableFrom(spawnThing.GetType()))
-								{
-									int totalSlots = (int)spawnThing.GetType().GetProperty("TotalSlots", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).GetValue(spawnThing);
-									adaptiveStorageCapacities.Add(spawnThing, totalSlots);
-								}
-							}
 							spawnThing.DeSpawn();
 						}
 					}
@@ -2411,17 +2396,17 @@ namespace SaveOurShip2
 			}
 			foreach (Thing spawnThing in toMoveShipParts)
 			{
-				ReSpawnThingOnMap(spawnThing, targetMap, adjustment, rotb, null, fac);
+				ReSpawnThingOnMap(spawnThing, targetMap, adjustment, rotb, fac);
 			}
 			foreach (Thing spawnThing in toMoveBuildings)
 			{
 				// adaptiveStorageCapacities only needed when respawning buldings
-				ReSpawnThingOnMap(spawnThing, targetMap, adjustment, rotb, adaptiveStorageCapacities, fac);
+				ReSpawnThingOnMap(spawnThing, targetMap, adjustment, rotb, fac);
 			}
 			foreach (Thing spawnThing in toMoveThings)
 			{
 				if(!(spawnThing is Plant))
-					ReSpawnThingOnMap(spawnThing, targetMap, adjustment, rotb, null, fac);
+					ReSpawnThingOnMap(spawnThing, targetMap, adjustment, rotb, fac);
 			}
 			foreach (MinifiedThing minified in toInstallAfterMove)
 			{
@@ -2571,7 +2556,7 @@ namespace SaveOurShip2
 			}
 			foreach(Plant plant in plants)
             {
-				ReSpawnThingOnMap(plant, targetMap, adjustment, rotb, null, fac);
+				ReSpawnThingOnMap(plant, targetMap, adjustment, rotb, fac);
 			}
 			if (devMode)
 				watch.Record("moveTerrain");
@@ -2667,7 +2652,7 @@ namespace SaveOurShip2
 				Log.Message("SOS2: ".Colorize(Color.cyan) + sourceMap + " Ship move complete in ".Colorize(Color.green) + watch.MakeReport());
 			}
 		}
-		private static void ReSpawnThingOnMap(Thing spawnThing, Map targetMap, IntVec3 adjustment, int rotb, Dictionary<Thing, int> adaptiveStorageCapacities, Faction fac = null)
+		private static void ReSpawnThingOnMap(Thing spawnThing, Map targetMap, IntVec3 adjustment, int rotb, Faction fac = null)
 		{
 			if (spawnThing.Destroyed)
 				return;
@@ -2718,24 +2703,6 @@ namespace SaveOurShip2
 				spawnThing.SetFaction(fac);
 
 			spawnThing.SpawnSetup(targetMap, !spawnThing.def.HasModExtension<SoSSpawnOverride>());
-
-			if (spawnThing.def.building != null && spawnThing.def.building.maxItemsInCell > 1)
-			{
-				if (adaptiveStorageType != null && adaptiveStorageType.IsAssignableFrom(spawnThing.GetType()))
-				{
-					if (adaptiveStorageCapacities.ContainsKey(spawnThing))
-					{
-						try
-						{
-							spawnThing.GetType().GetProperty("TotalSlots", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).SetValue(spawnThing, adaptiveStorageCapacities[spawnThing]);
-						}
-						catch (Exception e)
-						{
-							Log.Warning("Error applying adaptive storage capacity: " + e.Message);
-						}
-					}
-				}
-			}
 
 			if (spawnThing is Pawn pawn)
 				pawn.pather.ResetToCurrentPosition();

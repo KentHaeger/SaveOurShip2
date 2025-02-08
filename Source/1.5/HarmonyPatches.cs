@@ -2168,8 +2168,17 @@ namespace SaveOurShip2
 	[HarmonyPatch(typeof(Building), "MaxItemsInCell", MethodType.Getter)]
 	public static class DisableForMoveShelf
 	{
+		static bool? adaptiveStorageEnabled = null;
 		public static int Postfix(int __result, Building __instance)
 		{
+			if (adaptiveStorageEnabled == null)
+			{
+				adaptiveStorageEnabled = ModLister.HasActiveModWithName("Adaptive Storage Framework");
+			}
+			if (adaptiveStorageEnabled ?? false)
+			{
+				return __result;
+			}
 			if (__result > 1 && ShipInteriorMod2.MoveShipFlag)
 				return 1;
 			return __result;
