@@ -804,7 +804,7 @@
 				<heatVent>10</heatVent>
 				<threat>3</threat>
 				<antiEntropic>true</antiEntropic>
-				<antiEntropicRecoveryRate>0.001</antiEntropicRecoveryRate>
+				<antiEntropicRecoveryRate>0.004</antiEntropicRecoveryRate>
 			</li>
 			<li Class="CompProperties_Power">
 				<compClass>CompPowerTransmitter</compClass>

@@ -106,6 +106,11 @@ namespace SaveOurShip2
 					else if (myNet.Depletion > 0 && mapComp.ShipMapState != ShipMapState.inCombat && !mapComp.Cloaks.Any(c => c.active))
 						RemoveDepletionFromNetwork(Props.heatVent / 10f);
 				}
+				if (Props.antiEntropic)
+				{
+					if (myNet.Depletion > 0)
+						RemoveDepletionFromNetwork(Props.heatVent * Props.antiEntropicRecoveryRate);
+				}
 				if (myNet.StorageUsed > 0)
 				{
 					float ratio = myNet.RatioInNetwork;
@@ -124,8 +129,6 @@ namespace SaveOurShip2
 							{
 								batteries.RandomElement().AddEnergy(2);
 							}
-							if (myNet.Depletion > 0)
-								RemoveDepletionFromNetwork(Props.heatVent * Props.antiEntropicRecoveryRate);
 						}
 						return;
 					}
