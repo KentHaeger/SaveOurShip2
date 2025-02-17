@@ -21,6 +21,30 @@ namespace SaveOurShip2
 		public HashSet<Building_ShipBridge> TacCons = new HashSet<Building_ShipBridge>();
 		public HashSet<Building_ShipBridge> PilCons = new HashSet<Building_ShipBridge>();
 		public int GridID;
+		private static Type turretCEtype;
+		private static bool turretCEinitialized = false;
+		public static bool IsCETurret(ThingWithComps thing)
+		{
+			if (!turretCEinitialized)
+			{
+				try
+				{
+					if (ModLister.HasActiveModWithName("Combat Extended"))
+					{
+						turretCEtype = Type.GetType("CombatExtended.Compatibility.SOS2Compat.Building_ShipTurretCE, CombatExtended", false);
+					}
+				}
+				catch (Exception e)
+				{
+					turretCEtype = null;
+				}
+			}
+			if (turretCEtype == null || thing == null)
+			{
+				return false;
+			}
+			return turretCEtype.IsAssignableFrom(thing.GetType());
+		}
 		public float StorageCapacity //usable capacity (minus depletion)
 		{ 
 			get
@@ -111,7 +135,7 @@ namespace SaveOurShip2
 					}
 				}
 			}
-			else if (comp.parent is Building_ShipTurret)
+			else if (comp.parent is Building_ShipTurret || IsCETurret(comp.parent))
 				Turrets.Add(comp);
 			else if (comp is CompShipHeatSource source)
 			{
