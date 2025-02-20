@@ -12,7 +12,7 @@ SoS2's return would not have been possible without the tireless work of communit
 
 Testers: Dreamingofstarlight(Lunarium), I Forgot, Sym/Grimmy, Clever Ape, Dragoncri, Epoch_soc, Doubleface1369, Stylish, Splinter, TheGruntBox, Zeah
 
-Submod Support: Ms Mommy Memner, I Forgot, Cruel Moose and thamuzz
+Submod Support: Ms Mommy Memer, I Forgot, Cruel Moose and thamuzz
 
 Contributors: Boris, SonicTHI, Owlchemist, Oskar Potocki, Thamuzz1331, Trollam, K', Sarg, Karim, Saakra, Revolus, MatthewTeply, dkargin, HG, Morphium, Halno, Argón, DianaWinters, UrbanMonkey, M.A.G.Gen., Epicguru, sdanchenko, m00nl1ght-dev
 
