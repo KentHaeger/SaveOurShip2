@@ -784,7 +784,7 @@ namespace SaveOurShip2
 							Mass += 1;
 							return;
 						}
-						else if (b.TryGetComp<CompEngineTrail>() != null)
+						if (b.TryGetComp<CompEngineTrail>() != null)
 						{
 							var refuelable = b.TryGetComp<CompRefuelable>();
 							ThrustRaw += b.TryGetComp<CompEngineTrail>().Thrust;
@@ -797,16 +797,16 @@ namespace SaveOurShip2
 							EngineMass += b.def.Size.Area * 60;
 							Engines.Add(b.TryGetComp<CompEngineTrail>());
 						}
-						else if (b.TryGetComp<CompRCSThruster>() != null)
+						if (b.TryGetComp<CompRCSThruster>() != null)
 							RCSs.Add(b.GetComp<CompRCSThruster>());
 					}
 					else
 					{
 						if (b.TryGetComp<CompCryptoLaunchable>() != null)
 							Pods.Add(b.GetComp<CompCryptoLaunchable>());
-						else if (b.TryGetComp<CompShipBay>() != null)
+						if (b.TryGetComp<CompShipBay>() != null)
 							Bays.Add(b.GetComp<CompShipBay>());
-						else if (b is Building_ShipBridge bridge && bridge.terminate == false)
+						if (b is Building_ShipBridge bridge && bridge.terminate == false)
 						{
 							Bridges.Add(bridge);
 							if (bridge.mannableComp == null)
@@ -821,11 +821,11 @@ namespace SaveOurShip2
 							bridge.ShipIndex = Index;
 							bridge.ShipName = Name;
 						}
-						else if (b is Building_ShipSensor sensor)
+						if (b is Building_ShipSensor sensor)
 							Sensors.Add(sensor);
-						else if (b.TryGetComp<CompHullFoamDistributor>() != null)
+						if (b.TryGetComp<CompHullFoamDistributor>() != null)
 							FoamDistributors.Add(b.GetComp<CompHullFoamDistributor>());
-						else if (b.TryGetComp<CompShipLifeSupport>() != null)
+						if (b.TryGetComp<CompShipLifeSupport>() != null)
 							LifeSupports.Add(b.GetComp<CompShipLifeSupport>());
 					}
 				}
@@ -901,7 +901,7 @@ namespace SaveOurShip2
 							Mass -= 1;
 							return;
 						}
-						else if (b.TryGetComp<CompEngineTrail>() != null)
+						if (b.TryGetComp<CompEngineTrail>() != null)
 						{
 							var refuelable = b.TryGetComp<CompRefuelable>();
 							ThrustRaw -= b.TryGetComp<CompEngineTrail>().Thrust;
@@ -914,16 +914,16 @@ namespace SaveOurShip2
 							EngineMass -= b.def.Size.Area * 60;
 							Engines.Remove(b.TryGetComp<CompEngineTrail>());
 						}
-						else if (b.TryGetComp<CompRCSThruster>() != null)
+						if (b.TryGetComp<CompRCSThruster>() != null)
 							RCSs.Remove(b.GetComp<CompRCSThruster>());
 					}
 					else
 					{
 						if (b.TryGetComp<CompCryptoLaunchable>() != null)
 							Pods.Remove(b.GetComp<CompCryptoLaunchable>());
-						else if (b.TryGetComp<CompShipBay>() != null)
+						if (b.TryGetComp<CompShipBay>() != null)
 							Bays.Remove(b.GetComp<CompShipBay>());
-						else if (b is Building_ShipBridge bridge)
+						if (b is Building_ShipBridge bridge)
 						{
 							Bridges.Remove(bridge);
 							if (bridge.mannableComp == null)
@@ -933,11 +933,11 @@ namespace SaveOurShip2
 							//bridge.ShipIndex = -1;
 							//bridge.ShipName = "destroyed ship";
 						}
-						else if (b is Building_ShipSensor sensor)
+						if (b is Building_ShipSensor sensor)
 							Sensors.Remove(sensor);
-						else if (b.TryGetComp<CompHullFoamDistributor>() != null)
+						if (b.TryGetComp<CompHullFoamDistributor>() != null)
 							FoamDistributors.Remove(b.GetComp<CompHullFoamDistributor>());
-						else if (b.TryGetComp<CompShipLifeSupport>() != null)
+						if (b.TryGetComp<CompShipLifeSupport>() != null)
 							LifeSupports.Remove(b.GetComp<CompShipLifeSupport>());
 					}
 				}
