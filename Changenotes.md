@@ -111,3 +111,5 @@ Feb 26 2025
 - Shuttle autodoc will tend pawns in cargo hold too
 - Credits typo fixed
 - Compatibility with CE for selecting turets from Tactical Console. Will take effect when CE is updated too
+In testing:
+- Added support for multi-role buildings such as core and life support in one for Bioship addon
