@@ -17,7 +17,10 @@ namespace SaveOurShip2
             base.CompTickRare();
             if(parent is VehiclePawn vehicle)
             {
-                foreach(Pawn pawn in vehicle.AllPawnsAboard)
+                List<Pawn> pawns = vehicle.AllPawnsAboard.ListFullCopy();
+                List<Thing> cargoPawns = vehicle.inventory.innerContainer.Where(t => (t is Pawn)).ToList();
+                pawns.AddRange(cargoPawns.ConvertAll(t => (Pawn)t));
+                foreach (Pawn pawn in pawns)
                 {
                     Hediff bleed = HealthUtility.FindMostBleedingHediff(pawn, new HediffDef[] { });
                     if (bleed != null)

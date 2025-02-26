@@ -53,12 +53,12 @@ namespace SaveOurShip2.Vehicles
             myShield.parent = vehicle;
             myShield.Initialize(shield);
             vehicle.AddComp(myShield);
+            net.RebuildHeatNet();
             if (!unlockingAfterLoad)
             {
                 if (vehicle.Spawned)
                 {
                     myShield.PostSpawnSetup(unlockingAfterLoad);
-                    net.RebuildHeatNet();
                     ShipMapComp mapComp = vehicle.Map.GetComponent<ShipMapComp>();
                     if (mapComp != null)
                         mapComp.Shields.Add(myShield);

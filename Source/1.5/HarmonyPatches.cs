@@ -2168,8 +2168,17 @@ namespace SaveOurShip2
 	[HarmonyPatch(typeof(Building), "MaxItemsInCell", MethodType.Getter)]
 	public static class DisableForMoveShelf
 	{
+		static bool? adaptiveStorageEnabled = null;
 		public static int Postfix(int __result, Building __instance)
 		{
+			if (adaptiveStorageEnabled == null)
+			{
+				adaptiveStorageEnabled = ModLister.HasActiveModWithName("Adaptive Storage Framework");
+			}
+			if (adaptiveStorageEnabled ?? false)
+			{
+				return __result;
+			}
 			if (__result > 1 && ShipInteriorMod2.MoveShipFlag)
 				return 1;
 			return __result;
@@ -3176,6 +3185,13 @@ namespace SaveOurShip2
 					foreach (IntVec3 tile in ship.Area)
 					{
 						map.fogGrid.Unfog(tile);
+						foreach (Thing t in map.thingGrid.ThingsAt(tile))
+						{
+							if (t is Filth || (t.def.thingCategories?.Contains(ThingCategoryDefOf.StoneChunks) ?? false))
+							{
+								t.Destroy(DestroyMode.Vanish);
+							}
+						}
 					}
 				}
 			}
@@ -4784,22 +4800,26 @@ namespace SaveOurShip2
         }
     }
 
-    [HarmonyPatch(typeof(VehiclePawn),"PostLoad")]
-	public static class PostLoadNewComponents
-    {
-		public static List<ThingComp> CompsToAdd=new List<ThingComp>();
-
-		public static bool Prefix(VehiclePawn __instance)
-        {
-			CompsToAdd = new List<ThingComp>();
-			return true;
-		}
-
+	[HarmonyPatch(typeof(VehiclePawn), "ExposeData")]
+	public static class VehicleExposeData
+	{
 		public static void Postfix(VehiclePawn __instance)
-        {
-			foreach (ThingComp comp in CompsToAdd)
+		{
+			if (Scribe.mode == LoadSaveMode.LoadingVars)
 			{
-				__instance.AddComp(comp);
+				float heatStored = 0f;
+				Scribe_Values.Look<float>(ref heatStored, CompVehicleHeatNet.storedHeatLabel, 0f);
+				if (heatStored != 0f)
+				{
+					CompVehicleHeatNet net = __instance.GetComp<CompVehicleHeatNet>();
+					if (net == null)
+					{
+						net = new CompVehicleHeatNet();
+						net.parent = __instance;
+						__instance.AllComps.Add(net);
+					}
+					net.heatStoredLoaded = heatStored;
+				}
 			}
 		}
 	}
@@ -4843,6 +4863,25 @@ namespace SaveOurShip2
 					}
 					mapComp.Shields.Add(compShield);
 				}
+			}
+		}
+	}
+
+	[HarmonyPatch(typeof(VehicleAI), "AITick")]
+	public static class NoAITick
+	{
+		// Due to NRE because of type issues, have to disable this for upgradeable shuttles.
+		public static bool Prefix(VehicleAI __instance)
+		{
+			VehiclePawn pawn = __instance.vehicle;
+			string[] shuttleNames = { "SoS2_Shuttle", "SoS2_Shuttle_Heavy", "SoS2_Shuttle_Superheavy" };
+			if (shuttleNames.Contains(__instance.vehicle.def.defName))
+			{
+				return false;
+			}
+			else
+			{
+				return true;
 			}
 		}
 	}

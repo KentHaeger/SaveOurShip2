@@ -100,3 +100,14 @@ Jan 31 2025
 - Compatibility with Mechanoid Upgrades.
 - Compatibility with Life Support System mod.
 - Need RCS thrusters message will correctly say that at least one is needed, not many.
+Feb 26 2025
+- Many different shuttle errors were fixed.
+- Shuttle heat will be saved and loaded correctly, except for off-map shuttles (in combat). Need to save and load in new version.
+- Adaptive Storage compatibility fixed
+- Outerdoor status will no longer stay short-term cached for airlocks after ship move.
+- Buffed anti-entropy heatbank depletion recovery
+- Starship bow timeout decreased from 30 to 12 days
+- Charlon Whitestone will be clean of rock rubble and chunks inside
+- Shuttle autodoc will tend pawns in cargo hold too
+- Credits typo fixed
+- Compatibility with CE for selecting turets from Tactical Console. Will take effect when CE is updated too

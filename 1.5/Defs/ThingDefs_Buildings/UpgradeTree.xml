@@ -598,8 +598,8 @@
 						<sink>
 							<compClass>SaveOurShip2.CompShipHeatSink</compClass>
 							<heatCapacity>200</heatCapacity>
-							<heatVent>0.25</heatVent>
-							<heatLoss>0.25</heatLoss>
+							<heatVent>0.3</heatVent>
+							<heatLoss>0.3</heatLoss>
 						</sink>
 					</li>
 				</upgrades>

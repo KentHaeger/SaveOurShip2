@@ -29,6 +29,15 @@ namespace SaveOurShip2
 		{
 			get
 			{
+				if (mapComp == null)
+				{
+					ShipMapComp parentMapComp = parent.Map?.GetComponent<ShipMapComp>();
+					if (parentMapComp == null)
+					{
+						return false;
+					}
+					return parentMapComp?.Cloaks.Any(c => c.active) == true;
+				}
 				disabled = mapComp?.Cloaks.Any(c => c.active) == true;
 				return disabled;
 			}
@@ -69,7 +78,7 @@ namespace SaveOurShip2
 		public override void CompTick()
 		{
 			base.CompTick();
-			if (!parent.Spawned || parent.Destroyed || myNet == null || map == null)
+			if (!parent.Spawned || parent.Destroyed || myNet == null || (map == null && !(parent is VehiclePawn)))
 			{
 				return;
 			}
@@ -77,7 +86,7 @@ namespace SaveOurShip2
 			{
 				if (Props.heatVent > 0 && !Props.antiEntropic && !Disabled) //radiate to space
 				{
-					if (inSpace)
+					if (inSpace || parent is VehiclePawn)
 						RemHeatFromNetwork(Props.heatVent);
 					else
 					{
@@ -97,13 +106,18 @@ namespace SaveOurShip2
 					else if (myNet.Depletion > 0 && mapComp.ShipMapState != ShipMapState.inCombat && !mapComp.Cloaks.Any(c => c.active))
 						RemoveDepletionFromNetwork(Props.heatVent / 10f);
 				}
+				if (Props.antiEntropic)
+				{
+					if (myNet.Depletion > 0)
+						RemoveDepletionFromNetwork(Props.heatVent * Props.antiEntropicRecoveryRate);
+				}
 				if (myNet.StorageUsed > 0)
 				{
 					float ratio = myNet.RatioInNetwork;
 					if (ratio > 0.7f)
 					{
 						FleckMaker.ThrowHeatGlow(parent.Position, parent.Map, parent.DrawSize.x * 0.5f * Mathf.Pow(ratio, 3));
-						if (ratio > 0.9f)
+						if (ratio > 0.9f && !(parent is VehiclePawn))
 							this.parent.TakeDamage(new DamageInfo(DamageDefOf.Burn, 10));
 					}
 					if (Props.antiEntropic) //convert heat
@@ -115,8 +129,6 @@ namespace SaveOurShip2
 							{
 								batteries.RandomElement().AddEnergy(2);
 							}
-							if (myNet.Depletion > 0)
-								RemoveDepletionFromNetwork(Props.heatVent * Props.antiEntropicRecoveryRate);
 						}
 						return;
 					}
