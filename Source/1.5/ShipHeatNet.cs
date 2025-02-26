@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,25 +22,45 @@ namespace SaveOurShip2
 		public HashSet<Building_ShipBridge> TacCons = new HashSet<Building_ShipBridge>();
 		public HashSet<Building_ShipBridge> PilCons = new HashSet<Building_ShipBridge>();
 		public int GridID;
-		private static Type turretCEtype;
+		// CE Compatibility for turrets added to heat net
+		private static Type turretCEtype = null;
+		private static MethodInfo turretCastMetod = null;
 		private static bool turretCEinitialized = false;
-		public static bool IsCETurret(ThingWithComps thing)
+		public static Building_ShipTurret CESafeCastToTurret(ThingWithComps thing)
 		{
+			if (IsCompatibleCETurret(thing))
+			{
+				return (Building_ShipTurret)turretCastMetod.Invoke(thing, new object[] { });
+			}
+			else
+			{
+				return (Building_ShipTurret)thing;
+			}
+		}
+		public static bool IsCompatibleCETurret(ThingWithComps thing)
+		{
+			if (thing == null)
+			{
+				return false;
+			}
 			if (!turretCEinitialized)
 			{
 				try
 				{
 					if (ModLister.HasActiveModWithName("Combat Extended"))
 					{
-						turretCEtype = Type.GetType("CombatExtended.Compatibility.SOS2Compat.Building_ShipTurretCE, CombatExtended", false);
+						turretCEtype = Type.GetType("CombatExtended.Compatibility.SOS2Compat.Building_ShipTurretCE, SOS2Compat", false);
+						turretCastMetod = turretCEtype?.GetMethod("ToBuilding_ShipTurret") ?? null;
 					}
+					turretCEinitialized = true;
 				}
 				catch (Exception e)
 				{
 					turretCEtype = null;
+					turretCEinitialized = true;
 				}
 			}
-			if (turretCEtype == null || thing == null)
+			if (turretCEtype == null || turretCastMetod == null)
 			{
 				return false;
 			}
@@ -115,6 +136,13 @@ namespace SaveOurShip2
 
 		public void Register(CompShipHeat comp)
 		{
+			if (comp.parent is Building b)
+			{
+				if (b.def.Size.x > 1)
+				{
+					Log.Warning("+Registering large:" + b.GetType().Name);
+				}
+			}
 			if (comp is CompShipHeatSink sink)
 			{
 				if (Sinks.Add(sink))
@@ -135,8 +163,20 @@ namespace SaveOurShip2
 					}
 				}
 			}
-			else if (comp.parent is Building_ShipTurret || IsCETurret(comp.parent))
+			else if (comp.parent is Building_ShipTurret || IsCompatibleCETurret(comp.parent))
+			{
 				Turrets.Add(comp);
+				ThingDef parentDef = comp.parent.def;
+				if (parentDef != null)
+				{
+					Log.Warning("+Adding def:" + parentDef.defName);
+				}
+				else
+				{
+					Log.Warning("!Adding null def");
+
+				}
+			}
 			else if (comp is CompShipHeatSource source)
 			{
 				if (Sources.Add(source))
