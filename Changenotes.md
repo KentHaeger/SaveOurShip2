@@ -115,3 +115,6 @@ Feb 26 2025
 
 In testing:
 - Added support for multi-role buildings such as core and life support in one for Bioship addon
+- fixed issue with shuttles broken/exploding after battle
+- No Sightstealers incident (Anomaly) in space
+- Enabled staring mechs, such as those in Mechanitor scenario, to spawn when starting in space
