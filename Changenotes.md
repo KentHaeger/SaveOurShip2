@@ -100,6 +100,7 @@ Jan 31 2025
 - Compatibility with Mechanoid Upgrades.
 - Compatibility with Life Support System mod.
 - Need RCS thrusters message will correctly say that at least one is needed, not many.
+
 Feb 26 2025
 - Many different shuttle errors were fixed.
 - Shuttle heat will be saved and loaded correctly, except for off-map shuttles (in combat). Need to save and load in new version.
@@ -111,5 +112,6 @@ Feb 26 2025
 - Shuttle autodoc will tend pawns in cargo hold too
 - Credits typo fixed
 - Compatibility with CE for selecting turets from Tactical Console. Will take effect when CE is updated too
+
 In testing:
 - Added support for multi-role buildings such as core and life support in one for Bioship addon
