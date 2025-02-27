@@ -100,6 +100,7 @@ Jan 31 2025
 - Compatibility with Mechanoid Upgrades.
 - Compatibility with Life Support System mod.
 - Need RCS thrusters message will correctly say that at least one is needed, not many.
+
 Feb 26 2025
 - Many different shuttle errors were fixed.
 - Shuttle heat will be saved and loaded correctly, except for off-map shuttles (in combat). Need to save and load in new version.
