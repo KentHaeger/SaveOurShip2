@@ -2565,7 +2565,8 @@ namespace SaveOurShip2
 			{
 				// AI lost. Reset all their shuttles faction, so that thaey don't prevent buildings capture,
 				// becuse of being enemy pawns, which is totally not evident for the player.
-				foreach (VehiclePawn veh in loser.mapPawns.AllPawnsSpawned.Where(pawn => pawn is VehiclePawn veh))
+				IEnumerable<Pawn> vehiclesToDisembark = loser.mapPawns.AllPawnsSpawned.Where(pawn => pawn is VehiclePawn veh);
+				foreach (VehiclePawn veh in vehiclesToDisembark)
 				{
 					if (veh.Faction.HostileTo(Faction.OfPlayer))
 					{
