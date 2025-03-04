@@ -227,7 +227,7 @@ namespace SaveOurShip2
 			int num = 0;
 			foreach (Thing item in list3)
 			{
-				if (!(item is Pawn))
+				if (!(item is Pawn) || ((item is Pawn p) && (p.RaceProps?.IsMechanoid ?? false)))
 				{
 					if (item.def.CanHaveFaction)
 					{

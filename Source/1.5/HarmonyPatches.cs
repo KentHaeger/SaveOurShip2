@@ -5157,6 +5157,27 @@ namespace SaveOurShip2
         }
     }
 
+	// Anomaly section
+	[HarmonyPatch(typeof(IncidentWorker_SightstealerSwarm), "TryExecuteWorker")]
+	public static class NoSightstealerSwarmInSpace
+	{
+		public static bool Prefix(IncidentParms parms)
+		{
+			Map map = (Map)parms.target;
+			return !map.IsSpace();
+		}
+	}
+
+	[HarmonyPatch(typeof(IncidentWorker_SightstealerArrival), "TryExecuteWorker")]
+	public static class NoSightstealerArrivalInSpace
+	{
+		public static bool Prefix(IncidentParms parms)
+		{
+			Map map = (Map)parms.target;
+			return !map.IsSpace();
+		}
+	}
+
 	[HarmonyPatch(typeof(Building_HoldingPlatform), "EjectContents")]
 	public static class EntitiesTravelWithShip
     {

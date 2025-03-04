@@ -964,9 +964,14 @@ namespace SaveOurShip2
 			if (shipDef != null)
 			{
 				int requiredSize = Math.Max(shipDef.sizeX + shipDef.offsetX * 2, shipDef.sizeZ + shipDef.offsetZ * 2);
-				if (requiredSize > 250 && requiredSize <= 500)
+				const int maxMapSize = 550;
+				if (requiredSize > 250 && requiredSize <= maxMapSize)
 				{
 					mapSizeInt = requiredSize;
+				}
+				else if (requiredSize >= maxMapSize)
+				{
+					Log.Warning("Too large map size attempted to be set:" + requiredSize);
 				}
 			}
 			IntVec3 mapSize = new IntVec3(mapSizeInt, 1, mapSizeInt);
@@ -1506,6 +1511,25 @@ namespace SaveOurShip2
 				SlowTick(tick);
 			}
 		}
+
+		public void RecalculateThreat()
+		{
+			totalThreat = 1;
+			threatPerSegment = new[] { 1f, 1f, 1f, 1f };
+			BuildingsCount = 0;
+			Log.Warning("Recalc therat, ships on map:" + ShipsOnMap.Values.Count);
+			foreach (SpaceShipCache ship in ShipsOnMap.Values)
+			{
+				float[] actualThreatPerSegment = ship.ActualThreatPerSegment();
+				threatPerSegment[0] += actualThreatPerSegment[0];
+				threatPerSegment[1] += actualThreatPerSegment[1];
+				threatPerSegment[2] += actualThreatPerSegment[2];
+				threatPerSegment[3] += actualThreatPerSegment[3];
+				//threatPerSegment = threatPerSegment.Zip(ship.ActualThreatPerSegment, (x, y) => x + y).ToArray();
+				BuildingsCount += ship.Buildings.Count;
+				totalThreat += ship.ThreatCurrent;
+			}
+		}
 		public void SlowTick(int tick)
 		{
 			foreach (SpaceShipCache ship in ShipsOnMap.Values.ToList())
@@ -1548,9 +1572,7 @@ namespace SaveOurShip2
 				}
 
 				//threat calcs
-				totalThreat = 1;
-				threatPerSegment = new[] { 1f, 1f, 1f, 1f };
-				BuildingsCount = 0;
+				RecalculateThreat();
 				float powerCapacity = 0;
 				float powerRemaining = 0;
 				foreach (SpaceShipCache ship in ShipsOnMap.Values)
@@ -1564,18 +1586,10 @@ namespace SaveOurShip2
 						}
 						ship.PurgeCheck();
 					}
-					float[] actualThreatPerSegment = ship.ActualThreatPerSegment();
-					threatPerSegment[0] += actualThreatPerSegment[0];
-					threatPerSegment[1] += actualThreatPerSegment[1];
-					threatPerSegment[2] += actualThreatPerSegment[2];
-					threatPerSegment[3] += actualThreatPerSegment[3];
-					//threatPerSegment = threatPerSegment.Zip(ship.ActualThreatPerSegment, (x, y) => x + y).ToArray();
-					BuildingsCount += ship.Buildings.Count;
-					totalThreat += ship.ThreatCurrent;
 				}
 				//Log.Message("SOS2: ".Colorize(Color.cyan) + map + " threat CSML: " + threatPerSegment[0] + " " + threatPerSegment[1] + " " + threatPerSegment[2] + " " + threatPerSegment[3] + " ");
-
 				//shipAI distance, boarding
+
 				if (HasShipMapAI && tick > BattleStartTick + 60)
 				{
 					if (ShipsOnMap.Count > 1) //fleet AI evals ships in fleet and rem bad ships
@@ -2565,7 +2579,8 @@ namespace SaveOurShip2
 			{
 				// AI lost. Reset all their shuttles faction, so that thaey don't prevent buildings capture,
 				// becuse of being enemy pawns, which is totally not evident for the player.
-				foreach (VehiclePawn veh in loser.mapPawns.AllPawnsSpawned.Where(pawn => pawn is VehiclePawn veh))
+				IEnumerable<Pawn> vehiclesToDisembark = loser.mapPawns.AllPawnsSpawned.Where(pawn => pawn is VehiclePawn veh);
+				foreach (VehiclePawn veh in vehiclesToDisembark)
 				{
 					if (veh.Faction.HostileTo(Faction.OfPlayer))
 					{
