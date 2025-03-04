@@ -113,8 +113,10 @@ Feb 26 2025
 - Credits typo fixed
 - Compatibility with CE for selecting turets from Tactical Console. Will take effect when CE is updated too
 
-In testing:
+Mar 3 2025:
 - Added support for multi-role buildings such as core and life support in one for Bioship addon
 - fixed issue with shuttles broken/exploding after battle
 - No Sightstealers incident (Anomaly) in space
 - Enabled staring mechs, such as those in Mechanitor scenario, to spawn when starting in space
+- More CE compatibility for turrets - in progress
+- Fixed map size final limit being to low and map size not applied for Leviathan
