@@ -26,6 +26,23 @@ namespace SaveOurShip2
 		private static Type turretCEtype = null;
 		private static MethodInfo turretCastMetod = null;
 		private static bool turretCEinitialized = false;
+		// For unknown buildings
+		public static Building_ShipTurret CESafeTryCastToTurret(ThingWithComps thing)
+		{
+			if (thing is Building_ShipTurret)
+			{
+				return thing as Building_ShipTurret;
+			}
+			else if (IsCompatibleCETurret(thing))
+			{
+				return (Building_ShipTurret)turretCastMetod.Invoke(thing, new object[] { });
+			}
+			else
+			{
+				return null;
+			}
+		}
+		// For cases when turret is added to list of turrets and guaranteed to be either Building_ShipTurret or Building_ShipTurretCE
 		public static Building_ShipTurret CESafeCastToTurret(ThingWithComps thing)
 		{
 			if (IsCompatibleCETurret(thing))
@@ -136,13 +153,6 @@ namespace SaveOurShip2
 
 		public void Register(CompShipHeat comp)
 		{
-			if (comp.parent is Building b)
-			{
-				if (b.def.Size.x > 1)
-				{
-					Log.Warning("+Registering large:" + b.GetType().Name);
-				}
-			}
 			if (comp is CompShipHeatSink sink)
 			{
 				if (Sinks.Add(sink))
@@ -167,15 +177,6 @@ namespace SaveOurShip2
 			{
 				Turrets.Add(comp);
 				ThingDef parentDef = comp.parent.def;
-				if (parentDef != null)
-				{
-					Log.Warning("+Adding def:" + parentDef.defName);
-				}
-				else
-				{
-					Log.Warning("!Adding null def");
-
-				}
 			}
 			else if (comp is CompShipHeatSource source)
 			{

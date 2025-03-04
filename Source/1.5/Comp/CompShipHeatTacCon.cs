@@ -32,14 +32,6 @@ namespace SaveOurShip2
 			foreach (var t in myNet.Turrets)
 			{
 				ThingDef def = t.parent.def;
-				if(def != null)
-				{
-					Log.Warning("Adding def:" + def.defName);
-				}
-				else
-				{
-					Log.Warning("Turret with null parent def");
-				}
 				defs.Add(t.parent.def);
 			}
 			if (myNet.Cloaks.Any())
