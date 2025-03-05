@@ -28,7 +28,7 @@ namespace SaveOurShip2
 		public override void PostExposeData()
 		{
 			base.PostExposeData();
-			Scribe_Collections.Look<IntVec3>(ref reservedArea, "reservedArea", LookMode.Reference);
+			Scribe_Collections.Look<IntVec3>(ref reservedArea, "reservedArea");
 			if (reservedArea == null)
 				reservedArea = new HashSet<IntVec3>();
 		}
@@ -41,7 +41,6 @@ namespace SaveOurShip2
 		HashSet<CompFueledTravel> dockedShuttles = new HashSet<CompFueledTravel>();
 		CompRefuelable compRefuelable;
 		CompPowerTrader compPowerTrader;
-
 		public CompProps_ShipBay Props
 		{
 			get
