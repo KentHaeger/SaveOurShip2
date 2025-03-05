@@ -2579,14 +2579,23 @@ namespace SaveOurShip2
 			{
 				// AI lost. Reset all their shuttles faction, so that thaey don't prevent buildings capture,
 				// becuse of being enemy pawns, which is totally not evident for the player.
-				IEnumerable<Pawn> vehiclesToDisembark = loser.mapPawns.AllPawnsSpawned.Where(pawn => pawn is VehiclePawn veh);
+				IEnumerable<Pawn> mapPawns = loser.mapPawns.AllPawnsSpawned.ToList().ListFullCopy();
+				foreach (Pawn p in mapPawns)
+				{
+					if (!(p is VehiclePawn) && p.CurJobDef == JobDefOf_Vehicles.Board)
+					{
+						// Stop boarding jobs to avoid inconveniences with enemies stuck in their shuttles
+						p.jobs.StopAll();
+					}
+				}
+				IEnumerable<Pawn> vehiclesToDisembark = mapPawns.Where(pawn => pawn is VehiclePawn veh);
 				foreach (VehiclePawn veh in vehiclesToDisembark)
 				{
 					if (veh.Faction.HostileTo(Faction.OfPlayer))
 					{
 						veh.DisembarkAll();
-						veh.SetFaction(null);
 						veh.ignition.Drafted = false;
+						// TODO: Can't set vehicle faction to null here, as it's not supported by Framework. 
 					}
 				}
 			}
