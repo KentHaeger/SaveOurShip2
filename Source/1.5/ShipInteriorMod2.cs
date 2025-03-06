@@ -2057,10 +2057,21 @@ namespace SaveOurShip2
 			foreach (Building item in toUninstall)
 			{
 				IntVec3 oldPosition = item.Position;
-				MinifiedThing uninstalled = item.Uninstall();
-				// Force uninstalled to original posion in order to install it back in that position too
-				uninstalled.Position = oldPosition;
-				toInstallAfterMove.Add(uninstalled);
+				try
+				{
+					MinifiedThing uninstalled = item.Uninstall();
+					// Force uninstalled to original posion in order to install it back in that position too
+					uninstalled.Position = oldPosition;
+					toInstallAfterMove.Add(uninstalled);
+				}
+				catch (Exception e)
+				{
+					if (item != null)
+					{
+						Log.Warning("Error uninstaling during ship move: " + item.def.defName + " at " + item.Position);
+					}
+					throw e;
+				}
 			}
 			foreach (IntVec3 pos in sourceArea)
 			{
@@ -2282,7 +2293,20 @@ namespace SaveOurShip2
 					pawn.Notify_Teleported();
 				}
 				else if (!thing.Destroyed)
-					thing.Destroy();
+				{
+					try
+					{
+						thing.Destroy();
+					}
+					catch (Exception e)
+					{
+						if (thing != null)
+						{
+							Log.Warning("Error destroying during ship move: " + thing.def.defName + " at " + thing.Position);
+						}
+						throw e;
+					}
+				}
 			}
 			if (devMode)
 				watch.Record("destroySource");
@@ -2296,7 +2320,9 @@ namespace SaveOurShip2
 				try
 				{
 					if (spawnThing.Spawned)
+					{
 						spawnThing.DeSpawn();
+					}
 				}
 				catch (Exception e)
 				{
@@ -2400,8 +2426,18 @@ namespace SaveOurShip2
 			}
 			foreach (Thing spawnThing in toMoveBuildings)
 			{
-				// adaptiveStorageCapacities only needed when respawning buldings
-				ReSpawnThingOnMap(spawnThing, targetMap, adjustment, rotb, fac);
+				try
+				{
+					ReSpawnThingOnMap(spawnThing, targetMap, adjustment, rotb, fac);
+				}
+				catch (Exception e)
+				{
+					if (spawnThing != null)
+					{
+						Log.Warning("Error respawning during ship move: " + spawnThing.def.defName + " at " + spawnThing.Position);
+					}
+					throw e;
+				}
 			}
 			foreach (Thing spawnThing in toMoveThings)
 			{
