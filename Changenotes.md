@@ -120,3 +120,10 @@ Mar 3 2025:
 - Enabled staring mechs, such as those in Mechanitor scenario, to spawn when starting in space
 - More CE compatibility for turrets - in progress
 - Fixed map size final limit being to low and map size not applied for Leviathan
+
+In testing:
+- Additional logging for ship move
+- Added abandon wreck confirmation
+- Handled possible issues when moving things to graveyard with ship physics
+- Fixed shuttle issue when AI moves one of their fleet ships to graveyard
+- Fixed issue with moving to occupied graveyard tiles. Such as recovered hullfoam parts may fall off multiple times from the same location
