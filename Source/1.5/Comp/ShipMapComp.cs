@@ -2315,9 +2315,16 @@ namespace SaveOurShip2
 				{
 					p.DeSpawn();
 				}
-				foreach (Thing p in things)
+				try
 				{
-					p.SpawnSetup(ShipGraveyard, false);
+					foreach (Thing p in things)
+					{
+						p.SpawnSetup(ShipGraveyard, false);
+					}
+				}
+				catch (Exception e)
+				{
+					Log.Message("Things were not moved to graveyard. Trace: " + e.StackTrace);
 				}
 			}
 		}
@@ -2421,7 +2428,8 @@ namespace SaveOurShip2
 				Log.Warning("SOS2: ".Colorize(Color.cyan) + map + " Ship ".Colorize(Color.green) + shipIndex + " Removing with: " + core);
 				if (ShipGraveyard == null)
 					SpawnGraveyard();
-				foreach(Pawn pawn in map.mapPawns.AllPawnsSpawned)
+				IReadOnlyList<Pawn> pawns = map.mapPawns.AllPawnsSpawned;
+				foreach (Pawn pawn in pawns)
                 {
 					if (pawn.Faction != Faction.OfPlayer && ship.Area.Contains(pawn.Position))
 					{
@@ -2438,6 +2446,18 @@ namespace SaveOurShip2
 						}
 					}
                 }
+				// Moving ship to graveyard is a forced move, so hard clean up first. Moving to another coordinates if occupied is not good for performance and very complicated,
+				// so the area will be cleared. Normally, there is nothing on graveyard map at given ship area befor it moves there.
+				// But one case is known, ship may recover parts with hullfoam distributor, then some hullfoam may fall off to graveyard,
+				// then recover again and fall off again to occupied tiles.
+				foreach (IntVec3 tile in ship.Area)
+				{
+					List<Thing> thingsAtGraveyardTile = ShipGraveyard.thingGrid.ThingsListAt(tile);
+					foreach (Thing t in thingsAtGraveyardTile)
+					{
+						t.Destroy();
+					}
+				}
 				ShipInteriorMod2.MoveShip(core, ShipGraveyard, IntVec3.Zero);
 			}
 			Log.Warning("SOS2: ".Colorize(Color.cyan) + map + " Ships remaining: " + ShipsOnMap.Count);
