@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using Verse;
+using Verse.AI.Group;
 
 namespace SaveOurShip2
 {
@@ -265,7 +266,51 @@ namespace SaveOurShip2
 			}
 			spawners.Clear();
 			spawnPos.Clear();
+			if (spaceShipDef.defName == "StartSiteAsteroidMech")
+			{
+				AssignMechAIForMechanoidBase();
+			}
 		}
+
+		private void AssignMechAIForMechanoidBase()
+		{
+			// Divide map into parts, assign mech in each part a separate lord, so that they don't aggro all at once.
+			Map map = Find.CurrentMap;
+			int partCount = 6;
+			int mapWidth = map.Size.x;
+			int mapHeight = map.Size.z;
+			int regionWidth = mapWidth / partCount;
+			int regionHeight = mapHeight / partCount;
+			List<Pawn> allEnemyMechs = map.mapPawns.AllPawnsSpawned.Where(p => p.GetLord() == null && p.Faction.HostileTo(Faction.OfPlayer)).ToList();
+			if (!allEnemyMechs.Any())
+			{
+				Log.Warning("Detected asteroid mech base start with no mechs");
+				return;
+			}
+			Faction mechFaction = allEnemyMechs.First().Faction;
+			for (int xPart = 0; xPart < partCount; xPart++)
+			{
+				for (int zPart = 0; zPart < partCount; zPart++)
+				{
+					CellRect part = new CellRect();
+					part.minX = xPart * mapWidth / partCount;
+					part.maxX = (xPart + 1) * mapWidth / partCount - 1;
+					part.minZ = zPart * mapHeight / partCount;
+					part.maxZ = (zPart + 1) * mapHeight / partCount - 1;
+					IEnumerable<Pawn> mechsInRegion = allEnemyMechs.Where(p => part.Contains(p.Position));
+					Lord groupLord;
+					if (mechsInRegion.Any())
+					{
+						groupLord = LordMaker.MakeNewLord(mechFaction, new LordJob_DefendShip(mechFaction, part.CenterCell), Find.CurrentMap);
+						foreach (Pawn p in mechsInRegion)
+						{
+							groupLord.AddPawn(p);
+						}
+					}
+				}
+			}
+		}
+
 		static List<IntVec3> GetSpawnCells(Map spaceMap, out List<Building> spawners) //spawn placer > crypto > salvbay > bridge
 		{
 			spawners = new List<Building>();
