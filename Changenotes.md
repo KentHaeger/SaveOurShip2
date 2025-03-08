@@ -127,3 +127,4 @@ In testing:
 - Handled possible issues when moving things to graveyard with ship physics
 - Fixed shuttle issue when AI moves one of their fleet ships to graveyard
 - Fixed issue with moving to occupied graveyard tiles. Such as recovered hullfoam parts may fall off multiple times from the same location
+- Fixed AI logic for Mechanoid Asteroid Base start
