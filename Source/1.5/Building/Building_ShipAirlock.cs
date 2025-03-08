@@ -374,6 +374,14 @@ namespace SaveOurShip2
 		}
 		public void DeSpawnDock(bool force = false)
 		{
+			if (unfoldComp == null)
+				Log.Error("UnfoldComp was null when despawning dock");
+			if (mapComp == null)
+				Log.Error("ShipMapComp was null when despawning dock");
+			if (extenders is null)
+				Log.Error($"Extenders collection is null when despawning dock");
+			else if (extenders.Contains(null))
+				Log.Error("Extenders has a null building in its collection; this may trip up foreach loop during despawning dock");
 			unfoldComp.Target = 0.0f;
 			if (mapComp.Docked.Contains(this)) //was docked to ship
 			{
