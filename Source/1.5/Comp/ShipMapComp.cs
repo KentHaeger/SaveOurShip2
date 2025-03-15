@@ -1517,7 +1517,6 @@ namespace SaveOurShip2
 			totalThreat = 1;
 			threatPerSegment = new[] { 1f, 1f, 1f, 1f };
 			BuildingsCount = 0;
-			Log.Warning("Recalc therat, ships on map:" + ShipsOnMap.Values.Count);
 			foreach (SpaceShipCache ship in ShipsOnMap.Values)
 			{
 				float[] actualThreatPerSegment = ship.ActualThreatPerSegment();
