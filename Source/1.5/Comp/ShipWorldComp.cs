@@ -20,6 +20,7 @@ namespace SaveOurShip2
 		public int nextUniqueMissionID = 0;
 		public const int StarhipBowTimeout = 720000; // 12 days
 		public int LastStarshipBowTick = -StarhipBowTimeout;
+		public MentalBreakThresholdsCache MentalBreakThresholdsCache = new MentalBreakThresholdsCache();
 
 		public ShipWorldComp(World world) : base(world)
 		{
@@ -92,6 +93,7 @@ namespace SaveOurShip2
 			if (Scribe.mode != LoadSaveMode.PostLoadInit)
 			{
 				ShipInteriorMod2.PurgeWorldComp();
+				MentalBreakThresholdsCache.Clear();
 			}
 			/*if (Scribe.mode!=LoadSaveMode.Saving)
 			{

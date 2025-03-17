@@ -5430,6 +5430,41 @@ namespace SaveOurShip2
 		}
 	}
 
+	// Cached mental break thresholds, becuse they negatively affect performance at Starship Bow with extreme psychic droners
+	// Those values change super-rarely and even never change on many pawns in Vanilla, so can be safely cached for a short time period
+	[HarmonyPatch(typeof(MentalBreaker), "get_BreakThresholdExtreme")]
+	public static class CacheMentalBreakThresholdExtereme
+	{
+		public static bool Prefix(MentalBreaker __instance, ref float __result)
+		{
+			ShipWorldComp worldComp = Find.World.GetComponent<ShipWorldComp>();
+			__result = worldComp.MentalBreakThresholdsCache.GetExtremeBreakThreshold(__instance.pawn);
+			return false;
+		}
+	}
+
+	[HarmonyPatch(typeof(MentalBreaker), "get_BreakThresholdMajor")]
+	public static class CacheMentalBreakThresholdMajor
+	{
+		public static bool Prefix(MentalBreaker __instance, ref float __result)
+		{
+			ShipWorldComp worldComp = Find.World.GetComponent<ShipWorldComp>();
+			__result = worldComp.MentalBreakThresholdsCache.GetMajorBreakThreshold(__instance.pawn);
+			return false;
+		}
+	}
+
+	[HarmonyPatch(typeof(MentalBreaker), "get_BreakThresholdMinor")]
+	public static class CacheMentalBreakThresholdMinor
+	{
+		public static bool Prefix(MentalBreaker __instance, ref float __result)
+		{
+			ShipWorldComp worldComp = Find.World.GetComponent<ShipWorldComp>();
+			__result = worldComp.MentalBreakThresholdsCache.GetMinorBreakThreshold(__instance.pawn);
+			return false;
+		}
+	}
+
 	/*[HarmonyPatch(typeof(ActiveDropPod),"PodOpen")]
 	public static class ActivePodFix{
 		public static bool Prefix (ref ActiveDropPod __instance)
