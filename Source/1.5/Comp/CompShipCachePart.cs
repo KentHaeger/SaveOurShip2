@@ -68,6 +68,10 @@ namespace SaveOurShip2
 		Map map;
 		public ShipMapComp mapComp;
 		Faction fac;
+
+		// Evaluating if should draw roof or not for every frame harms perfomance at Starship Bow, so should be cached
+		public bool RoofCacheDirty = true;
+		private Material CachedRoofMaterial;
 		public CompProps_ShipCachePart Props
 		{
 			get
@@ -366,26 +370,37 @@ namespace SaveOurShip2
 			base.PostDraw();
 			if (!Props.roof || !parent.Spawned)
 				return;
-			if ((Find.PlaySettings.showRoofOverlay || parent.Position.Fogged(parent.Map)) && parent.Position.Roofed(parent.Map))
+			if (RoofCacheDirty)
 			{
-				foreach (Thing t in parent.Position.GetThingList(parent.Map).Where(t => t is Building))
+				RoofCacheDirty = false;
+				if ((Find.PlaySettings.showRoofOverlay || parent.Position.Fogged(parent.Map)) && parent.Position.Roofed(parent.Map))
 				{
-					var heatComp = t.TryGetComp<CompShipHeat>();
-					var bayComp = t.TryGetComp<CompShipBay>();
-					if (bayComp != null || (heatComp != null && heatComp.Props.showOnRoof))
+					foreach (Thing t in parent.Position.GetThingList(parent.Map).Where(t => t is Building))
 					{
-						return;
+						var heatComp = t.TryGetComp<CompShipHeat>();
+						var bayComp = t.TryGetComp<CompShipBay>();
+						if (bayComp != null || (heatComp != null && heatComp.Props.showOnRoof))
+						{
+							CachedRoofMaterial = null;
+							return;
+						}
 					}
+					if (isTile)
+						CachedRoofMaterial = roofedGraphicTile.MatSingleFor(parent);
+					else if (isMechTile || isArchoTile)
+						CachedRoofMaterial = roofedGraphicTileMech.MatSingleFor(parent);
+					else if (isWreckTile)
+						CachedRoofMaterial = roofedGraphicTileWreck.MatSingleFor(parent);
+					else if (isFoamTile)
+						CachedRoofMaterial = roofedGraphicTileFoam.MatSingleFor(parent);
 				}
-				if (isTile)
-					Graphics.DrawMesh(roofedGraphicTile.MeshAt(parent.Rotation), new Vector3(parent.DrawPos.x, Altitudes.AltitudeFor(AltitudeLayer.MoteOverhead), parent.DrawPos.z), Quaternion.identity, roofedGraphicTile.MatSingleFor(parent), 0);
-				else if (isMechTile || isArchoTile)
-					Graphics.DrawMesh(roofedGraphicTileMech.MeshAt(parent.Rotation), new Vector3(parent.DrawPos.x, Altitudes.AltitudeFor(AltitudeLayer.MoteOverhead), parent.DrawPos.z), Quaternion.identity, roofedGraphicTileMech.MatSingleFor(parent), 0);
-				else if (isWreckTile)
-					Graphics.DrawMesh(roofedGraphicTileWreck.MeshAt(parent.Rotation), new Vector3(parent.DrawPos.x, Altitudes.AltitudeFor(AltitudeLayer.MoteOverhead), parent.DrawPos.z), Quaternion.identity, roofedGraphicTileWreck.MatSingleFor(parent), 0);
-				else if (isFoamTile)
-					Graphics.DrawMesh(roofedGraphicTileFoam.MeshAt(parent.Rotation), new Vector3(parent.DrawPos.x, Altitudes.AltitudeFor(AltitudeLayer.MoteOverhead), parent.DrawPos.z), Quaternion.identity, roofedGraphicTileFoam.MatSingleFor(parent), 0);
+				else
+				{
+					CachedRoofMaterial = null;
+				}
 			}
+			if (CachedRoofMaterial != null)
+				Graphics.DrawMesh(roofedGraphicTileFoam.MeshAt(parent.Rotation), new Vector3(parent.DrawPos.x, Altitudes.AltitudeFor(AltitudeLayer.MoteOverhead), parent.DrawPos.z), Quaternion.identity, CachedRoofMaterial, 0);
 		}
 		public virtual void SetShipTerrain(IntVec3 v)
 		{

@@ -46,6 +46,9 @@ namespace SaveOurShip2
 		public static Dictionary<Building_Bed, bool> bedsCache = new Dictionary<Building_Bed, bool>();
 		Area_Allowed breathableZone = null;
 
+		public const int RoofUpdateInterval = 60;
+		public int RoofUpdateTick;
+
 		public ShipMapComp(Map map) : base(map)
 		{
 			grid = new int[map.cellIndices.NumGridCells];
@@ -122,6 +125,23 @@ namespace SaveOurShip2
 			heatGridDirty = false;
 			breathableZoneDirty = false;
 			loaded = true;
+
+			// Clear roof cache
+			if (Find.TickManager.TicksGame > RoofUpdateTick + RoofUpdateInterval)
+			{
+				RoofUpdateTick = Find.TickManager.TicksGame;
+				foreach (SpaceShipCache ship in shipsOnMap.Values)
+				{
+					foreach (Building b in ship.Buildings)
+					{
+						CompShipCachePart compCachePart = b.TryGetComp<CompShipCachePart>();
+						if (compCachePart != null)
+						{
+							compCachePart.RoofCacheDirty = true;
+						}
+					}
+				}
+			}
 		}
 		void AccumulateToNetNew(HashSet<CompShipHeat> compBatch, ShipHeatNet net)
 		{
