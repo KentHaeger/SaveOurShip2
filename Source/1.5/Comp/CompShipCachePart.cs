@@ -370,6 +370,10 @@ namespace SaveOurShip2
 			base.PostDraw();
 			if (!Props.roof || !parent.Spawned)
 				return;
+			if (mapComp != null && mapComp.ShowRoofOverlayCached != Find.PlaySettings.showRoofOverlay)
+			{
+				mapComp.ClearRoofCache();
+			}
 			if (RoofCacheDirty)
 			{
 				RoofCacheDirty = false;

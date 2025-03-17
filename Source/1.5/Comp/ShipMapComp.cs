@@ -48,6 +48,8 @@ namespace SaveOurShip2
 
 		public const int RoofUpdateInterval = 60;
 		public int RoofUpdateTick;
+		// Need to cache game setting in order to update when it's cchanged
+		public bool ShowRoofOverlayCached;
 
 		public ShipMapComp(Map map) : base(map)
 		{
@@ -95,8 +97,8 @@ namespace SaveOurShip2
 			}
 			cachedNets = list;
 
-			if(map.IsSpace())
-            {
+			if (map.IsSpace())
+			{
 				breathableZone = map.areaManager.AllAreas.FirstOrDefault(area => area.Label == "SoSBreathable".Translate()) as Area_Allowed;
 				if (breathableZone == null)
 				{
@@ -106,43 +108,48 @@ namespace SaveOurShip2
 				}
 				else
 					breathableZone.innerGrid.Clear();
-				foreach(SpaceShipCache ship in shipsOnMap.Values)
-                {
+				foreach (SpaceShipCache ship in shipsOnMap.Values)
+				{
 					if (ship.IsWreck)
 					{
 						continue;
 					}
-					foreach(IntVec3 vec in ship.Area)
-                    {
+					foreach (IntVec3 vec in ship.Area)
+					{
 						if (VecHasLS(vec) && !ShipInteriorMod2.ExposedToOutside(vec.GetRoom(map)))
 							breathableZone.innerGrid.Set(vec, true);
-                    }
-                }
-            }
+					}
+				}
+			}
 
 			base.map.mapDrawer.WholeMapChanged(MapMeshFlagDefOf.Buildings);
 			base.map.mapDrawer.WholeMapChanged(MapMeshFlagDefOf.Things);
 			heatGridDirty = false;
 			breathableZoneDirty = false;
 			loaded = true;
-
-			// Clear roof cache
 			if (Find.TickManager.TicksGame > RoofUpdateTick + RoofUpdateInterval)
 			{
-				RoofUpdateTick = Find.TickManager.TicksGame;
-				foreach (SpaceShipCache ship in shipsOnMap.Values)
+				ClearRoofCache();
+			}
+		}
+		public void ClearRoofCache()
+		{
+			// Clear roof cache
+			RoofUpdateTick = Find.TickManager.TicksGame;
+			ShowRoofOverlayCached = Find.PlaySettings.showRoofOverlay;
+			foreach (SpaceShipCache ship in shipsOnMap.Values)
+			{
+				foreach (Building b in ship.Buildings)
 				{
-					foreach (Building b in ship.Buildings)
+					CompShipCachePart compCachePart = b.TryGetComp<CompShipCachePart>();
+					if (compCachePart != null)
 					{
-						CompShipCachePart compCachePart = b.TryGetComp<CompShipCachePart>();
-						if (compCachePart != null)
-						{
-							compCachePart.RoofCacheDirty = true;
-						}
+						compCachePart.RoofCacheDirty = true;
 					}
 				}
 			}
 		}
+
 		void AccumulateToNetNew(HashSet<CompShipHeat> compBatch, ShipHeatNet net)
 		{
 			HashSet<CompShipHeat> newBatch = new HashSet<CompShipHeat>();
