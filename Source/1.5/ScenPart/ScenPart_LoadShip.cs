@@ -174,6 +174,7 @@ namespace SaveOurShip2
 			Scribe_Values.Look(ref playerFactionName, "playerFactionName");
 			//typeof(GameDataSaveLoader).GetField("isSavingOrLoadingExternalIdeo", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).SetValue(null, true);
 			Scribe_Deep.Look(ref playerFactionIdeo, "playerFactionIdeo");
+			Scribe_Values.Look(ref ShipInteriorMod2.LoadShipClassicIdeoMode, "classicMode", false);
 			Scribe_Collections.Look<Ideo>(ref ideosAboardShip, "ideos", LookMode.Deep);
 			//typeof(GameDataSaveLoader).GetField("isSavingOrLoadingExternalIdeo", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).SetValue(null, false);
 			Scribe_Deep.Look<TickManager>(ref tickManager, false, "tickManager");

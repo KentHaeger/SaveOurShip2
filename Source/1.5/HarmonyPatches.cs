@@ -3764,7 +3764,7 @@ namespace SaveOurShip2
 
 		public static void Postfix(Page_ChooseIdeoPreset __instance)
 		{
-			if (ShipInteriorMod2.LoadShipFlag)
+			if (ShipInteriorMod2.LoadShipFlag && !ShipInteriorMod2.LoadShipClassicIdeoMode)
 			{
 				foreach (Faction allFaction in Find.FactionManager.AllFactions)
 				{

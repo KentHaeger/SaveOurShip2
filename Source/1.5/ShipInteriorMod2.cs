@@ -151,6 +151,7 @@ namespace SaveOurShip2
 		public static Map shipOriginMap = null; //used to check for shipmove map size problem in placeworker, reset after move
 		public static bool SaveShipFlag; //used in patch to trigger ending scene
 		public static bool LoadShipFlag; //set to true in ScenPart_LoadShip.PostWorldGenerate and false in the patch to MapGenerator.GenerateMap
+		public static bool LoadShipClassicIdeoMode; // Has to be applied with a delay when loading ship
 		public static bool StartShipFlag; //as above but for ScenPart_StartInSpace
 		public static bool ArchoIdeoFlag;
 		public static bool MoveShipFlag //set on ship move/remove
@@ -2936,6 +2937,7 @@ namespace SaveOurShip2
 				Scribe_Values.Look(ref playerFactionName, "playerFactionName");
 				//typeof(GameDataSaveLoader).GetField("isSavingOrLoadingExternalIdeo", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).SetValue(null, true);
 				Scribe_Deep.Look(ref playerFactionIdeo, "playerFactionIdeo");
+				Scribe_Values.Look(ref Find.IdeoManager.classicMode, "classicMode", forceSave:true);
 				//typeof(GameDataSaveLoader).GetField("isSavingOrLoadingExternalIdeo", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).SetValue(null, false);
 
 				Scribe_Deep.Look<TickManager>(ref Current.Game.tickManager, true, "tickManager");
