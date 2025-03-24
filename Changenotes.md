@@ -128,3 +128,12 @@ In testing:
 - Fixed shuttle issue when AI moves one of their fleet ships to graveyard
 - Fixed issue with moving to occupied graveyard tiles. Such as recovered hullfoam parts may fall off multiple times from the same location
 - Fixed AI logic for Mechanoid Asteroid Base start
+- Fixed texture path error message when Biotech DLC is not available
+- Removed manning ship bridges for enemy pawns at graveyards, as that has no practical use, but affects performance on larger wrecks such as Starship Bow
+- Added caching for Mental break thresolds, which significantly improves performance at Starship Bow
+- Improved roof drawingperformance, mostly affecting FPS at large wrecks sucah as Starship Bow
+- Shuttle bays compatibility with small bays for personal shuttles. The change was missing from dev branch, but was in Steam release
+- Fix for player ship with huge CR attacking pre-Moon base ship. The change was missing from dev branch, but was in Steam release. These two fixes by thecaffiend
+- Fix for Mysterious Archotech Sphere to be able to be found via scanning
+- Ideology system inactive option (from Ideology DLC startup settings) is supported in travel to new planet and load ship, will no longer force-activate ideology in that scenario
+  
