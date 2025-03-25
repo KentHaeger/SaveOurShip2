@@ -17,7 +17,8 @@
 	<SoS.LeaveGraveyardDesc>Leave the wreck to its fate.</SoS.LeaveGraveyardDesc>
 	<!-- Verse formating will spread name over several {n} fields, so got to use 2 strings -->
 	<SoS.LeaveGraveyardConfirmation1>Are you sure you want to abandon wreck</SoS.LeaveGraveyardConfirmation1>
-	<SoS.LeaveGraveyardConfirmation2>with {0} colonists and {1} buildings?</SoS.LeaveGraveyardConfirmation2>
+	<SoS.LeaveGraveyardConfirmation2>with {0} buildings?</SoS.LeaveGraveyardConfirmation2>
+	<SoS.LeaveGraveyardConfirmationColonistsParagraph>Warning! There are {0} colonists at this wreck, they will be abandoned too.</SoS.LeaveGraveyardConfirmationColonistsParagraph>
 	<SoS.ForceExitAndRemoveMapCountdown>Entering atmosphere in {0}.</SoS.ForceExitAndRemoveMapCountdown>
 	<SoS.BurnUpPlayer>Orbit failure!</SoS.BurnUpPlayer>
 	<SoS.BurnUpPlayerDesc>With the loss of the last ship bridge this map can no longer maintain its orbit and will enter the atmosphere in {0} days! \n\nEverything on it will be destroyed! Build a new ship bridge to prevent this.</SoS.BurnUpPlayerDesc>
