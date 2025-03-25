@@ -120,8 +120,8 @@ Mar 3 2025:
 - Enabled staring mechs, such as those in Mechanitor scenario, to spawn when starting in space
 - More CE compatibility for turrets - in progress
 - Fixed map size final limit being to low and map size not applied for Leviathan
-
-In testing:
+ 
+Mar 25 2025:
 - Additional logging for ship move
 - Added abandon wreck confirmation
 - Handled possible issues when moving things to graveyard with ship physics
