@@ -131,7 +131,7 @@ namespace SaveOurShip2
 		{
 			base.GetSettings<ModSettings_SoS>();
 		}
-		public const string SOS2version = "GithubV2.7.7";
+		public const string SOS2version = "GithubV2.7.11";
 		public const int SOS2ReqCurrentMinor = 5;
 		// 1.5.4063 public build (4062 constant) was not enough as there is no AnomalyUtility.TryDuplicatePawn_NewTemp method to harmony patch it.
 		// Historical builds are not available, so for sure can be increased just to next build, 4066
@@ -151,6 +151,7 @@ namespace SaveOurShip2
 		public static Map shipOriginMap = null; //used to check for shipmove map size problem in placeworker, reset after move
 		public static bool SaveShipFlag; //used in patch to trigger ending scene
 		public static bool LoadShipFlag; //set to true in ScenPart_LoadShip.PostWorldGenerate and false in the patch to MapGenerator.GenerateMap
+		public static bool LoadShipClassicIdeoMode; // Has to be applied with a delay when loading ship
 		public static bool StartShipFlag; //as above but for ScenPart_StartInSpace
 		public static bool ArchoIdeoFlag;
 		public static bool MoveShipFlag //set on ship move/remove
@@ -650,6 +651,13 @@ namespace SaveOurShip2
 				if (check.Any())
 					return check.RandomElement();
 				ships.Where(def => !def.neverAttacks && !def.neverRandom && (allowNavyExc || !def.navyExclusive)).RandomElement();
+			}
+			Log.Warning($"SOS2: found no suitable enemy ship at all, very final fallback, allowNavyExc: {allowNavyExc}, randomFleet: {randomFleet}");
+			// final_final_2_usethis.docx check: Prevents NRE attacking moonbase, should be almost never reached otherwise:
+			check = ships.Where(def => ValidShipDef(def, 0, 100000f, tradeShip, allowNavyExc, randomFleet, 0, minZ, maxZ)).ToList();
+			if (check.Any())
+			{
+				return check.RandomElement();
 			}
 			return null;
 		}
@@ -2057,10 +2065,21 @@ namespace SaveOurShip2
 			foreach (Building item in toUninstall)
 			{
 				IntVec3 oldPosition = item.Position;
-				MinifiedThing uninstalled = item.Uninstall();
-				// Force uninstalled to original posion in order to install it back in that position too
-				uninstalled.Position = oldPosition;
-				toInstallAfterMove.Add(uninstalled);
+				try
+				{
+					MinifiedThing uninstalled = item.Uninstall();
+					// Force uninstalled to original posion in order to install it back in that position too
+					uninstalled.Position = oldPosition;
+					toInstallAfterMove.Add(uninstalled);
+				}
+				catch (Exception e)
+				{
+					if (item != null)
+					{
+						Log.Warning("Error uninstaling during ship move: " + item.def.defName + " at " + item.Position);
+					}
+					throw e;
+				}
 			}
 			foreach (IntVec3 pos in sourceArea)
 			{
@@ -2282,7 +2301,20 @@ namespace SaveOurShip2
 					pawn.Notify_Teleported();
 				}
 				else if (!thing.Destroyed)
-					thing.Destroy();
+				{
+					try
+					{
+						thing.Destroy();
+					}
+					catch (Exception e)
+					{
+						if (thing != null)
+						{
+							Log.Warning("Error destroying during ship move: " + thing.def.defName + " at " + thing.Position);
+						}
+						throw e;
+					}
+				}
 			}
 			if (devMode)
 				watch.Record("destroySource");
@@ -2296,7 +2328,9 @@ namespace SaveOurShip2
 				try
 				{
 					if (spawnThing.Spawned)
+					{
 						spawnThing.DeSpawn();
+					}
 				}
 				catch (Exception e)
 				{
@@ -2400,8 +2434,18 @@ namespace SaveOurShip2
 			}
 			foreach (Thing spawnThing in toMoveBuildings)
 			{
-				// adaptiveStorageCapacities only needed when respawning buldings
-				ReSpawnThingOnMap(spawnThing, targetMap, adjustment, rotb, fac);
+				try
+				{
+					ReSpawnThingOnMap(spawnThing, targetMap, adjustment, rotb, fac);
+				}
+				catch (Exception e)
+				{
+					if (spawnThing != null)
+					{
+						Log.Warning("Error respawning during ship move: " + spawnThing.def.defName + " at " + spawnThing.Position);
+					}
+					throw e;
+				}
 			}
 			foreach (Thing spawnThing in toMoveThings)
 			{
@@ -2893,6 +2937,7 @@ namespace SaveOurShip2
 				Scribe_Values.Look(ref playerFactionName, "playerFactionName");
 				//typeof(GameDataSaveLoader).GetField("isSavingOrLoadingExternalIdeo", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).SetValue(null, true);
 				Scribe_Deep.Look(ref playerFactionIdeo, "playerFactionIdeo");
+				Scribe_Values.Look(ref Find.IdeoManager.classicMode, "classicMode", forceSave:true);
 				//typeof(GameDataSaveLoader).GetField("isSavingOrLoadingExternalIdeo", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).SetValue(null, false);
 
 				Scribe_Deep.Look<TickManager>(ref Current.Game.tickManager, true, "tickManager");

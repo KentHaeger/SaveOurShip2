@@ -46,6 +46,11 @@ namespace SaveOurShip2
 		public static Dictionary<Building_Bed, bool> bedsCache = new Dictionary<Building_Bed, bool>();
 		Area_Allowed breathableZone = null;
 
+		public const int RoofUpdateInterval = 60;
+		public int RoofUpdateTick;
+		// Need to cache game setting in order to update when it's cchanged
+		public bool ShowRoofOverlayCached;
+
 		public ShipMapComp(Map map) : base(map)
 		{
 			grid = new int[map.cellIndices.NumGridCells];
@@ -92,8 +97,8 @@ namespace SaveOurShip2
 			}
 			cachedNets = list;
 
-			if(map.IsSpace())
-            {
+			if (map.IsSpace())
+			{
 				breathableZone = map.areaManager.AllAreas.FirstOrDefault(area => area.Label == "SoSBreathable".Translate()) as Area_Allowed;
 				if (breathableZone == null)
 				{
@@ -103,26 +108,48 @@ namespace SaveOurShip2
 				}
 				else
 					breathableZone.innerGrid.Clear();
-				foreach(SpaceShipCache ship in shipsOnMap.Values)
-                {
+				foreach (SpaceShipCache ship in shipsOnMap.Values)
+				{
 					if (ship.IsWreck)
 					{
 						continue;
 					}
-					foreach(IntVec3 vec in ship.Area)
-                    {
+					foreach (IntVec3 vec in ship.Area)
+					{
 						if (VecHasLS(vec) && !ShipInteriorMod2.ExposedToOutside(vec.GetRoom(map)))
 							breathableZone.innerGrid.Set(vec, true);
-                    }
-                }
-            }
+					}
+				}
+			}
 
 			base.map.mapDrawer.WholeMapChanged(MapMeshFlagDefOf.Buildings);
 			base.map.mapDrawer.WholeMapChanged(MapMeshFlagDefOf.Things);
 			heatGridDirty = false;
 			breathableZoneDirty = false;
 			loaded = true;
+			if (Find.TickManager.TicksGame > RoofUpdateTick + RoofUpdateInterval)
+			{
+				ClearRoofCache();
+			}
 		}
+		public void ClearRoofCache()
+		{
+			// Clear roof cache
+			RoofUpdateTick = Find.TickManager.TicksGame;
+			ShowRoofOverlayCached = Find.PlaySettings.showRoofOverlay;
+			foreach (SpaceShipCache ship in shipsOnMap.Values)
+			{
+				foreach (Building b in ship.Buildings)
+				{
+					CompShipCachePart compCachePart = b.TryGetComp<CompShipCachePart>();
+					if (compCachePart != null)
+					{
+						compCachePart.RoofCacheDirty = true;
+					}
+				}
+			}
+		}
+
 		void AccumulateToNetNew(HashSet<CompShipHeat> compBatch, ShipHeatNet net)
 		{
 			HashSet<CompShipHeat> newBatch = new HashSet<CompShipHeat>();
@@ -1517,7 +1544,6 @@ namespace SaveOurShip2
 			totalThreat = 1;
 			threatPerSegment = new[] { 1f, 1f, 1f, 1f };
 			BuildingsCount = 0;
-			Log.Warning("Recalc therat, ships on map:" + ShipsOnMap.Values.Count);
 			foreach (SpaceShipCache ship in ShipsOnMap.Values)
 			{
 				float[] actualThreatPerSegment = ship.ActualThreatPerSegment();
@@ -2315,9 +2341,16 @@ namespace SaveOurShip2
 				{
 					p.DeSpawn();
 				}
-				foreach (Thing p in things)
+				try
 				{
-					p.SpawnSetup(ShipGraveyard, false);
+					foreach (Thing p in things)
+					{
+						p.SpawnSetup(ShipGraveyard, false);
+					}
+				}
+				catch (Exception e)
+				{
+					Log.Message("Things were not moved to graveyard. Trace: " + e.StackTrace);
 				}
 			}
 		}
@@ -2421,7 +2454,8 @@ namespace SaveOurShip2
 				Log.Warning("SOS2: ".Colorize(Color.cyan) + map + " Ship ".Colorize(Color.green) + shipIndex + " Removing with: " + core);
 				if (ShipGraveyard == null)
 					SpawnGraveyard();
-				foreach(Pawn pawn in map.mapPawns.AllPawnsSpawned)
+				IReadOnlyList<Pawn> pawns = map.mapPawns.AllPawnsSpawned;
+				foreach (Pawn pawn in pawns)
                 {
 					if (pawn.Faction != Faction.OfPlayer && ship.Area.Contains(pawn.Position))
 					{
@@ -2438,6 +2472,18 @@ namespace SaveOurShip2
 						}
 					}
                 }
+				// Moving ship to graveyard is a forced move, so hard clean up first. Moving to another coordinates if occupied is not good for performance and very complicated,
+				// so the area will be cleared. Normally, there is nothing on graveyard map at given ship area befor it moves there.
+				// But one case is known, ship may recover parts with hullfoam distributor, then some hullfoam may fall off to graveyard,
+				// then recover again and fall off again to occupied tiles.
+				foreach (IntVec3 tile in ship.Area)
+				{
+					List<Thing> thingsAtGraveyardTile = ShipGraveyard.thingGrid.ThingsListAt(tile);
+					foreach (Thing t in thingsAtGraveyardTile)
+					{
+						t.Destroy();
+					}
+				}
 				ShipInteriorMod2.MoveShip(core, ShipGraveyard, IntVec3.Zero);
 			}
 			Log.Warning("SOS2: ".Colorize(Color.cyan) + map + " Ships remaining: " + ShipsOnMap.Count);
@@ -2579,14 +2625,23 @@ namespace SaveOurShip2
 			{
 				// AI lost. Reset all their shuttles faction, so that thaey don't prevent buildings capture,
 				// becuse of being enemy pawns, which is totally not evident for the player.
-				IEnumerable<Pawn> vehiclesToDisembark = loser.mapPawns.AllPawnsSpawned.Where(pawn => pawn is VehiclePawn veh);
+				IEnumerable<Pawn> mapPawns = loser.mapPawns.AllPawnsSpawned.ToList().ListFullCopy();
+				foreach (Pawn p in mapPawns)
+				{
+					if (!(p is VehiclePawn) && p.CurJobDef == JobDefOf_Vehicles.Board)
+					{
+						// Stop boarding jobs to avoid inconveniences with enemies stuck in their shuttles
+						p.jobs.StopAll();
+					}
+				}
+				IEnumerable<Pawn> vehiclesToDisembark = mapPawns.Where(pawn => pawn is VehiclePawn veh);
 				foreach (VehiclePawn veh in vehiclesToDisembark)
 				{
 					if (veh.Faction.HostileTo(Faction.OfPlayer))
 					{
 						veh.DisembarkAll();
-						veh.SetFaction(null);
 						veh.ignition.Drafted = false;
+						// TODO: Can't set vehicle faction to null here, as it's not supported by Framework. 
 					}
 				}
 			}

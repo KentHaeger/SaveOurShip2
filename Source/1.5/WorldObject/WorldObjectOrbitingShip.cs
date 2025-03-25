@@ -312,7 +312,18 @@ namespace SaveOurShip2
 					{
 						action = delegate
 						{
-							mapComp.ShipMapState = ShipMapState.burnUpSet;
+							StringBuilder sb = new StringBuilder();
+							sb.Append(TranslatorFormattedStringExtensions.Translate("SoS.LeaveGraveyardConfirmation1"));
+							sb.Append(" ");
+							sb.Append(Label);
+							sb.Append(" ");
+							int colonistCount = mapComp.map.mapPawns.ColonistCount;
+							int buildingCount = mapComp.map.listerBuildings.allBuildingsColonist.Count + mapComp.map.listerBuildings.allBuildingsNonColonist.Count;
+							sb.Append(TranslatorFormattedStringExtensions.Translate("SoS.LeaveGraveyardConfirmation2", colonistCount, buildingCount));
+							Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation(sb.ToString(), delegate
+							{
+								mapComp.ShipMapState = ShipMapState.burnUpSet;
+							}));
 						},
 						defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.LeaveGraveyard"),
 						defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.LeaveGraveyardDesc"),
