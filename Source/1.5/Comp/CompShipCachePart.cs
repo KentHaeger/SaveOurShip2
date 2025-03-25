@@ -374,7 +374,8 @@ namespace SaveOurShip2
 			{
 				mapComp.ClearRoofCache();
 			}
-			if (RoofCacheDirty)
+			// Redrawing every 60 frames handles unfogged and paused case, which would otherwise stay cached (and not hide roof on unfog) indefenetely long
+			if (RoofCacheDirty || Time.frameCount % 60 == 0)
 			{
 				RoofCacheDirty = false;
 				if ((Find.PlaySettings.showRoofOverlay || parent.Position.Fogged(parent.Map)) && parent.Position.Roofed(parent.Map))
