@@ -115,7 +115,6 @@
     <Compile Include="Designator_RestoreHull.cs" />
     <Compile Include="HediffCompProperties_GearRepair.cs" />
     <Compile Include="HediffComp_GearRepair.cs" />
-    <Compile Include="MentalBreakThresholdsCache.cs" />
     <Compile Include="Obs-Shuttle\TransportPodsArrivalAction_MoonBase.cs" />
     <Compile Include="Obs-Shuttle\TransportPodsArrivalAction_ShipAssault.cs" />
     <Compile Include="BiomeWorker_OuterSpace.cs" />
