@@ -136,4 +136,6 @@ Mar 25 2025:
 - Fix for player ship with huge CR attacking pre-Moon base ship. The change was missing from dev branch, but was in Steam release. These two fixes by thecaffiend
 - Fix for Mysterious Archotech Sphere to be able to be found via scanning
 - Ideology system inactive option (from Ideology DLC startup settings) is supported in travel to new planet and load ship, will no longer force-activate ideology in that scenario
-  
+
+In testing:
+- Pawns will no longer get hypothermia when inside shuttles in space
