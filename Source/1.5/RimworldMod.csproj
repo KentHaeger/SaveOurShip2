@@ -385,6 +385,7 @@
     <Compile Include="Vehicles\ShuttleTakeoff.cs" />
     <Compile Include="Vehicles\SoS2TurretUpgrade.cs" />
     <Compile Include="Vehicles\SoS2VehicleTurret.cs" />
+    <Compile Include="Vehicles\SoS2VehicleUtility.cs" />
     <Compile Include="Vehicles\VehicleEventMethods.cs" />
     <Compile Include="WorldObject\MoonBase.cs" />
     <Compile Include="Obsolete\Building_Radiator.cs" />

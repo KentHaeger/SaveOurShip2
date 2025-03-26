@@ -4874,15 +4874,7 @@ namespace SaveOurShip2
 		public static bool Prefix(VehicleAI __instance)
 		{
 			VehiclePawn pawn = __instance.vehicle;
-			string[] shuttleNames = { "SoS2_Shuttle", "SoS2_Shuttle_Heavy", "SoS2_Shuttle_Superheavy" };
-			if (shuttleNames.Contains(__instance.vehicle.def.defName))
-			{
-				return false;
-			}
-			else
-			{
-				return true;
-			}
+			return !SoS2VehicleUtility.IsUpgradeableShuttle(pawn);
 		}
 	}
 
@@ -5155,7 +5147,20 @@ namespace SaveOurShip2
 			if (ShipInteriorMod2.IsShuttle(__instance) && __instance.Faction != Faction.OfPlayer)
 				__instance.ignition.Drafted = false;
         }
-    }
+	}
+
+	[HarmonyPatch(typeof(ThingOwnerUtility), "TryGetFixedTemperature")]
+	public static class WarmInsideShuttles
+	{
+		public static void Postfix(IThingHolder holder, Thing forThing, ref float temperature, ref bool __result)
+		{
+			if (holder is VehiclePawn vehicle && forThing is Pawn && SoS2VehicleUtility.IsShuttle(vehicle))
+			{
+				temperature = 21f;
+				__result = true;
+			}
+		}
+	}
 
 	// Anomaly section
 	[HarmonyPatch(typeof(IncidentWorker_SightstealerSwarm), "TryExecuteWorker")]
