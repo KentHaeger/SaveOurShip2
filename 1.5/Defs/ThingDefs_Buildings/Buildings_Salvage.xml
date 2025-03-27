@@ -449,7 +449,7 @@
 		<canOverlapZones>false</canOverlapZones>
 		<statBases>
 			<WorkToBuild>16000</WorkToBuild>
-			<MaxHitPoints>150</MaxHitPoints>
+			<MaxHitPoints>1500</MaxHitPoints>
 			<Flammability>0</Flammability>
 		</statBases>
 		<tickerType>Normal</tickerType>
