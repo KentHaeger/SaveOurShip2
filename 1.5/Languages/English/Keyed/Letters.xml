@@ -9,9 +9,9 @@
 	<!-- misc -->
 	<SoS.LetterLabelShortCircuitDesc>A fault in an electrical conduit has caused a short circuit. Luckily, your capacitor array's fuse prevented it from discharging.</SoS.LetterLabelShortCircuitDesc>
 	<SoS.EncounterStart>Derelict</SoS.EncounterStart>
-	<SoS.EncounterStartDesc>You have approached a derelict that will burn up in the atmosphere in {0}.\n\nYou can send a boarding party to investigate or move it to your map with the salvage bay. Once secured it can be salvaged, repaired or repurposed.</SoS.EncounterStartDesc>
+	<SoS.EncounterStartDesc>You have approached a derelict that will burn up in the atmosphere in {0}.\n\nYou can send a boarding party to investigate or move it to your map using the salvage bay. Once secured, it can be salvaged, repaired, or repurposed.</SoS.EncounterStartDesc>
 	<SoS.EncounterStartWithBridge>Partially functional Derelict</SoS.EncounterStartWithBridge>
-	<SoS.EncounterStartWithBridgeDesc>You have approached a derelict that will burn up in the atmosphere in {0}.\n\nYou can send a boarding party to investigate or move it to your map with the salvage bay. Once secured it can be salvaged, repaired or repurposed.\n\nThis derelict has some Pilot Console(s) and/or AI/Drone cores left. They can be powered on and captured or may need to be destroyed in order to turn ship remains into free buildings with Claim and Deconstruct options avalable right at the derelict site.</SoS.EncounterStartWithBridgeDesc>
+	<SoS.EncounterStartWithBridgeDesc>You have approached a derelict that will burn up in the atmosphere in {0}.\n\nYou can send a boarding party to investigate or move it to your map using the salvage bay. Once secured, it can be salvaged, repaired, or repurposed.\n\nThis derelict has at least one Pilot Console and/or Drone core left intact. These can be powered on and captured, or may need to be destroyed in order to be able to use the Claim and Deconstruct options on site, without retrieving derelict with Salvage Bay.</SoS.EncounterStartWithBridgeDesc>
 	<SoS.EncounterAmbush>Ambush!</SoS.EncounterAmbush>
 	<SoS.EncounterAmbushDesc>As you approach the {0} it begins to power up its shields and weapons.\nPrepare for battle!</SoS.EncounterAmbushDesc>
 	<SoS.CombatStart>Ship battle</SoS.CombatStart>
