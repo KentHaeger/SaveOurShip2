@@ -94,8 +94,14 @@ namespace SaveOurShip2
 		}
 		void OrbitSet() //recalc on change only
 		{
-			Vector3 v = Vector3.SlerpUnclamped(vecEquator * radius, vecEquator * radius * -1, theta * -1);
-			drawPos = new Vector3(v.x, phi, v.z); //td not correct
+			float phi_angle = Mathf.Clamp(phi / 60f, -Mathf.PI/2f, Mathf.PI / 2f);
+			// Old ship location vector in equatorial plane 
+			// Vector3 v = Vector3.SlerpUnclamped(vecEquator * radius, vecEquator * radius * -1, theta * -1);
+			float y = radius * Mathf.Sin(phi_angle);
+			float projectionRadius = radius * Mathf.Cos(phi_angle);
+			// Projection to equatorial plane
+			Vector3 vPlanar = Vector3.SlerpUnclamped(vecEquator * projectionRadius, vecEquator * projectionRadius * -1, theta * -1);
+			drawPos = new Vector3(vPlanar.x, y, vPlanar.z);
 		}
 		public override void SpawnSetup()
 		{
@@ -113,7 +119,7 @@ namespace SaveOurShip2
 				return;
 
 			Theta = Theta + 0.0001f * orbitalMove.Theta;
-			Phi = Phi + 0.004f * orbitalMove.Phi;
+			Phi = Phi + 0.04f * orbitalMove.Phi;
 
 			if (Find.TickManager.TicksGame % 60 == 0)
 			{
