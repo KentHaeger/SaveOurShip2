@@ -561,7 +561,7 @@ namespace SaveOurShip2
 						currentTargetInt = new LocalTargetInfo(new IntVec3(1, 0, Position.z));
 					if (spinalComp.Props.destroysHull)
 					{
-						List<Thing> thingsToDestroy = new List<Thing>();
+						HashSet<Thing> thingsToDestroy = new HashSet<Thing>();
 
 						if (Rotation.AsByte == 0)
 						{
@@ -572,7 +572,10 @@ namespace SaveOurShip2
 									IntVec3 vec = new IntVec3(x, 0, z);
 									foreach (Thing thing in vec.GetThingList(Map))
 									{
-										thingsToDestroy.Add(thing);
+										if (!thingsToDestroy.Contains(thing))
+										{
+											thingsToDestroy.Add(thing);
+										}
 									}
 								}
 							}
@@ -586,7 +589,10 @@ namespace SaveOurShip2
 									IntVec3 vec = new IntVec3(x, 0, z);
 									foreach (Thing thing in vec.GetThingList(Map))
 									{
-										thingsToDestroy.Add(thing);
+										if (!thingsToDestroy.Contains(thing))
+										{
+											thingsToDestroy.Add(thing);
+										}
 									}
 								}
 							}
@@ -600,7 +606,10 @@ namespace SaveOurShip2
 									IntVec3 vec = new IntVec3(x, 0, z);
 									foreach (Thing thing in vec.GetThingList(Map))
 									{
-										thingsToDestroy.Add(thing);
+										if (!thingsToDestroy.Contains(thing))
+										{
+												thingsToDestroy.Add(thing);
+										}
 									}
 								}
 							}
@@ -614,7 +623,10 @@ namespace SaveOurShip2
 									IntVec3 vec = new IntVec3(x, 0, z);
 									foreach (Thing thing in vec.GetThingList(Map))
 									{
-										thingsToDestroy.Add(thing);
+										if (!thingsToDestroy.Contains(thing))
+										{
+											thingsToDestroy.Add(thing);
+										}
 									}
 								}
 							}

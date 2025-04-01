@@ -57,7 +57,14 @@ namespace SaveOurShip2
 				if (Props.reactionless)
 				{
 					if (powerComp.PowerOn)
-						return true;
+						if (refuelComp != null)
+						{
+							return refuelComp.Fuel > FuelUse;
+						}
+						else
+						{
+							return true;
+						}
 				}
 				else if (Props.energy)
 				{
@@ -77,7 +84,16 @@ namespace SaveOurShip2
 				if (Props.reactionless)
 				{
 					if (powerComp.PowerOn)
-						return true;
+					{
+						if (refuelComp != null)
+						{
+							return refuelComp.Fuel > FuelUse;
+						}
+						else
+						{
+							return true;
+						}
+					}
 				}
 				else if (rot == parent.Rotation)
 				{

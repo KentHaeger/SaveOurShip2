@@ -1029,7 +1029,7 @@ namespace SaveOurShip2
 					shieldsActive = false;
 					newMapComp.ShipMapState = ShipMapState.isGraveyard;
 					newMap.Parent.GetComponent<TimedForcedExitShip>().StartForceExitAndRemoveMapCountdown(d.ticksUntilDeparture);
-					Find.LetterStack.ReceiveLetter("SoS.EncounterStart".Translate(), "SoS.EncounterStartDesc".Translate(newMap.Parent.GetComponent<TimedForcedExitShip>().ForceExitAndRemoveMapCountdownTimeLeftString), LetterDefOf.NeutralEvent);
+					// Non-fake derelict letter will be sent later, depending on wreck/ship condition
 				}
 			}
 			else if (shipDef != null)
@@ -1061,6 +1061,31 @@ namespace SaveOurShip2
 			else
 			{
 				mp.Name = shipDef.label + " " + newMap.uniqueID;
+			}
+			if (passingShip is DerelictShip && !fakeWreck)
+			{
+				// When there are bridges left at derelict, it is not claimable/deconstructable because of working like ship, not freee buildinfgs.
+				// Send tutorial-ish letter in this case.
+				bool hasActiveShips = false;
+				foreach (int i in newMapComp.ShipsOnMap.Keys)
+				{
+					SpaceShipCache ship = newMapComp.ShipsOnMap[i];
+					if (!ship.IsWreck)
+					{
+						hasActiveShips = true;
+						break;
+					}
+				}
+				if (hasActiveShips)
+				{
+					Find.LetterStack.ReceiveLetter("SoS.EncounterStartWithBridge".Translate(),
+						"SoS.EncounterStartWithBridgeDesc".Translate(newMap.Parent.GetComponent<TimedForcedExitShip>().ForceExitAndRemoveMapCountdownTimeLeftString), LetterDefOf.NeutralEvent);
+				}
+				else
+				{
+					Find.LetterStack.ReceiveLetter("SoS.EncounterStart".Translate(),
+						"SoS.EncounterStartDesc".Translate(newMap.Parent.GetComponent<TimedForcedExitShip>().ForceExitAndRemoveMapCountdownTimeLeftString), LetterDefOf.NeutralEvent);
+				}
 			}
 			return newMap;
 		}

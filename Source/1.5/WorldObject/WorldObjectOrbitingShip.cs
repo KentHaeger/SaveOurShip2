@@ -315,11 +315,17 @@ namespace SaveOurShip2
 							StringBuilder sb = new StringBuilder();
 							sb.Append(TranslatorFormattedStringExtensions.Translate("SoS.LeaveGraveyardConfirmation1"));
 							sb.Append(" ");
-							sb.Append(Label);
+							// #bb8fo4 color commonly used in XML text highlihts
+							sb.Append(Label.Colorize(new Color(0.733f, 0.561f, 0.016f)));
 							sb.Append(" ");
 							int colonistCount = mapComp.map.mapPawns.ColonistCount;
 							int buildingCount = mapComp.map.listerBuildings.allBuildingsColonist.Count + mapComp.map.listerBuildings.allBuildingsNonColonist.Count;
-							sb.Append(TranslatorFormattedStringExtensions.Translate("SoS.LeaveGraveyardConfirmation2", colonistCount, buildingCount));
+							sb.Append(TranslatorFormattedStringExtensions.Translate("SoS.LeaveGraveyardConfirmation2", buildingCount));
+							if (colonistCount > 0)
+							{
+								sb.Append("\n\n");
+								sb.Append(TranslatorFormattedStringExtensions.Translate("SoS.LeaveGraveyardConfirmationColonistsParagraph", colonistCount));
+							}
 							Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation(sb.ToString(), delegate
 							{
 								mapComp.ShipMapState = ShipMapState.burnUpSet;

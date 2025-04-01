@@ -4874,15 +4874,7 @@ namespace SaveOurShip2
 		public static bool Prefix(VehicleAI __instance)
 		{
 			VehiclePawn pawn = __instance.vehicle;
-			string[] shuttleNames = { "SoS2_Shuttle", "SoS2_Shuttle_Heavy", "SoS2_Shuttle_Superheavy" };
-			if (shuttleNames.Contains(__instance.vehicle.def.defName))
-			{
-				return false;
-			}
-			else
-			{
-				return true;
-			}
+			return !SoS2VehicleUtility.IsUpgradeableShuttle(pawn);
 		}
 	}
 
@@ -5155,7 +5147,20 @@ namespace SaveOurShip2
 			if (ShipInteriorMod2.IsShuttle(__instance) && __instance.Faction != Faction.OfPlayer)
 				__instance.ignition.Drafted = false;
         }
-    }
+	}
+
+	[HarmonyPatch(typeof(ThingOwnerUtility), "TryGetFixedTemperature")]
+	public static class WarmInsideShuttles
+	{
+		public static void Postfix(IThingHolder holder, Thing forThing, ref float temperature, ref bool __result)
+		{
+			if (holder is VehiclePawn vehicle && forThing is Pawn && SoS2VehicleUtility.IsShuttle(vehicle))
+			{
+				temperature = 21f;
+				__result = true;
+			}
+		}
+	}
 
 	// Anomaly section
 	[HarmonyPatch(typeof(IncidentWorker_SightstealerSwarm), "TryExecuteWorker")]
@@ -5438,8 +5443,28 @@ namespace SaveOurShip2
 		public static bool Prefix(MentalBreaker __instance, ref float __result)
 		{
 			ShipWorldComp worldComp = Find.World.GetComponent<ShipWorldComp>();
-			__result = worldComp.MentalBreakThresholdsCache.GetExtremeBreakThreshold(__instance.pawn);
-			return false;
+			if (worldComp.ExtremeBreakThresholds.ContainsKey(__instance.pawn) && Find.TickManager.TicksGame % 60 != 0)
+			{
+				__result = worldComp.ExtremeBreakThresholds[__instance.pawn];
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+
+		public static void Postfix(MentalBreaker __instance, ref float __result)
+		{
+			ShipWorldComp worldComp = Find.World.GetComponent<ShipWorldComp>();
+			if (worldComp.ExtremeBreakThresholds.ContainsKey(__instance.pawn))
+			{
+				worldComp.ExtremeBreakThresholds[__instance.pawn] = __result;
+			}
+			else
+			{
+				worldComp.ExtremeBreakThresholds.Add(__instance.pawn, __result);
+			}
 		}
 	}
 
@@ -5449,8 +5474,28 @@ namespace SaveOurShip2
 		public static bool Prefix(MentalBreaker __instance, ref float __result)
 		{
 			ShipWorldComp worldComp = Find.World.GetComponent<ShipWorldComp>();
-			__result = worldComp.MentalBreakThresholdsCache.GetMajorBreakThreshold(__instance.pawn);
-			return false;
+			if (worldComp.MajorBreakThresholds.ContainsKey(__instance.pawn) && Find.TickManager.TicksGame % 60 != 0)
+			{
+				__result = worldComp.MajorBreakThresholds[__instance.pawn];
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+
+		public static void Postfix(MentalBreaker __instance, ref float __result)
+		{
+			ShipWorldComp worldComp = Find.World.GetComponent<ShipWorldComp>();
+			if (worldComp.MajorBreakThresholds.ContainsKey(__instance.pawn))
+			{
+				worldComp.MajorBreakThresholds[__instance.pawn] = __result;
+			}
+			else
+			{
+				worldComp.MajorBreakThresholds.Add(__instance.pawn, __result);
+			}
 		}
 	}
 
@@ -5460,8 +5505,28 @@ namespace SaveOurShip2
 		public static bool Prefix(MentalBreaker __instance, ref float __result)
 		{
 			ShipWorldComp worldComp = Find.World.GetComponent<ShipWorldComp>();
-			__result = worldComp.MentalBreakThresholdsCache.GetMinorBreakThreshold(__instance.pawn);
-			return false;
+			if (worldComp.MinorBreakThresholds.ContainsKey(__instance.pawn) && Find.TickManager.TicksGame % 60 != 0)
+			{
+				__result = worldComp.MinorBreakThresholds[__instance.pawn];
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+
+		public static void Postfix(MentalBreaker __instance, ref float __result)
+		{
+			ShipWorldComp worldComp = Find.World.GetComponent<ShipWorldComp>();
+			if (worldComp.MinorBreakThresholds.ContainsKey(__instance.pawn))
+			{
+				worldComp.MinorBreakThresholds[__instance.pawn] = __result;
+			}
+			else
+			{
+				worldComp.MinorBreakThresholds.Add(__instance.pawn, __result);
+			}
 		}
 	}
 
