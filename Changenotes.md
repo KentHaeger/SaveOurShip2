@@ -143,3 +143,4 @@ In testing:
 - Clarified derelict message when it has bridges and claiming/deconstruction is not available because of that
 - Fixed exploit: with Invisibility from Royalty, there was a very esy strategy for Starship Bow
 - Technical improvement in mental break thresholds cache
+- Fixed issue with destruction of multi-tile buildings in spinal weapon "wipeout zone" at source map
