@@ -138,4 +138,8 @@ Mar 25 2025:
 - Ideology system inactive option (from Ideology DLC startup settings) is supported in travel to new planet and load ship, will no longer force-activate ideology in that scenario
 
 In testing:
-- Pawns will no longer get hypothermia when inside shuttles in space
+- Pawn won't get hypothermia in shuttles
+- Fixed exploit: Archotech Thrusters always worked even when run out of fuel
+- Clarified derelict message when it has bridges and claiming/deconstruction is not available because of that
+- Fixed exploit: with Invisibility from Royalty, there was a very esy strategy for Starship Bow
+- Technical improvement in mental break thresholds cache
