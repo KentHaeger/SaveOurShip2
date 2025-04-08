@@ -1141,6 +1141,7 @@
 			<graphicClass>Graphic_Multi</graphicClass>
 			<drawSize>(2.3,2.3)</drawSize>
 		</graphicData>
+		<uiIconScale>0.55</uiIconScale>
 		<altitudeLayer>BuildingOnTop</altitudeLayer>
 		<researchPrerequisites>
 			<li>ShipEngine</li>
