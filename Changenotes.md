@@ -144,3 +144,6 @@ Apr 1 2025:
 - Fixed exploit: with Invisibility from Royalty, there was a very easy strategy for Starship Bow
 - Technical improvement in mental break thresholds cache
 - Fixed issue with destruction of multi-tile buildings in spinal weapon "wipeout zone" at source map
+
+In testing:
+- Added letter for when pirates immediately attack player ship because of no powered comms console
