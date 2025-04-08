@@ -355,11 +355,12 @@
 					<ToxicResistance>0.5</ToxicResistance>
 					<ImmunityGainSpeed>1</ImmunityGainSpeed>
 					<MechBandwidth MayRequire="Ludeon.RimWorld.Biotech">16</MechBandwidth>
-					<MechControlGroups MayRequire="Ludeon.RimWorld.Biotech">2</MechControlGroups>
+					<MechControlGroups MayRequire="Ludeon.RimWorld.Biotech">5</MechControlGroups>
 					<DecompressionResistance>1</DecompressionResistance>
 					<HypoxiaResistance>1</HypoxiaResistance>
 					<VacuumSpeedMultiplier>4</VacuumSpeedMultiplier>
-					<MechFormingSpeed  MayRequire="Ludeon.RimWorld.Biotech">1</MechFormingSpeed>
+					<MechFormingSpeed MayRequire="Ludeon.RimWorld.Biotech">1</MechFormingSpeed>
+					<WorkSpeedGlobalOffsetMech MayRequire="Ludeon.RimWorld.Biotech">0.18</WorkSpeedGlobalOffsetMech>
 				</statOffsets>
 				<capMods>
 					<li>
@@ -423,11 +424,12 @@
 					<NegotiationAbility>0.50</NegotiationAbility>
 					<TradePriceImprovement>0.10</TradePriceImprovement>
 					<MechBandwidth MayRequire="Ludeon.RimWorld.Biotech">32</MechBandwidth>
-					<MechControlGroups MayRequire="Ludeon.RimWorld.Biotech">2</MechControlGroups>
+					<MechControlGroups MayRequire="Ludeon.RimWorld.Biotech">8</MechControlGroups>
 					<DecompressionResistance>1</DecompressionResistance>
 					<HypoxiaResistance>1</HypoxiaResistance>
 					<VacuumSpeedMultiplier>4</VacuumSpeedMultiplier>
-					<MechFormingSpeed  MayRequire="Ludeon.RimWorld.Biotech">2</MechFormingSpeed>
+					<MechFormingSpeed MayRequire="Ludeon.RimWorld.Biotech">2</MechFormingSpeed>
+					<WorkSpeedGlobalOffsetMech MayRequire="Ludeon.RimWorld.Biotech">0.36</WorkSpeedGlobalOffsetMech>
 				</statOffsets>
 				<capMods>
 					<li>

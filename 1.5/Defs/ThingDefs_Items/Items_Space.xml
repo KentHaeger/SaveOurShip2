@@ -79,7 +79,7 @@
 		<resourceReadoutPriority>Middle</resourceReadoutPriority>
 		<soundInteract>Metal_Drop</soundInteract>
 		<soundDrop>Metal_Drop</soundDrop>
-		<stackLimit>10</stackLimit>
+		<stackLimit>20</stackLimit>
 		<useHitPoints>true</useHitPoints>
 		<statBases>
 			<MarketValue>20</MarketValue>

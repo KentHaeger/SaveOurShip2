@@ -224,6 +224,7 @@
 	<SoS.HeatWithPowerDesc>Use power for heating when not enough heat is present in the network.</SoS.HeatWithPowerDesc>
 	<SoS.PurgeHeat>Emergency heat purge</SoS.PurgeHeat>
 	<SoS.PurgeHeatDesc>Eject molten silver into space to rapidly lower your ship's stored heat.\n\nThis will cause your shields to drop!</SoS.PurgeHeatDesc>
+	<SoS.CantPurge>Can't purge heat because covered by active shield from other ship or heat net. Consider disabling it manually.</SoS.CantPurge>
 	<SoS.HeatPurge>Vent coolant</SoS.HeatPurge>
 	<SoS.HeatPurgeDesc>Begin venting coolant from heatsinks. All shields, weapons, and cloaks on this heat network will shut down, and heatsinks will vent heat five times as quickly.\n\nThis process depletes coolant and reduces the overall capacity of the heat network, and cannot be canceled once it has begun. Outside of combat, depleted capacity will slowly recover.</SoS.HeatPurgeDesc>
 	<SoS.HeatPurgeVenting>Already venting</SoS.HeatPurgeVenting>

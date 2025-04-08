@@ -1141,6 +1141,7 @@
 			<graphicClass>Graphic_Multi</graphicClass>
 			<drawSize>(2.3,2.3)</drawSize>
 		</graphicData>
+		<uiIconScale>0.55</uiIconScale>
 		<altitudeLayer>BuildingOnTop</altitudeLayer>
 		<researchPrerequisites>
 			<li>ShipEngine</li>
@@ -2503,6 +2504,7 @@
 		<designatorDropdown>Ship_Cryptos</designatorDropdown>
 		<description>A cryptosleep casket with multiple built-in timers and contingencies. Can be opened without manual intervention. In the event of catastrophic ship failure, it can also act as an escape pod.\n\nIt would be a good idea to have at least one of these aboard any starship.</description>
 		<thingClass>Building_CryptosleepCasket</thingClass>
+		<containedPawnsSelectable>true</containedPawnsSelectable>
 		<graphicData>
 			<texPath>Things/Building/Ship/AutoSleepPod</texPath>
 			<graphicClass>Graphic_MultiOnOff</graphicClass>
