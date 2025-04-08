@@ -147,3 +147,9 @@ Apr 1 2025:
 
 In testing:
 - Added letter for when pirates immediately attack player ship because of no powered comms console
+- Win ship battle command
+- Can select Ship Cryptosleep Casket occupant without ejecting them
+- Increased hullfoam stack limit from 10 to 20
+- Added bonuses from control sublink, which they can't install to formgel Mechanitors directly: AI formgel gets buffs like they has lvl 3 sublink, Archoech formgel like theyhave lvl 6 sublink
+- Fixed oversized UI icon for RCS Thruster
+- Added message for non-evident thing, purge port not purging due to being covered by active shield from other heat net/ship. Those aren't disabled automatically.
