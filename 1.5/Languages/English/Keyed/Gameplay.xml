@@ -137,6 +137,7 @@
 	<SoS.PirateAttacksPayDesc>The pirates have decided that your payment was not good enough and are beginning their attack.</SoS.PirateAttacksPayDesc>
 	<SoS.PirateAttacksWait>Pirates attack</SoS.PirateAttacksWait>
 	<SoS.PirateAttacksWaitDesc>The pirates have decided they will wait no longer and are beginning their attack.</SoS.PirateAttacksWaitDesc>
+	<SoS.PirateImmediateAttack>A pirate ship is attacking you. They might want talk before shooting, but couldn't do that to a ship without powered comms console.</SoS.PirateImmediateAttack>
 	<SelectEverything>Select Everything</SelectEverything>
 	<SelectEverythingDesc>Select everything.</SelectEverythingDesc>
 	<!-- bridge -->

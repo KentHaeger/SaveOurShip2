@@ -65,6 +65,9 @@ namespace SaveOurShip2
 			}
 			else if (!(bounty > 50 && Rand.Bool)) //attack
 			{
+				parms.customLetterText = "";
+				SendStandardLetter(def.letterLabel, TranslatorFormattedStringExtensions.Translate("SoS.PirateImmediateAttack"), def.letterDef, parms, TargetInfo.Invalid, Array.Empty<NamedArgument>());
+
 				var mapComp = map.GetComponent<ShipMapComp>();
 				mapComp.StartShipEncounter(ship);
 			}
