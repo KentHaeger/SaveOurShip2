@@ -144,3 +144,14 @@ Apr 1 2025:
 - Fixed exploit: with Invisibility from Royalty, there was a very easy strategy for Starship Bow
 - Technical improvement in mental break thresholds cache
 - Fixed issue with destruction of multi-tile buildings in spinal weapon "wipeout zone" at source map
+
+Apr 8 2025:
+- Added letter for when pirates immediately attack player ship because of no powered comms console
+- Win ship battle command
+- Can select Ship Cryptosleep Casket occupant without ejecting them
+- Increased hullfoam stack limit from 10 to 20
+- Added bonuses from control sublink, which they can't install to formgel Mechanitors directly: AI formgel gets buffs like they have lvl 3 sublink, Archoech formgel like they have lvl 6 sublink
+- Fixed oversized UI icon for RCS Thruster
+- Added message for non-evident thing, purge port not purging due to being covered by active shield from other heat net/ship. Those aren't disabled automatically.
+- CE Compatibility, hopefully temporary fix: Enemies won't retreat based on threat calc because that does not work properly now, will still retreat because of other reasons. Only applicable when CE is enabled. 
+- CE Compatibility, hopefully temporary fix: Enemy shuttles won't spawn with plasma turrets, because that caused issues. Only applicable when CE is enabled.

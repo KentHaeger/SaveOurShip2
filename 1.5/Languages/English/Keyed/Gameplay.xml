@@ -137,6 +137,7 @@
 	<SoS.PirateAttacksPayDesc>The pirates have decided that your payment was not good enough and are beginning their attack.</SoS.PirateAttacksPayDesc>
 	<SoS.PirateAttacksWait>Pirates attack</SoS.PirateAttacksWait>
 	<SoS.PirateAttacksWaitDesc>The pirates have decided they will wait no longer and are beginning their attack.</SoS.PirateAttacksWaitDesc>
+	<SoS.PirateImmediateAttack>A pirate ship is attacking you. They might want talk before shooting, but couldn't do that to a ship without powered comms console.</SoS.PirateImmediateAttack>
 	<SelectEverything>Select Everything</SelectEverything>
 	<SelectEverythingDesc>Select everything.</SelectEverythingDesc>
 	<!-- bridge -->
@@ -223,6 +224,7 @@
 	<SoS.HeatWithPowerDesc>Use power for heating when not enough heat is present in the network.</SoS.HeatWithPowerDesc>
 	<SoS.PurgeHeat>Emergency heat purge</SoS.PurgeHeat>
 	<SoS.PurgeHeatDesc>Eject molten silver into space to rapidly lower your ship's stored heat.\n\nThis will cause your shields to drop!</SoS.PurgeHeatDesc>
+	<SoS.CantPurge>Can't purge heat because covered by active shield from other ship or heat net. Consider disabling it manually.</SoS.CantPurge>
 	<SoS.HeatPurge>Vent coolant</SoS.HeatPurge>
 	<SoS.HeatPurgeDesc>Begin venting coolant from heatsinks. All shields, weapons, and cloaks on this heat network will shut down, and heatsinks will vent heat five times as quickly.\n\nThis process depletes coolant and reduces the overall capacity of the heat network, and cannot be canceled once it has begun. Outside of combat, depleted capacity will slowly recover.</SoS.HeatPurgeDesc>
 	<SoS.HeatPurgeVenting>Already venting</SoS.HeatPurgeVenting>
