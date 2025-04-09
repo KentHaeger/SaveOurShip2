@@ -1701,9 +1701,14 @@ namespace SaveOurShip2
 
 					if (anyShipCanMove) //set AI heading
 					{
-						//True, totalThreat:1, TargetMapComp.totalThreat:1, TurretNum:0
-						//retreat
-						if (Retreating || (totalThreat / (TargetMapComp.totalThreat * 0.9f * Difficulty) < 0.4f) || powerRemaining / powerCapacity < 0.2f || totalThreat == 1 || BuildingsCount / (float)BuildingCountAtStart < 0.7f || tick > BattleStartTick + 90000 || (ShipMapAI == ShipAI.avoidant && MapEnginePower > targetMapComp.MapEnginePower) || (ShipMapAI == ShipAI.carrier && tick > BattleStartTick + 9000 && !ShuttleMissions.Any()))
+						bool retreatByThreat = (totalThreat / (TargetMapComp.totalThreat * 0.9f * Difficulty) < 0.4f);
+						// Temporary CE compatibility fix: as their turrets aren't properly added to turret list, threat calc is broken so enemies are better off not reating based on that.
+						// Will still rereat for other reasons, so that isnot too bad.
+						if (ModIntegration.IsCEEnabled())
+						{
+							retreatByThreat = false;
+						}
+						if (Retreating || retreatByThreat || powerRemaining / powerCapacity < 0.2f || totalThreat == 1 || BuildingsCount / (float)BuildingCountAtStart < 0.7f || tick > BattleStartTick + 90000 || (ShipMapAI == ShipAI.avoidant && MapEnginePower > targetMapComp.MapEnginePower) || (ShipMapAI == ShipAI.carrier && tick > BattleStartTick + 9000 && !ShuttleMissions.Any()))
 						{
 							Heading = -1;
 							Retreating = true;

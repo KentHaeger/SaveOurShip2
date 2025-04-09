@@ -64,7 +64,7 @@ namespace SaveOurShip2
 			{
 				try
 				{
-					if (ModLister.HasActiveModWithName("Combat Extended"))
+					if (ModIntegration.IsCEEnabled())
 					{
 						turretCEtype = Type.GetType("CombatExtended.Compatibility.SOS2Compat.Building_ShipTurretCE, SOS2Compat", false);
 						turretCastMetod = turretCEtype?.GetMethod("ToBuilding_ShipTurret") ?? null;
