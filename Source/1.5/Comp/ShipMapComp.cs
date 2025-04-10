@@ -2628,7 +2628,8 @@ namespace SaveOurShip2
 						{
 							tgtMapComp.ShipMapState = ShipMapState.burnUpSet;
 							//remove all wrecks from map, leave pawns
-							foreach (int shipIndex in OriginMapComp.GraveComp.ShipsOnMap.Keys)
+							List<int> shipKeys = OriginMapComp.GraveComp.ShipsOnMap.Keys.ToList();
+							foreach (int shipIndex in shipKeys)
 							{
 								ShipInteriorMod2.RemoveShipOrArea(OriginMapComp.ShipGraveyard, shipIndex, null, false);
 							}

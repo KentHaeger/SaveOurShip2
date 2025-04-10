@@ -256,7 +256,7 @@ namespace SaveOurShip2
 						// 1) Who can't attack player ship randomly
 						// 2) Who can't even spawn as non-wreck
 						// For now, don't check neverAttacks here, for navy, so that Archotech Sphere can be found
-						ship.attackableShip = navy.spaceShipDefs.Where(def => !def.neverRandom && /*!def.neverAttacks &&*/ def.rarityLevel <= rarity).RandomElement();
+						ship.attackableShip = navy.spaceShipDefs.Where(def => !def.neverRandom && !def.spaceSite && def.rarityLevel <= rarity).RandomElement();
 						ship.shipFaction = Find.FactionManager.AllFactions.Where(f => navy.factionDefs.Contains(f.def)).RandomElement();
 					}
 				}
