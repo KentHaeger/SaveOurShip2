@@ -2284,6 +2284,19 @@ namespace SaveOurShip2
 		}
 	}
 
+	//Prevent exploiting formgels for scanning
+	[HarmonyPatch(typeof(Building_SubcoreScanner), "CanAcceptPawn")] // additional 
+	public static class PreventFormgelsScanning
+	{
+		public static void Postfix(Building_SubcoreScanner __instance, Pawn selPawn, ref AcceptanceReport __result)
+		{
+			if (__result.Accepted && ShipInteriorMod2.IsHologram(selPawn))
+			{
+				__result = TranslatorFormattedStringExtensions.Translate("SoS.CantScanFormgel");
+			}
+		}
+	}
+
 	[HarmonyPatch(typeof(CompAssignableToPawn), "PostSpawnSetup")] //beds?
 	public static class DisableForMoveAssignableOn
 	{
