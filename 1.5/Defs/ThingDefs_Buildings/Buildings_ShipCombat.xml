@@ -2160,6 +2160,7 @@
 				<emits>false</emits>
 				<receives>true</receives>
 				<color>(0.5,0,0)</color>
+				<wipeoutWidth>3</wipeoutWidth>
 			</li>
 			<li Class="SaveOurShip2.CompProps_ShipHeat">
 				<compClass>SaveOurShip2.CompShipHeat</compClass>
@@ -2270,6 +2271,7 @@
 				<emits>false</emits>
 				<receives>true</receives>
 				<color>(0,0.5,0)</color>
+				<wipeoutWidth>3</wipeoutWidth>
 			</li>
 			<li Class="SaveOurShip2.CompProps_ShipHeat">
 				<compClass>SaveOurShip2.CompShipHeat</compClass>
@@ -2400,6 +2402,7 @@
 				<emits>false</emits>
 				<receives>true</receives>
 				<color>(0,0,0.5)</color>
+				<wipeoutWidth>3</wipeoutWidth>
 			</li>
 			<li Class="SaveOurShip2.CompProps_ShipHeat">
 				<compClass>SaveOurShip2.CompShipHeat</compClass>
