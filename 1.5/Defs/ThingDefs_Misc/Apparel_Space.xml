@@ -26,6 +26,7 @@
 			<ArmorRating_Heat>0.75</ArmorRating_Heat>
 			<Insulation_Cold>100</Insulation_Cold>
 			<Insulation_Heat>25</Insulation_Heat>
+			<SellPriceFactor>0.35</SellPriceFactor>
 		</statBases>
 		<equippedStatOffsets>
 			<MoveSpeed>-0.25</MoveSpeed>
@@ -66,6 +67,10 @@
 			</tags>
 			<defaultOutfitTags />
 		</apparel>
+		<tradeability>Sellable</tradeability>
+		<tradeTags>
+			<li>Clothing</li>
+		</tradeTags>
 		<comps>
 			<li>
 				<compClass>SaveOurShip2.CompEVA</compClass>
@@ -99,6 +104,7 @@
 			<ArmorRating_Heat>0.75</ArmorRating_Heat>
 			<Insulation_Cold>100</Insulation_Cold>
 			<Insulation_Heat>25</Insulation_Heat>
+			<SellPriceFactor>0.35</SellPriceFactor>
 		</statBases>
 		<equippedStatOffsets>
 			<MoveSpeed>-0.25</MoveSpeed>
@@ -141,6 +147,10 @@
 			</tags>
 			<defaultOutfitTags />
 		</apparel>
+		<tradeability>Sellable</tradeability>
+		<tradeTags>
+			<li>Clothing</li>
+		</tradeTags>
 		<comps>
 			<li>
 				<compClass>SaveOurShip2.CompEVA</compClass>
@@ -238,6 +248,7 @@
 			<ArmorRating_Heat>0.75</ArmorRating_Heat>
 			<Insulation_Cold>50</Insulation_Cold>
 			<Insulation_Heat>25</Insulation_Heat>
+			<SellPriceFactor>0.35</SellPriceFactor>
 		</statBases>
 		<equippedStatOffsets>
 			<MoveSpeed>-0.04</MoveSpeed>
@@ -307,6 +318,7 @@
 			<Insulation_Cold>100</Insulation_Cold>
 			<Insulation_Heat>25</Insulation_Heat>
 			<EquipDelay>15</EquipDelay>
+			<SellPriceFactor>0.35</SellPriceFactor>
 		</statBases>
 		<equippedStatOffsets>
 			<MoveSpeed>-0.4</MoveSpeed>
@@ -364,6 +376,11 @@
 				</li>
 			</options>
 		</colorGenerator>
+		<tradeability>Sellable</tradeability>
+		<tradeTags>
+			<li>HiTechArmor</li>
+			<li>Armor</li>
+		</tradeTags>
 		<comps>
 			<li>
 				<compClass>SaveOurShip2.CompEVA</compClass>
@@ -402,6 +419,7 @@
 			<Insulation_Cold>50</Insulation_Cold>
 			<Insulation_Heat>25</Insulation_Heat>
 			<EquipDelay>4</EquipDelay>
+			<SellPriceFactor>0.35</SellPriceFactor>
 		</statBases>
 		<equippedStatOffsets>
 			<MoveSpeed>-0.04</MoveSpeed>
@@ -430,6 +448,11 @@
 			</tags>
 			<defaultOutfitTags />
 		</apparel>
+		<tradeability>Sellable</tradeability>
+		<tradeTags>
+			<li>HiTechArmor</li>
+			<li>Armor</li>
+		</tradeTags>
 		<comps>
 			<li>
 				<compClass>SaveOurShip2.CompEVA</compClass>
