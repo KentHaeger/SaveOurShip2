@@ -155,3 +155,6 @@ Apr 8 2025:
 - Added message for non-evident thing, purge port not purging due to being covered by active shield from other heat net/ship. Those aren't disabled automatically.
 - CE Compatibility, hopefully temporary fix: Enemies won't retreat based on threat calc because that does not work properly now, will still retreat because of other reasons. Only applicable when CE is enabled. 
 - CE Compatibility, hopefully temporary fix: Enemy shuttles won't spawn with plasma turrets, because that caused issues. Only applicable when CE is enabled.
+
+In Testing:
+- All EVA gear is now tradeable, but with decreased price. 
