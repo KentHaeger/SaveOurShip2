@@ -17,7 +17,8 @@ namespace SaveOurShip2
 	{
 		scoop = 1,
 		stabilize = 2,
-		target = 4
+		target = 4,
+		stabilizeForever = 8,
 	}
 
 	public class Command_SelectShipMap : Command
@@ -122,6 +123,12 @@ namespace SaveOurShip2
 						Messages.Message(TranslatorFormattedStringExtensions.Translate("SoS.SalvageStablizeFuel", req), MessageTypeDefOf.NeutralEvent);
 					}
 				}
+			}
+			else if (mode == SelectShipMapMode.stabilizeForever)
+			{
+				var worldObjectComp = targetMap.Parent.GetComponent<TimedForcedExitShip>();
+				// 360 million ticks = 100 years
+				worldObjectComp.ticksLeftToForceExitAndRemoveMap += 360000000;
 			}
 		}
 	}
