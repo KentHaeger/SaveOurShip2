@@ -152,9 +152,10 @@ Apr 8 2025:
 - Increased hullfoam stack limit from 10 to 20
 - Added bonuses from control sublink, which they can't install to formgel Mechanitors directly: AI formgel gets buffs like they have lvl 3 sublink, Archoech formgel like they have lvl 6 sublink
 - Fixed oversized UI icon for RCS Thruster
-- Added message for non-evident thing, purge port not purging due to being covered by active shield from other heat net/ship. Those aren't disabled automatically.
-- CE Compatibility, hopefully temporary fix: Enemies won't retreat based on threat calc because that does not work properly now, will still retreat because of other reasons. Only applicable when CE is enabled. 
-- CE Compatibility, hopefully temporary fix: Enemy shuttles won't spawn with plasma turrets, because that caused issues. Only applicable when CE is enabled.
+- Added message for non-evident thing, purge port not purging due to being covered by active shield from other heat net/ship. Those aren't disabled automatically
+- CE Compatibility, hopefully temporary fix: Enemies won't retreat based on threat calc because that does not work properly now, will still retreat because of other reasons. Only applicable when CE is enabled
+- CE Compatibility, hopefully temporary fix: Enemy shuttles won't spawn with plasma turrets, because that caused issues. Only applicable when CE is enabled
 
 In Testing:
-- All EVA gear is now tradeable, but with decreased price. 
+- All EVA gear is now tradeable, but with decreased price
+- Added Stabilize Forever Dev command for graveyard maps
