@@ -94,7 +94,7 @@ namespace SaveOurShip2
 				List<CompEngineTrail> engines = mapComp.MaxSalvageWeightOnMap(out int maxMass, out float fuel);
 				if (bCount > maxMass)
 				{
-					Messages.Message(TranslatorFormattedStringExtensions.Translate("SoS.SalvageCount", bCount, maxMass), MessageTypeDefOf.NeutralEvent);
+					Messages.Message(TranslatorFormattedStringExtensions.Translate("SoS.SalvageFailMass", bCount, maxMass), MessageTypeDefOf.NeutralEvent);
 				}
 				else
 				{
