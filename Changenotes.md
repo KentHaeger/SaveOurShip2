@@ -162,3 +162,4 @@ In Testing:
 - Engine exhaust zone offset moved to XML
 - Small fix for immediate ememy retreat at the start of ship battle
 - PDs will target first shulle instead of random one, that helps in more efficient ant-shuttle defense
+- Enemy ship turrets won't beep continually when can't fire 
