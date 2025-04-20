@@ -21,7 +21,6 @@ namespace SaveOurShip2
 		private static Vector3[] offsetL = { new Vector3(0, 0, -11f), new Vector3(-11f, 0, 0), new Vector3(0, 0, 11f), new Vector3(11f, 0, 0) };
 		private static Vector3[] offsetE = { new Vector3(0, 0, -9.2f), new Vector3(-9.2f, 0, 0), new Vector3(0, 0, 9.2f), new Vector3(9.2f, 0, 0) };
 		public static IntVec2[] killOffset = { new IntVec2(0, -6), new IntVec2(-6, 0), new IntVec2(0, 4), new IntVec2(4, 0) };
-		public static IntVec2[] killOffsetL = { new IntVec2(0, -13), new IntVec2(-13, 0), new IntVec2(0, 7), new IntVec2(7, 0) };
 		public virtual CompProps_EngineTrail Props
 		{
 			get { return props as CompProps_EngineTrail; }
@@ -162,7 +161,7 @@ namespace SaveOurShip2
 			ExhaustArea.Clear();
 			CellRect rectToKill;
 			if (size > 3)
-				rectToKill = parent.OccupiedRect().MovedBy(killOffsetL[parent.Rotation.AsInt]).ExpandedBy(2);
+				rectToKill = parent.OccupiedRect().MovedBy(Props.killOffsetL(parent.Rotation.AsInt)).ExpandedBy(2);
 			else
 				rectToKill = parent.OccupiedRect().MovedBy(killOffset[parent.Rotation.AsInt]).ExpandedBy(1);
 			if (parent.Rotation.IsHorizontal)
