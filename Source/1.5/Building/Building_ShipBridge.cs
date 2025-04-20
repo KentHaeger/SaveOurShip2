@@ -1042,9 +1042,10 @@ namespace SaveOurShip2
 							}
 						}
 					},
+					// Uses single door of the standard airlock as icon
 					icon = ContentFinder<Texture2D>.Get("Things/Building/Ship/Airlock_Mover"),
-					defaultLabel = "Select outer airlocks",
-					defaultDesc = "Select all outer airlocks for the current ship"
+					defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.BridgeSelectOuterdoors"),
+					defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.BridgeSelectOuterdoorsDesc")
 				};
 				yield return selectOuterdoors;
 			}
