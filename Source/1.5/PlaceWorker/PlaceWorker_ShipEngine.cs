@@ -41,7 +41,8 @@ namespace SaveOurShip2
 			CellRect rectToKill;
 			if (def.size.z > 3)
 			{
-				rectToKill = new CellRect(minx, minz, rot.IsHorizontal ? def.size.z : def.size.x, rot.IsHorizontal ? def.size.x : def.size.z).MovedBy(CompEngineTrail.killOffsetL[rot.AsInt]).ExpandedBy(2);
+				CompProps_EngineTrail engineProps = def.GetCompProperties<CompProps_EngineTrail>();
+				rectToKill = new CellRect(minx, minz, rot.IsHorizontal ? def.size.z : def.size.x, rot.IsHorizontal ? def.size.x : def.size.z).MovedBy(engineProps.killOffsetL(rot.AsInt)).ExpandedBy(2);
 			}
 			else
 			{
