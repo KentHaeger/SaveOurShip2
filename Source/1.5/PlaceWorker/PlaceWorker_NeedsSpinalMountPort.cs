@@ -27,15 +27,16 @@ namespace SaveOurShip2
 			{
 				int wipeoutWidth = def.GetCompProperties<CompProps_SpinalMount>()?.wipeoutWidth ?? 3;
 				int wipeoutSideWidth = (wipeoutWidth - 1) / 2;
+				int wipeoutOffset = def.GetCompProperties<CompProps_SpinalMount>()?.wipeoutOffset ?? 2;
 				CellRect rect;
 				if (rot.AsByte == 0)
-					rect = new CellRect(center.x - wipeoutSideWidth, center.z + 3, wipeoutWidth, currentMap.Size.z - center.z - 3);
+					rect = new CellRect(center.x - wipeoutSideWidth, center.z + wipeoutOffset + 1, wipeoutWidth, currentMap.Size.z - center.z - wipeoutOffset);
 				else if (rot.AsByte == 1)
-					rect = new CellRect(center.x + 3, center.z - wipeoutSideWidth, currentMap.Size.x - center.x - 3, wipeoutWidth);
+					rect = new CellRect(center.x + wipeoutOffset + 1, center.z - wipeoutSideWidth, currentMap.Size.x - center.x - wipeoutOffset, wipeoutWidth);
 				else if (rot.AsByte == 2)
-					rect = new CellRect(center.x - wipeoutSideWidth, 0, wipeoutWidth, center.z - 2);
+					rect = new CellRect(center.x - wipeoutSideWidth, 0, wipeoutWidth, center.z - wipeoutOffset);
 				else
-					rect = new CellRect(0, center.z - wipeoutSideWidth, center.x - 2, wipeoutWidth);
+					rect = new CellRect(0, center.z - wipeoutSideWidth, center.x - wipeoutOffset, wipeoutWidth);
 				GenDraw.DrawFieldEdges(rect.Cells.ToList(),Color.red);
 			}
 		}

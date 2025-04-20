@@ -14,6 +14,7 @@ namespace SaveOurShip2
 		public Color color = Color.white;
 		public bool destroysHull = true;
 		public int wipeoutWidth = 3;
+		public int wipeoutOffset = 2;
 
 		public CompProps_SpinalMount()
 		{
