@@ -553,6 +553,7 @@ namespace SaveOurShip2
 				{
 					// Spinal weapon fire wipes out everything in the same line as barrel center and also this width both sides
 					int SpinalWipeotSideWidth = (spinalComp.Props.wipeoutWidth - 1) / 2;
+					int wipeoutOffset = spinalComp.Props.wipeoutOffset;
 					if (Rotation.AsByte == 0)
 						currentTargetInt = new LocalTargetInfo(new IntVec3(Position.x, 0, Map.Size.z - 1));
 					else if (Rotation.AsByte == 1)
@@ -569,7 +570,9 @@ namespace SaveOurShip2
 						{
 							for (int x = Position.x - SpinalWipeotSideWidth; x <= Position.x + SpinalWipeotSideWidth; x++)
 							{
-								for (int z = Position.z + 3; z < Map.Size.z; z++)
+								// Spinal weapon can't have kill zone overlapping it's center, will destroy itself.
+								// So 0 offset is when will zone starts in next ceell, that's why it is wipeoutOffset +1/-1 here
+								for (int z = Position.z + wipeoutOffset + 1; z < Map.Size.z; z++)
 								{
 									IntVec3 vec = new IntVec3(x, 0, z);
 									foreach (Thing thing in vec.GetThingList(Map))
@@ -584,7 +587,7 @@ namespace SaveOurShip2
 						}
 						else if (Rotation.AsByte == 1)
 						{
-							for (int x = Position.x + 3; x < Map.Size.x; x++)
+							for (int x = Position.x + wipeoutOffset + 1; x < Map.Size.x; x++)
 							{
 								for (int z = Position.z - SpinalWipeotSideWidth; z <= Position.z + SpinalWipeotSideWidth; z++)
 								{
@@ -603,7 +606,7 @@ namespace SaveOurShip2
 						{
 							for (int x = Position.x - SpinalWipeotSideWidth; x <= Position.x + SpinalWipeotSideWidth; x++)
 							{
-								for (int z = Position.z - 3; z > 0; z--)
+								for (int z = Position.z - wipeoutOffset - 1; z > 0; z--)
 								{
 									IntVec3 vec = new IntVec3(x, 0, z);
 									foreach (Thing thing in vec.GetThingList(Map))
@@ -618,7 +621,7 @@ namespace SaveOurShip2
 						}
 						else
 						{
-							for (int x = 1; x <= Position.x - 3; x++)
+							for (int x = 1; x <= Position.x - wipeoutOffset - 1; x++)
 							{
 								for (int z = Position.z - SpinalWipeotSideWidth; z <= Position.z + SpinalWipeotSideWidth; z++)
 								{
