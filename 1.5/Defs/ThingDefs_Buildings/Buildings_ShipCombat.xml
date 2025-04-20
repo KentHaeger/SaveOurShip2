@@ -46,6 +46,10 @@
 			<Beauty>0</Beauty>
 			<RangedWeapon_DamageMultiplier>1.0</RangedWeapon_DamageMultiplier>
 		</statBases>
+		<building>
+			<!-- When not enough energy to fire, Vanilla sound logic would cause enemy turrets to beep continually and annoyingly, so disabled -->
+			<playTargetAcquiredSound>false</playTargetAcquiredSound>
+		</building>
 		<uiIconScale>1.0</uiIconScale>
 		<seeThroughFog>true</seeThroughFog>
 	</ThingDef>

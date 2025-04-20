@@ -391,7 +391,7 @@ namespace SaveOurShip2
 					currentTargetInt = TryFindNewTarget();
 				}
 			}
-			if (!isValid && currentTargetInt.IsValid)
+			if (def.building.playTargetAcquiredSound && !isValid && currentTargetInt.IsValid)
 			{
 				SoundDefOf.TurretAcquireTarget.PlayOneShot(new TargetInfo(base.Position, base.Map, false));
 			}
