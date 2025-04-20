@@ -130,15 +130,16 @@ namespace SaveOurShip2
 						podsinrange.Add(obj);
 					}
 				}*/
+				IEnumerable<VehiclePawn> enemyShuttlesInRange = mapComp.TargetMapComp.ShuttlesInRange.Where(shuttle => shuttle.Faction != turret.Faction);
 				if (mapComp.TargetMapComp.TorpsInRange.Any() && Rand.Chance(0.1f))
 				{
 					ShipCombatProjectile projtr = mapComp.TargetMapComp.TorpsInRange.RandomElement();
 					mapComp.TargetMapComp.Projectiles.Remove(projtr);
 					mapComp.TargetMapComp.TorpsInRange.Remove(projtr);
 				}
-				else if(mapComp.TargetMapComp.ShuttlesInRange.Where(shuttle=>shuttle.Faction!=turret.Faction).Any())
+				else if(enemyShuttlesInRange.Any())
                 {
-					VehiclePawn shuttleHit = mapComp.TargetMapComp.ShuttlesInRange.Where(shuttle => shuttle.Faction != turret.Faction).RandomElement();
+					VehiclePawn shuttleHit = enemyShuttlesInRange.First();
 					int? targetIntellectualSkill = (shuttleHit.FindPawnWithBestStat(StatDefOf.ResearchSpeed)?.skills?.GetSkill(SkillDefOf.Intellectual)?.Level);
 					int skill = 0;
 					if (targetIntellectualSkill.HasValue)
