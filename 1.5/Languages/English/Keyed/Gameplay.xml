@@ -192,6 +192,8 @@
 	<SoS.Rebuild>Rebuild ship parts</SoS.Rebuild>
 	<SoS.RebuildDesc>Places blueprints for destroyed buildings on this ship.</SoS.RebuildDesc>
 	<SoS.BridgeConnectTooltip>Bridge is not connected! Make sure this is hooked up to both heat and power networks.</SoS.BridgeConnectTooltip>
+	<SoS.BridgeSelectOuterdoors>Select outer airlocks</SoS.BridgeSelectOuterdoors>
+	<SoS.BridgeSelectOuterdoorsDesc>Select all outer airlocks for the current ship</SoS.BridgeSelectOuterdoorsDesc>
 	<!-- story -->
 	<SoS.QuestPillarA>Attack KSS Horizon</SoS.QuestPillarA>
 	<SoS.QuestPillarADesc>Attempt to engage the ancient terraforming station and recover an archotech pillar</SoS.QuestPillarADesc>
