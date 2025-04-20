@@ -159,3 +159,5 @@ Apr 8 2025:
 In Testing:
 - All EVA gear is now tradeable, but with decreased price
 - Added Stabilize Forever Dev command for graveyard maps
+- Engine exhaust zone offset moved to XML
+- Small fix for immediate ememy retreat at the start of ship battle
