@@ -493,7 +493,7 @@ namespace SaveOurShip2
 			if (powerComp != null && powerComp.PowerNet.CurrentStoredEnergy() < EnergyToFire)
 			{
 				if (!PointDefenseMode && PlayerControlled)
-					Messages.Message(TranslatorFormattedStringExtensions.Translate("SoS.CannotFireDueToPower", Label), this, MessageTypeDefOf.CautionInput);
+					Messages.Message(TranslatorFormattedStringExtensions.Translate("SoS.CannotFireDueToPower", Label), this, MessageTypeDefOf.SilentInput);
 				shipTarget = LocalTargetInfo.Invalid;
 				ResetCurrentTarget();
 				return;
@@ -502,7 +502,7 @@ namespace SaveOurShip2
 			if (heatComp.Props.heatPerPulse > 0 && !heatComp.AddHeatToNetwork(HeatToFire))
 			{
 				if (!PointDefenseMode && PlayerControlled)
-					Messages.Message(TranslatorFormattedStringExtensions.Translate("SoS.CannotFireDueToHeat", Label), this, MessageTypeDefOf.CautionInput);
+					Messages.Message(TranslatorFormattedStringExtensions.Translate("SoS.CannotFireDueToHeat", Label), this, MessageTypeDefOf.SilentInput);
 				shipTarget = LocalTargetInfo.Invalid;
 				ResetCurrentTarget();
 				return;
