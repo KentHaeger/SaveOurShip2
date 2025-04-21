@@ -4735,7 +4735,11 @@ namespace SaveOurShip2
     {
 		public static void Postfix(CompUpgradeTree __instance, UpgradeNode node, ref bool __result)
         {
-			if(node.upgrades.Where(upgrade=>upgrade is SoS2TurretUpgrade sosUpgrade && sosUpgrade.turretSlot >= __instance.Vehicle.GetStatValue(ResourceBank.VehicleStatDefOf.Hardpoints)).Count()>0)
+			if (node.upgrades == null)
+			{
+				return;
+			}
+			if (node.upgrades.Where(upgrade=>upgrade is SoS2TurretUpgrade sosUpgrade && sosUpgrade.turretSlot >= __instance.Vehicle.GetStatValue(ResourceBank.VehicleStatDefOf.Hardpoints)).Count()>0)
             {
 				__result = true;
             }
