@@ -5082,20 +5082,23 @@ namespace SaveOurShip2
 			}
 			if (Vehicle.CompUpgradeTree.Disabled(__instance.SelectedNode))
 			{
-				if (__instance.SelectedNode.upgrades.Where(upgrade => upgrade is SoS2TurretUpgrade sosUpgrade && sosUpgrade.turretSlot >= __instance.Vehicle.GetStatValue(ResourceBank.VehicleStatDefOf.Hardpoints)).Count() > 0)
+				if (__instance.SelectedNode.upgrades != null && __instance.SelectedNode.upgrades.Where(upgrade => upgrade is SoS2TurretUpgrade sosUpgrade && sosUpgrade.turretSlot >= __instance.Vehicle.GetStatValue(ResourceBank.VehicleStatDefOf.Hardpoints)).Count() > 0)
 				{
 					Messages.Message(Translator.Translate("SoS.NoHardpoints"), MessageTypeDefOf.RejectInput, false);
 					return false;
 				}
 				float CargoMod = 0;
-				foreach (Upgrade upgrade in __instance.SelectedNode.upgrades)
+				if (__instance.SelectedNode.upgrades != null)
 				{
-					if (upgrade is StatUpgrade stat && stat.vehicleStats != null)
+					foreach (Upgrade upgrade in __instance.SelectedNode.upgrades)
 					{
-						foreach (StatUpgrade.VehicleStatDefUpgrade value in stat.vehicleStats)
+						if (upgrade is StatUpgrade stat && stat.vehicleStats != null)
 						{
-							if (value.def == VehicleStatDefOf.CargoCapacity)
-								CargoMod += value.value;
+							foreach (StatUpgrade.VehicleStatDefUpgrade value in stat.vehicleStats)
+							{
+								if (value.def == VehicleStatDefOf.CargoCapacity)
+									CargoMod += value.value;
+							}
 						}
 					}
 				}
