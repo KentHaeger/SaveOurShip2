@@ -164,3 +164,4 @@ In Testing:
 - PDs will target first shulle instead of random one, that helps in more efficient ant-shuttle defense
 - Enemy ship turrets won't beep continually when can't fire
 - Fixed compatibility issue with Kurin Deluxe Edition [Vehicles]
+- When player turret can't fire due to not enough energy/heat capacity, notification changed from repeating beeping message to repeating silent message
