@@ -2753,11 +2753,21 @@ namespace SaveOurShip2
 	[HarmonyPatch(typeof(Building_CryptosleepCasket), "GetFloatMenuOptions")]
 	public static class CantEnterCryptonest
 	{
-		public static bool Prefix(Building_CryptosleepCasket __instance)
+		public static bool Prefix(Building_CryptosleepCasket __instance, Pawn myPawn, ref IEnumerable<FloatMenuOption> __result)
 		{
 			if (__instance.def == ResourceBank.ThingDefOf.Cryptonest)
 			{
 				return false;
+			}
+			if (__instance.def == ResourceBank.ThingDefOf.CrittersleepCasket || __instance.def == ResourceBank.ThingDefOf.CrittersleepCasketLarge)
+			{
+				if (myPawn.RaceProps?.Humanlike ?? false)
+				{
+					List<FloatMenuOption> notAllowedList = new List<FloatMenuOption>();
+					notAllowedList.Add(new FloatMenuOption(TranslatorFormattedStringExtensions.Translate("SoS.CantEnterCrittersleep"), null));
+					__result = notAllowedList;
+					return false;
+				}
 			}
 			return true;
 		}

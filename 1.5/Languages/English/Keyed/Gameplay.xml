@@ -275,6 +275,8 @@
 	<SoS.ReactorOverdrive2Desc>Greatly increase reactor output, at the cost of increased heat production and fuel consumption. Increases instability, risking fire and radiation leaks.</SoS.ReactorOverdrive2Desc>
 	<SoS.ReactorOverdrive3>Overdrive III</SoS.ReactorOverdrive3>
 	<SoS.ReactorOverdrive3Desc>Vastly increase reactor output, at the cost of increased heat production and fuel consumption. Increases instability, risking fire and radiation leaks.</SoS.ReactorOverdrive3Desc>
+	<!-- caskets -->
+	<SoS.CantEnterCrittersleep>Humanlikes aren't allowed to use crittersleep caskets.</SoS.CantEnterCrittersleep>
 	<!-- blueprints -->
 	<SoS.BlueprintDisabled>Requires starflight basics research</SoS.BlueprintDisabled>
 	<SoS.BlueprintFailed>Blueprint placement failed! Area must support heavy construction and be clear of non-owned objects and mountain roof.</SoS.BlueprintFailed>
