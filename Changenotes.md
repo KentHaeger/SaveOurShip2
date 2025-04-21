@@ -165,3 +165,4 @@ In Testing:
 - Enemy ship turrets won't beep continually when can't fire
 - Fixed compatibility issue with Kurin Deluxe Edition [Vehicles]
 - When player turret can't fire due to not enough energy/heat capacity, notification changed from repeating beeping message to repeating silent message
+- Humanlikes are not allowed to use critterslep caskets, those are for animals
