@@ -32,7 +32,7 @@ namespace SaveOurShip2
                 return Props.fuelUse;
             }
         }
-		public virtual float Thrust
+		public virtual int Thrust
 		{
 			get
 			{
