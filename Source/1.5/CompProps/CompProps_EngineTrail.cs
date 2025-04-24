@@ -7,7 +7,7 @@ namespace SaveOurShip2
 	public class CompProps_EngineTrail : CompProperties
 	{
 		//public GraphicData graphicData = new GraphicData();
-		public float thrust = 0;
+		public int thrust = 0;
 		public int fuelUse = 0;
 		public int width = 0;
 		public bool takeOff = false;

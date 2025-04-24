@@ -253,7 +253,7 @@ namespace SaveOurShip2
 			thrust *= Mathf.Pow(MassSum, 1.2f);
 			List<CompEngineTrail> list = new List<CompEngineTrail>();
 			list = Engines.Where(e => e.CanFire(new Rot4(mapComp.EngineRot))).OrderBy(e => e.Thrust).ThenBy(e => e.Props.energy).ThenBy(e => e.Props.reactionless).ToList();
-			float i = 0;
+			int i = 0;
 			foreach (CompEngineTrail engine in list)
 			{
 				//Log.Message(Index + " " + engine);
