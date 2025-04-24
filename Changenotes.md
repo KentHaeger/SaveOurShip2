@@ -166,3 +166,5 @@ In Testing:
 - Fixed compatibility issue with Kurin Deluxe Edition [Vehicles]
 - When player turret can't fire due to not enough energy/heat capacity, notification changed from repeating beeping message to repeating silent message
 - Humanlikes are not allowed to use critterslep caskets, those are for animals
+- Engine thrust changed to float
+
