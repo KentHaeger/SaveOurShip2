@@ -19,6 +19,10 @@ namespace SaveOurShip2
 		public IntVec2 killOffsetSouthL = new IntVec2(0, 7);
 		public IntVec2 killOffsetWestL = new IntVec2(7, 0);
 
+		public int killZoneLength = 15;
+		public int killZoneWidth = 5;
+		public int killZoneExtraOffset = 0;
+
 		public IntVec2 killOffsetL(int rotInt)
 		{
 			switch (rotInt)

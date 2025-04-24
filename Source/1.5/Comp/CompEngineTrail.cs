@@ -159,15 +159,8 @@ namespace SaveOurShip2
 			if (Props.reactionless)
 				return;
 			ExhaustArea.Clear();
-			CellRect rectToKill;
-			if (size > 3)
-				rectToKill = parent.OccupiedRect().MovedBy(Props.killOffsetL(parent.Rotation.AsInt)).ExpandedBy(2);
-			else
-				rectToKill = parent.OccupiedRect().MovedBy(killOffset[parent.Rotation.AsInt]).ExpandedBy(1);
-			if (parent.Rotation.IsHorizontal)
-				rectToKill.Width = rectToKill.Width * 2 - 3;
-			else
-				rectToKill.Height = rectToKill.Height * 2 - 3;
+			CellRect rectToKill = GenAdjExtension.GetDirectAdjacentRect(parent.Position.ToIntVec2, parent.Rotation.Rotated(RotationDirection.Opposite).rotInt, parent.OccupiedRect(),
+				Props.killZoneWidth, Props.killZoneLength, Props.killZoneExtraOffset);
 			foreach (IntVec3 v in rectToKill.Where(v => v.InBounds(parent.Map)))
 			{
 				ExhaustArea.Add(v);

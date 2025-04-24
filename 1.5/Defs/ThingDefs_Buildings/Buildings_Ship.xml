@@ -962,6 +962,8 @@
 				<thrust>1</thrust>
 				<fuelUse>1</fuelUse>
 				<takeOff>true</takeOff>
+				<killZoneLength>7</killZoneLength>
+				<killZoneWidth>4</killZoneWidth>
 				<soundWorking>ShipEngineFuel</soundWorking>
 			</li>
 			<li Class="Rimefeller.CompProperties_Pipe" MayRequire="Dubwise.Rimefeller"/>
@@ -1037,6 +1039,8 @@
 				<thrust>2</thrust>
 				<fuelUse>2</fuelUse>
 				<takeOff>true</takeOff>
+				<killZoneLength>7</killZoneLength>
+				<killZoneWidth>5</killZoneWidth>
 				<soundWorking>ShipEngineFuel</soundWorking>
 			</li>
 			<li Class="Rimefeller.CompProperties_Pipe" MayRequire="Dubwise.Rimefeller"/>
@@ -1114,6 +1118,8 @@
 				<thrust>6</thrust>
 				<fuelUse>3</fuelUse>
 				<takeOff>true</takeOff>
+				<killZoneLength>15</killZoneLength>
+				<killZoneWidth>9</killZoneWidth>
 				<soundWorking>ShipEngineFuel</soundWorking>
 			</li>
 		</comps>
