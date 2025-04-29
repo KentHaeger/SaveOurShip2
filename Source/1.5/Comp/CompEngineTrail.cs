@@ -39,6 +39,17 @@ namespace SaveOurShip2
 				return Props.thrust;
 			}
 		}
+		public virtual float PreciseThrust
+		{
+			get
+			{
+				// For compatibility, legacy int thrust will bew used if new precise is not defined
+				if (Props.preciseThrust != 0)
+					return Props.preciseThrust;
+				else
+					return Props.thrust;
+			}
+		}
 		public bool PodFueled => refuelComp.Props.fuelFilter.AllowedThingDefs.Contains(ResourceBank.ThingDefOf.ShuttleFuelPods);
 		public bool active = false;
 		int size;
@@ -112,7 +123,7 @@ namespace SaveOurShip2
 		{
 			if (Props.energy)
 			{
-				powerComp.PowerOutput = -2000 * Thrust;
+				powerComp.PowerOutput = -2000 * PreciseThrust;
 			}
 			active = true;
 		}
@@ -125,7 +136,7 @@ namespace SaveOurShip2
 			}
 			if (Props.energy)
 			{
-				powerComp.PowerOutput = -2000 * Thrust;
+				powerComp.PowerOutput = -2000 * PreciseThrust;
 				active = true;
 				return true;
 			}
@@ -140,7 +151,7 @@ namespace SaveOurShip2
 		{
 			if (Props.energy)
 			{
-				powerComp.PowerOutput = -200 * Thrust;
+				powerComp.PowerOutput = -200 * PreciseThrust;
 			}
 			active = false;
 			/*if (sustainer != null && !sustainer.Ended)
