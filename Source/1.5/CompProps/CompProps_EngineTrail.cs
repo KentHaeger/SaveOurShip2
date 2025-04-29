@@ -8,6 +8,7 @@ namespace SaveOurShip2
 	{
 		//public GraphicData graphicData = new GraphicData();
 		public int thrust = 0;
+		public float preciseThrust = 0;
 		public int fuelUse = 0;
 		public int width = 0;
 		public bool takeOff = false;

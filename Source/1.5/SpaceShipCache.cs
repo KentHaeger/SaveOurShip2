@@ -223,7 +223,7 @@ namespace SaveOurShip2
 			{
 				if (engine.CanFire(new Rot4(mapComp.EngineRot)))
 				{
-					enginePower += engine.Thrust;
+					enginePower += engine.PreciseThrust;
 				}
 			}
 			return enginePower;
@@ -252,14 +252,14 @@ namespace SaveOurShip2
 		{
 			thrust *= Mathf.Pow(MassSum, 1.2f);
 			List<CompEngineTrail> list = new List<CompEngineTrail>();
-			list = Engines.Where(e => e.CanFire(new Rot4(mapComp.EngineRot))).OrderBy(e => e.Thrust).ThenBy(e => e.Props.energy).ThenBy(e => e.Props.reactionless).ToList();
-			int i = 0;
+			list = Engines.Where(e => e.CanFire(new Rot4(mapComp.EngineRot))).OrderBy(e => e.PreciseThrust).ThenBy(e => e.Props.energy).ThenBy(e => e.Props.reactionless).ToList();
+			float accumulatedThrust = 0;
 			foreach (CompEngineTrail engine in list)
 			{
 				//Log.Message(Index + " " + engine);
-				i += engine.Thrust;
+				accumulatedThrust += engine.PreciseThrust;
 				engine.On();
-				if (i > thrust)
+				if (accumulatedThrust > thrust)
 					return;
 			}
 		}
@@ -787,7 +787,7 @@ namespace SaveOurShip2
 						if (b.TryGetComp<CompEngineTrail>() != null)
 						{
 							var refuelable = b.TryGetComp<CompRefuelable>();
-							ThrustRaw += b.TryGetComp<CompEngineTrail>().Thrust;
+							ThrustRaw += b.TryGetComp<CompEngineTrail>().PreciseThrust;
 							if (refuelable != null)
 							{
 								MaxTakeoff += refuelable.Props.fuelCapacity;
@@ -904,7 +904,7 @@ namespace SaveOurShip2
 						if (b.TryGetComp<CompEngineTrail>() != null)
 						{
 							var refuelable = b.TryGetComp<CompRefuelable>();
-							ThrustRaw -= b.TryGetComp<CompEngineTrail>().Thrust;
+							ThrustRaw -= b.TryGetComp<CompEngineTrail>().PreciseThrust;
 							if (refuelable != null)
 							{
 								MaxTakeoff -= refuelable.Props.fuelCapacity;
