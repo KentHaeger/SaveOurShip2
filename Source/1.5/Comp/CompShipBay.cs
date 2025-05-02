@@ -140,8 +140,8 @@ namespace SaveOurShip2
 		public override void PostDraw()
 		{
 			base.PostDraw();
-			// Get room is slow if not enclosed, so update flag rarely.
-			if (needDrawRoof == null || Find.TickManager.TicksGame % 60 == 0)
+			// Get room is slow if not enclosed, so update flag rarely, but not much, otherwise it will be visible
+			if (needDrawRoof == null || Find.TickManager.TicksGame % 40 == 0 || Time.frameCount % 40 == 0)
 			{
 				needDrawRoof = parent.GetRoom() != null && parent.GetRoom().Cells.Any(c => c.Fogged(parent.Map));
 			}
