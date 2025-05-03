@@ -156,7 +156,7 @@ Apr 8 2025:
 - CE Compatibility, hopefully temporary fix: Enemies won't retreat based on threat calc because that does not work properly now, will still retreat because of other reasons. Only applicable when CE is enabled
 - CE Compatibility, hopefully temporary fix: Enemy shuttles won't spawn with plasma turrets, because that caused issues. Only applicable when CE is enabled
 
-In Testing:
+May 3 2025:
 - All EVA gear is now tradeable, but with decreased price
 - Added Stabilize Forever Dev command for graveyard maps
 - Engine exhaust zone offset moved to XML, as well as spinal kill zone width and offset from barrel center
