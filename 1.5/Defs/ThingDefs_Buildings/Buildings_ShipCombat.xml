@@ -46,6 +46,10 @@
 			<Beauty>0</Beauty>
 			<RangedWeapon_DamageMultiplier>1.0</RangedWeapon_DamageMultiplier>
 		</statBases>
+		<building>
+			<!-- When not enough energy to fire, Vanilla sound logic would cause enemy turrets to beep continually and annoyingly, so disabled -->
+			<playTargetAcquiredSound>false</playTargetAcquiredSound>
+		</building>
 		<uiIconScale>1.0</uiIconScale>
 		<seeThroughFog>true</seeThroughFog>
 	</ThingDef>
@@ -2160,6 +2164,7 @@
 				<emits>false</emits>
 				<receives>true</receives>
 				<color>(0.5,0,0)</color>
+				<wipeoutWidth>3</wipeoutWidth>
 			</li>
 			<li Class="SaveOurShip2.CompProps_ShipHeat">
 				<compClass>SaveOurShip2.CompShipHeat</compClass>
@@ -2270,6 +2275,7 @@
 				<emits>false</emits>
 				<receives>true</receives>
 				<color>(0,0.5,0)</color>
+				<wipeoutWidth>3</wipeoutWidth>
 			</li>
 			<li Class="SaveOurShip2.CompProps_ShipHeat">
 				<compClass>SaveOurShip2.CompShipHeat</compClass>
@@ -2400,6 +2406,7 @@
 				<emits>false</emits>
 				<receives>true</receives>
 				<color>(0,0,0.5)</color>
+				<wipeoutWidth>3</wipeoutWidth>
 			</li>
 			<li Class="SaveOurShip2.CompProps_ShipHeat">
 				<compClass>SaveOurShip2.CompShipHeat</compClass>

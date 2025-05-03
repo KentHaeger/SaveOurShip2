@@ -89,6 +89,8 @@
 	<SoS.SalvageStablizeFuel>Stabilization requires {0} fuel!</SoS.SalvageStablizeFuel>
 	<SoS.SalvageStablizeDesc>Stabilize the orbit of {0}. This requires enough salvage bays and will consume fuel in your engines.</SoS.SalvageStablizeDesc>
 	<SoS.SalvageStablizeConfirm>Stabilize the orbit of {0}. This requires enough salvage bays and will consume {1} chemfuel equivalent in your engines.</SoS.SalvageStablizeConfirm>
+	<SoS.SalvageStablizeForever>Stabilize {0} forever</SoS.SalvageStablizeForever>
+	<SoS.SalvageStablizeForeverDesc>Stabilize the orbit of {0} for a really long time. Normally, derelicts and defeated enemy ship maps are time-limited, but for anyone wanting to build a space station or something like that, this option is provided.</SoS.SalvageStablizeForeverDesc>
 	<SoS.SalvageDisabled>Cannot salvage: in ship battle, or enemy pawns are present!</SoS.SalvageDisabled>
 	<SoS.SalvageAbandonConfirm>Are you sure you want to discard the target?\nEverything connected to or on it will burn up in the atmosphere!</SoS.SalvageAbandonConfirm>
 	<SoS.SalvageBridge>Can not move intact ships with the salvage bay, capture or destroy the bridge.</SoS.SalvageBridge>
@@ -190,6 +192,8 @@
 	<SoS.Rebuild>Rebuild ship parts</SoS.Rebuild>
 	<SoS.RebuildDesc>Places blueprints for destroyed buildings on this ship.</SoS.RebuildDesc>
 	<SoS.BridgeConnectTooltip>Bridge is not connected! Make sure this is hooked up to both heat and power networks.</SoS.BridgeConnectTooltip>
+	<SoS.BridgeSelectOuterdoors>Select outer airlocks</SoS.BridgeSelectOuterdoors>
+	<SoS.BridgeSelectOuterdoorsDesc>Select all outer airlocks for the current ship</SoS.BridgeSelectOuterdoorsDesc>
 	<!-- story -->
 	<SoS.QuestPillarA>Attack KSS Horizon</SoS.QuestPillarA>
 	<SoS.QuestPillarADesc>Attempt to engage the ancient terraforming station and recover an archotech pillar</SoS.QuestPillarADesc>
@@ -271,6 +275,8 @@
 	<SoS.ReactorOverdrive2Desc>Greatly increase reactor output, at the cost of increased heat production and fuel consumption. Increases instability, risking fire and radiation leaks.</SoS.ReactorOverdrive2Desc>
 	<SoS.ReactorOverdrive3>Overdrive III</SoS.ReactorOverdrive3>
 	<SoS.ReactorOverdrive3Desc>Vastly increase reactor output, at the cost of increased heat production and fuel consumption. Increases instability, risking fire and radiation leaks.</SoS.ReactorOverdrive3Desc>
+	<!-- caskets -->
+	<SoS.CantEnterCrittersleep>Humanlikes aren't allowed to use crittersleep caskets.</SoS.CantEnterCrittersleep>
 	<!-- blueprints -->
 	<SoS.BlueprintDisabled>Requires starflight basics research</SoS.BlueprintDisabled>
 	<SoS.BlueprintFailed>Blueprint placement failed! Area must support heavy construction and be clear of non-owned objects and mountain roof.</SoS.BlueprintFailed>
@@ -310,6 +316,7 @@
 	<SoS.EquipMeleeDesc>Equip this hologram with a blade and an energy shield</SoS.EquipMeleeDesc>
 	<SoS.ResurrectBrain>Resurrect</SoS.ResurrectBrain>
 	<SoS.ResurrectBrainDesc>Use a resurrector mech serum to construct a new body for this consciousness</SoS.ResurrectBrainDesc>
+	<SoS.CantScanFormgel>Formgel is not suitable for scanning</SoS.CantScanFormgel>
 	<SoS.ArchoGift>Unlocks archotech gifts</SoS.ArchoGift>
 	<SoS.ArchotechGoodwillPlus>Psychically increase goodwill (+10, costs {0} field strength)</SoS.ArchotechGoodwillPlus>
 	<SoS.ArchotechGoodwillMinus>Psychically decrease goodwill (-10, costs {0} field strength)</SoS.ArchotechGoodwillMinus>

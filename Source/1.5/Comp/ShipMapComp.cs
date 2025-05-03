@@ -1704,7 +1704,8 @@ namespace SaveOurShip2
 						bool retreatByThreat = (totalThreat / (TargetMapComp.totalThreat * 0.9f * Difficulty) < 0.4f);
 						// Temporary CE compatibility fix: as their turrets aren't properly added to turret list, threat calc is broken so enemies are better off not reating based on that.
 						// Will still rereat for other reasons, so that isnot too bad.
-						if (ModIntegration.IsCEEnabled())
+						// Also, there is hard to detect non-CE issue when threat was not updated properly just after battle start, so waiting to apply threat logic.
+						if (ModIntegration.IsCEEnabled() || tick < BattleStartTick + 240)
 						{
 							retreatByThreat = false;
 						}
@@ -2628,7 +2629,8 @@ namespace SaveOurShip2
 						{
 							tgtMapComp.ShipMapState = ShipMapState.burnUpSet;
 							//remove all wrecks from map, leave pawns
-							foreach (int shipIndex in OriginMapComp.GraveComp.ShipsOnMap.Keys)
+							List<int> shipKeys = OriginMapComp.GraveComp.ShipsOnMap.Keys.ToList();
+							foreach (int shipIndex in shipKeys)
 							{
 								ShipInteriorMod2.RemoveShipOrArea(OriginMapComp.ShipGraveyard, shipIndex, null, false);
 							}

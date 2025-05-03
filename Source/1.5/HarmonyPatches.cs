@@ -2284,6 +2284,19 @@ namespace SaveOurShip2
 		}
 	}
 
+	//Prevent exploiting formgels for scanning
+	[HarmonyPatch(typeof(Building_SubcoreScanner), "CanAcceptPawn")] // additional 
+	public static class PreventFormgelsScanning
+	{
+		public static void Postfix(Building_SubcoreScanner __instance, Pawn selPawn, ref AcceptanceReport __result)
+		{
+			if (__result.Accepted && ShipInteriorMod2.IsHologram(selPawn))
+			{
+				__result = TranslatorFormattedStringExtensions.Translate("SoS.CantScanFormgel");
+			}
+		}
+	}
+
 	[HarmonyPatch(typeof(CompAssignableToPawn), "PostSpawnSetup")] //beds?
 	public static class DisableForMoveAssignableOn
 	{
@@ -2500,7 +2513,9 @@ namespace SaveOurShip2
 			}
 			else //psitech compat
 			{
-				foreach (ThingDef item in DefDatabase<ThingDef>.AllDefs.Where((ThingDef def) => def.IsCryptosleepCasket && !def.defName.StartsWith("PTPsychicTraier")))
+				foreach (ThingDef item in DefDatabase<ThingDef>.AllDefs.Where(
+					(ThingDef def) => def.IsCryptosleepCasket && !def.defName.StartsWith("PTPsychicTraier") && def != ResourceBank.ThingDefOf.CrittersleepCasket &&
+									  def != ResourceBank.ThingDefOf.CrittersleepCasketLarge))
 				{
 					Building_CryptosleepCasket building_CryptosleepCasket = (Building_CryptosleepCasket)GenClosest.ClosestThingReachable(p.PositionHeld, p.MapHeld, ThingRequest.ForDef(item), PathEndMode.InteractionCell, TraverseParms.For(traveler), 9999f, (Thing x) => !((Building_CryptosleepCasket)x).HasAnyContents && traveler.CanReserve(x, 1, -1, null, ignoreOtherReservations));
 					if (building_CryptosleepCasket != null)
@@ -2738,11 +2753,21 @@ namespace SaveOurShip2
 	[HarmonyPatch(typeof(Building_CryptosleepCasket), "GetFloatMenuOptions")]
 	public static class CantEnterCryptonest
 	{
-		public static bool Prefix(Building_CryptosleepCasket __instance)
+		public static bool Prefix(Building_CryptosleepCasket __instance, Pawn myPawn, ref IEnumerable<FloatMenuOption> __result)
 		{
 			if (__instance.def == ResourceBank.ThingDefOf.Cryptonest)
 			{
 				return false;
+			}
+			if (__instance.def == ResourceBank.ThingDefOf.CrittersleepCasket || __instance.def == ResourceBank.ThingDefOf.CrittersleepCasketLarge)
+			{
+				if (myPawn.RaceProps?.Humanlike ?? false)
+				{
+					List<FloatMenuOption> notAllowedList = new List<FloatMenuOption>();
+					notAllowedList.Add(new FloatMenuOption(TranslatorFormattedStringExtensions.Translate("SoS.CantEnterCrittersleep"), null));
+					__result = notAllowedList;
+					return false;
+				}
 			}
 			return true;
 		}
@@ -4722,7 +4747,11 @@ namespace SaveOurShip2
     {
 		public static void Postfix(CompUpgradeTree __instance, UpgradeNode node, ref bool __result)
         {
-			if(node.upgrades.Where(upgrade=>upgrade is SoS2TurretUpgrade sosUpgrade && sosUpgrade.turretSlot >= __instance.Vehicle.GetStatValue(ResourceBank.VehicleStatDefOf.Hardpoints)).Count()>0)
+			if (node.upgrades == null)
+			{
+				return;
+			}
+			if (node.upgrades.Where(upgrade=>upgrade is SoS2TurretUpgrade sosUpgrade && sosUpgrade.turretSlot >= __instance.Vehicle.GetStatValue(ResourceBank.VehicleStatDefOf.Hardpoints)).Count()>0)
             {
 				__result = true;
             }
@@ -5065,20 +5094,23 @@ namespace SaveOurShip2
 			}
 			if (Vehicle.CompUpgradeTree.Disabled(__instance.SelectedNode))
 			{
-				if (__instance.SelectedNode.upgrades.Where(upgrade => upgrade is SoS2TurretUpgrade sosUpgrade && sosUpgrade.turretSlot >= __instance.Vehicle.GetStatValue(ResourceBank.VehicleStatDefOf.Hardpoints)).Count() > 0)
+				if (__instance.SelectedNode.upgrades != null && __instance.SelectedNode.upgrades.Where(upgrade => upgrade is SoS2TurretUpgrade sosUpgrade && sosUpgrade.turretSlot >= __instance.Vehicle.GetStatValue(ResourceBank.VehicleStatDefOf.Hardpoints)).Count() > 0)
 				{
 					Messages.Message(Translator.Translate("SoS.NoHardpoints"), MessageTypeDefOf.RejectInput, false);
 					return false;
 				}
 				float CargoMod = 0;
-				foreach (Upgrade upgrade in __instance.SelectedNode.upgrades)
+				if (__instance.SelectedNode.upgrades != null)
 				{
-					if (upgrade is StatUpgrade stat && stat.vehicleStats != null)
+					foreach (Upgrade upgrade in __instance.SelectedNode.upgrades)
 					{
-						foreach (StatUpgrade.VehicleStatDefUpgrade value in stat.vehicleStats)
+						if (upgrade is StatUpgrade stat && stat.vehicleStats != null)
 						{
-							if (value.def == VehicleStatDefOf.CargoCapacity)
-								CargoMod += value.value;
+							foreach (StatUpgrade.VehicleStatDefUpgrade value in stat.vehicleStats)
+							{
+								if (value.def == VehicleStatDefOf.CargoCapacity)
+									CargoMod += value.value;
+							}
 						}
 					}
 				}

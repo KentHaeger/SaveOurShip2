@@ -38,19 +38,11 @@ namespace SaveOurShip2
 				if (vec.z < minz)
 					minz = vec.z;
 			}
-			CellRect rectToKill;
-			if (def.size.z > 3)
-			{
-				rectToKill = new CellRect(minx, minz, rot.IsHorizontal ? def.size.z : def.size.x, rot.IsHorizontal ? def.size.x : def.size.z).MovedBy(CompEngineTrail.killOffsetL[rot.AsInt]).ExpandedBy(2);
-			}
-			else
-			{
-				rectToKill = new CellRect(minx, minz, rot.IsHorizontal ? def.size.z : def.size.x, rot.IsHorizontal ? def.size.x : def.size.z).MovedBy(CompEngineTrail.killOffset[rot.AsInt]).ExpandedBy(1);
-			}
-			if (rot.IsHorizontal)
-				rectToKill.Width = rectToKill.Width * 2 - 3;
-			else
-				rectToKill.Height = rectToKill.Height * 2 - 3;
+
+			CellRect occupiedRect = GenAdj.OccupiedRect(center, rot, def.size);
+			CompProps_EngineTrail compProps = def.GetCompProperties<CompProps_EngineTrail>();
+			CellRect rectToKill = GenAdjExtension.GetDirectAdjacentRect(center.ToIntVec2, rot.Rotated(RotationDirection.Opposite).rotInt, occupiedRect,
+				compProps.killZoneWidth, compProps.killZoneLength, compProps.killZoneExtraOffset);
 			GenDraw.DrawFieldEdges(rectToKill.Cells.ToList(), Color.red);
 		}
 	}
