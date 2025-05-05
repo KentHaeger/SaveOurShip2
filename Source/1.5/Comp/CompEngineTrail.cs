@@ -47,7 +47,7 @@ namespace SaveOurShip2
 				if (Props.preciseThrust != 0)
 					return Props.preciseThrust;
 				else
-					return Props.thrust;
+					return Thrust;
 			}
 		}
 		public bool PodFueled => refuelComp.Props.fuelFilter.AllowedThingDefs.Contains(ResourceBank.ThingDefOf.ShuttleFuelPods);
