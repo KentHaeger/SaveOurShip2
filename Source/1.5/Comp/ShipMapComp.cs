@@ -844,6 +844,7 @@ namespace SaveOurShip2
 
 			//callSlowTick = true;
 		}
+
 		public Map SpawnEnemyShipMap(PassingShip passingShip, Faction faction, bool fleet, bool bounty)
 		{
 			Map newMap = new Map();
@@ -856,8 +857,21 @@ namespace SaveOurShip2
 			bool isDerelict = false;
 			float CR = 0;
 			float radius = 150f;
-			float theta = ((WorldObjectOrbitingShip)ShipCombatOriginMap.Parent).Theta - 0.1f + 0.002f * Rand.Range(0, 20);
-			float phi = ((WorldObjectOrbitingShip)ShipCombatOriginMap.Parent).Phi - 0.01f + 0.001f * Rand.Range(-20, 20);
+			float theta = ((WorldObjectOrbitingShip)ShipCombatOriginMap.Parent).Theta;
+			float phi = ((WorldObjectOrbitingShip)ShipCombatOriginMap.Parent).Phi;
+			float phiOffsetScale = 1;
+			if (Mathf.Abs(theta) > 0.9f * Mathf.PI / 2)
+			{
+				phiOffsetScale /= Mathf.Cos(theta);
+			}
+			// As theta (longitude) gets closer to north/south poles, just phi offset doesn't set up enemy ship visually aside from player ship well
+			// So, use theta offset
+			else
+			{
+				theta -= Mathf.Sign(theta) * 0.05f * Mathf.PI / 2;
+			}
+			theta -= 0.1f + 0.002f * Rand.Range(0, 20);
+			phi -= 0.01f + phiOffsetScale * 0.001f * Rand.Range(-20, 20);
 
 			if (passingShip is AttackableShip attackableShip)
 			{
@@ -2342,7 +2356,7 @@ namespace SaveOurShip2
 			if (pawns.Any())
 			{
 				if (ShipGraveyard == null)
-					SpawnGraveyard();
+					SpawnGraveyard(map.Parent);
 				foreach (Pawn p in pawns)
 				{
 					p.DeSpawn();
@@ -2357,7 +2371,7 @@ namespace SaveOurShip2
 			{
 				List<Thing> things = new List<Thing>();
 				if (ShipGraveyard == null)
-					SpawnGraveyard();
+					SpawnGraveyard(map.Parent);
 				foreach (SpaceShipCache ship in ShipsOnMap.Values)
 				{
 					foreach (IntVec3 v in ship.AreaDestroyed)
@@ -2484,7 +2498,7 @@ namespace SaveOurShip2
 			{
 				Log.Warning("SOS2: ".Colorize(Color.cyan) + map + " Ship ".Colorize(Color.green) + shipIndex + " Removing with: " + core);
 				if (ShipGraveyard == null)
-					SpawnGraveyard();
+					SpawnGraveyard(map.Parent);
 				IReadOnlyList<Pawn> pawns = map.mapPawns.AllPawnsSpawned;
 				foreach (Pawn pawn in pawns)
                 {
@@ -2523,20 +2537,37 @@ namespace SaveOurShip2
 				Log.Warning("SOS2: ".Colorize(Color.cyan) + map + " Ship ".Colorize(Color.green) + s.Index + ", area: " + s.Area.Count + ", bldgs: " + s.BuildingCount + ", cores: " + s.Bridges.Count);
 			}
 		}
-		public void SpawnGraveyard() //if not present, create a graveyard
+		public void SpawnGraveyard(MapParent mapParent) //if not present, create a graveyard
 		{
 			//Log.Message("SOS2: ".Colorize(Color.cyan) + map + " SpawnGraveyard");
+			float theta = 0;
+			float phi = 0;
+			float radius = WorldObjectMath.defaultRadius;
+			WorldObjectMath.GetSphericalCoords(mapParent, out phi, out theta, out radius);
 			float adj;
+			// Graveyards for player ship go to the left, enemy ones go to the right
+			int offsetSign = -1;
 			if (ShipCombatOrigin)
-				adj = Rand.Range(0.025f, 0.075f);
-			else
-				adj = Rand.Range(-0.075f, -0.125f);
+				offsetSign = 1;
+			// Numbers picked for graveyard to be visually near parent map.
+			float thetaOffset = offsetSign * Rand.Range(0.008f, 0.022f);
 			ShipGraveyard = GetOrGenerateMapUtility.GetOrGenerateMap(ShipInteriorMod2.FindWorldTile(), map.Size, ResourceBank.WorldObjectDefOf.WreckSpace);
 			ShipGraveyard.fogGrid.ClearAllFog();
 			var mp = (WorldObjectOrbitingShip)ShipGraveyard.Parent;
-			mp.Radius = 150;
-			mp.Theta = ((WorldObjectOrbitingShip)ShipCombatOriginMap.Parent).Theta + adj;
-			mp.Phi = ((WorldObjectOrbitingShip)ShipCombatOriginMap.Parent).Phi - 0.01f + 0.001f * Rand.Range(0, 20);
+			mp.Radius = radius;
+			mp.Theta = theta + thetaOffset;
+			float phiOffsetScale = 1;
+			if (Mathf.Abs(theta) > 0.9f * Mathf.PI / 2)
+			{
+				phiOffsetScale /= Mathf.Cos(theta);
+			}
+			// As theta (longitude) gets closer to north/south poles, just phi offset doesn't set up enemy ship visually aside from player ship well
+			// So, use theta offset
+			else
+			{
+				mp.Theta -= Mathf.Sign(theta) * 0.02f * Mathf.PI / 2;
+			}
+			mp.Phi = phi - phiOffsetScale * 0.01f + 0.001f * Rand.Range(0, 20);
 			mp.Name += "Wreckage nr." + ShipGraveyard.uniqueID;
 			var graveMapComp = ShipGraveyard.GetComponent<ShipMapComp>();
 			graveMapComp.ShipMapState = ShipMapState.isGraveyard;

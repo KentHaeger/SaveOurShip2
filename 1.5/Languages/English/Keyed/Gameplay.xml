@@ -5,10 +5,14 @@
 	<!-- scenario selection-->
 	<SoS.NoShipsToLoad>There are no ships to load. Load ship scenario is a new game plus, when some ship was launched to a new planet from existing game, it can be loaded here.\nTo start playing in space normally, use Derelict Ship or Space Station scenarios instead.</SoS.NoShipsToLoad>
 	<!-- world/orbit -->
-	<SoS.MoveWest>Short burn west</SoS.MoveWest>
+	<SoS.MoveWest>Burn west</SoS.MoveWest>
 	<SoS.MoveWestDesc>Move the ship westward.</SoS.MoveWestDesc>
-	<SoS.MoveEast>Short burn east</SoS.MoveEast>
+	<SoS.MoveEast>Burn east</SoS.MoveEast>
 	<SoS.MoveEastDesc>Move the ship eastward.</SoS.MoveEastDesc>
+	<SoS.MoveNorth>Burn north</SoS.MoveNorth>
+	<SoS.MoveNorthDesc>Move the ship northward.</SoS.MoveNorthDesc>
+	<SoS.MoveSouth>Burn south</SoS.MoveSouth>
+	<SoS.MoveSouthDesc>Move the ship southward.</SoS.MoveSouthDesc>
 	<SoS.MoveStop>Stop orbital movement</SoS.MoveStop>
 	<SoS.MoveStopDesc>Reverse burn into geosynchronous orbit.</SoS.MoveStopDesc>
 	<SoS.AbandonHome>Abandon ship</SoS.AbandonHome>

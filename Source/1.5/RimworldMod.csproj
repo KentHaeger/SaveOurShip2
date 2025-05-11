@@ -472,6 +472,7 @@
     <Compile Include="Verb\Verb_LaunchProjectileShip.cs" />
     <Compile Include="Verb\Verb_SpaceBubblePop.cs" />
     <Compile Include="Events\WeatherEvent_VacuumDamage.cs" />
+    <Compile Include="WorldObject\WorldObjectMath.cs" />
     <Compile Include="WorldObject\WorldObjectOrbitingShip.cs" />
   </ItemGroup>
   <ItemGroup>
