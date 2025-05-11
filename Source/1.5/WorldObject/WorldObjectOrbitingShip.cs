@@ -51,14 +51,13 @@ namespace SaveOurShip2
 		public Vector3 drawPos;
 		public Vector3 originDrawPos = Vector3.zero;
 		public Vector3 targetDrawPos = Vector3.zero;
-		public Vector3 NominalPos => Vector3.SlerpUnclamped(vecEquator * 150, vecEquator * -150, 3);
+		public Vector3 NominalPos => Vector3.SlerpUnclamped(WorldObjectMath.vecEquator * 150, WorldObjectMath.vecEquator * -150, 3);
 		public void SetNominalPos()
 		{
 			radius = 150;
 			Theta = -3;
 		}
 		//used in orbit
-		public static Vector3 vecEquator = new Vector3(0, 0, 1);
 		public static Vector3 vecPolar = new Vector3(0, 1, 0);
 		public OrbitalMovementDirection orbitalMove = new OrbitalMovementDirection();
 		public bool preventMove = false;
@@ -94,14 +93,7 @@ namespace SaveOurShip2
 		}
 		void OrbitSet() //recalc on change only
 		{
-			float phi_angle = Mathf.Clamp(phi / 60f, -Mathf.PI/2f, Mathf.PI / 2f);
-			// Old ship location vector in equatorial plane 
-			// Vector3 v = Vector3.SlerpUnclamped(vecEquator * radius, vecEquator * radius * -1, theta * -1);
-			float y = radius * Mathf.Sin(phi_angle);
-			float projectionRadius = radius * Mathf.Cos(phi_angle);
-			// Projection to equatorial plane
-			Vector3 vPlanar = Vector3.SlerpUnclamped(vecEquator * projectionRadius, vecEquator * projectionRadius * -1, theta * -1);
-			drawPos = new Vector3(vPlanar.x, y, vPlanar.z);
+			drawPos = WorldObjectMath.GetPos(phi, theta, radius);
 		}
 		public override void SpawnSetup()
 		{
@@ -119,7 +111,7 @@ namespace SaveOurShip2
 				return;
 
 			Theta = Theta + 0.0001f * orbitalMove.Theta;
-			Phi = Phi + 0.04f * orbitalMove.Phi;
+			Phi = Phi + 0.0001f * orbitalMove.Phi;
 
 			if (Find.TickManager.TicksGame % 60 == 0)
 			{
@@ -146,12 +138,11 @@ namespace SaveOurShip2
 			Scribe_Values.Look<float>(ref theta, "theta", -3, false);
 			Scribe_Values.Look<float>(ref phi, "phi", 0, false);
 			Scribe_Values.Look<float>(ref radius, "radius", 150f, false);
-			// Temporarily, just don't save/load
-			if (Scribe.mode == LoadSaveMode.LoadingVars)
-			{
-				orbitalMove.Stop();
-			}
-			// Scribe_Values.Look<int>(ref orbitalMove, "orbitalMove", 0, false);
+			// Save game comaptibility for orbital move
+			// Old saves: only orbitalMove field mening theta angle movement
+			// New saves: orbitalMove field mening theta angle, also orbitalMovePhi
+			Scribe_Values.Look<int>(ref orbitalMove.Theta, "orbitalMove", 0, true);
+			Scribe_Values.Look<int>(ref orbitalMove.Phi, "orbitalMovePhi", 0, true);
 			Scribe_Values.Look<string>(ref nameInt, "nameInt", null, false);
 			Scribe_Values.Look<Vector3>(ref drawPos, "drawPos", Vector3.zero, false);
 			Scribe_Values.Look<Vector3>(ref originDrawPos, "originDrawPos", Vector3.zero, false);
@@ -249,18 +240,17 @@ namespace SaveOurShip2
 						{
 							action = delegate ()
 							{
-								orbitalMove.Theta = 0;
-								orbitalMove.Phi = 1;
+								orbitalMove = OrbitalMovementDirection.North;
 							},
-							defaultLabel = "Move North",
-							defaultDesc = "Move North"
+							defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.MoveNorth"),
+							defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.MoveNorthDesc"),
+							icon = ContentFinder<Texture2D>.Get("UI/Ship_Icon_North", true)
 						};
 						Command_Action burnWest = new Command_Action
 						{
 							action = delegate ()
 							{
-								orbitalMove.Theta = -1;
-								orbitalMove.Phi = 0;
+								orbitalMove = OrbitalMovementDirection.West;
 							},
 							defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.MoveWest"),
 							defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.MoveWestDesc"),
@@ -271,8 +261,7 @@ namespace SaveOurShip2
 						{
 							action = delegate ()
 							{
-								orbitalMove.Theta = 0;
-								orbitalMove.Phi = 0;
+								orbitalMove = new OrbitalMovementDirection();
 							},
 							defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.MoveStop"),
 							defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.MoveStopDesc"),
@@ -283,8 +272,7 @@ namespace SaveOurShip2
 						{
 							action = delegate ()
 							{
-								orbitalMove.Theta = 1;
-								orbitalMove.Phi = 0;
+								orbitalMove = OrbitalMovementDirection.East;
 							},
 							defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.MoveEast"),
 							defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.MoveEastDesc"),
@@ -295,17 +283,19 @@ namespace SaveOurShip2
 						{
 							action = delegate ()
 							{
-								orbitalMove.Theta = 0;
-								orbitalMove.Phi = -1;
+								orbitalMove = OrbitalMovementDirection.South;
 							},
-							defaultLabel = "Move South",
-							defaultDesc = "Move South"
+							defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.MoveSouth"),
+							defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.MoveSouthDesc"),
+							icon = ContentFinder<Texture2D>.Get("UI/Ship_Icon_South", true)
 						};
 						if (preventMove)
 						{
 							burnWest.disabled = true;
 							burnStop.disabled = true;
 							burnEast.disabled = true;
+							burnNorth.disabled = true;
+							burnSouth.disabled = true;
 						}
 						else if (orbitalMove.IsStopped())
 						{
@@ -313,8 +303,23 @@ namespace SaveOurShip2
 						}
 						else
 						{
-							burnWest.disabled = true;
-							burnEast.disabled = true;
+							// Disable currently active movemnt command
+							if (orbitalMove == OrbitalMovementDirection.West)
+							{
+								burnWest.disabled = true;
+							}
+							if (orbitalMove == OrbitalMovementDirection.East)
+							{
+								burnEast.disabled = true;
+							}
+							if (orbitalMove == OrbitalMovementDirection.North)
+							{
+								burnNorth.disabled = true;
+							}
+							if (orbitalMove == OrbitalMovementDirection.South)
+							{
+								burnSouth.disabled = true;
+							}
 						}
 						yield return burnNorth;
 						yield return burnWest;
@@ -498,9 +503,21 @@ namespace SaveOurShip2
 	public class OrbitalMovementDirection
 	{
 		// Compared to traditional spherical coordinates, these are exchanged
+		// 0 is stop, -1 is move backwards, 1 is move forward
 		public int Phi;
 		public int Theta;
-
+		public static OrbitalMovementDirection West = new OrbitalMovementDirection(0, 1);
+		public static OrbitalMovementDirection East = new OrbitalMovementDirection(0, -1);
+		public static OrbitalMovementDirection North = new OrbitalMovementDirection(1, 0);
+		public static OrbitalMovementDirection South = new OrbitalMovementDirection(-1, 0);
+		public OrbitalMovementDirection()
+		{
+		}
+		public OrbitalMovementDirection(int phi, int theta)
+		{
+			Phi = phi;
+			Theta = theta;
+		}
 		public void Stop()
 		{
 			Phi = 0;
