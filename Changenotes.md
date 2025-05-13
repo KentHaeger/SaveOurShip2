@@ -167,3 +167,6 @@ May 3 2025:
 - When player turret can't fire due to not enough energy/heat capacity, notification changed from repeating beeping message to repeating silent message
 - Humanlikes are not allowed to use critterslep caskets, those are for animals
 - Faster roofs update on unfog
+
+In testing:
+- New feature: can move ship north/south on the world map
