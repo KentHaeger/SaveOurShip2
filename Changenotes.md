@@ -168,5 +168,5 @@ May 3 2025:
 - Humanlikes are not allowed to use critterslep caskets, those are for animals
 - Faster roofs update on unfog
 
-In testing:
+May 15 2025:
 - New feature: can move ship north/south on the world map
