@@ -1637,6 +1637,7 @@
 			<graphicClass>Graphic_Multi</graphicClass>
 			<drawSize>(1,1)</drawSize>
 		</graphicData>
+		<uiIconScale>0.65</uiIconScale>
 		<researchPrerequisites>
 			<li>ShipSensorCluster</li>
 		</researchPrerequisites>
