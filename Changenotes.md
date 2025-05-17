@@ -171,5 +171,5 @@ May 3 2025:
 May 15 2025:
 - New feature: can move ship north/south on the world map
 
-May 16 2025
+May 17 2025
 - Fixed heat net update for ships directly at the edge of the map
