@@ -184,6 +184,7 @@
 			<ArmorRating_Heat>0.75</ArmorRating_Heat>
 			<Insulation_Cold>50</Insulation_Cold>
 			<Insulation_Heat>25</Insulation_Heat>
+			<SellPriceFactor>0.35</SellPriceFactor>
 		</statBases>
 		<equippedStatOffsets>
 			<MoveSpeed>-0.04</MoveSpeed>

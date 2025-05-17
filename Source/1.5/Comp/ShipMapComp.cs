@@ -161,11 +161,14 @@ namespace SaveOurShip2
 				net.Register(comp);
 				foreach (IntVec3 cell in GenAdj.CellsOccupiedBy(comp.parent))
 				{
-					grid[comp.parent.Map.cellIndices.CellToIndex(cell)] = net.GridID;
+					if (cell.InBounds(comp.parent.Map))
+					{
+						grid[comp.parent.Map.cellIndices.CellToIndex(cell)] = net.GridID;
+					}
 				}
 				foreach (IntVec3 cell in GenAdj.CellsAdjacentCardinal(comp.parent))
 				{
-					if (grid[comp.parent.Map.cellIndices.CellToIndex(cell)] == -1)
+					if (cell.InBounds(comp.parent.Map) && grid[comp.parent.Map.cellIndices.CellToIndex(cell)] == -1)
 					{
 						foreach (Thing t in cell.GetThingList(comp.parent.Map))
 						{
