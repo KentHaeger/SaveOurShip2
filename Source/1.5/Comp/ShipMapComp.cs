@@ -2530,7 +2530,7 @@ namespace SaveOurShip2
 				// then recover again and fall off again to occupied tiles.
 				foreach (IntVec3 tile in ship.Area)
 				{
-					List<Thing> thingsAtGraveyardTile = ShipGraveyard.thingGrid.ThingsListAt(tile);
+					List<Thing> thingsAtGraveyardTile = ShipGraveyard.thingGrid.ThingsListAt(tile).ListFullCopy();
 					foreach (Thing t in thingsAtGraveyardTile)
 					{
 						t.Destroy();
