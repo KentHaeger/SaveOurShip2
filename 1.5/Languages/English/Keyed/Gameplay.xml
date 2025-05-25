@@ -30,7 +30,7 @@
 	<SoS.BurnUpCountdown>Entering atmosphere in {0}!</SoS.BurnUpCountdown>
 	<SoS.BurnUpCountdownTip>This map will enter atmosphere in {0}. Everything on it will be destroyed.</SoS.BurnUpCountdownTip>
 	<!-- combat -->
-	<SoS.CombatTooltip>Shows the enemy ship's distance from your ship, all projectiles and shuttles currently in flight.\n\nRED: laser/canon range\nGREEN: plasma range\nBLUE: railgun range.\nPURPLE: torpedo range\nSmall colored bars: inaccurate maximum range for large weapons</SoS.CombatTooltip>
+	<SoS.CombatTooltip>Shows the enemy ship's distance from your ship, all projectiles and shuttles currently in flight.\n\nRED: laser/canon range\nGREEN: plasma range\nBLUE: railgun range.\nPURPLE: torpedo range\nSmall colored bars: inaccurate maximum range for large weapons\nShuttles can be used at any distance</SoS.CombatTooltip>
 	<SoS.CombatRetreat>Retreat</SoS.CombatRetreat>
 	<SoS.CombatRetreatDesc>Try to move away from the enemy ship</SoS.CombatRetreatDesc>
 	<SoS.CombatStop>Stop</SoS.CombatStop>
