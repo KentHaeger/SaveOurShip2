@@ -173,3 +173,6 @@ May 15 2025:
 
 May 17 2025
 - Fixed heat net update for ships directly at the edge of the map
+
+May 28 2025
+- Fixed loading resources from incorrect thread error in new scenario
