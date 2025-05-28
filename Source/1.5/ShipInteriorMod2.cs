@@ -65,6 +65,9 @@ namespace SaveOurShip2
             }
 			//Needs an init delay
 			if (useSplashScreen) LongEventHandler.QueueLongEvent(() => ShipInteriorMod2.UseCustomSplashScreen(), "ShipInteriorMod2", false, null);
+			// Poke SectionLayer_Gas to inituilize it's static resources, so that when space start scenario needs to create a map, that
+			// doesn't result in those resources loading from separate thread, whiuch is an error.
+			SectionLayer_Gas dummyGasLayer = new SectionLayer_Gas(null);
 		}
 
 		//This is an intentionally dumb name, in homage to my original 2019-era patch names. What it actually does is disable vehicle wrecks spawning in space. Credit to @Thain for the runner-up name, "NotElonsTesla"
