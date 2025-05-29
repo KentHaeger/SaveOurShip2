@@ -176,3 +176,6 @@ May 17 2025
 
 May 28 2025
 - Fixed loading resources from incorrect thread error in new scenario
+
+May 29 2025
+- Fixed ship buildings coordinates when rotating ship with certain buildings: non-rotatable, but having non-default rotation, such as Neat Storage large crate
