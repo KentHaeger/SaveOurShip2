@@ -2716,8 +2716,10 @@ namespace SaveOurShip2
 				}
 				else if (spawnThing.def.rotatable == false && spawnThing.def.size.x % 2 == 0)
 					adjx -= 1;
-				rot.x = targetMap.Size.x - spawnThing.Position.z + adjx;
-				rot.z = spawnThing.Position.x;
+				IntVec3 additionalAdj = new IntVec3(adjx, 0, adjz);
+				additionalAdj = additionalAdj.RotatedBy(spawnThing.Rotation);
+				rot.x = targetMap.Size.x - spawnThing.Position.z + additionalAdj.x;
+				rot.z = spawnThing.Position.x + additionalAdj.z;
 				spawnThing.Position = rot + adjustment;
 			}
 			else if (rotb == 2)
@@ -2728,19 +2730,24 @@ namespace SaveOurShip2
 					spawnThing.Rotation = new Rot4(spawnThing.Rotation.AsByte + rotb);
 				}
 				else if (spawnThing.def.rotatable == false && spawnThing.def.size.x % 2 == 0)
-					adjx -= 1;
-				if (spawnThing.def.rotatable == false && spawnThing.def.size.x != spawnThing.def.size.z)
 				{
-					if (spawnThing.def.size.z % 2 == 0) //5x2
-						adjz -= 1;
-					else //6x3,6x7
-						adjz += 1;
+					adjx -= 1;
 				}
-				rot.x = targetMap.Size.x - spawnThing.Position.z + adjx;
-				rot.z = spawnThing.Position.x;
+				IntVec3 additionalAdj = new IntVec3(adjx, 0, adjz);
+				additionalAdj = additionalAdj.RotatedBy(spawnThing.Rotation);
+				rot.x = targetMap.Size.x - spawnThing.Position.z + additionalAdj.x;
+				rot.z = spawnThing.Position.x + additionalAdj.z;
 				IntVec3 tempPos = rot;
-				rot.x = targetMap.Size.x - tempPos.z + adjx;
-				rot.z = tempPos.x + adjz;
+				// Code repetiotion here, get adjustment again, rotate from tempPos again
+				int secondAdjx = 0;
+				if (spawnThing.def.rotatable == false && spawnThing.def.size.x % 2 == 0)
+				{
+					secondAdjx -= 1;
+				}
+				IntVec3 secondAdj = new IntVec3(adjx, 0, adjz);
+				secondAdj = secondAdj.RotatedBy(spawnThing.Rotation);
+				rot.x = targetMap.Size.x - tempPos.z + secondAdj.x;
+				rot.z = tempPos.x + secondAdj.z;
 				spawnThing.Position = rot + adjustment;
 			}
 			else
