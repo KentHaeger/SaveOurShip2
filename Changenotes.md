@@ -179,3 +179,4 @@ May 28 2025
 
 May 29 2025
 - Fixed ship buildings coordinates when rotating ship with certain buildings: non-rotatable, but having non-default rotation, such as Neat Storage large crate
+- Fixed exlposion ticking error spam caused by exlposion moved to graveyard map
