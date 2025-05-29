@@ -2682,7 +2682,11 @@ namespace SaveOurShip2
 			}
 			foreach (Section sec in sourceSec)
 			{
-				sec.RegenerateAllLayers(); //RegenerateDirtyLayers - some layers are not set dirty properly (zones), slower
+				// In transit map is not expected to have all layers set up, neither needs them
+				if (sourceMapComp.ShipMapState != ShipMapState.inTransit)
+				{
+					sec.RegenerateAllLayers(); //RegenerateDirtyLayers - some layers are not set dirty properly (zones), slower
+				}
 			}
 			List<Section> targetSec = new List<Section>();
 			foreach (IntVec3 pos in targetArea)
