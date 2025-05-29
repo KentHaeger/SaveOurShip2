@@ -181,4 +181,4 @@ May 29 2025
 - Fixed ship buildings coordinates when rotating ship with certain buildings: non-rotatable, but having non-default rotation, such as Neat Storage large crate
 - Fixed exlposion ticking error spam caused by exlposion moved to graveyard map
 - Added missing purge worldComp when starting new game. Previously, it was possible to use old world comp from old game world.
-- Fixed section layes update errors when landing ship
+- Fixed section layers update errors when landing ship
