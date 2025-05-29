@@ -182,3 +182,4 @@ May 29 2025
 - Fixed exlposion ticking error spam caused by exlposion moved to graveyard map
 - Added missing purge worldComp when starting new game. Previously, it was possible to use old world comp from old game world.
 - Fixed section layers update errors when landing ship
+- Fixed null key use error and broken world view after orbital failure
