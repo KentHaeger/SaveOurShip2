@@ -1106,7 +1106,7 @@ namespace SaveOurShip2
 		// Thread spawner
 		public static void Prefix()
 		{
-			if (!MapChangeHelper.MapIsSpace || !MapSections.ContainsKey(Find.CurrentMap)) return;
+			if (!MapChangeHelper.MapIsSpace || Find.CurrentMap == null || !MapSections.ContainsKey(Find.CurrentMap)) return;
 
 			// Calculate all the various fields we're going to be using this call before we start making threads
 			Center = GameCamera.transform.position;
