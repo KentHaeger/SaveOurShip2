@@ -2172,7 +2172,9 @@ namespace SaveOurShip2
 						}
 						else if (t is Plant plant)
 							plants.Add(plant);
-						toMoveThings.Add(t);
+						// Explosion is a thing too, but it's better not move. Otherwise, will cause erors when moving to another map
+						if (!(t is Explosion))
+							toMoveThings.Add(t);
 					}
 				}
 				foreach (Pawn p in pawns) //drop carried things, add to move list
