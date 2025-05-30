@@ -183,4 +183,4 @@ May 29 2025
 - Added missing purge worldComp when starting new game. Previously, it was possible to use old world comp from old game world.
 - Fixed section layers update errors when landing ship
 - Fixed null key use error and broken world view after orbital failure
-- Fixed enemy boading mechanoid not attacking player ship when thee are no exposed pawns/weapons
+- Fixed enemy boarding mechanoids not attacking player ship when thee are no exposed pawns/weapons
