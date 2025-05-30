@@ -184,3 +184,4 @@ May 29 2025
 - Fixed section layers update errors when landing ship
 - Fixed null key use error and broken world view after orbital failure
 - Fixed enemy boarding mechanoids not attacking player ship when thee are no exposed pawns/weapons
+- Fixed time update when travelling to a new planet
