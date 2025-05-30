@@ -216,7 +216,7 @@ namespace SaveOurShip2
 				//time
 				Current.Game.tickManager = tickManager;
 				traveltime = Rand.RangeInclusive(ModSettings_SoS.minTravelTime, ModSettings_SoS.maxTravelTime);
-				Current.Game.tickManager.DebugSetTicksGame(Current.Game.tickManager.TicksAbs + 3600000 * traveltime);
+				Current.Game.tickManager.DebugSetTicksGame(Current.Game.tickManager.TicksGame + 3600000 * traveltime);
 
 				Current.Game.playSettings = playSettings;
 				Current.Game.storyWatcher = storyWatcher;
