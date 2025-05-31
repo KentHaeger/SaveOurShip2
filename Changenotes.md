@@ -185,3 +185,4 @@ May 29 2025
 - Fixed null key use error and broken world view after orbital failure
 - Fixed enemy boarding mechanoids not attacking player ship when thee are no exposed pawns/weapons
 - Fixed time update when travelling to a new planet
+- Fixed flipping double Topedo Launchers (6x3) when flipping ship/wreck
