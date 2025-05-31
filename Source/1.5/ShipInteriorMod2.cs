@@ -2746,11 +2746,19 @@ namespace SaveOurShip2
 				IntVec3 tempPos = rot;
 				// Code repetiotion here, get adjustment again, rotate from tempPos again
 				int secondAdjx = 0;
+				int secondAdjz = 0;
 				if (spawnThing.def.rotatable == false && spawnThing.def.size.x % 2 == 0)
 				{
 					secondAdjx -= 1;
 				}
-				IntVec3 secondAdj = new IntVec3(adjx, 0, adjz);
+				if (spawnThing.def.rotatable == false && spawnThing.def.size.x != spawnThing.def.size.z)
+				{
+					if (spawnThing.def.size.z % 2 == 0) //5x2
+						secondAdjz -= 1;
+					else //6x3,6x7
+						secondAdjz += 1;
+				}
+				IntVec3 secondAdj = new IntVec3(secondAdjx, 0, secondAdjz);
 				secondAdj = secondAdj.RotatedBy(spawnThing.Rotation);
 				rot.x = targetMap.Size.x - tempPos.z + secondAdj.x;
 				rot.z = tempPos.x + secondAdj.z;
