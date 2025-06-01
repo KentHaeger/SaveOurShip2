@@ -1143,6 +1143,7 @@ namespace SaveOurShip2
 			{
 				RangeToKeep = Range;
 			}
+			InvaderLord = null;
 		}
 		private void DetermineInitialRange(bool ambush)
 		{
@@ -2889,6 +2890,13 @@ namespace SaveOurShip2
 					Messages.Message("SoS.EnemyBoardingShuttleArrived".Translate(), MessageTypeDefOf.NegativeEvent);
 					VehicleSkyfaller_Arriving vehicleSkyfaller_Arriving = (VehicleSkyfaller_Arriving)VehicleSkyfallerMaker.MakeSkyfaller(mission.shuttle.CompVehicleLauncher.Props.skyfallerIncoming, mission.shuttle);
 					GenSpawn.Spawn(vehicleSkyfaller_Arriving, vec, mapToSpawnIn, GetShuttleLandingRotation(mission.shuttle));
+					foreach (Pawn p in vehicleSkyfaller_Arriving.vehicle.AllPawnsAboard)
+					{
+						if (!(p is VehiclePawn))
+						{
+							ShipInteriorMod2.AddPawnToLord(mapToSpawnIn, p);
+						}
+					}
 				}
 			}
         }

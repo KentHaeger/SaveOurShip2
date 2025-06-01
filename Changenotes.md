@@ -176,3 +176,13 @@ May 17 2025
 
 May 28 2025
 - Fixed loading resources from incorrect thread error in new scenario
+
+June 1 2025
+- Fixed ship buildings coordinates when rotating ship with certain buildings: non-rotatable, but having non-default rotation, such as Neat Storage large crate
+- Fixed exlposion ticking error spam caused by exlposion moved to graveyard map
+- Added missing purge worldComp when starting new game. Previously, it was possible to use old world comp from old game world.
+- Fixed section layers update errors when landing ship
+- Fixed null key use error and broken world view after orbital failure
+- Fixed enemy boarding mechanoids not attacking player ship when thee are no exposed pawns/weapons
+- Fixed time update when travelling to a new planet
+- Fixed flipping double Torpedo Launchers (6x3) when flipping ship/wreck

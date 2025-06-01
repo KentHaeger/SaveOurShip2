@@ -134,7 +134,7 @@ namespace SaveOurShip2
 		{
 			base.GetSettings<ModSettings_SoS>();
 		}
-		public const string SOS2version = "GithubV2.7.16";
+		public const string SOS2version = "GithubV2.7.18";
 		public const int SOS2ReqCurrentMinor = 5;
 		// 1.5.4063 public build (4062 constant) was not enough as there is no AnomalyUtility.TryDuplicatePawn_NewTemp method to harmony patch it.
 		// Historical builds are not available, so for sure can be increased just to next build, 4066
@@ -2172,7 +2172,9 @@ namespace SaveOurShip2
 						}
 						else if (t is Plant plant)
 							plants.Add(plant);
-						toMoveThings.Add(t);
+						// Explosion is a thing too, but it's better not move. Otherwise, will cause erors when moving to another map
+						if (!(t is Explosion))
+							toMoveThings.Add(t);
 					}
 				}
 				foreach (Pawn p in pawns) //drop carried things, add to move list
@@ -2680,7 +2682,11 @@ namespace SaveOurShip2
 			}
 			foreach (Section sec in sourceSec)
 			{
-				sec.RegenerateAllLayers(); //RegenerateDirtyLayers - some layers are not set dirty properly (zones), slower
+				// In transit map is not expected to have all layers set up, neither needs them
+				if (sourceMapComp.ShipMapState != ShipMapState.inTransit)
+				{
+					sec.RegenerateAllLayers(); //RegenerateDirtyLayers - some layers are not set dirty properly (zones), slower
+				}
 			}
 			List<Section> targetSec = new List<Section>();
 			foreach (IntVec3 pos in targetArea)
@@ -2716,8 +2722,10 @@ namespace SaveOurShip2
 				}
 				else if (spawnThing.def.rotatable == false && spawnThing.def.size.x % 2 == 0)
 					adjx -= 1;
-				rot.x = targetMap.Size.x - spawnThing.Position.z + adjx;
-				rot.z = spawnThing.Position.x;
+				IntVec3 additionalAdj = new IntVec3(adjx, 0, adjz);
+				additionalAdj = additionalAdj.RotatedBy(spawnThing.Rotation);
+				rot.x = targetMap.Size.x - spawnThing.Position.z + additionalAdj.x;
+				rot.z = spawnThing.Position.x + additionalAdj.z;
 				spawnThing.Position = rot + adjustment;
 			}
 			else if (rotb == 2)
@@ -2728,19 +2736,32 @@ namespace SaveOurShip2
 					spawnThing.Rotation = new Rot4(spawnThing.Rotation.AsByte + rotb);
 				}
 				else if (spawnThing.def.rotatable == false && spawnThing.def.size.x % 2 == 0)
+				{
 					adjx -= 1;
+				}
+				IntVec3 additionalAdj = new IntVec3(adjx, 0, adjz);
+				additionalAdj = additionalAdj.RotatedBy(spawnThing.Rotation);
+				rot.x = targetMap.Size.x - spawnThing.Position.z + additionalAdj.x;
+				rot.z = spawnThing.Position.x + additionalAdj.z;
+				IntVec3 tempPos = rot;
+				// Code repetiotion here, get adjustment again, rotate from tempPos again
+				int secondAdjx = 0;
+				int secondAdjz = 0;
+				if (spawnThing.def.rotatable == false && spawnThing.def.size.x % 2 == 0)
+				{
+					secondAdjx -= 1;
+				}
 				if (spawnThing.def.rotatable == false && spawnThing.def.size.x != spawnThing.def.size.z)
 				{
 					if (spawnThing.def.size.z % 2 == 0) //5x2
-						adjz -= 1;
+						secondAdjz -= 1;
 					else //6x3,6x7
-						adjz += 1;
+						secondAdjz += 1;
 				}
-				rot.x = targetMap.Size.x - spawnThing.Position.z + adjx;
-				rot.z = spawnThing.Position.x;
-				IntVec3 tempPos = rot;
-				rot.x = targetMap.Size.x - tempPos.z + adjx;
-				rot.z = tempPos.x + adjz;
+				IntVec3 secondAdj = new IntVec3(secondAdjx, 0, secondAdjz);
+				secondAdj = secondAdj.RotatedBy(spawnThing.Rotation);
+				rot.x = targetMap.Size.x - tempPos.z + secondAdj.x;
+				rot.z = tempPos.x + secondAdj.z;
 				spawnThing.Position = rot + adjustment;
 			}
 			else

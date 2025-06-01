@@ -26,7 +26,7 @@ namespace SaveOurShip2
 
 		public ShipWorldComp(World world) : base(world)
 		{
-
+			ShipInteriorMod2.PurgeWorldComp();
 		}
 
 		private int nextShipId = 0;
