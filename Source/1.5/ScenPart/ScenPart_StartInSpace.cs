@@ -37,6 +37,19 @@ namespace SaveOurShip2
 			Scribe_Values.Look<bool>(ref damageStart, "damageStart");
 			Scribe_Values.Look<ShipStartFlags>(ref startType, "startType");
 		}
+
+		private bool ShipUnlockedAsStartup(ShipDef def, ShipStartFlags startType)
+		{
+			if (GlobalUnlockDef.AllShipsUnlocked())
+			{
+				return true;
+			}
+			else
+			{
+				return (startType == ShipStartFlags.Ship && def.startingShip == true && def.startingDungeon == false) ||
+					(startType == ShipStartFlags.Station && def.startingShip == true && def.startingDungeon == true);
+			}
+		}
 		public override void DoEditInterface(Listing_ScenEdit listing)
 		{
 			Rect scenPartRect = listing.GetScenPartRect(this, ScenPart.RowHeight * 3f);
@@ -66,7 +79,7 @@ namespace SaveOurShip2
 			if (Widgets.ButtonText(rect2, spaceShipDef.label, true, true, true))
 			{
 				List<FloatMenuOption> list = new List<FloatMenuOption>();
-				foreach (ShipDef localTd2 in DefDatabase<ShipDef>.AllDefs.Where(t => t.defName == "0" || (startType == ShipStartFlags.Ship && t.startingShip == true && t.startingDungeon == false) || (startType == ShipStartFlags.Station && t.startingShip == true && t.startingDungeon == true)).OrderBy(t => t.defName))
+				foreach (ShipDef localTd2 in DefDatabase<ShipDef>.AllDefs.Where(t => t.defName == "0" || ShipUnlockedAsStartup(t, startType)).OrderBy(t => t.defName))
 				{
 					ShipDef localTd = localTd2;
 					list.Add(new FloatMenuOption(localTd.label + " (" + localTd.defName + ")", delegate ()
