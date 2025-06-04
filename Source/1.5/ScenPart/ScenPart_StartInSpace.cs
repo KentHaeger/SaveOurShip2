@@ -51,7 +51,8 @@ namespace SaveOurShip2
 
 		private bool ShipUnlockedAsStartup(ShipDef def, ShipStartFlags startType)
 		{
-			if (GlobalUnlockDef.AllShipsUnlocked())
+			// Unlocks only apply to start on ship
+			if (GlobalUnlockDef.AllShipsUnlocked() && startType == ShipStartFlags.Ship)
 			{
 				return !excludedShipDefs.Contains(def.defName);
 			}
