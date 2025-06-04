@@ -37,6 +37,31 @@ namespace SaveOurShip2
 			Scribe_Values.Look<bool>(ref damageStart, "damageStart");
 			Scribe_Values.Look<ShipStartFlags>(ref startType, "startType");
 		}
+
+		// These ships/stations were manually picked as not interesting (not actual combat ship)/not intended to start with.
+		// To make ship list easier to use, it's huge
+		private static readonly string excludedShipsString = "AbandonedMiningStation,ContainerFurniture,ContainerLoot,ContainerMech,ContainerSecure," +
+			"ContainerSecurity,ContainerTV,DefenseInstallation,DefenseInstallation4,DefenseInstallation6,MechanoidMoonBase,SatelliteLarge2," +
+			"SatelliteLarge2Eng,SatelliteLarge2Eng2,SatelliteLarge3Eng,SatelliteLarge3Eng2,SatelliteLarge4,SatelliteSmall2,SatelliteSmall2Eng," +
+			"SatelliteSmall2Eng2,SatelliteSmall3,SatelliteSmall3Eng,SatelliteSmall3Eng2,SatelliteSmall4,SmallSatellite,StarshipBowDungeon,StartSiteAsteroidA," +
+			"StartSiteAsteroidB,StartSiteAsteroidC,StartSiteAsteroidD,StartSiteAsteroidE,StartSiteAsteroidMech,StartSiteEmpire,StartSiteMoonA,StartSiteMoonB," +
+			"StartSiteShipyard,StartSiteSkylab,StationAgri01,StationAgri01D,StationAgri02,StationAgri03,StationAgri03D,StationArchotechGarden,StationPrison01," +
+			"StationPrison02,TribalVillageIsNotAShip";
+		private static List<string> excludedShipDefs = excludedShipsString.Split(',').ToList();
+
+		private bool ShipUnlockedAsStartup(ShipDef def, ShipStartFlags startType)
+		{
+			// Unlocks only apply to start on ship
+			if (GlobalUnlockDef.AllShipsUnlocked() && startType == ShipStartFlags.Ship)
+			{
+				return !excludedShipDefs.Contains(def.defName);
+			}
+			else
+			{
+				return (startType == ShipStartFlags.Ship && def.startingShip == true && def.startingDungeon == false) ||
+					(startType == ShipStartFlags.Station && def.startingShip == true && def.startingDungeon == true);
+			}
+		}
 		public override void DoEditInterface(Listing_ScenEdit listing)
 		{
 			Rect scenPartRect = listing.GetScenPartRect(this, ScenPart.RowHeight * 3f);
@@ -66,10 +91,16 @@ namespace SaveOurShip2
 			if (Widgets.ButtonText(rect2, spaceShipDef.label, true, true, true))
 			{
 				List<FloatMenuOption> list = new List<FloatMenuOption>();
-				foreach (ShipDef localTd2 in DefDatabase<ShipDef>.AllDefs.Where(t => t.defName == "0" || (startType == ShipStartFlags.Ship && t.startingShip == true && t.startingDungeon == false) || (startType == ShipStartFlags.Station && t.startingShip == true && t.startingDungeon == true)).OrderBy(t => t.defName))
+				foreach (ShipDef localTd2 in DefDatabase<ShipDef>.AllDefs.Where(t => t.defName == "0" || ShipUnlockedAsStartup(t, startType)).OrderBy(t => t.defName))
 				{
 					ShipDef localTd = localTd2;
-					list.Add(new FloatMenuOption(localTd.label + " (" + localTd.defName + ")", delegate ()
+					string CRString = "";
+					if (GlobalUnlockDef.AllShipsUnlocked())
+					{
+						// 00A0 is non-breakable space
+						CRString = " CR:\u00A0" + localTd2.combatPoints;
+					}
+					list.Add(new FloatMenuOption(localTd.label + " (" + localTd.defName + ")" + CRString, delegate ()
 					{
 						spaceShipDef = localTd;
 					}, MenuOptionPriority.Default, null, null, 0f, null, null, true, 0));
