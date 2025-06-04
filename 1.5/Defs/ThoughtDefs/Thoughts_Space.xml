@@ -5,24 +5,28 @@
     <defName>SpaceThoughts</defName>
     <workerClass>SaveOurShip2.ThoughtWorker_SpaceThoughts</workerClass>
     <stages>
-      <li>
+      <!-- 0 -->
+	  <li>
         <label>space!</label>
         <description>It's so cooool!</description>
         <baseMoodEffect>5</baseMoodEffect>
       </li>
+	  <!-- 1 -->
       <li>
         <label>space...</label>
-        <description>So empty...So big! *shudder*</description>
+        <description>So empty...So big! *shudder*\n\nCaused by Wimp or Undergrounder trait</description>
         <baseMoodEffect>-5</baseMoodEffect>
       </li>
+	  <!-- 2 -->
       <li>
         <label>EVA</label>
         <description>Holy crap! I'm actually doing this!</description>
         <baseMoodEffect>15</baseMoodEffect>
       </li>
+	  <!-- 3 -->
       <li>
         <label>EVA</label>
-        <description>Why am I doing this?!?</description>
+        <description>Why am I doing this?!?\n\nCaused by Wimp or Undergrounder trait</description>
         <baseMoodEffect>-15</baseMoodEffect>
       </li>
     </stages>
