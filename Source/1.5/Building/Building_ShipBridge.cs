@@ -115,6 +115,33 @@ namespace SaveOurShip2
 			}
 			return true;
 		}
+
+		public Command_Action GetTargetShuttlesCommand()
+		{
+			Command_Action result = new Command_Action
+			{
+				action = delegate
+				{
+					SoundDefOf.Tick_Tiny.PlayOneShotOnCamera();
+					CameraJumper.TryJump(mapComp.ShipCombatTargetMap.Center, mapComp.ShipCombatTargetMap);
+					Targeter targeter = Find.Targeter;
+					TargetingParameters parms = new TargetingParameters();
+					parms.canTargetPawns = true;
+					parms.canTargetBuildings = true;
+					parms.canTargetLocations = true;
+					Find.Targeter.BeginTargeting(parms, (Action<LocalTargetInfo>)delegate (LocalTargetInfo x)
+					{
+						mapComp.TargetMapComp.ShuttleTarget = x.Cell;
+					}, (Pawn)null, delegate { CameraJumper.TryJump(this.Position, mapComp.ShipCombatOriginMap); });
+				},
+				defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.TargetShuttles"),
+				defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.TargetShuttlesDesc"),
+				groupable = false,
+				icon = ContentFinder<Texture2D>.Get("UI/ShuttleMissionStrafe")
+			};
+			return result;
+		}
+
 		[DebuggerHidden]
 		public override IEnumerable<Gizmo> GetGizmos()
 		{
@@ -530,27 +557,7 @@ namespace SaveOurShip2
                     }
 					if (mapComp.ShuttleMissions.Any(mission => mission.mission==ShipMapComp.ShuttleMission.STRAFE || mission.mission==ShipMapComp.ShuttleMission.BOMB))
                     {
-						Command_Action targetShuttles = new Command_Action
-						{
-							action = delegate
-							{
-								SoundDefOf.Tick_Tiny.PlayOneShotOnCamera();
-								CameraJumper.TryJump(mapComp.ShipCombatTargetMap.Center, mapComp.ShipCombatTargetMap);
-								Targeter targeter = Find.Targeter;
-								TargetingParameters parms = new TargetingParameters();
-								parms.canTargetPawns = true;
-								parms.canTargetBuildings = true;
-								parms.canTargetLocations = true;
-								Find.Targeter.BeginTargeting(parms, (Action<LocalTargetInfo>)delegate (LocalTargetInfo x)
-								{
-									mapComp.TargetMapComp.ShuttleTarget = x.Cell;
-								}, (Pawn)null, delegate { CameraJumper.TryJump(this.Position, mapComp.ShipCombatOriginMap); });
-							},
-							defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.TargetShuttles"),
-							defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.TargetShuttlesDesc"),
-							groupable = false,
-							icon = ContentFinder<Texture2D>.Get("UI/ShuttleMissionStrafe")
-						};
+						Command_Action targetShuttles = GetTargetShuttlesCommand();
 						yield return targetShuttles;
                     }
 					if (ckActive)
