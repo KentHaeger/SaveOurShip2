@@ -186,3 +186,6 @@ June 1 2025
 - Fixed enemy boarding mechanoids not attacking player ship when thee are no exposed pawns/weapons
 - Fixed time update when travelling to a new planet
 - Fixed flipping double Torpedo Launchers (6x3) when flipping ship/wreck
+
+June 3 2025
+- Added support for unlocking all ships as starting ship options in submod. Nothing to use yet, wait for submod release.
