@@ -96,7 +96,8 @@ namespace SaveOurShip2
 					string CRString = "";
 					if (GlobalUnlockDef.AllShipsUnlocked())
 					{
-						CRString = " CR: " + localTd2.combatPoints;
+						// 00A0 is non-breakable space
+						CRString = " CR:\u00A0" + localTd2.combatPoints;
 					}
 					list.Add(new FloatMenuOption(localTd.label + " (" + localTd.defName + ")" + CRString, delegate ()
 					{
