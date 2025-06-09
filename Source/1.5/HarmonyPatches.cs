@@ -4829,6 +4829,19 @@ namespace SaveOurShip2
         }
     }
 
+	[HarmonyPatch(typeof(Command_CooldownAction), "DrawBottomBar")]
+	public static class DontDrawExtraBarForVehicleTurrets
+	{
+		public static bool Prefix(Command_CooldownAction __instance)
+		{
+			if(__instance.turret.turretDef.defName == "SoS2ShuttlePlasma" || (__instance.turret.turretDef.defName == "SoS2ShuttleLaser"))
+			{
+				return false;
+			}
+			return true;
+		}
+	}
+
 	[HarmonyPatch(typeof(VehiclePawn), "ExposeData")]
 	public static class VehicleExposeData
 	{
