@@ -72,12 +72,13 @@ namespace SaveOurShip2
 				if (ShipInteriorMod2.allowedToObserve.Contains(p.def.defName))
 				{
 					observedMap = (MapParent)target.WorldObject;
+					// GeneratingMap translation key is from base game
 					LongEventHandler.QueueLongEvent(delegate
 					{
 						GetOrGenerateMapUtility.GetOrGenerateMap(target.WorldObject.Tile, target.WorldObject.def);
 						GetOrGenerateMapUtility.UnfogMapFromEdge(observedMap.Map);
 						MapHelper.TryLinkMapToWorldObject(observedMap.Map, target.Tile);
-					}, "Generating map", false, delegate { });
+					}, "GeneratingMap", false, delegate { });
 					return true;
 				}
 				else
@@ -94,7 +95,7 @@ namespace SaveOurShip2
 					observedMap = GetOrGenerateMapUtility.GetOrGenerateMap(target.Tile, Find.World.info.initialMapSize, null).Parent;
 					GetOrGenerateMapUtility.UnfogMapFromEdge(observedMap.Map);
 					((Settlement)observedMap).Name = "Observed Area "+ this.thingIDNumber;
-				}, "Generating map", false, delegate { });
+				}, "GeneratingMap", false, delegate { });
 				return true;
 			}
 			return false;
