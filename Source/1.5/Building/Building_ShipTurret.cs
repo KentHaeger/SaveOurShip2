@@ -815,7 +815,7 @@ namespace SaveOurShip2
 					yield return command_VerbTargetShip;
 				}
 			}
-			if (shipTarget.IsValid)
+			if (shipTarget.IsValid || forcedTarget.IsValid)
 			{
 				Command_Action command_Action2 = new Command_Action
 				{
@@ -828,7 +828,7 @@ namespace SaveOurShip2
 						SoundDefOf.Tick_Low.PlayOneShotOnCamera();
 					}
 				};
-				if (!shipTarget.IsValid)
+				if (!shipTarget.IsValid && !forcedTarget.IsValid)
 				{
 					command_Action2.Disable(TranslatorFormattedStringExtensions.Translate("CommandStopAttackFailNotForceAttacking"));
 				}
