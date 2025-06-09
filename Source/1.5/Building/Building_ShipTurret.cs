@@ -159,6 +159,7 @@ namespace SaveOurShip2
 				UpdateGunVerbs();
 			}
 		}
+
 		public override void OrderAttack(LocalTargetInfo targ)
 		{
 			if (holdFire)
@@ -222,6 +223,11 @@ namespace SaveOurShip2
 		public override void Tick()
 		{
 			base.Tick();
+			// Update spinal weapons reasonable rare
+			if (Find.TickManager.TicksGame % 240 == 0)
+			{
+				SpinalRecalc();
+			}
 			if (selected && !Find.Selector.IsSelected(this))
 			{
 				selected = false;
