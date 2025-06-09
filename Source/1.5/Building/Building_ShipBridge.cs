@@ -1153,7 +1153,7 @@ namespace SaveOurShip2
 			if (countdownComp != null && mapComp.ShipMapState != ShipMapState.isGraveyard && countdownComp.ForceExitAndRemoveMapCountdownActive)
 			{
 				countdownComp.ResetForceExitAndRemoveMapCountdown();
-				Messages.Message("SoS.BurnUpPlayerPrevented", this, MessageTypeDefOf.PositiveEvent);
+				Messages.Message(TranslatorFormattedStringExtensions.Translate("SoS.BurnUpPlayerPrevented"), this, MessageTypeDefOf.PositiveEvent);
 			}
 		}
 		public override void Destroy(DestroyMode mode = DestroyMode.Vanish)
