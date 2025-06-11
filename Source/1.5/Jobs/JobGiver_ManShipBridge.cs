@@ -22,6 +22,16 @@ namespace SaveOurShip2
 
 		protected override Job TryGiveJob(Pawn pawn)
 		{
+			if (pawn.Map != null && pawn.Faction != Faction.OfPlayer)
+			{
+				ShipMapComp mapComp = pawn.Map.GetComponent<ShipMapComp>();
+				if (mapComp.ShipMapState == ShipMapState.isGraveyard)
+				{
+					// No point in manning bridge by non-player pawns at graveyards (but player can man bridge there to capture trophy)
+					// Also, pathing to it affects Starship Bow performance
+					return null;
+				}
+			}
 			Predicate<Thing> validator = delegate (Thing t)
 			{
 				if (t.def.hasInteractionCell && t.def.HasComp(typeof(CompMannable)) && t.Faction == pawn.Faction && pawn.CanReserve(t))

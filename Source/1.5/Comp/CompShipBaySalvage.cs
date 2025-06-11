@@ -89,6 +89,24 @@ namespace SaveOurShip2
 					}
 					yield return stablizeShipEnemy;
 				}
+				if (!map.Parent.GetComponent<TimedForcedExitShip>().stabilized && Prefs.DevMode)
+				{
+					Command_SelectShipMap stablizeShipEnemyForever = new Command_SelectShipMap
+					{
+						salvageBay = (Building)parent,
+						sourceMap = parent.Map,
+						targetMap = map,
+						mode = SelectShipMapMode.stabilizeForever,
+						defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.SalvageStablizeForever", map.Parent.Label),
+						defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.SalvageStablizeForeverDesc", map.Parent.Label),
+						icon = ContentFinder<Texture2D>.Get("UI/StabilizeShipForever")
+					};
+					if (!nominal)
+					{
+						stablizeShipEnemyForever.Disable(TranslatorFormattedStringExtensions.Translate("SoS.SalvageDisabled"));
+					}
+					yield return stablizeShipEnemyForever;
+				}
 			}
 			Command_TargetWreck moveWreck = new Command_TargetWreck
 			{

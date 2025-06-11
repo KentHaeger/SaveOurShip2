@@ -113,8 +113,11 @@
     <Compile Include="Comp\CompCryptoCocoon.cs" />
     <Compile Include="Comp\CompShuttleAutoDoc.cs" />
     <Compile Include="Designator_RestoreHull.cs" />
+    <Compile Include="GenAdjExtension.cs" />
+    <Compile Include="GlobalUnlockDef.cs" />
     <Compile Include="HediffCompProperties_GearRepair.cs" />
     <Compile Include="HediffComp_GearRepair.cs" />
+    <Compile Include="ModIntegration.cs" />
     <Compile Include="Obs-Shuttle\TransportPodsArrivalAction_MoonBase.cs" />
     <Compile Include="Obs-Shuttle\TransportPodsArrivalAction_ShipAssault.cs" />
     <Compile Include="BiomeWorker_OuterSpace.cs" />
@@ -136,6 +139,7 @@
     <Compile Include="CompProps\CompProps_Archolife.cs" />
     <Compile Include="CompProps\CompProps_ArcholifeCosmetics.cs" />
     <Compile Include="CloakThresholdGizmo.cs" />
+    <Compile Include="SoSDebugActions.cs" />
     <Compile Include="SoSSpawnOverride.cs" />
     <Compile Include="Vehicles\CompHoverMode.cs" />
     <Compile Include="Vehicles\CompProperties_HoverMode.cs" />
@@ -383,6 +387,7 @@
     <Compile Include="Vehicles\ShuttleTakeoff.cs" />
     <Compile Include="Vehicles\SoS2TurretUpgrade.cs" />
     <Compile Include="Vehicles\SoS2VehicleTurret.cs" />
+    <Compile Include="Vehicles\SoS2VehicleUtility.cs" />
     <Compile Include="Vehicles\VehicleEventMethods.cs" />
     <Compile Include="WorldObject\MoonBase.cs" />
     <Compile Include="Obsolete\Building_Radiator.cs" />
@@ -468,6 +473,7 @@
     <Compile Include="Verb\Verb_LaunchProjectileShip.cs" />
     <Compile Include="Verb\Verb_SpaceBubblePop.cs" />
     <Compile Include="Events\WeatherEvent_VacuumDamage.cs" />
+    <Compile Include="WorldObject\WorldObjectMath.cs" />
     <Compile Include="WorldObject\WorldObjectOrbitingShip.cs" />
   </ItemGroup>
   <ItemGroup>

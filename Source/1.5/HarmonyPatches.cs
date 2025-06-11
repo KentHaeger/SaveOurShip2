@@ -1106,7 +1106,7 @@ namespace SaveOurShip2
 		// Thread spawner
 		public static void Prefix()
 		{
-			if (!MapChangeHelper.MapIsSpace || !MapSections.ContainsKey(Find.CurrentMap)) return;
+			if (!MapChangeHelper.MapIsSpace || Find.CurrentMap == null || !MapSections.ContainsKey(Find.CurrentMap)) return;
 
 			// Calculate all the various fields we're going to be using this call before we start making threads
 			Center = GameCamera.transform.position;
@@ -2168,8 +2168,17 @@ namespace SaveOurShip2
 	[HarmonyPatch(typeof(Building), "MaxItemsInCell", MethodType.Getter)]
 	public static class DisableForMoveShelf
 	{
+		static bool? adaptiveStorageEnabled = null;
 		public static int Postfix(int __result, Building __instance)
 		{
+			if (adaptiveStorageEnabled == null)
+			{
+				adaptiveStorageEnabled = ModLister.HasActiveModWithName("Adaptive Storage Framework");
+			}
+			if (adaptiveStorageEnabled ?? false)
+			{
+				return __result;
+			}
 			if (__result > 1 && ShipInteriorMod2.MoveShipFlag)
 				return 1;
 			return __result;
@@ -2272,6 +2281,19 @@ namespace SaveOurShip2
 				return false;
 			}
 			return true;
+		}
+	}
+
+	//Prevent exploiting formgels for scanning
+	[HarmonyPatch(typeof(Building_SubcoreScanner), "CanAcceptPawn")] // additional 
+	public static class PreventFormgelsScanning
+	{
+		public static void Postfix(Building_SubcoreScanner __instance, Pawn selPawn, ref AcceptanceReport __result)
+		{
+			if (__result.Accepted && ShipInteriorMod2.IsHologram(selPawn))
+			{
+				__result = TranslatorFormattedStringExtensions.Translate("SoS.CantScanFormgel");
+			}
 		}
 	}
 
@@ -2491,7 +2513,9 @@ namespace SaveOurShip2
 			}
 			else //psitech compat
 			{
-				foreach (ThingDef item in DefDatabase<ThingDef>.AllDefs.Where((ThingDef def) => def.IsCryptosleepCasket && !def.defName.StartsWith("PTPsychicTraier")))
+				foreach (ThingDef item in DefDatabase<ThingDef>.AllDefs.Where(
+					(ThingDef def) => def.IsCryptosleepCasket && !def.defName.StartsWith("PTPsychicTraier") && def != ResourceBank.ThingDefOf.CrittersleepCasket &&
+									  def != ResourceBank.ThingDefOf.CrittersleepCasketLarge))
 				{
 					Building_CryptosleepCasket building_CryptosleepCasket = (Building_CryptosleepCasket)GenClosest.ClosestThingReachable(p.PositionHeld, p.MapHeld, ThingRequest.ForDef(item), PathEndMode.InteractionCell, TraverseParms.For(traveler), 9999f, (Thing x) => !((Building_CryptosleepCasket)x).HasAnyContents && traveler.CanReserve(x, 1, -1, null, ignoreOtherReservations));
 					if (building_CryptosleepCasket != null)
@@ -2729,11 +2753,21 @@ namespace SaveOurShip2
 	[HarmonyPatch(typeof(Building_CryptosleepCasket), "GetFloatMenuOptions")]
 	public static class CantEnterCryptonest
 	{
-		public static bool Prefix(Building_CryptosleepCasket __instance)
+		public static bool Prefix(Building_CryptosleepCasket __instance, Pawn myPawn, ref IEnumerable<FloatMenuOption> __result)
 		{
 			if (__instance.def == ResourceBank.ThingDefOf.Cryptonest)
 			{
 				return false;
+			}
+			if (__instance.def == ResourceBank.ThingDefOf.CrittersleepCasket || __instance.def == ResourceBank.ThingDefOf.CrittersleepCasketLarge)
+			{
+				if (myPawn.RaceProps?.Humanlike ?? false)
+				{
+					List<FloatMenuOption> notAllowedList = new List<FloatMenuOption>();
+					notAllowedList.Add(new FloatMenuOption(TranslatorFormattedStringExtensions.Translate("SoS.CantEnterCrittersleep"), null));
+					__result = notAllowedList;
+					return false;
+				}
 			}
 			return true;
 		}
@@ -3176,6 +3210,13 @@ namespace SaveOurShip2
 					foreach (IntVec3 tile in ship.Area)
 					{
 						map.fogGrid.Unfog(tile);
+						foreach (Thing t in map.thingGrid.ThingsAt(tile))
+						{
+							if (t is Filth || (t.def.thingCategories?.Contains(ThingCategoryDefOf.StoneChunks) ?? false))
+							{
+								t.Destroy(DestroyMode.Vanish);
+							}
+						}
 					}
 				}
 			}
@@ -3198,7 +3239,21 @@ namespace SaveOurShip2
 	{
 		public static void Postfix(ref PawnKindDef kind, ref bool __result, Map map)
 		{
-			__result = DefDatabase<PawnKindDef>.AllDefs.Where((PawnKindDef x) => x.RaceProps.Animal && x.RaceProps.wildness < 0.35f && (!x.race.tradeTags?.Contains("AnimalInsectSpace") ?? true) && map.mapTemperature.SeasonAndOutdoorTemperatureAcceptableFor(x.race) && x.race.tradeTags.Contains("AnimalFarm") && !x.RaceProps.Dryad).TryRandomElementByWeight((PawnKindDef k) => 0.420000017f - k.RaceProps.wildness, out kind);
+			// Diagnostic code found SoS2_Shuttle_Superheavy_PawnKind when playing with VFE Insectid 2
+			/*IEnumerable<PawnKindDef> nullTags = DefDatabase<PawnKindDef>.AllDefs.Where((PawnKindDef x) => x.race.tradeTags == null);
+			foreach (PawnKindDef def in nullTags)
+			{
+				Log.Warning("Def with null trade tags:" + def.defName);
+			}*/
+
+			__result = DefDatabase<PawnKindDef>.AllDefs.Where(
+					(PawnKindDef x) => x.RaceProps.Animal &&
+					x.RaceProps.wildness < 0.35f &&
+					(!x.race?.tradeTags?.Contains("AnimalInsectSpace") ?? true) &&
+					map.mapTemperature.SeasonAndOutdoorTemperatureAcceptableFor(x.race) &&
+					(x.race.tradeTags?.Contains("AnimalFarm") ?? false) &&
+					!x.RaceProps.Dryad)
+				.TryRandomElementByWeight((PawnKindDef k) => 0.420000017f - k.RaceProps.wildness, out kind);
 		}
 	}
 
@@ -3734,7 +3789,7 @@ namespace SaveOurShip2
 
 		public static void Postfix(Page_ChooseIdeoPreset __instance)
 		{
-			if (ShipInteriorMod2.LoadShipFlag)
+			if (ShipInteriorMod2.LoadShipFlag && !ShipInteriorMod2.LoadShipClassicIdeoMode)
 			{
 				foreach (Faction allFaction in Find.FactionManager.AllFactions)
 				{
@@ -4006,11 +4061,16 @@ namespace SaveOurShip2
 	{
 		public static bool Prefix(IncidentWorker_GiveQuest __instance, IncidentParms parms, ref bool __result)
 		{
-			QuestScriptDef quest = __instance.def.questScriptDef ?? parms.questScriptDef;
+			// Just nulletproof null checks, in case in modded situation things are set up strangely at this point
+			QuestScriptDef quest = __instance?.def?.questScriptDef ?? parms?.questScriptDef;
+			if (quest == null)
+			{
+				return true;
+			}
 			Map spaceHome = ShipInteriorMod2.FindPlayerShipMap();
 			if (quest.defName == "EndGame_RoyalAscent")
 			{
-				IEnumerable<Map> surfacePlayerMaps = Find.Maps.Where((Map x) => (x.IsPlayerHome && x != spaceHome));
+				IEnumerable<Map> surfacePlayerMaps = Find.Maps.Where((Map x) => (x != null && x.IsPlayerHome && x != spaceHome));
 				if (!surfacePlayerMaps.Any())
 				{
 					__result = false;
@@ -4550,9 +4610,24 @@ namespace SaveOurShip2
     {
 		public static void Postfix(ref string disableReason, CompVehicleLauncher __instance, ref bool __result)
         {
-            if (disableReason != Translator.Translate("CommandLaunchGroupFailUnderRoof")) return;
+			//Temporary fix clarifying the message on shuttle unable to launch because of rotated
+			if (disableReason == "VF_CannotLaunchImmobile".Translate(__instance.Vehicle.LabelShort) && __instance.Vehicle.Angle != 0)
+			{
+				disableReason = "VF_Fix_CannotLaunchRotated".Translate(__instance.Vehicle.LabelShort);
+			}
 
-            VehiclePawn vehiclePawn = (VehiclePawn) __instance.parent;
+			// Somwehow, was allowed to launch overloaded.
+			VehiclePawn vehiclePawn = (VehiclePawn)__instance.parent;
+			float vehicleCapacity = vehiclePawn.GetStatValue(VehicleStatDefOf.CargoCapacity);
+			if (MassUtility.InventoryMass(vehiclePawn) > vehicleCapacity)
+			{
+				disableReason = "VF_CannotLaunchOverEncumbered".Translate(vehiclePawn.LabelShort);
+				__result = false;
+				return;
+			}
+
+			if (disableReason != Translator.Translate("CommandLaunchGroupFailUnderRoof")) return;
+
             Map map = vehiclePawn.Map;
             IntVec3 cell = vehiclePawn.Position;
 
@@ -4672,7 +4747,11 @@ namespace SaveOurShip2
     {
 		public static void Postfix(CompUpgradeTree __instance, UpgradeNode node, ref bool __result)
         {
-			if(node.upgrades.Where(upgrade=>upgrade is SoS2TurretUpgrade sosUpgrade && sosUpgrade.turretSlot >= __instance.Vehicle.GetStatValue(ResourceBank.VehicleStatDefOf.Hardpoints)).Count()>0)
+			if (node.upgrades == null)
+			{
+				return;
+			}
+			if (node.upgrades.Where(upgrade=>upgrade is SoS2TurretUpgrade sosUpgrade && sosUpgrade.turretSlot >= __instance.Vehicle.GetStatValue(ResourceBank.VehicleStatDefOf.Hardpoints)).Count()>0)
             {
 				__result = true;
             }
@@ -4750,22 +4829,39 @@ namespace SaveOurShip2
         }
     }
 
-    [HarmonyPatch(typeof(VehiclePawn),"PostLoad")]
-	public static class PostLoadNewComponents
-    {
-		public static List<ThingComp> CompsToAdd=new List<ThingComp>();
-
-		public static bool Prefix(VehiclePawn __instance)
-        {
-			CompsToAdd = new List<ThingComp>();
+	[HarmonyPatch(typeof(Command_CooldownAction), "DrawBottomBar")]
+	public static class DontDrawExtraBarForVehicleTurrets
+	{
+		public static bool Prefix(Command_CooldownAction __instance)
+		{
+			if(__instance.turret.turretDef.defName == "SoS2ShuttlePlasma" || (__instance.turret.turretDef.defName == "SoS2ShuttleLaser"))
+			{
+				return false;
+			}
 			return true;
 		}
+	}
 
+	[HarmonyPatch(typeof(VehiclePawn), "ExposeData")]
+	public static class VehicleExposeData
+	{
 		public static void Postfix(VehiclePawn __instance)
-        {
-			foreach (ThingComp comp in CompsToAdd)
+		{
+			if (Scribe.mode == LoadSaveMode.LoadingVars)
 			{
-				__instance.AddComp(comp);
+				float heatStored = 0f;
+				Scribe_Values.Look<float>(ref heatStored, CompVehicleHeatNet.storedHeatLabel, 0f);
+				if (heatStored != 0f)
+				{
+					CompVehicleHeatNet net = __instance.GetComp<CompVehicleHeatNet>();
+					if (net == null)
+					{
+						net = new CompVehicleHeatNet();
+						net.parent = __instance;
+						__instance.AllComps.Add(net);
+					}
+					net.heatStoredLoaded = heatStored;
+				}
 			}
 		}
 	}
@@ -4813,6 +4909,17 @@ namespace SaveOurShip2
 		}
 	}
 
+	[HarmonyPatch(typeof(VehicleAI), "AITick")]
+	public static class NoAITick
+	{
+		// Due to NRE because of type issues, have to disable this for upgradeable shuttles.
+		public static bool Prefix(VehicleAI __instance)
+		{
+			VehiclePawn pawn = __instance.vehicle;
+			return !SoS2VehicleUtility.IsUpgradeableShuttle(pawn);
+		}
+	}
+
 	// Additional null checks when loading
 	[HarmonyPatch(typeof(WorldHandling), "AllAerialVehicles_AliveOrDead")]
 	public static class AllAerialVehiclesOnLoad
@@ -4837,21 +4944,8 @@ namespace SaveOurShip2
 				//__result.AddRange(aerialVehicle.vehicle.AllPawnsAboard);
 			}
 			return false;
-    }
-  }
-  
-	[HarmonyPatch(typeof(CompVehicleLauncher), "CanLaunchWithCargoCapacity")]
-	public static class RotatedLaunchWarningFix
-	{
-		//Temporary fix clarifying the message on shuttle unable to launch
-		public static void Postfix(CompVehicleLauncher __instance, ref string disableReason)
-		{
-			if( disableReason == "VF_CannotLaunchImmobile".Translate(__instance.Vehicle.LabelShort) && __instance.Vehicle.Angle != 0)
-			{
-				disableReason = "VF_Fix_CannotLaunchRotated".Translate(__instance.Vehicle.LabelShort);
-      }
-    }
-  }
+		}
+	}
   
 	[HarmonyPatch(typeof(CompUpgradeTree), "ValidateListers")]
 	public static class DisableValidateListersOffMap
@@ -5013,20 +5107,23 @@ namespace SaveOurShip2
 			}
 			if (Vehicle.CompUpgradeTree.Disabled(__instance.SelectedNode))
 			{
-				if (__instance.SelectedNode.upgrades.Where(upgrade => upgrade is SoS2TurretUpgrade sosUpgrade && sosUpgrade.turretSlot >= __instance.Vehicle.GetStatValue(ResourceBank.VehicleStatDefOf.Hardpoints)).Count() > 0)
+				if (__instance.SelectedNode.upgrades != null && __instance.SelectedNode.upgrades.Where(upgrade => upgrade is SoS2TurretUpgrade sosUpgrade && sosUpgrade.turretSlot >= __instance.Vehicle.GetStatValue(ResourceBank.VehicleStatDefOf.Hardpoints)).Count() > 0)
 				{
 					Messages.Message(Translator.Translate("SoS.NoHardpoints"), MessageTypeDefOf.RejectInput, false);
 					return false;
 				}
 				float CargoMod = 0;
-				foreach (Upgrade upgrade in __instance.SelectedNode.upgrades)
+				if (__instance.SelectedNode.upgrades != null)
 				{
-					if (upgrade is StatUpgrade stat && stat.vehicleStats != null)
+					foreach (Upgrade upgrade in __instance.SelectedNode.upgrades)
 					{
-						foreach (StatUpgrade.VehicleStatDefUpgrade value in stat.vehicleStats)
+						if (upgrade is StatUpgrade stat && stat.vehicleStats != null)
 						{
-							if (value.def == VehicleStatDefOf.CargoCapacity)
-								CargoMod += value.value;
+							foreach (StatUpgrade.VehicleStatDefUpgrade value in stat.vehicleStats)
+							{
+								if (value.def == VehicleStatDefOf.CargoCapacity)
+									CargoMod += value.value;
+							}
 						}
 					}
 				}
@@ -5095,7 +5192,41 @@ namespace SaveOurShip2
 			if (ShipInteriorMod2.IsShuttle(__instance) && __instance.Faction != Faction.OfPlayer)
 				__instance.ignition.Drafted = false;
         }
-    }
+	}
+
+	[HarmonyPatch(typeof(ThingOwnerUtility), "TryGetFixedTemperature")]
+	public static class WarmInsideShuttles
+	{
+		public static void Postfix(IThingHolder holder, Thing forThing, ref float temperature, ref bool __result)
+		{
+			if (holder is VehiclePawn vehicle && forThing is Pawn && SoS2VehicleUtility.IsShuttle(vehicle))
+			{
+				temperature = 21f;
+				__result = true;
+			}
+		}
+	}
+
+	// Anomaly section
+	[HarmonyPatch(typeof(IncidentWorker_SightstealerSwarm), "TryExecuteWorker")]
+	public static class NoSightstealerSwarmInSpace
+	{
+		public static bool Prefix(IncidentParms parms)
+		{
+			Map map = (Map)parms.target;
+			return !map.IsSpace();
+		}
+	}
+
+	[HarmonyPatch(typeof(IncidentWorker_SightstealerArrival), "TryExecuteWorker")]
+	public static class NoSightstealerArrivalInSpace
+	{
+		public static bool Prefix(IncidentParms parms)
+		{
+			Map map = (Map)parms.target;
+			return !map.IsSpace();
+		}
+	}
 
 	[HarmonyPatch(typeof(Building_HoldingPlatform), "EjectContents")]
 	public static class EntitiesTravelWithShip
@@ -5206,7 +5337,11 @@ namespace SaveOurShip2
 			{
 				return true;
 			}
-			bool isSleepingAndVisible = parms.bed != null && !parms.bed.def.building.bed_showSleeperBody;
+			if (parms.bed == null)
+			{
+				return true;
+			}
+			bool isSleepingAndVisible = !parms.bed.def.building.bed_showSleeperBody;
 			if (!isSleepingAndVisible || !parms.bed.Map.IsSpace())
 			{
 				return true;
@@ -5314,6 +5449,129 @@ namespace SaveOurShip2
 				return false;
 			}
 			return true;
+		}
+	}
+
+	[HarmonyPatch(typeof(Placeworker_AttachedToWall), "AllowsPlacing")]
+	public static class AllowWallAttachmentsOnVentsAndSolarPanels
+	{
+		public static void Postfix(ref AcceptanceReport __result, BuildableDef checkingDef, IntVec3 loc, Rot4 rot, Map map)
+		{
+			// Don't override out of bouds and in fully occupied tile cases
+			if (__result == false && __result.Reason == "")
+			{
+				return;
+			}
+			List<Thing> thingList = (loc + GenAdj.CardinalDirections[rot.AsInt]).GetThingList(map);
+			foreach (Thing t in thingList)
+			{
+				if (t is Building_ShipVent)
+				{
+					// "active" side of vent is opposite
+					__result = t.Rotation != rot.Opposite;
+					return;
+				}
+				if (t.def.defName == "ShipInside_SolarGenerator" || t.def.defName == "ShipInside_SolarGeneratorMech" || t.def.defName == "ShipInside_SolarGeneratorArchotech")
+				{
+					__result = t.Rotation != rot;
+					return;
+				}
+			}
+		}
+	}
+
+	// Cached mental break thresholds, becuse they negatively affect performance at Starship Bow with extreme psychic droners
+	// Those values change super-rarely and even never change on many pawns in Vanilla, so can be safely cached for a short time period
+	[HarmonyPatch(typeof(MentalBreaker), "get_BreakThresholdExtreme")]
+	public static class CacheMentalBreakThresholdExtereme
+	{
+		public static bool Prefix(MentalBreaker __instance, ref float __result)
+		{
+			ShipWorldComp worldComp = Find.World.GetComponent<ShipWorldComp>();
+			if (worldComp.ExtremeBreakThresholds.ContainsKey(__instance.pawn) && Find.TickManager.TicksGame % 60 != 0)
+			{
+				__result = worldComp.ExtremeBreakThresholds[__instance.pawn];
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+
+		public static void Postfix(MentalBreaker __instance, ref float __result)
+		{
+			ShipWorldComp worldComp = Find.World.GetComponent<ShipWorldComp>();
+			if (worldComp.ExtremeBreakThresholds.ContainsKey(__instance.pawn))
+			{
+				worldComp.ExtremeBreakThresholds[__instance.pawn] = __result;
+			}
+			else
+			{
+				worldComp.ExtremeBreakThresholds.Add(__instance.pawn, __result);
+			}
+		}
+	}
+
+	[HarmonyPatch(typeof(MentalBreaker), "get_BreakThresholdMajor")]
+	public static class CacheMentalBreakThresholdMajor
+	{
+		public static bool Prefix(MentalBreaker __instance, ref float __result)
+		{
+			ShipWorldComp worldComp = Find.World.GetComponent<ShipWorldComp>();
+			if (worldComp.MajorBreakThresholds.ContainsKey(__instance.pawn) && Find.TickManager.TicksGame % 60 != 0)
+			{
+				__result = worldComp.MajorBreakThresholds[__instance.pawn];
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+
+		public static void Postfix(MentalBreaker __instance, ref float __result)
+		{
+			ShipWorldComp worldComp = Find.World.GetComponent<ShipWorldComp>();
+			if (worldComp.MajorBreakThresholds.ContainsKey(__instance.pawn))
+			{
+				worldComp.MajorBreakThresholds[__instance.pawn] = __result;
+			}
+			else
+			{
+				worldComp.MajorBreakThresholds.Add(__instance.pawn, __result);
+			}
+		}
+	}
+
+	[HarmonyPatch(typeof(MentalBreaker), "get_BreakThresholdMinor")]
+	public static class CacheMentalBreakThresholdMinor
+	{
+		public static bool Prefix(MentalBreaker __instance, ref float __result)
+		{
+			ShipWorldComp worldComp = Find.World.GetComponent<ShipWorldComp>();
+			if (worldComp.MinorBreakThresholds.ContainsKey(__instance.pawn) && Find.TickManager.TicksGame % 60 != 0)
+			{
+				__result = worldComp.MinorBreakThresholds[__instance.pawn];
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+
+		public static void Postfix(MentalBreaker __instance, ref float __result)
+		{
+			ShipWorldComp worldComp = Find.World.GetComponent<ShipWorldComp>();
+			if (worldComp.MinorBreakThresholds.ContainsKey(__instance.pawn))
+			{
+				worldComp.MinorBreakThresholds[__instance.pawn] = __result;
+			}
+			else
+			{
+				worldComp.MinorBreakThresholds.Add(__instance.pawn, __result);
+			}
 		}
 	}
 

@@ -8,6 +8,7 @@ using RimWorld.Planet;
 using HarmonyLib;
 using RimWorld;
 using Vehicles;
+using SaveOurShip2;
 using SaveOurShip2.Vehicles;
 
 namespace SaveOurShip2
@@ -130,15 +131,16 @@ namespace SaveOurShip2
 						podsinrange.Add(obj);
 					}
 				}*/
+				IEnumerable<VehiclePawn> enemyShuttlesInRange = mapComp.TargetMapComp.ShuttlesInRange.Where(shuttle => shuttle.Faction != turret.Faction);
 				if (mapComp.TargetMapComp.TorpsInRange.Any() && Rand.Chance(0.1f))
 				{
 					ShipCombatProjectile projtr = mapComp.TargetMapComp.TorpsInRange.RandomElement();
 					mapComp.TargetMapComp.Projectiles.Remove(projtr);
 					mapComp.TargetMapComp.TorpsInRange.Remove(projtr);
 				}
-				else if(mapComp.TargetMapComp.ShuttlesInRange.Where(shuttle=>shuttle.Faction!=turret.Faction).Any())
+				else if(enemyShuttlesInRange.Any())
                 {
-					VehiclePawn shuttleHit = mapComp.TargetMapComp.ShuttlesInRange.Where(shuttle => shuttle.Faction != turret.Faction).RandomElement();
+					VehiclePawn shuttleHit = enemyShuttlesInRange.First();
 					int? targetIntellectualSkill = (shuttleHit.FindPawnWithBestStat(StatDefOf.ResearchSpeed)?.skills?.GetSkill(SkillDefOf.Intellectual)?.Level);
 					int skill = 0;
 					if (targetIntellectualSkill.HasValue)
@@ -168,7 +170,15 @@ namespace SaveOurShip2
 									Messages.Message(TranslatorFormattedStringExtensions.Translate("SoS.CombatPodDestroyedPlayer"), null, MessageTypeDefOf.NegativeEvent);
 								else
 									Messages.Message(TranslatorFormattedStringExtensions.Translate("SoS.CombatPodDestroyedEnemy"), null, MessageTypeDefOf.PositiveEvent);
-								mapComp.TargetMapComp.DeRegisterShuttleMission(mapComp.TargetMapComp.ShuttleMissions.Where(mission => mission.shuttle == shuttleHit).First(), true);
+								ShipMapComp.ShuttleMissionData shuttleMission = mapComp.TargetMapComp.ShuttleMissions.Where(mission => mission.shuttle == shuttleHit).FirstOrDefault(null);
+								if (shuttleMission != null)
+								{
+									mapComp.TargetMapComp.DeRegisterShuttleMission(shuttleMission, true);
+								}
+								else
+								{
+									Log.Warning("Failed to get mission to de-register for shuttle:" + shuttleHit);
+								}
 								foreach (Pawn pawn in shuttleHit.AllPawnsAboard.ListFullCopy())
 								{
 									Log.Message("Pawn " + pawn + " is having a real bad day.");
@@ -191,15 +201,22 @@ namespace SaveOurShip2
 							}
 							else if(shuttleHit.statHandler.GetStatValue(VehicleStatDefOf.BodyIntegrity) <= ((CompShuttleLauncher)shuttleHit.CompVehicleLauncher).retreatAtHealth)
                             {
-                                ShipMapComp.ShuttleMissionData missionData = mapComp.TargetMapComp.ShuttleMissions.Where(mission => mission.shuttle == shuttleHit).First();
-								if (missionData.mission != ShipMapComp.ShuttleMission.RETURN)
+                                ShipMapComp.ShuttleMissionData missionData = mapComp.TargetMapComp.ShuttleMissions.Where(mission => mission.shuttle == shuttleHit).FirstOrDefault(null);
+								if (missionData != null)
 								{
-									if (shuttleHit.Faction == Faction.OfPlayer)
-										Messages.Message("SoS.ShuttleRetreat".Translate(), MessageTypeDefOf.NegativeEvent);
-									else
-										Messages.Message("SoS.EnemyShuttleRetreat".Translate(), MessageTypeDefOf.PositiveEvent);
-                                }
-								missionData.mission = ShipMapComp.ShuttleMission.RETURN;
+									if (missionData.mission != ShipMapComp.ShuttleMission.RETURN)
+									{
+										if (shuttleHit.Faction == Faction.OfPlayer)
+											Messages.Message("SoS.ShuttleRetreat".Translate(), MessageTypeDefOf.NegativeEvent);
+										else
+											Messages.Message("SoS.EnemyShuttleRetreat".Translate(), MessageTypeDefOf.PositiveEvent);
+									}
+									missionData.mission = ShipMapComp.ShuttleMission.RETURN;
+								}
+								else
+								{
+									Log.Warning("Failed get shuttle mission for setting it to RETURN for shuttle:" + shuttleHit);
+								}
 							}
 						}
 					}

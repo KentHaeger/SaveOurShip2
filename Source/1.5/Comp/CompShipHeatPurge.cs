@@ -98,15 +98,33 @@ namespace SaveOurShip2
 					cloak.active = false;
 				}
 			}
+			// If still under active shield after disabling shields in own heat net, it means covered by shield from other net/other ship
+			// Won't disable that, because player might not understand thing with other net and may not turn other net shields back on.
+			// So, just warn instead
+			CompShipHeatShield coveringShield = GetActiveShieldCovering();
+			if (coveringShield != null)
+			{
+				Messages.Message(TranslatorFormattedStringExtensions.Translate("SoS.CantPurge"), coveringShield.parent, MessageTypeDefOf.NegativeEvent);
+			}
 		}
-		public bool CanPurge()
+
+		public CompShipHeatShield GetActiveShieldCovering()
 		{
 			foreach (CompShipHeatShield shield in mapComp.Shields)
 			{
 				if (!shield.shutDown && (parent.DrawPos - shield.parent.DrawPos).magnitude < shield.radius)
 				{
-					return false;
+					return shield;
 				}
+			}
+			return null;
+		}
+
+		public bool CanPurge()
+		{
+			if (GetActiveShieldCovering() != null)
+			{
+				return false;
 			}
 			if (mapComp.ShipMapState != ShipMapState.inCombat)
 			{

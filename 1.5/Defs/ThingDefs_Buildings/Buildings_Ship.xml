@@ -75,6 +75,7 @@
 				<texPath>Things/Building/Linked/Wall_Blueprint_Atlas</texPath>
 			</blueprintGraphicData>
 			<paintable>true</paintable>
+			<supportsWallAttachments>true</supportsWallAttachments>
 		</building>
 		<costList>
 			<Steel>14</Steel>
@@ -341,6 +342,7 @@
 				<texPath>Things/Building/Linked/Wall_Blueprint_Atlas</texPath>
 			</blueprintGraphicData>
 			<paintable>true</paintable>
+			<supportsWallAttachments>true</supportsWallAttachments>
 		</building>
 		<comps>
 			<li Class="SaveOurShip2.CompProps_ShipCachePart">
@@ -472,6 +474,7 @@
 				<texPath>Things/Building/Linked/Wall_Blueprint_Atlas</texPath>
 			</blueprintGraphicData>
 			<paintable>true</paintable>
+			<supportsWallAttachments>true</supportsWallAttachments>
 		</building>
 	</ThingDef>
 	<DesignatorDropdownGroupDef>
@@ -959,6 +962,8 @@
 				<thrust>1</thrust>
 				<fuelUse>1</fuelUse>
 				<takeOff>true</takeOff>
+				<killZoneLength>7</killZoneLength>
+				<killZoneWidth>4</killZoneWidth>
 				<soundWorking>ShipEngineFuel</soundWorking>
 			</li>
 			<li Class="Rimefeller.CompProperties_Pipe" MayRequire="Dubwise.Rimefeller"/>
@@ -1034,6 +1039,8 @@
 				<thrust>2</thrust>
 				<fuelUse>2</fuelUse>
 				<takeOff>true</takeOff>
+				<killZoneLength>7</killZoneLength>
+				<killZoneWidth>5</killZoneWidth>
 				<soundWorking>ShipEngineFuel</soundWorking>
 			</li>
 			<li Class="Rimefeller.CompProperties_Pipe" MayRequire="Dubwise.Rimefeller"/>
@@ -1111,6 +1118,8 @@
 				<thrust>6</thrust>
 				<fuelUse>3</fuelUse>
 				<takeOff>true</takeOff>
+				<killZoneLength>15</killZoneLength>
+				<killZoneWidth>9</killZoneWidth>
 				<soundWorking>ShipEngineFuel</soundWorking>
 			</li>
 		</comps>
@@ -1138,6 +1147,7 @@
 			<graphicClass>Graphic_Multi</graphicClass>
 			<drawSize>(2.3,2.3)</drawSize>
 		</graphicData>
+		<uiIconScale>0.55</uiIconScale>
 		<altitudeLayer>BuildingOnTop</altitudeLayer>
 		<researchPrerequisites>
 			<li>ShipEngine</li>
@@ -1627,6 +1637,7 @@
 			<graphicClass>Graphic_Multi</graphicClass>
 			<drawSize>(1,1)</drawSize>
 		</graphicData>
+		<uiIconScale>0.65</uiIconScale>
 		<researchPrerequisites>
 			<li>ShipSensorCluster</li>
 		</researchPrerequisites>
@@ -1919,8 +1930,8 @@
 		<fillPercent>0.40</fillPercent>
 		<tickerType>Normal</tickerType>
 		<statBases>
-			<MaxHitPoints>100</MaxHitPoints>
-			<WorkToBuild>800</WorkToBuild>
+			<MaxHitPoints>200</MaxHitPoints>
+			<WorkToBuild>4000</WorkToBuild>
 			<Mass>200</Mass>
 			<Flammability>0</Flammability>
 		</statBases>
@@ -2500,6 +2511,7 @@
 		<designatorDropdown>Ship_Cryptos</designatorDropdown>
 		<description>A cryptosleep casket with multiple built-in timers and contingencies. Can be opened without manual intervention. In the event of catastrophic ship failure, it can also act as an escape pod.\n\nIt would be a good idea to have at least one of these aboard any starship.</description>
 		<thingClass>Building_CryptosleepCasket</thingClass>
+		<containedPawnsSelectable>true</containedPawnsSelectable>
 		<graphicData>
 			<texPath>Things/Building/Ship/AutoSleepPod</texPath>
 			<graphicClass>Graphic_MultiOnOff</graphicClass>

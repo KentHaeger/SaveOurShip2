@@ -2,17 +2,27 @@
 <LanguageData>
 	<!-- All new tags should start with SoS. -->
 	
+	<!-- scenario selection-->
+	<SoS.NoShipsToLoad>There are no ships to load. Load ship scenario is a new game plus, when some ship was launched to a new planet from existing game, it can be loaded here.\nTo start playing in space normally, use Derelict Ship or Space Station scenarios instead.</SoS.NoShipsToLoad>
 	<!-- world/orbit -->
-	<SoS.MoveWest>Short burn west</SoS.MoveWest>
+	<SoS.MoveWest>Burn west</SoS.MoveWest>
 	<SoS.MoveWestDesc>Move the ship westward.</SoS.MoveWestDesc>
-	<SoS.MoveEast>Short burn east</SoS.MoveEast>
+	<SoS.MoveEast>Burn east</SoS.MoveEast>
 	<SoS.MoveEastDesc>Move the ship eastward.</SoS.MoveEastDesc>
+	<SoS.MoveNorth>Burn north</SoS.MoveNorth>
+	<SoS.MoveNorthDesc>Move the ship northward.</SoS.MoveNorthDesc>
+	<SoS.MoveSouth>Burn south</SoS.MoveSouth>
+	<SoS.MoveSouthDesc>Move the ship southward.</SoS.MoveSouthDesc>
 	<SoS.MoveStop>Stop orbital movement</SoS.MoveStop>
 	<SoS.MoveStopDesc>Reverse burn into geosynchronous orbit.</SoS.MoveStopDesc>
 	<SoS.AbandonHome>Abandon ship</SoS.AbandonHome>
 	<SoS.AbandonHomeDesc>Abandon your ship - any colonists on it will be lost!</SoS.AbandonHomeDesc>
 	<SoS.LeaveGraveyard>Abandon wreck</SoS.LeaveGraveyard>
 	<SoS.LeaveGraveyardDesc>Leave the wreck to its fate.</SoS.LeaveGraveyardDesc>
+	<!-- Verse formating will spread name over several {n} fields, so got to use 2 strings -->
+	<SoS.LeaveGraveyardConfirmation1>Are you sure you want to abandon wreck</SoS.LeaveGraveyardConfirmation1>
+	<SoS.LeaveGraveyardConfirmation2>with {0} buildings?</SoS.LeaveGraveyardConfirmation2>
+	<SoS.LeaveGraveyardConfirmationColonistsParagraph>Warning! There are {0} colonists at this wreck, they will be abandoned too.</SoS.LeaveGraveyardConfirmationColonistsParagraph>
 	<SoS.ForceExitAndRemoveMapCountdown>Entering atmosphere in {0}.</SoS.ForceExitAndRemoveMapCountdown>
 	<SoS.BurnUpPlayer>Orbit failure!</SoS.BurnUpPlayer>
 	<SoS.BurnUpPlayerDesc>With the loss of the last ship bridge this map can no longer maintain its orbit and will enter the atmosphere in {0} days! \n\nEverything on it will be destroyed! Build a new ship bridge to prevent this.</SoS.BurnUpPlayerDesc>
@@ -20,7 +30,7 @@
 	<SoS.BurnUpCountdown>Entering atmosphere in {0}!</SoS.BurnUpCountdown>
 	<SoS.BurnUpCountdownTip>This map will enter atmosphere in {0}. Everything on it will be destroyed.</SoS.BurnUpCountdownTip>
 	<!-- combat -->
-	<SoS.CombatTooltip>Shows the enemy ship's distance from your ship, all projectiles and shuttles currently in flight.\n\nRED: laser/canon range\nGREEN: plasma range\nBLUE: railgun range.\nPURPLE: torpedo range\nSmall colored bars: inaccurate maximum range for large weapons</SoS.CombatTooltip>
+	<SoS.CombatTooltip>Shows the enemy ship's distance from your ship, all projectiles and shuttles currently in flight.\n\nRED: laser/canon range\nGREEN: plasma range\nBLUE: railgun range.\nPURPLE: torpedo range\nSmall colored bars: inaccurate maximum range for large weapons\nShuttles can be used at any distance</SoS.CombatTooltip>
 	<SoS.CombatRetreat>Retreat</SoS.CombatRetreat>
 	<SoS.CombatRetreatDesc>Try to move away from the enemy ship</SoS.CombatRetreatDesc>
 	<SoS.CombatStop>Stop</SoS.CombatStop>
@@ -83,6 +93,8 @@
 	<SoS.SalvageStablizeFuel>Stabilization requires {0} fuel!</SoS.SalvageStablizeFuel>
 	<SoS.SalvageStablizeDesc>Stabilize the orbit of {0}. This requires enough salvage bays and will consume fuel in your engines.</SoS.SalvageStablizeDesc>
 	<SoS.SalvageStablizeConfirm>Stabilize the orbit of {0}. This requires enough salvage bays and will consume {1} chemfuel equivalent in your engines.</SoS.SalvageStablizeConfirm>
+	<SoS.SalvageStablizeForever>Stabilize {0} forever</SoS.SalvageStablizeForever>
+	<SoS.SalvageStablizeForeverDesc>Stabilize the orbit of {0} for a really long time. Normally, derelicts and defeated enemy ship maps are time-limited, but for anyone wanting to build a space station or something like that, this option is provided.</SoS.SalvageStablizeForeverDesc>
 	<SoS.SalvageDisabled>Cannot salvage: in ship battle, or enemy pawns are present!</SoS.SalvageDisabled>
 	<SoS.SalvageAbandonConfirm>Are you sure you want to discard the target?\nEverything connected to or on it will burn up in the atmosphere!</SoS.SalvageAbandonConfirm>
 	<SoS.SalvageBridge>Can not move intact ships with the salvage bay, capture or destroy the bridge.</SoS.SalvageBridge>
@@ -131,6 +143,7 @@
 	<SoS.PirateAttacksPayDesc>The pirates have decided that your payment was not good enough and are beginning their attack.</SoS.PirateAttacksPayDesc>
 	<SoS.PirateAttacksWait>Pirates attack</SoS.PirateAttacksWait>
 	<SoS.PirateAttacksWaitDesc>The pirates have decided they will wait no longer and are beginning their attack.</SoS.PirateAttacksWaitDesc>
+	<SoS.PirateImmediateAttack>A pirate ship is attacking you. They might want talk before shooting, but couldn't do that to a ship without powered comms console.</SoS.PirateImmediateAttack>
 	<SelectEverything>Select Everything</SelectEverything>
 	<SelectEverythingDesc>Select everything.</SelectEverythingDesc>
 	<!-- bridge -->
@@ -174,7 +187,7 @@
 	<SoS.MoveFail>Move failed!</SoS.MoveFail>
 	<SoS.MoveFailDesc>Ship move failed! Recheck your ship and reload if things are out of place or broken. This is most often caused by modded buildings that do not despawn properly.\nFailed by moving: {0}</SoS.MoveFailDesc>
 	<SoS.MoveFailPilot>Ship requires a pilot to move.</SoS.MoveFailPilot>
-	<SoS.MoveFailRCS>Not enough RCS thrusters to move ship, required {0}</SoS.MoveFailRCS>
+	<SoS.MoveFailRCS>At least one RCS thruster is required to move ship</SoS.MoveFailRCS>
 	<SoS.MoveFailFuel>Not enough fuel to move ship, required {0} fuel</SoS.MoveFailFuel>
 	<SoS.MoveFailFaction>Ship from another faction next to target area. Move aborted.</SoS.MoveFailFaction>
 	<SoS.MoveFailCombat>Main ship map is in battle.</SoS.MoveFailCombat>
@@ -183,6 +196,8 @@
 	<SoS.Rebuild>Rebuild ship parts</SoS.Rebuild>
 	<SoS.RebuildDesc>Places blueprints for destroyed buildings on this ship.</SoS.RebuildDesc>
 	<SoS.BridgeConnectTooltip>Bridge is not connected! Make sure this is hooked up to both heat and power networks.</SoS.BridgeConnectTooltip>
+	<SoS.BridgeSelectOuterdoors>Select outer airlocks</SoS.BridgeSelectOuterdoors>
+	<SoS.BridgeSelectOuterdoorsDesc>Select all outer airlocks for the current ship</SoS.BridgeSelectOuterdoorsDesc>
 	<!-- story -->
 	<SoS.QuestPillarA>Attack KSS Horizon</SoS.QuestPillarA>
 	<SoS.QuestPillarADesc>Attempt to engage the ancient terraforming station and recover an archotech pillar</SoS.QuestPillarADesc>
@@ -217,6 +232,7 @@
 	<SoS.HeatWithPowerDesc>Use power for heating when not enough heat is present in the network.</SoS.HeatWithPowerDesc>
 	<SoS.PurgeHeat>Emergency heat purge</SoS.PurgeHeat>
 	<SoS.PurgeHeatDesc>Eject molten silver into space to rapidly lower your ship's stored heat.\n\nThis will cause your shields to drop!</SoS.PurgeHeatDesc>
+	<SoS.CantPurge>Can't purge heat because covered by active shield from other ship or heat net. Consider disabling it manually.</SoS.CantPurge>
 	<SoS.HeatPurge>Vent coolant</SoS.HeatPurge>
 	<SoS.HeatPurgeDesc>Begin venting coolant from heatsinks. All shields, weapons, and cloaks on this heat network will shut down, and heatsinks will vent heat five times as quickly.\n\nThis process depletes coolant and reduces the overall capacity of the heat network, and cannot be canceled once it has begun. Outside of combat, depleted capacity will slowly recover.</SoS.HeatPurgeDesc>
 	<SoS.HeatPurgeVenting>Already venting</SoS.HeatPurgeVenting>
@@ -263,6 +279,8 @@
 	<SoS.ReactorOverdrive2Desc>Greatly increase reactor output, at the cost of increased heat production and fuel consumption. Increases instability, risking fire and radiation leaks.</SoS.ReactorOverdrive2Desc>
 	<SoS.ReactorOverdrive3>Overdrive III</SoS.ReactorOverdrive3>
 	<SoS.ReactorOverdrive3Desc>Vastly increase reactor output, at the cost of increased heat production and fuel consumption. Increases instability, risking fire and radiation leaks.</SoS.ReactorOverdrive3Desc>
+	<!-- caskets -->
+	<SoS.CantEnterCrittersleep>Humanlikes aren't allowed to use crittersleep caskets.</SoS.CantEnterCrittersleep>
 	<!-- blueprints -->
 	<SoS.BlueprintDisabled>Requires starflight basics research</SoS.BlueprintDisabled>
 	<SoS.BlueprintFailed>Blueprint placement failed! Area must support heavy construction and be clear of non-owned objects and mountain roof.</SoS.BlueprintFailed>
@@ -302,6 +320,7 @@
 	<SoS.EquipMeleeDesc>Equip this hologram with a blade and an energy shield</SoS.EquipMeleeDesc>
 	<SoS.ResurrectBrain>Resurrect</SoS.ResurrectBrain>
 	<SoS.ResurrectBrainDesc>Use a resurrector mech serum to construct a new body for this consciousness</SoS.ResurrectBrainDesc>
+	<SoS.CantScanFormgel>Formgel is not suitable for scanning</SoS.CantScanFormgel>
 	<SoS.ArchoGift>Unlocks archotech gifts</SoS.ArchoGift>
 	<SoS.ArchotechGoodwillPlus>Psychically increase goodwill (+10, costs {0} field strength)</SoS.ArchotechGoodwillPlus>
 	<SoS.ArchotechGoodwillMinus>Psychically decrease goodwill (-10, costs {0} field strength)</SoS.ArchotechGoodwillMinus>

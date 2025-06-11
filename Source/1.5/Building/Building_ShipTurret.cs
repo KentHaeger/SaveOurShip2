@@ -159,6 +159,7 @@ namespace SaveOurShip2
 				UpdateGunVerbs();
 			}
 		}
+
 		public override void OrderAttack(LocalTargetInfo targ)
 		{
 			if (holdFire)
@@ -222,6 +223,11 @@ namespace SaveOurShip2
 		public override void Tick()
 		{
 			base.Tick();
+			// Update spinal weapons reasonable rare
+			if (Find.TickManager.TicksGame % 240 == 0)
+			{
+				SpinalRecalc();
+			}
 			if (selected && !Find.Selector.IsSelected(this))
 			{
 				selected = false;
@@ -391,7 +397,7 @@ namespace SaveOurShip2
 					currentTargetInt = TryFindNewTarget();
 				}
 			}
-			if (!isValid && currentTargetInt.IsValid)
+			if (def.building.playTargetAcquiredSound && !isValid && currentTargetInt.IsValid)
 			{
 				SoundDefOf.TurretAcquireTarget.PlayOneShot(new TargetInfo(base.Position, base.Map, false));
 			}
@@ -493,7 +499,7 @@ namespace SaveOurShip2
 			if (powerComp != null && powerComp.PowerNet.CurrentStoredEnergy() < EnergyToFire)
 			{
 				if (!PointDefenseMode && PlayerControlled)
-					Messages.Message(TranslatorFormattedStringExtensions.Translate("SoS.CannotFireDueToPower", Label), this, MessageTypeDefOf.CautionInput);
+					Messages.Message(TranslatorFormattedStringExtensions.Translate("SoS.CannotFireDueToPower", Label), this, MessageTypeDefOf.SilentInput);
 				shipTarget = LocalTargetInfo.Invalid;
 				ResetCurrentTarget();
 				return;
@@ -502,7 +508,7 @@ namespace SaveOurShip2
 			if (heatComp.Props.heatPerPulse > 0 && !heatComp.AddHeatToNetwork(HeatToFire))
 			{
 				if (!PointDefenseMode && PlayerControlled)
-					Messages.Message(TranslatorFormattedStringExtensions.Translate("SoS.CannotFireDueToHeat", Label), this, MessageTypeDefOf.CautionInput);
+					Messages.Message(TranslatorFormattedStringExtensions.Translate("SoS.CannotFireDueToHeat", Label), this, MessageTypeDefOf.SilentInput);
 				shipTarget = LocalTargetInfo.Invalid;
 				ResetCurrentTarget();
 				return;
@@ -551,6 +557,9 @@ namespace SaveOurShip2
 				//spinal weapons fire straight and destroy things in the way
 				if (spinalComp != null)
 				{
+					// Spinal weapon fire wipes out everything in the same line as barrel center and also this width both sides
+					int SpinalWipeotSideWidth = (spinalComp.Props.wipeoutWidth - 1) / 2;
+					int wipeoutOffset = spinalComp.Props.wipeoutOffset;
 					if (Rotation.AsByte == 0)
 						currentTargetInt = new LocalTargetInfo(new IntVec3(Position.x, 0, Map.Size.z - 1));
 					else if (Rotation.AsByte == 1)
@@ -561,60 +570,74 @@ namespace SaveOurShip2
 						currentTargetInt = new LocalTargetInfo(new IntVec3(1, 0, Position.z));
 					if (spinalComp.Props.destroysHull)
 					{
-						List<Thing> thingsToDestroy = new List<Thing>();
+						HashSet<Thing> thingsToDestroy = new HashSet<Thing>();
 
 						if (Rotation.AsByte == 0)
 						{
-							for (int x = Position.x - 1; x <= Position.x + 1; x++)
+							for (int x = Position.x - SpinalWipeotSideWidth; x <= Position.x + SpinalWipeotSideWidth; x++)
 							{
-								for (int z = Position.z + 3; z < Map.Size.z; z++)
+								// Spinal weapon can't have kill zone overlapping it's center, will destroy itself.
+								// So 0 offset is when will zone starts in next ceell, that's why it is wipeoutOffset +1/-1 here
+								for (int z = Position.z + wipeoutOffset + 1; z < Map.Size.z; z++)
 								{
 									IntVec3 vec = new IntVec3(x, 0, z);
 									foreach (Thing thing in vec.GetThingList(Map))
 									{
-										thingsToDestroy.Add(thing);
+										if (!thingsToDestroy.Contains(thing))
+										{
+											thingsToDestroy.Add(thing);
+										}
 									}
 								}
 							}
 						}
 						else if (Rotation.AsByte == 1)
 						{
-							for (int x = Position.x + 3; x < Map.Size.x; x++)
+							for (int x = Position.x + wipeoutOffset + 1; x < Map.Size.x; x++)
 							{
-								for (int z = Position.z - 1; z <= Position.z + 1; z++)
+								for (int z = Position.z - SpinalWipeotSideWidth; z <= Position.z + SpinalWipeotSideWidth; z++)
 								{
 									IntVec3 vec = new IntVec3(x, 0, z);
 									foreach (Thing thing in vec.GetThingList(Map))
 									{
-										thingsToDestroy.Add(thing);
+										if (!thingsToDestroy.Contains(thing))
+										{
+											thingsToDestroy.Add(thing);
+										}
 									}
 								}
 							}
 						}
 						else if (Rotation.AsByte == 2)
 						{
-							for (int x = Position.x - 1; x <= Position.x + 1; x++)
+							for (int x = Position.x - SpinalWipeotSideWidth; x <= Position.x + SpinalWipeotSideWidth; x++)
 							{
-								for (int z = Position.z - 3; z > 0; z--)
+								for (int z = Position.z - wipeoutOffset - 1; z > 0; z--)
 								{
 									IntVec3 vec = new IntVec3(x, 0, z);
 									foreach (Thing thing in vec.GetThingList(Map))
 									{
-										thingsToDestroy.Add(thing);
+										if (!thingsToDestroy.Contains(thing))
+										{
+												thingsToDestroy.Add(thing);
+										}
 									}
 								}
 							}
 						}
 						else
 						{
-							for (int x = 1; x <= Position.x - 3; x++)
+							for (int x = 1; x <= Position.x - wipeoutOffset - 1; x++)
 							{
-								for (int z = Position.z - 1; z <= Position.z + 1; z++)
+								for (int z = Position.z - SpinalWipeotSideWidth; z <= Position.z + SpinalWipeotSideWidth; z++)
 								{
 									IntVec3 vec = new IntVec3(x, 0, z);
 									foreach (Thing thing in vec.GetThingList(Map))
 									{
-										thingsToDestroy.Add(thing);
+										if (!thingsToDestroy.Contains(thing))
+										{
+											thingsToDestroy.Add(thing);
+										}
 									}
 								}
 							}
@@ -798,7 +821,7 @@ namespace SaveOurShip2
 					yield return command_VerbTargetShip;
 				}
 			}
-			if (shipTarget.IsValid)
+			if (shipTarget.IsValid || forcedTarget.IsValid)
 			{
 				Command_Action command_Action2 = new Command_Action
 				{
@@ -811,7 +834,7 @@ namespace SaveOurShip2
 						SoundDefOf.Tick_Low.PlayOneShotOnCamera();
 					}
 				};
-				if (!shipTarget.IsValid)
+				if (!shipTarget.IsValid && !forcedTarget.IsValid)
 				{
 					command_Action2.Disable(TranslatorFormattedStringExtensions.Translate("CommandStopAttackFailNotForceAttacking"));
 				}

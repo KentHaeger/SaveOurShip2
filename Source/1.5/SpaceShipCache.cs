@@ -223,7 +223,7 @@ namespace SaveOurShip2
 			{
 				if (engine.CanFire(new Rot4(mapComp.EngineRot)))
 				{
-					enginePower += engine.Thrust;
+					enginePower += engine.PreciseThrust;
 				}
 			}
 			return enginePower;
@@ -252,14 +252,14 @@ namespace SaveOurShip2
 		{
 			thrust *= Mathf.Pow(MassSum, 1.2f);
 			List<CompEngineTrail> list = new List<CompEngineTrail>();
-			list = Engines.Where(e => e.CanFire(new Rot4(mapComp.EngineRot))).OrderBy(e => e.Thrust).ThenBy(e => e.Props.energy).ThenBy(e => e.Props.reactionless).ToList();
-			int i = 0;
+			list = Engines.Where(e => e.CanFire(new Rot4(mapComp.EngineRot))).OrderBy(e => e.PreciseThrust).ThenBy(e => e.Props.energy).ThenBy(e => e.Props.reactionless).ToList();
+			float accumulatedThrust = 0;
 			foreach (CompEngineTrail engine in list)
 			{
 				//Log.Message(Index + " " + engine);
-				i += engine.Thrust;
+				accumulatedThrust += engine.PreciseThrust;
 				engine.On();
-				if (i > thrust)
+				if (accumulatedThrust > thrust)
 					return;
 			}
 		}
@@ -325,7 +325,7 @@ namespace SaveOurShip2
 			float fuelNeeded = MassActual;
 			if (!HasRCS())
 			{
-				Messages.Message(TranslatorFormattedStringExtensions.Translate("SoS.MoveFailRCS", 1 + (fuelNeeded / 2000)), Core, MessageTypeDefOf.NeutralEvent);
+				Messages.Message(TranslatorFormattedStringExtensions.Translate("SoS.MoveFailRCS"), Core, MessageTypeDefOf.NeutralEvent);
 				return;
 			}
 			fuelNeeded *= fuelPercentNeeded;
@@ -351,7 +351,7 @@ namespace SaveOurShip2
 			float fuelNeeded = MassActual;
 			if (!HasRCS())
 			{
-				return TranslatorFormattedStringExtensions.Translate("SoS.MoveFailRCS", 1 + (fuelNeeded / 2000));
+				return TranslatorFormattedStringExtensions.Translate("SoS.MoveFailRCS");
 			}
 			fuelNeeded *= fuelPercentNeeded;
 			if (FuelNeeded(atmospheric) < fuelNeeded)
@@ -784,10 +784,10 @@ namespace SaveOurShip2
 							Mass += 1;
 							return;
 						}
-						else if (b.TryGetComp<CompEngineTrail>() != null)
+						if (b.TryGetComp<CompEngineTrail>() != null)
 						{
 							var refuelable = b.TryGetComp<CompRefuelable>();
-							ThrustRaw += b.TryGetComp<CompEngineTrail>().Thrust;
+							ThrustRaw += b.TryGetComp<CompEngineTrail>().PreciseThrust;
 							if (refuelable != null)
 							{
 								MaxTakeoff += refuelable.Props.fuelCapacity;
@@ -797,16 +797,16 @@ namespace SaveOurShip2
 							EngineMass += b.def.Size.Area * 60;
 							Engines.Add(b.TryGetComp<CompEngineTrail>());
 						}
-						else if (b.TryGetComp<CompRCSThruster>() != null)
+						if (b.TryGetComp<CompRCSThruster>() != null)
 							RCSs.Add(b.GetComp<CompRCSThruster>());
 					}
 					else
 					{
 						if (b.TryGetComp<CompCryptoLaunchable>() != null)
 							Pods.Add(b.GetComp<CompCryptoLaunchable>());
-						else if (b.TryGetComp<CompShipBay>() != null)
+						if (b.TryGetComp<CompShipBay>() != null)
 							Bays.Add(b.GetComp<CompShipBay>());
-						else if (b is Building_ShipBridge bridge && bridge.terminate == false)
+						if (b is Building_ShipBridge bridge && bridge.terminate == false)
 						{
 							Bridges.Add(bridge);
 							if (bridge.mannableComp == null)
@@ -821,11 +821,11 @@ namespace SaveOurShip2
 							bridge.ShipIndex = Index;
 							bridge.ShipName = Name;
 						}
-						else if (b is Building_ShipSensor sensor)
+						if (b is Building_ShipSensor sensor)
 							Sensors.Add(sensor);
-						else if (b.TryGetComp<CompHullFoamDistributor>() != null)
+						if (b.TryGetComp<CompHullFoamDistributor>() != null)
 							FoamDistributors.Add(b.GetComp<CompHullFoamDistributor>());
-						else if (b.TryGetComp<CompShipLifeSupport>() != null)
+						if (b.TryGetComp<CompShipLifeSupport>() != null)
 							LifeSupports.Add(b.GetComp<CompShipLifeSupport>());
 					}
 				}
@@ -901,10 +901,10 @@ namespace SaveOurShip2
 							Mass -= 1;
 							return;
 						}
-						else if (b.TryGetComp<CompEngineTrail>() != null)
+						if (b.TryGetComp<CompEngineTrail>() != null)
 						{
 							var refuelable = b.TryGetComp<CompRefuelable>();
-							ThrustRaw -= b.TryGetComp<CompEngineTrail>().Thrust;
+							ThrustRaw -= b.TryGetComp<CompEngineTrail>().PreciseThrust;
 							if (refuelable != null)
 							{
 								MaxTakeoff -= refuelable.Props.fuelCapacity;
@@ -914,16 +914,16 @@ namespace SaveOurShip2
 							EngineMass -= b.def.Size.Area * 60;
 							Engines.Remove(b.TryGetComp<CompEngineTrail>());
 						}
-						else if (b.TryGetComp<CompRCSThruster>() != null)
+						if (b.TryGetComp<CompRCSThruster>() != null)
 							RCSs.Remove(b.GetComp<CompRCSThruster>());
 					}
 					else
 					{
 						if (b.TryGetComp<CompCryptoLaunchable>() != null)
 							Pods.Remove(b.GetComp<CompCryptoLaunchable>());
-						else if (b.TryGetComp<CompShipBay>() != null)
+						if (b.TryGetComp<CompShipBay>() != null)
 							Bays.Remove(b.GetComp<CompShipBay>());
-						else if (b is Building_ShipBridge bridge)
+						if (b is Building_ShipBridge bridge)
 						{
 							Bridges.Remove(bridge);
 							if (bridge.mannableComp == null)
@@ -933,11 +933,11 @@ namespace SaveOurShip2
 							//bridge.ShipIndex = -1;
 							//bridge.ShipName = "destroyed ship";
 						}
-						else if (b is Building_ShipSensor sensor)
+						if (b is Building_ShipSensor sensor)
 							Sensors.Remove(sensor);
-						else if (b.TryGetComp<CompHullFoamDistributor>() != null)
+						if (b.TryGetComp<CompHullFoamDistributor>() != null)
 							FoamDistributors.Remove(b.GetComp<CompHullFoamDistributor>());
-						else if (b.TryGetComp<CompShipLifeSupport>() != null)
+						if (b.TryGetComp<CompShipLifeSupport>() != null)
 							LifeSupports.Remove(b.GetComp<CompShipLifeSupport>());
 					}
 				}
@@ -1092,15 +1092,19 @@ namespace SaveOurShip2
 			{
 				foreach (CompHullFoamDistributor dist in FoamDistributors.Where(d => d.fuelComp.Fuel > 0 && d.powerComp.PowerOn))
 				{
-					Tuple<bool, IntVec3, int> toReplace = BuildingsToFoam.OrderBy(t => t.Item3).First(); 
-
-					Thing replacer = ThingMaker.MakeThing(toReplace.Item1 ? ResourceBank.ThingDefOf.HullFoamWall : ResourceBank.ThingDefOf.ShipHullfoamTile);
-
-					replacer.SetFaction(Faction);
-					if (GenPlace.TryPlaceThing(replacer, toReplace.Item2, map, ThingPlaceMode.Direct))
+					// Re-check that still have something to patch after previous iteration
+					if (BuildingsToFoam.Any())
 					{
-						BuildingsToFoam.Remove(toReplace);
-						dist.fuelComp.ConsumeFuel(1);
+						Tuple<bool, IntVec3, int> toReplace = BuildingsToFoam.OrderBy(t => t.Item3).First();
+
+						Thing replacer = ThingMaker.MakeThing(toReplace.Item1 ? ResourceBank.ThingDefOf.HullFoamWall : ResourceBank.ThingDefOf.ShipHullfoamTile);
+
+						replacer.SetFaction(Faction);
+						if (GenPlace.TryPlaceThing(replacer, toReplace.Item2, map, ThingPlaceMode.Direct))
+						{
+							BuildingsToFoam.Remove(toReplace);
+							dist.fuelComp.ConsumeFuel(1);
+						}
 					}
 				}
 			}

@@ -97,6 +97,24 @@ namespace SaveOurShip2
 			return result;
 		}
 
+		public bool DevChooseLaunchTarget(GlobalTargetInfo target)
+		{
+			if (Find.World.Impassable(target.Tile))
+			{
+				return false;
+			}
+			if (Find.WorldObjects.AnyWorldObjectAt(target.Tile))
+			{
+				return false;
+			}
+			if (CanLaunchNow)
+			{
+				ShipInteriorMod2.worldTileOverride = target.Tile;
+				ShipCountdown.InitiateCountdown(this);
+				QuestUtility.SendQuestTargetSignals(base.Map.Parent.questTags, "LaunchedShip");
+			}
+			return true;
+		}
 		[DebuggerHidden]
 		public override IEnumerable<Gizmo> GetGizmos()
 		{
@@ -1024,7 +1042,10 @@ namespace SaveOurShip2
 							if (playerShipMap != null) //player ship in orbit already, move to temp map
 								Ship.CreateShipSketchIfFuelPct(1f, playerShipMap, 0, true);
 							else
+							{
+								ShipInteriorMod2.worldTileOverride = -1;
 								ShipCountdown.InitiateCountdown(this);
+							}
 							QuestUtility.SendQuestTargetSignals(base.Map.Parent.questTags, "LaunchedShip");
 						}
 					},
@@ -1042,7 +1063,53 @@ namespace SaveOurShip2
 					launch.Disable(null);
 				}
 				yield return launch;
+				if (Prefs.DevMode && ShipInteriorMod2.FindPlayerShipMap() == null)
+				{
+					Command_Action launchToSpecificTile = new Command_Action()
+					{
+						groupable = false,
+						action = delegate
+						{
+							CameraJumper.TryJump(CameraJumper.GetWorldTarget(this));
+							Find.WorldSelector.ClearSelection();
+							Find.WorldTargeter.BeginTargeting(DevChooseLaunchTarget, canTargetTiles: true, closeWorldTabWhenFinished: true);
+						},
+						hotKey = KeyBindingDefOf.Misc1,
+						defaultLabel = "Dev: Launch to specific tile",
+						defaultDesc = "Pick a surface tile that will be associated with the ship. Based on selected tile latitude, solar panels will work great or bad. " +
+							"Quests and Ideology work sites will be genarated near picked surface tile."
+					};
+					if (!CanLaunchNow)
+					{
+						launchToSpecificTile.Disable(ShipUtility.LaunchFailReasons(this).First<string>());
+					}
+					else if (ShipCountdown.CountingDown)
+					{
+						launchToSpecificTile.Disable(null);
+					}
+					yield return launchToSpecificTile;
+				}
 			}
+			Command_Action selectOuterdoors = new Command_Action
+			{
+				groupable = false,
+				action = delegate
+				{
+					Find.Selector.ClearSelection();
+					foreach (Building building in Ship.Buildings)
+					{
+						if (building is Building_ShipAirlock airlock && airlock.Outerdoor())
+						{
+							Find.Selector.Select(airlock, false);
+						}
+					}
+				},
+				// Uses single door of the standard airlock as icon
+				icon = ContentFinder<Texture2D>.Get("Things/Building/Ship/Airlock_Mover"),
+				defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.BridgeSelectOuterdoors"),
+				defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.BridgeSelectOuterdoorsDesc")
+			};
+			yield return selectOuterdoors;
 		}
 		private bool ChoseWorldTarget(GlobalTargetInfo target)
 		{
@@ -1086,7 +1153,7 @@ namespace SaveOurShip2
 			if (countdownComp != null && mapComp.ShipMapState != ShipMapState.isGraveyard && countdownComp.ForceExitAndRemoveMapCountdownActive)
 			{
 				countdownComp.ResetForceExitAndRemoveMapCountdown();
-				Messages.Message("SoS.BurnUpPlayerPrevented", this, MessageTypeDefOf.PositiveEvent);
+				Messages.Message(TranslatorFormattedStringExtensions.Translate("SoS.BurnUpPlayerPrevented"), this, MessageTypeDefOf.PositiveEvent);
 			}
 		}
 		public override void Destroy(DestroyMode mode = DestroyMode.Vanish)

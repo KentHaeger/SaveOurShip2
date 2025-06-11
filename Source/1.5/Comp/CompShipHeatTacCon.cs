@@ -31,6 +31,7 @@ namespace SaveOurShip2
 			HashSet<Def> defs = new HashSet<Def>();
 			foreach (var t in myNet.Turrets)
 			{
+				ThingDef def = t.parent.def;
 				defs.Add(t.parent.def);
 			}
 			if (myNet.Cloaks.Any())
@@ -91,7 +92,8 @@ namespace SaveOurShip2
 			}*/
 			if (!myNet.Turrets.Any())
 				yield break;
-			if (myNet.Turrets.Any(t => ((Building_ShipTurret)t.parent).holdFire == false))
+			// if (myNet.Turrets.Any(t => ((Building_ShipTurret)t.parent).holdFire == false))
+			if (myNet.Turrets.Any(t => (ShipHeatNet.CESafeCastToTurret(t.parent)).holdFire == false))
 				HoldFire = false;
 			Command_Action selectWeapons = new Command_Action
 			{
@@ -120,9 +122,9 @@ namespace SaveOurShip2
 					HoldFire = !HoldFire;
 					foreach (CompShipHeat h in myNet.Turrets)
 					{
-						((Building_ShipTurret)h.parent).holdFire = HoldFire;
+						ShipHeatNet.CESafeCastToTurret(h.parent).holdFire = HoldFire;
 						if (HoldFire)
-							((Building_ShipTurret)h.parent).ResetForcedTarget();
+							ShipHeatNet.CESafeCastToTurret(h.parent).ResetForcedTarget();
 					}
 				},
 				isActive = (() => HoldFire)
@@ -135,7 +137,7 @@ namespace SaveOurShip2
 					Find.Selector.Deselect(this);
 					foreach (CompShipHeat h in myNet.Turrets)
 					{
-						((Building_ShipTurret)h.parent).ResetForcedTarget();
+						ShipHeatNet.CESafeCastToTurret(h.parent).ResetForcedTarget();
 					}
 				},
 				defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.HoldFire"),
@@ -145,7 +147,7 @@ namespace SaveOurShip2
 			yield return ceaseFire;
 			if (myNet.Turrets.Any(t => t.Props.pointDefense))
 			{
-				if (myNet.Turrets.Any(t => t.Props.pointDefense && ((Building_ShipTurret)t.parent).PointDefenseMode == false))
+				if (myNet.Turrets.Any(t => t.Props.pointDefense && ShipHeatNet.CESafeCastToTurret(t.parent).PointDefenseMode == false))
 					PointDefenseMode = false;
 				Command_Toggle togglePD = new Command_Toggle
 				{
@@ -157,7 +159,7 @@ namespace SaveOurShip2
 						PointDefenseMode = !PointDefenseMode;
 						foreach (var t in myNet.Turrets.Where(b => b.Props.pointDefense))
 						{
-							((Building_ShipTurret)t.parent).PointDefenseMode = PointDefenseMode;
+							ShipHeatNet.CESafeCastToTurret(t.parent).PointDefenseMode = PointDefenseMode;
 						}
 					},
 					isActive = (() => PointDefenseMode)

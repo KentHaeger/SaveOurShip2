@@ -21,7 +21,6 @@ namespace SaveOurShip2
 		private static Vector3[] offsetL = { new Vector3(0, 0, -11f), new Vector3(-11f, 0, 0), new Vector3(0, 0, 11f), new Vector3(11f, 0, 0) };
 		private static Vector3[] offsetE = { new Vector3(0, 0, -9.2f), new Vector3(-9.2f, 0, 0), new Vector3(0, 0, 9.2f), new Vector3(9.2f, 0, 0) };
 		public static IntVec2[] killOffset = { new IntVec2(0, -6), new IntVec2(-6, 0), new IntVec2(0, 4), new IntVec2(4, 0) };
-		public static IntVec2[] killOffsetL = { new IntVec2(0, -13), new IntVec2(-13, 0), new IntVec2(0, 7), new IntVec2(7, 0) };
 		public virtual CompProps_EngineTrail Props
 		{
 			get { return props as CompProps_EngineTrail; }
@@ -38,6 +37,17 @@ namespace SaveOurShip2
 			get
 			{
 				return Props.thrust;
+			}
+		}
+		public virtual float PreciseThrust
+		{
+			get
+			{
+				// For compatibility, legacy int thrust will bew used if new precise is not defined
+				if (Props.preciseThrust != 0)
+					return Props.preciseThrust;
+				else
+					return Thrust;
 			}
 		}
 		public bool PodFueled => refuelComp.Props.fuelFilter.AllowedThingDefs.Contains(ResourceBank.ThingDefOf.ShuttleFuelPods);
@@ -57,7 +67,14 @@ namespace SaveOurShip2
 				if (Props.reactionless)
 				{
 					if (powerComp.PowerOn)
-						return true;
+						if (refuelComp != null)
+						{
+							return refuelComp.Fuel > FuelUse;
+						}
+						else
+						{
+							return true;
+						}
 				}
 				else if (Props.energy)
 				{
@@ -77,7 +94,16 @@ namespace SaveOurShip2
 				if (Props.reactionless)
 				{
 					if (powerComp.PowerOn)
-						return true;
+					{
+						if (refuelComp != null)
+						{
+							return refuelComp.Fuel > FuelUse;
+						}
+						else
+						{
+							return true;
+						}
+					}
 				}
 				else if (rot == parent.Rotation)
 				{
@@ -97,7 +123,7 @@ namespace SaveOurShip2
 		{
 			if (Props.energy)
 			{
-				powerComp.PowerOutput = -2000 * Thrust;
+				powerComp.PowerOutput = -2000 * PreciseThrust;
 			}
 			active = true;
 		}
@@ -110,7 +136,7 @@ namespace SaveOurShip2
 			}
 			if (Props.energy)
 			{
-				powerComp.PowerOutput = -2000 * Thrust;
+				powerComp.PowerOutput = -2000 * PreciseThrust;
 				active = true;
 				return true;
 			}
@@ -125,7 +151,7 @@ namespace SaveOurShip2
 		{
 			if (Props.energy)
 			{
-				powerComp.PowerOutput = -200 * Thrust;
+				powerComp.PowerOutput = -200 * PreciseThrust;
 			}
 			active = false;
 			/*if (sustainer != null && !sustainer.Ended)
@@ -144,15 +170,8 @@ namespace SaveOurShip2
 			if (Props.reactionless)
 				return;
 			ExhaustArea.Clear();
-			CellRect rectToKill;
-			if (size > 3)
-				rectToKill = parent.OccupiedRect().MovedBy(killOffsetL[parent.Rotation.AsInt]).ExpandedBy(2);
-			else
-				rectToKill = parent.OccupiedRect().MovedBy(killOffset[parent.Rotation.AsInt]).ExpandedBy(1);
-			if (parent.Rotation.IsHorizontal)
-				rectToKill.Width = rectToKill.Width * 2 - 3;
-			else
-				rectToKill.Height = rectToKill.Height * 2 - 3;
+			CellRect rectToKill = GenAdjExtension.GetDirectAdjacentRect(parent.Position.ToIntVec2, parent.Rotation.Rotated(RotationDirection.Opposite).rotInt, parent.OccupiedRect(),
+				Props.killZoneWidth, Props.killZoneLength, Props.killZoneExtraOffset);
 			foreach (IntVec3 v in rectToKill.Where(v => v.InBounds(parent.Map)))
 			{
 				ExhaustArea.Add(v);

@@ -46,6 +46,11 @@ namespace SaveOurShip2
 		public static Dictionary<Building_Bed, bool> bedsCache = new Dictionary<Building_Bed, bool>();
 		Area_Allowed breathableZone = null;
 
+		public const int RoofUpdateInterval = 60;
+		public int RoofUpdateTick;
+		// Need to cache game setting in order to update when it's cchanged
+		public bool ShowRoofOverlayCached;
+
 		public ShipMapComp(Map map) : base(map)
 		{
 			grid = new int[map.cellIndices.NumGridCells];
@@ -92,8 +97,8 @@ namespace SaveOurShip2
 			}
 			cachedNets = list;
 
-			if(map.IsSpace())
-            {
+			if (map.IsSpace())
+			{
 				breathableZone = map.areaManager.AllAreas.FirstOrDefault(area => area.Label == "SoSBreathable".Translate()) as Area_Allowed;
 				if (breathableZone == null)
 				{
@@ -103,26 +108,48 @@ namespace SaveOurShip2
 				}
 				else
 					breathableZone.innerGrid.Clear();
-				foreach(SpaceShipCache ship in shipsOnMap.Values)
-                {
+				foreach (SpaceShipCache ship in shipsOnMap.Values)
+				{
 					if (ship.IsWreck)
 					{
 						continue;
 					}
-					foreach(IntVec3 vec in ship.Area)
-                    {
+					foreach (IntVec3 vec in ship.Area)
+					{
 						if (VecHasLS(vec) && !ShipInteriorMod2.ExposedToOutside(vec.GetRoom(map)))
 							breathableZone.innerGrid.Set(vec, true);
-                    }
-                }
-            }
+					}
+				}
+			}
 
 			base.map.mapDrawer.WholeMapChanged(MapMeshFlagDefOf.Buildings);
 			base.map.mapDrawer.WholeMapChanged(MapMeshFlagDefOf.Things);
 			heatGridDirty = false;
 			breathableZoneDirty = false;
 			loaded = true;
+			if (Find.TickManager.TicksGame > RoofUpdateTick + RoofUpdateInterval)
+			{
+				ClearRoofCache();
+			}
 		}
+		public void ClearRoofCache()
+		{
+			// Clear roof cache
+			RoofUpdateTick = Find.TickManager.TicksGame;
+			ShowRoofOverlayCached = Find.PlaySettings.showRoofOverlay;
+			foreach (SpaceShipCache ship in shipsOnMap.Values)
+			{
+				foreach (Building b in ship.Buildings)
+				{
+					CompShipCachePart compCachePart = b.TryGetComp<CompShipCachePart>();
+					if (compCachePart != null)
+					{
+						compCachePart.RoofCacheDirty = true;
+					}
+				}
+			}
+		}
+
 		void AccumulateToNetNew(HashSet<CompShipHeat> compBatch, ShipHeatNet net)
 		{
 			HashSet<CompShipHeat> newBatch = new HashSet<CompShipHeat>();
@@ -134,11 +161,14 @@ namespace SaveOurShip2
 				net.Register(comp);
 				foreach (IntVec3 cell in GenAdj.CellsOccupiedBy(comp.parent))
 				{
-					grid[comp.parent.Map.cellIndices.CellToIndex(cell)] = net.GridID;
+					if (cell.InBounds(comp.parent.Map))
+					{
+						grid[comp.parent.Map.cellIndices.CellToIndex(cell)] = net.GridID;
+					}
 				}
 				foreach (IntVec3 cell in GenAdj.CellsAdjacentCardinal(comp.parent))
 				{
-					if (grid[comp.parent.Map.cellIndices.CellToIndex(cell)] == -1)
+					if (cell.InBounds(comp.parent.Map) && grid[comp.parent.Map.cellIndices.CellToIndex(cell)] == -1)
 					{
 						foreach (Thing t in cell.GetThingList(comp.parent.Map))
 						{
@@ -817,6 +847,7 @@ namespace SaveOurShip2
 
 			//callSlowTick = true;
 		}
+
 		public Map SpawnEnemyShipMap(PassingShip passingShip, Faction faction, bool fleet, bool bounty)
 		{
 			Map newMap = new Map();
@@ -829,8 +860,25 @@ namespace SaveOurShip2
 			bool isDerelict = false;
 			float CR = 0;
 			float radius = 150f;
-			float theta = ((WorldObjectOrbitingShip)ShipCombatOriginMap.Parent).Theta - 0.1f + 0.002f * Rand.Range(0, 20);
-			float phi = ((WorldObjectOrbitingShip)ShipCombatOriginMap.Parent).Phi - 0.01f + 0.001f * Rand.Range(-20, 20);
+			float theta = ((WorldObjectOrbitingShip)ShipCombatOriginMap.Parent).Theta;
+			float phi = ((WorldObjectOrbitingShip)ShipCombatOriginMap.Parent).Phi;
+			float thetaOffsetScale = 1;
+			float phiExtraOffset = 0;
+			// As long as phi (latitude) is not too close to the pole, increase angle offset too keep up decreasing linear offset
+			// for the same longitude shift as latitude goes away from the planet equator
+			if (Mathf.Abs(phi) < 0.9f * Mathf.PI / 2)
+			{
+				thetaOffsetScale /= Mathf.Clamp(Mathf.Cos(phi), 0.1f , 1);
+			}
+			// As phi (latitude) gets closer to north/south poles, use phi offset to set up enemy ship visually aside from player ship well
+			else
+			{
+				phiExtraOffset = -Mathf.Sign(phi) * 0.05f * Mathf.PI / 2;
+			}
+			// -0.08 on theta angle is the main part of enemy ship offset
+			theta += -0.08f + thetaOffsetScale * 0.002f * Rand.Range(0, 10);
+			// 0.01 is base phi offset
+			phi += 0.007f +  0.001f * Rand.Range(-20, 20) + phiExtraOffset;
 
 			if (passingShip is AttackableShip attackableShip)
 			{
@@ -964,9 +1012,14 @@ namespace SaveOurShip2
 			if (shipDef != null)
 			{
 				int requiredSize = Math.Max(shipDef.sizeX + shipDef.offsetX * 2, shipDef.sizeZ + shipDef.offsetZ * 2);
-				if (requiredSize > 250 && requiredSize <= 500)
+				const int maxMapSize = 550;
+				if (requiredSize > 250 && requiredSize <= maxMapSize)
 				{
 					mapSizeInt = requiredSize;
+				}
+				else if (requiredSize >= maxMapSize)
+				{
+					Log.Warning("Too large map size attempted to be set:" + requiredSize);
 				}
 			}
 			IntVec3 mapSize = new IntVec3(mapSizeInt, 1, mapSizeInt);
@@ -997,7 +1050,7 @@ namespace SaveOurShip2
 					shieldsActive = false;
 					newMapComp.ShipMapState = ShipMapState.isGraveyard;
 					newMap.Parent.GetComponent<TimedForcedExitShip>().StartForceExitAndRemoveMapCountdown(d.ticksUntilDeparture);
-					Find.LetterStack.ReceiveLetter("SoS.EncounterStart".Translate(), "SoS.EncounterStartDesc".Translate(newMap.Parent.GetComponent<TimedForcedExitShip>().ForceExitAndRemoveMapCountdownTimeLeftString), LetterDefOf.NeutralEvent);
+					// Non-fake derelict letter will be sent later, depending on wreck/ship condition
 				}
 			}
 			else if (shipDef != null)
@@ -1029,6 +1082,31 @@ namespace SaveOurShip2
 			else
 			{
 				mp.Name = shipDef.label + " " + newMap.uniqueID;
+			}
+			if (passingShip is DerelictShip && !fakeWreck)
+			{
+				// When there are bridges left at derelict, it is not claimable/deconstructable because of working like ship, not freee buildinfgs.
+				// Send tutorial-ish letter in this case.
+				bool hasActiveShips = false;
+				foreach (int i in newMapComp.ShipsOnMap.Keys)
+				{
+					SpaceShipCache ship = newMapComp.ShipsOnMap[i];
+					if (!ship.IsWreck)
+					{
+						hasActiveShips = true;
+						break;
+					}
+				}
+				if (hasActiveShips)
+				{
+					Find.LetterStack.ReceiveLetter("SoS.EncounterStartWithBridge".Translate(),
+						"SoS.EncounterStartWithBridgeDesc".Translate(newMap.Parent.GetComponent<TimedForcedExitShip>().ForceExitAndRemoveMapCountdownTimeLeftString), LetterDefOf.NeutralEvent);
+				}
+				else
+				{
+					Find.LetterStack.ReceiveLetter("SoS.EncounterStart".Translate(),
+						"SoS.EncounterStartDesc".Translate(newMap.Parent.GetComponent<TimedForcedExitShip>().ForceExitAndRemoveMapCountdownTimeLeftString), LetterDefOf.NeutralEvent);
+				}
 			}
 			return newMap;
 		}
@@ -1065,6 +1143,7 @@ namespace SaveOurShip2
 			{
 				RangeToKeep = Range;
 			}
+			InvaderLord = null;
 		}
 		private void DetermineInitialRange(bool ambush)
 		{
@@ -1506,6 +1585,24 @@ namespace SaveOurShip2
 				SlowTick(tick);
 			}
 		}
+
+		public void RecalculateThreat()
+		{
+			totalThreat = 1;
+			threatPerSegment = new[] { 1f, 1f, 1f, 1f };
+			BuildingsCount = 0;
+			foreach (SpaceShipCache ship in ShipsOnMap.Values)
+			{
+				float[] actualThreatPerSegment = ship.ActualThreatPerSegment();
+				threatPerSegment[0] += actualThreatPerSegment[0];
+				threatPerSegment[1] += actualThreatPerSegment[1];
+				threatPerSegment[2] += actualThreatPerSegment[2];
+				threatPerSegment[3] += actualThreatPerSegment[3];
+				//threatPerSegment = threatPerSegment.Zip(ship.ActualThreatPerSegment, (x, y) => x + y).ToArray();
+				BuildingsCount += ship.Buildings.Count;
+				totalThreat += ship.ThreatCurrent;
+			}
+		}
 		public void SlowTick(int tick)
 		{
 			foreach (SpaceShipCache ship in ShipsOnMap.Values.ToList())
@@ -1548,9 +1645,7 @@ namespace SaveOurShip2
 				}
 
 				//threat calcs
-				totalThreat = 1;
-				threatPerSegment = new[] { 1f, 1f, 1f, 1f };
-				BuildingsCount = 0;
+				RecalculateThreat();
 				float powerCapacity = 0;
 				float powerRemaining = 0;
 				foreach (SpaceShipCache ship in ShipsOnMap.Values)
@@ -1564,18 +1659,10 @@ namespace SaveOurShip2
 						}
 						ship.PurgeCheck();
 					}
-					float[] actualThreatPerSegment = ship.ActualThreatPerSegment();
-					threatPerSegment[0] += actualThreatPerSegment[0];
-					threatPerSegment[1] += actualThreatPerSegment[1];
-					threatPerSegment[2] += actualThreatPerSegment[2];
-					threatPerSegment[3] += actualThreatPerSegment[3];
-					//threatPerSegment = threatPerSegment.Zip(ship.ActualThreatPerSegment, (x, y) => x + y).ToArray();
-					BuildingsCount += ship.Buildings.Count;
-					totalThreat += ship.ThreatCurrent;
 				}
 				//Log.Message("SOS2: ".Colorize(Color.cyan) + map + " threat CSML: " + threatPerSegment[0] + " " + threatPerSegment[1] + " " + threatPerSegment[2] + " " + threatPerSegment[3] + " ");
-
 				//shipAI distance, boarding
+
 				if (HasShipMapAI && tick > BattleStartTick + 60)
 				{
 					if (ShipsOnMap.Count > 1) //fleet AI evals ships in fleet and rem bad ships
@@ -1636,9 +1723,15 @@ namespace SaveOurShip2
 
 					if (anyShipCanMove) //set AI heading
 					{
-						//True, totalThreat:1, TargetMapComp.totalThreat:1, TurretNum:0
-						//retreat
-						if (Retreating || (totalThreat / (TargetMapComp.totalThreat * 0.9f * Difficulty) < 0.4f) || powerRemaining / powerCapacity < 0.2f || totalThreat == 1 || BuildingsCount / (float)BuildingCountAtStart < 0.7f || tick > BattleStartTick + 90000 || (ShipMapAI == ShipAI.avoidant && MapEnginePower > targetMapComp.MapEnginePower) || (ShipMapAI == ShipAI.carrier && tick > BattleStartTick + 9000 && !ShuttleMissions.Any()))
+						bool retreatByThreat = (totalThreat / (TargetMapComp.totalThreat * 0.9f * Difficulty) < 0.4f);
+						// Temporary CE compatibility fix: as their turrets aren't properly added to turret list, threat calc is broken so enemies are better off not reating based on that.
+						// Will still rereat for other reasons, so that isnot too bad.
+						// Also, there is hard to detect non-CE issue when threat was not updated properly just after battle start, so waiting to apply threat logic.
+						if (ModIntegration.IsCEEnabled() || tick < BattleStartTick + 240)
+						{
+							retreatByThreat = false;
+						}
+						if (Retreating || retreatByThreat || powerRemaining / powerCapacity < 0.2f || totalThreat == 1 || BuildingsCount / (float)BuildingCountAtStart < 0.7f || tick > BattleStartTick + 90000 || (ShipMapAI == ShipAI.avoidant && MapEnginePower > targetMapComp.MapEnginePower) || (ShipMapAI == ShipAI.carrier && tick > BattleStartTick + 9000 && !ShuttleMissions.Any()))
 						{
 							Heading = -1;
 							Retreating = true;
@@ -2271,7 +2364,7 @@ namespace SaveOurShip2
 			if (pawns.Any())
 			{
 				if (ShipGraveyard == null)
-					SpawnGraveyard();
+					SpawnGraveyard(map.Parent);
 				foreach (Pawn p in pawns)
 				{
 					p.DeSpawn();
@@ -2286,7 +2379,7 @@ namespace SaveOurShip2
 			{
 				List<Thing> things = new List<Thing>();
 				if (ShipGraveyard == null)
-					SpawnGraveyard();
+					SpawnGraveyard(map.Parent);
 				foreach (SpaceShipCache ship in ShipsOnMap.Values)
 				{
 					foreach (IntVec3 v in ship.AreaDestroyed)
@@ -2301,9 +2394,16 @@ namespace SaveOurShip2
 				{
 					p.DeSpawn();
 				}
-				foreach (Thing p in things)
+				try
 				{
-					p.SpawnSetup(ShipGraveyard, false);
+					foreach (Thing p in things)
+					{
+						p.SpawnSetup(ShipGraveyard, false);
+					}
+				}
+				catch (Exception e)
+				{
+					Log.Message("Things were not moved to graveyard. Trace: " + e.StackTrace);
 				}
 			}
 		}
@@ -2406,8 +2506,9 @@ namespace SaveOurShip2
 			{
 				Log.Warning("SOS2: ".Colorize(Color.cyan) + map + " Ship ".Colorize(Color.green) + shipIndex + " Removing with: " + core);
 				if (ShipGraveyard == null)
-					SpawnGraveyard();
-				foreach(Pawn pawn in map.mapPawns.AllPawnsSpawned)
+					SpawnGraveyard(map.Parent);
+				IReadOnlyList<Pawn> pawns = map.mapPawns.AllPawnsSpawned;
+				foreach (Pawn pawn in pawns)
                 {
 					if (pawn.Faction != Faction.OfPlayer && ship.Area.Contains(pawn.Position))
 					{
@@ -2424,6 +2525,18 @@ namespace SaveOurShip2
 						}
 					}
                 }
+				// Moving ship to graveyard is a forced move, so hard clean up first. Moving to another coordinates if occupied is not good for performance and very complicated,
+				// so the area will be cleared. Normally, there is nothing on graveyard map at given ship area befor it moves there.
+				// But one case is known, ship may recover parts with hullfoam distributor, then some hullfoam may fall off to graveyard,
+				// then recover again and fall off again to occupied tiles.
+				foreach (IntVec3 tile in ship.Area)
+				{
+					List<Thing> thingsAtGraveyardTile = ShipGraveyard.thingGrid.ThingsListAt(tile).ListFullCopy();
+					foreach (Thing t in thingsAtGraveyardTile)
+					{
+						t.Destroy();
+					}
+				}
 				ShipInteriorMod2.MoveShip(core, ShipGraveyard, IntVec3.Zero);
 			}
 			Log.Warning("SOS2: ".Colorize(Color.cyan) + map + " Ships remaining: " + ShipsOnMap.Count);
@@ -2432,20 +2545,36 @@ namespace SaveOurShip2
 				Log.Warning("SOS2: ".Colorize(Color.cyan) + map + " Ship ".Colorize(Color.green) + s.Index + ", area: " + s.Area.Count + ", bldgs: " + s.BuildingCount + ", cores: " + s.Bridges.Count);
 			}
 		}
-		public void SpawnGraveyard() //if not present, create a graveyard
+		public void SpawnGraveyard(MapParent mapParent) //if not present, create a graveyard
 		{
 			//Log.Message("SOS2: ".Colorize(Color.cyan) + map + " SpawnGraveyard");
-			float adj;
+			float theta = 0;
+			float phi = 0;
+			float radius = WorldObjectMath.defaultRadius;
+			WorldObjectMath.GetSphericalCoords(mapParent, out phi, out theta, out radius);
+			// Graveyards for player ship go to the left, enemy ones go to the right
+			int thetaOffsetSign = -1;
 			if (ShipCombatOrigin)
-				adj = Rand.Range(0.025f, 0.075f);
-			else
-				adj = Rand.Range(-0.075f, -0.125f);
+				thetaOffsetSign = 1;
+			// Numbers picked for graveyard to be visually near parent map.
+			float thetaOffset = thetaOffsetSign * Rand.Range(0.008f, 0.022f);
 			ShipGraveyard = GetOrGenerateMapUtility.GetOrGenerateMap(ShipInteriorMod2.FindWorldTile(), map.Size, ResourceBank.WorldObjectDefOf.WreckSpace);
 			ShipGraveyard.fogGrid.ClearAllFog();
 			var mp = (WorldObjectOrbitingShip)ShipGraveyard.Parent;
-			mp.Radius = 150;
-			mp.Theta = ((WorldObjectOrbitingShip)ShipCombatOriginMap.Parent).Theta + adj;
-			mp.Phi = ((WorldObjectOrbitingShip)ShipCombatOriginMap.Parent).Phi - 0.01f + 0.001f * Rand.Range(0, 20);
+			mp.Radius = radius;
+			float thetaOffsetScale = 1;
+			float phiExtraOffset = 0;
+			// See SpawnEnemyShip() comments for similar logic explanation
+			if (Mathf.Abs(phi) < 0.9f * Mathf.PI / 2)
+			{
+				thetaOffsetScale /= Mathf.Clamp(Mathf.Cos(phi), 0.1f, 1);
+			}
+			else
+			{
+				phiExtraOffset = -Mathf.Sign(mp.Phi) * 0.02f * Mathf.PI / 2;
+			}
+			mp.Theta = theta + thetaOffset * thetaOffsetScale;
+			mp.Phi = phi - 0.01f + 0.001f * Rand.Range(0, 20) + phiExtraOffset;
 			mp.Name += "Wreckage nr." + ShipGraveyard.uniqueID;
 			var graveMapComp = ShipGraveyard.GetComponent<ShipMapComp>();
 			graveMapComp.ShipMapState = ShipMapState.isGraveyard;
@@ -2538,7 +2667,8 @@ namespace SaveOurShip2
 						{
 							tgtMapComp.ShipMapState = ShipMapState.burnUpSet;
 							//remove all wrecks from map, leave pawns
-							foreach (int shipIndex in OriginMapComp.GraveComp.ShipsOnMap.Keys)
+							List<int> shipKeys = OriginMapComp.GraveComp.ShipsOnMap.Keys.ToList();
+							foreach (int shipIndex in shipKeys)
 							{
 								ShipInteriorMod2.RemoveShipOrArea(OriginMapComp.ShipGraveyard, shipIndex, null, false);
 							}
@@ -2561,6 +2691,30 @@ namespace SaveOurShip2
 				DeRegisterShuttleMission(mission);
 			}
 
+			if (loser != ShipInteriorMod2.FindPlayerShipMap())
+			{
+				// AI lost. Reset all their shuttles faction, so that thaey don't prevent buildings capture,
+				// becuse of being enemy pawns, which is totally not evident for the player.
+				IEnumerable<Pawn> mapPawns = loser.mapPawns.AllPawnsSpawned.ToList().ListFullCopy();
+				foreach (Pawn p in mapPawns)
+				{
+					if (!(p is VehiclePawn) && p.CurJobDef == JobDefOf_Vehicles.Board)
+					{
+						// Stop boarding jobs to avoid inconveniences with enemies stuck in their shuttles
+						p.jobs.StopAll();
+					}
+				}
+				IEnumerable<Pawn> vehiclesToDisembark = mapPawns.Where(pawn => pawn is VehiclePawn veh);
+				foreach (VehiclePawn veh in vehiclesToDisembark)
+				{
+					if (veh.Faction.HostileTo(Faction.OfPlayer))
+					{
+						veh.DisembarkAll();
+						veh.ignition.Drafted = false;
+						// TODO: Can't set vehicle faction to null here, as it's not supported by Framework. 
+					}
+				}
+			}
 			//td temp
 			tgtMapComp.ShipCombatTargetMap = null;
 			tgtMapComp.originMapComp = null;
@@ -2736,6 +2890,13 @@ namespace SaveOurShip2
 					Messages.Message("SoS.EnemyBoardingShuttleArrived".Translate(), MessageTypeDefOf.NegativeEvent);
 					VehicleSkyfaller_Arriving vehicleSkyfaller_Arriving = (VehicleSkyfaller_Arriving)VehicleSkyfallerMaker.MakeSkyfaller(mission.shuttle.CompVehicleLauncher.Props.skyfallerIncoming, mission.shuttle);
 					GenSpawn.Spawn(vehicleSkyfaller_Arriving, vec, mapToSpawnIn, GetShuttleLandingRotation(mission.shuttle));
+					foreach (Pawn p in vehicleSkyfaller_Arriving.vehicle.AllPawnsAboard)
+					{
+						if (!(p is VehiclePawn))
+						{
+							ShipInteriorMod2.AddPawnToLord(mapToSpawnIn, p);
+						}
+					}
 				}
 			}
         }
@@ -2848,7 +3009,8 @@ namespace SaveOurShip2
 				// New option ignores given coordintes (v) for now.
 				ShipMapComp mapComp = targetMap.GetComponent<ShipMapComp>();
 				SpaceShipCache mainShip = mapComp.ShipsOnMap.Values.OrderByDescending(x => x.Threat).First();
-				IntVec3 location = mainShip.Core.Position;
+				// Center is for rare case when player was bridgekilled while emeny boarding party was on the way.
+				IntVec3 location = mainShip?.Core?.Position ?? targetMap.Center;
 				Rot4 moveRot = mainShip.Engines.Any() ? mainShip.Engines.First().parent.Rotation : mainShip.Core.Rotation;
 				IntVec3 moveDirection = moveRot.AsVector2.ToVector3().ToIntVec3();
 

@@ -122,7 +122,7 @@ namespace SaveOurShip2
 			float bCountF = bCount * 2.5f;
 			if (salvage && bCountF > bMax)
 			{
-				Messages.Message(TranslatorFormattedStringExtensions.Translate("SoS.SalvageCount", (int)bCountF, bMax), MessageTypeDefOf.NeutralEvent);
+				Messages.Message(TranslatorFormattedStringExtensions.Translate("SoS.SalvageFailMass", (int)bCountF, bMax), MessageTypeDefOf.NeutralEvent);
 				cachedParts.Clear();
 				positions.Clear();
 				return;

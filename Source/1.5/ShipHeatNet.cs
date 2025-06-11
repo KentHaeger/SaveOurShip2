@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,6 +22,67 @@ namespace SaveOurShip2
 		public HashSet<Building_ShipBridge> TacCons = new HashSet<Building_ShipBridge>();
 		public HashSet<Building_ShipBridge> PilCons = new HashSet<Building_ShipBridge>();
 		public int GridID;
+		// CE Compatibility for turrets added to heat net
+		private static Type turretCEtype = null;
+		private static MethodInfo turretCastMetod = null;
+		private static bool turretCEinitialized = false;
+		// For unknown buildings
+		public static Building_ShipTurret CESafeTryCastToTurret(ThingWithComps thing)
+		{
+			if (thing is Building_ShipTurret)
+			{
+				return thing as Building_ShipTurret;
+			}
+			else if (IsCompatibleCETurret(thing))
+			{
+				return (Building_ShipTurret)turretCastMetod.Invoke(thing, new object[] { });
+			}
+			else
+			{
+				return null;
+			}
+		}
+		// For cases when turret is added to list of turrets and guaranteed to be either Building_ShipTurret or Building_ShipTurretCE
+		public static Building_ShipTurret CESafeCastToTurret(ThingWithComps thing)
+		{
+			if (IsCompatibleCETurret(thing))
+			{
+				return (Building_ShipTurret)turretCastMetod.Invoke(thing, new object[] { });
+			}
+			else
+			{
+				return (Building_ShipTurret)thing;
+			}
+		}
+		public static bool IsCompatibleCETurret(ThingWithComps thing)
+		{
+			if (thing == null)
+			{
+				return false;
+			}
+			if (!turretCEinitialized)
+			{
+				try
+				{
+					if (ModIntegration.IsCEEnabled())
+					{
+						turretCEtype = Type.GetType("CombatExtended.Compatibility.SOS2Compat.Building_ShipTurretCE, SOS2Compat", false);
+						turretCastMetod = turretCEtype?.GetMethod("ToBuilding_ShipTurret") ?? null;
+					}
+					turretCEinitialized = true;
+				}
+				catch (Exception e)
+				{
+					turretCEtype = null;
+					turretCEinitialized = true;
+				}
+			}
+			if (turretCEtype == null || turretCastMetod == null)
+			{
+				return false;
+			}
+			return turretCEtype.IsAssignableFrom(thing.GetType());
+		}
 		public float StorageCapacity //usable capacity (minus depletion)
 		{ 
 			get
@@ -111,8 +173,11 @@ namespace SaveOurShip2
 					}
 				}
 			}
-			else if (comp.parent is Building_ShipTurret)
+			else if (comp.parent is Building_ShipTurret || IsCompatibleCETurret(comp.parent))
+			{
 				Turrets.Add(comp);
+				ThingDef parentDef = comp.parent.def;
+			}
 			else if (comp is CompShipHeatSource source)
 			{
 				if (Sources.Add(source))

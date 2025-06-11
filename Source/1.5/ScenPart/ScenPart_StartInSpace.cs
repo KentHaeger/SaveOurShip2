@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using Verse;
+using Verse.AI.Group;
 
 namespace SaveOurShip2
 {
@@ -35,6 +36,31 @@ namespace SaveOurShip2
 			Scribe_Defs.Look<ShipDef>(ref spaceShipDef, "spaceShipDef");
 			Scribe_Values.Look<bool>(ref damageStart, "damageStart");
 			Scribe_Values.Look<ShipStartFlags>(ref startType, "startType");
+		}
+
+		// These ships/stations were manually picked as not interesting (not actual combat ship)/not intended to start with.
+		// To make ship list easier to use, it's huge
+		private static readonly string excludedShipsString = "AfterlifeVaultStart,AbandonedMiningStation,ContainerFurniture,ContainerLoot,ContainerMech,ContainerSecure," +
+			"ContainerSecurity,ContainerTV,DefenseInstallation,DefenseInstallation4,DefenseInstallation6,MechanoidMoonBase,SatelliteLarge2," +
+			"SatelliteLarge2Eng,SatelliteLarge2Eng2,SatelliteLarge3Eng,SatelliteLarge3Eng2,SatelliteLarge4,SatelliteSmall2,SatelliteSmall2Eng," +
+			"SatelliteSmall2Eng2,SatelliteSmall3,SatelliteSmall3Eng,SatelliteSmall3Eng2,SatelliteSmall4,SmallSatellite,StarshipBowDungeon,StartSiteAsteroidA," +
+			"StartSiteAsteroidB,StartSiteAsteroidC,StartSiteAsteroidD,StartSiteAsteroidE,StartSiteAsteroidMech,StartSiteEmpire,StartSiteMoonA,StartSiteMoonB," +
+			"StartSiteShipyard,StartSiteSkylab,StationAgri01,StationAgri01D,StationAgri02,StationAgri03,StationAgri03D,StationArchotechGarden,StationPrison01," +
+			"StationPrison02,TribalVillageIsNotAShip";
+		private static List<string> excludedShipDefs = excludedShipsString.Split(',').ToList();
+
+		private bool ShipUnlockedAsStartup(ShipDef def, ShipStartFlags startType)
+		{
+			// Unlocks only apply to start on ship
+			if (GlobalUnlockDef.AllShipsUnlocked() && startType == ShipStartFlags.Ship)
+			{
+				return !excludedShipDefs.Contains(def.defName);
+			}
+			else
+			{
+				return (startType == ShipStartFlags.Ship && def.startingShip == true && def.startingDungeon == false) ||
+					(startType == ShipStartFlags.Station && def.startingShip == true && def.startingDungeon == true);
+			}
 		}
 		public override void DoEditInterface(Listing_ScenEdit listing)
 		{
@@ -65,10 +91,16 @@ namespace SaveOurShip2
 			if (Widgets.ButtonText(rect2, spaceShipDef.label, true, true, true))
 			{
 				List<FloatMenuOption> list = new List<FloatMenuOption>();
-				foreach (ShipDef localTd2 in DefDatabase<ShipDef>.AllDefs.Where(t => t.defName == "0" || (startType == ShipStartFlags.Ship && t.startingShip == true && t.startingDungeon == false) || (startType == ShipStartFlags.Station && t.startingShip == true && t.startingDungeon == true)).OrderBy(t => t.defName))
+				foreach (ShipDef localTd2 in DefDatabase<ShipDef>.AllDefs.Where(t => t.defName == "0" || ShipUnlockedAsStartup(t, startType)).OrderBy(t => t.defName))
 				{
 					ShipDef localTd = localTd2;
-					list.Add(new FloatMenuOption(localTd.label + " (" + localTd.defName + ")", delegate ()
+					string CRString = "";
+					if (GlobalUnlockDef.AllShipsUnlocked())
+					{
+						// 00A0 is non-breakable space
+						CRString = " CR:\u00A0" + localTd2.combatPoints;
+					}
+					list.Add(new FloatMenuOption(localTd.label + " (" + localTd.defName + ")" + CRString, delegate ()
 					{
 						spaceShipDef = localTd;
 					}, MenuOptionPriority.Default, null, null, 0f, null, null, true, 0));
@@ -121,13 +153,6 @@ namespace SaveOurShip2
 
 		public static Map GenerateShipSpaceMap() //MapGenerator.GenerateMap override via patch
 		{
-			IntVec3 size = new IntVec3(Find.GameInitData.mapSize, 1, Find.GameInitData.mapSize);
-			if (size.x < 250 || size.z < 250)
-				size = new IntVec3(250, 0, 250);
-
-			Map spaceMap = ShipInteriorMod2.GeneratePlayerShipMap(size);
-			Current.ProgramState = ProgramState.MapInitializing;
-
 			ScenPart_StartInSpace scen = (ScenPart_StartInSpace)Current.Game.Scenario.parts.FirstOrDefault(s => s is ScenPart_StartInSpace);
 
 			if (scen.startType == ShipStartFlags.Station && scen.spaceShipDef.defName == "0") //random dungeon
@@ -139,6 +164,15 @@ namespace SaveOurShip2
 			{
 				scen.spaceShipDef = DefDatabase<ShipDef>.AllDefs.Where(def => def.startingShip == true && def.startingDungeon == false && def.defName != "0").RandomElement();
 			}
+
+			IntVec3 mapSize = new IntVec3(Find.GameInitData.mapSize, 1, Find.GameInitData.mapSize);
+			// As moon base starts are whole 250x250 maps saved, they got to have map size locked for now to avoid having empty space around
+			if (mapSize.x < 250 || mapSize.z < 250 || scen.spaceShipDef.defName == "StartSiteMoonA" || scen.spaceShipDef.defName == "StartSiteMoonB") 
+				mapSize = new IntVec3(250, 1, 250);
+
+			Map spaceMap = ShipInteriorMod2.GeneratePlayerShipMap(mapSize);
+			Current.ProgramState = ProgramState.MapInitializing;
+
 			List<Building> cores = new List<Building>();
 			ShipInteriorMod2.GenerateShip(scen.spaceShipDef, spaceMap, null, Faction.OfPlayer, null, out cores, false, false, scen.damageStart ? 1 : 0, (spaceMap.Size.x - scen.spaceShipDef.sizeX) / 2, (spaceMap.Size.z - scen.spaceShipDef.sizeZ) / 2);
 
@@ -225,7 +259,7 @@ namespace SaveOurShip2
 			int num = 0;
 			foreach (Thing item in list3)
 			{
-				if (!(item is Pawn))
+				if (!(item is Pawn) || ((item is Pawn p) && (p.RaceProps?.IsMechanoid ?? false)))
 				{
 					if (item.def.CanHaveFaction)
 					{
@@ -263,7 +297,51 @@ namespace SaveOurShip2
 			}
 			spawners.Clear();
 			spawnPos.Clear();
+			if (spaceShipDef.defName == "StartSiteAsteroidMech")
+			{
+				AssignMechAIForMechanoidBase();
+			}
 		}
+
+		private void AssignMechAIForMechanoidBase()
+		{
+			// Divide map into parts, assign mech in each part a separate lord, so that they don't aggro all at once.
+			Map map = Find.CurrentMap;
+			int partCount = 6;
+			int mapWidth = map.Size.x;
+			int mapHeight = map.Size.z;
+			int regionWidth = mapWidth / partCount;
+			int regionHeight = mapHeight / partCount;
+			List<Pawn> allEnemyMechs = map.mapPawns.AllPawnsSpawned.Where(p => p.GetLord() == null && p.Faction.HostileTo(Faction.OfPlayer)).ToList();
+			if (!allEnemyMechs.Any())
+			{
+				Log.Warning("Detected asteroid mech base start with no mechs");
+				return;
+			}
+			Faction mechFaction = allEnemyMechs.First().Faction;
+			for (int xPart = 0; xPart < partCount; xPart++)
+			{
+				for (int zPart = 0; zPart < partCount; zPart++)
+				{
+					CellRect part = new CellRect();
+					part.minX = xPart * mapWidth / partCount;
+					part.maxX = (xPart + 1) * mapWidth / partCount - 1;
+					part.minZ = zPart * mapHeight / partCount;
+					part.maxZ = (zPart + 1) * mapHeight / partCount - 1;
+					IEnumerable<Pawn> mechsInRegion = allEnemyMechs.Where(p => part.Contains(p.Position));
+					Lord groupLord;
+					if (mechsInRegion.Any())
+					{
+						groupLord = LordMaker.MakeNewLord(mechFaction, new LordJob_DefendShip(mechFaction, part.CenterCell), Find.CurrentMap);
+						foreach (Pawn p in mechsInRegion)
+						{
+							groupLord.AddPawn(p);
+						}
+					}
+				}
+			}
+		}
+
 		static List<IntVec3> GetSpawnCells(Map spaceMap, out List<Building> spawners) //spawn placer > crypto > salvbay > bridge
 		{
 			spawners = new List<Building>();

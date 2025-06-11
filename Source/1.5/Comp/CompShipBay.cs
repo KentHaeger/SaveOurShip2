@@ -28,7 +28,7 @@ namespace SaveOurShip2
 		public override void PostExposeData()
 		{
 			base.PostExposeData();
-			Scribe_Collections.Look<IntVec3>(ref reservedArea, "reservedArea", LookMode.Reference);
+			Scribe_Collections.Look<IntVec3>(ref reservedArea, "reservedArea");
 			if (reservedArea == null)
 				reservedArea = new HashSet<IntVec3>();
 		}
@@ -41,7 +41,6 @@ namespace SaveOurShip2
 		HashSet<CompFueledTravel> dockedShuttles = new HashSet<CompFueledTravel>();
 		CompRefuelable compRefuelable;
 		CompPowerTrader compPowerTrader;
-
 		public CompProps_ShipBay Props
 		{
 			get
@@ -141,8 +140,8 @@ namespace SaveOurShip2
 		public override void PostDraw()
 		{
 			base.PostDraw();
-			// Get room is slow if not enclosed, so update flag rarely.
-			if (needDrawRoof == null || Find.TickManager.TicksGame % 60 == 0)
+			// Get room is slow if not enclosed, so update flag rarely, but not much, otherwise it will be visible
+			if (needDrawRoof == null || Find.TickManager.TicksGame % 40 == 0 || Time.frameCount % 40 == 0)
 			{
 				needDrawRoof = parent.GetRoom() != null && parent.GetRoom().Cells.Any(c => c.Fogged(parent.Map));
 			}
@@ -212,12 +211,14 @@ namespace SaveOurShip2
 				if(shuttle!=null)
                 {
 					CompFueledTravel fueledTravel = shuttle.GetComp<CompFueledTravel>();
-					if(fueledTravel == null)
+					if (fueledTravel == null)
 					{
 						return;
 					}
-					if (shuttle.def == ResourceBank.ThingDefOf.SoS2_Shuttle_Personal || fueledTravel.Props.fuelType == ResourceBank.ThingDefOf.ShuttleFuelPods)
+					if (shuttle.def == ResourceBank.ThingDefOf.SoS2_Shuttle_Personal ||  fueledTravel.Props.fuelType == ResourceBank.ThingDefOf.ShuttleFuelPods)
+					{
 						dockedShuttles.Add(fueledTravel);
+					}
                 }
             }
         }

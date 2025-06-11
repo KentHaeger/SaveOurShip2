@@ -160,8 +160,10 @@ namespace SaveOurShip2
 					slate.Set<Map>("map", this.parent.Map, false);
 					slate.Set<Pawn>("worker", worker, false);
 					slate.Set<float>("radius", Rand.Range(120f, 180f), false);
-					slate.Set<float>("theta", Rand.Range(((WorldObjectOrbitingShip)this.parent.Map.Parent).Theta - 0.25f, ((WorldObjectOrbitingShip)this.parent.Map.Parent).Theta + 0.25f), false);
-					slate.Set<float>("phi", Rand.Range(-1f, 1f), false);
+					float shipTheta = ((WorldObjectOrbitingShip)this.parent.Map.Parent).Theta;
+					slate.Set<float>("theta", Rand.Range(shipTheta - 0.25f, shipTheta + 0.25f), false);
+					float shipPhi = ((WorldObjectOrbitingShip)this.parent.Map.Parent).Phi;
+					slate.Set<float>("phi", Rand.Range(shipPhi - 0.12f, shipPhi + 0.12f), false);
 					slate.Set<int>("siteTile", ShipInteriorMod2.FindWorldTile(), false);
 					Quest quest = QuestUtility.GenerateQuestAndMakeAvailable(DefDatabase<QuestScriptDef>.GetNamed("SpaceSiteQuest"), slate);
 					Find.LetterStack.ReceiveLetter(quest.name, quest.description, LetterDefOf.PositiveEvent, null, null, quest, null, null);
@@ -252,7 +254,11 @@ namespace SaveOurShip2
 					if (navy != null)
 					{
 						ship.spaceNavyDef = navy;
-						ship.attackableShip = navy.spaceShipDefs.Where(def => !def.neverRandom && !def.neverAttacks && def.rarityLevel <= rarity).RandomElement();
+						// TODO: split never attacks into 2 tags:
+						// 1) Who can't attack player ship randomly
+						// 2) Who can't even spawn as non-wreck
+						// For now, don't check neverAttacks here, for navy, so that Archotech Sphere can be found
+						ship.attackableShip = navy.spaceShipDefs.Where(def => !def.neverRandom && !def.spaceSite && def.rarityLevel <= rarity).RandomElement();
 						ship.shipFaction = Find.FactionManager.AllFactions.Where(f => navy.factionDefs.Contains(f.def)).RandomElement();
 					}
 				}

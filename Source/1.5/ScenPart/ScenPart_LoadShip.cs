@@ -142,6 +142,11 @@ namespace SaveOurShip2
 			var mostRecentFile = directory.GetFiles().OrderByDescending(f => f.LastWriteTime).FirstOrDefault();
 			if (mostRecentFile != null)
 				filename = Path.GetFileNameWithoutExtension(mostRecentFile.FullName);
+			if (!HasValidFilename())
+			{
+				Dialog_MessageBox window = new Dialog_MessageBox(TranslatorFormattedStringExtensions.Translate("SoS.NoShipsToLoad"));
+				Find.WindowStack.Add(window);
+			}
 		}
 		public void DoEarlyInit() //Scenario.GetFirstConfigPage call via patch
 		{
@@ -169,6 +174,7 @@ namespace SaveOurShip2
 			Scribe_Values.Look(ref playerFactionName, "playerFactionName");
 			//typeof(GameDataSaveLoader).GetField("isSavingOrLoadingExternalIdeo", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).SetValue(null, true);
 			Scribe_Deep.Look(ref playerFactionIdeo, "playerFactionIdeo");
+			Scribe_Values.Look(ref ShipInteriorMod2.LoadShipClassicIdeoMode, "classicMode", false);
 			Scribe_Collections.Look<Ideo>(ref ideosAboardShip, "ideos", LookMode.Deep);
 			//typeof(GameDataSaveLoader).GetField("isSavingOrLoadingExternalIdeo", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).SetValue(null, false);
 			Scribe_Deep.Look<TickManager>(ref tickManager, false, "tickManager");
@@ -210,7 +216,7 @@ namespace SaveOurShip2
 				//time
 				Current.Game.tickManager = tickManager;
 				traveltime = Rand.RangeInclusive(ModSettings_SoS.minTravelTime, ModSettings_SoS.maxTravelTime);
-				Current.Game.tickManager.DebugSetTicksGame(Current.Game.tickManager.TicksAbs + 3600000 * traveltime);
+				Current.Game.tickManager.DebugSetTicksGame(Current.Game.tickManager.TicksGame + 3600000 * traveltime);
 
 				Current.Game.playSettings = playSettings;
 				Current.Game.storyWatcher = storyWatcher;

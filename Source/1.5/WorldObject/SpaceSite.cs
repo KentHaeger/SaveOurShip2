@@ -24,9 +24,10 @@ namespace SaveOurShip2
 		{
 			get
 			{
-				Vector3 v = Vector3.SlerpUnclamped(orbitVec * radius, orbitVec * radius * -1, theta * -1);
+				// Vector3 v = Vector3.SlerpUnclamped(orbitVec * radius, orbitVec * radius * -1, theta * -1);
 				// Todo: y = phi*16 is a temporary fix to make space sites look spread around whitout bigger changes to coordinates code
-				return new Vector3(v.x, phi*16, v.z);
+				// return new Vector3(v.x, phi*16, v.z);
+				return WorldObjectMath.GetPos(phi, theta, radius);
 			}
 		}
 
@@ -47,6 +48,18 @@ namespace SaveOurShip2
 			Scribe_Values.Look<float>(ref theta, "theta", 0, false);
 			Scribe_Values.Look<float>(ref phi, "phi", 0, false);
 			Scribe_Values.Look<float>(ref radius, "radius", 0f, false);
+			const string newCoordsName = "newCoords";
+			bool newCoords = true;
+			Scribe_Values.Look<bool>(ref newCoords, newCoordsName, false, true);
+			if (Scribe.mode == LoadSaveMode.LoadingVars)
+			{
+				if (!newCoords)
+				{
+					// Old coordinates were using *16 , also degre to radians change
+					phi *= 16;
+					phi /= 180f / Mathf.PI;
+				}
+			}
 		}
 
 		public override void Print(LayerSubMesh subMesh)

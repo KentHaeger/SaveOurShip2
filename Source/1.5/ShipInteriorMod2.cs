@@ -65,6 +65,9 @@ namespace SaveOurShip2
             }
 			//Needs an init delay
 			if (useSplashScreen) LongEventHandler.QueueLongEvent(() => ShipInteriorMod2.UseCustomSplashScreen(), "ShipInteriorMod2", false, null);
+			// Poke SectionLayer_Gas to inituilize it's static resources, so that when space start scenario needs to create a map, that
+			// doesn't result in those resources loading from separate thread, whiuch is an error.
+			SectionLayer_Gas dummyGasLayer = new SectionLayer_Gas(null);
 		}
 
 		//This is an intentionally dumb name, in homage to my original 2019-era patch names. What it actually does is disable vehicle wrecks spawning in space. Credit to @Thain for the runner-up name, "NotElonsTesla"
@@ -131,9 +134,12 @@ namespace SaveOurShip2
 		{
 			base.GetSettings<ModSettings_SoS>();
 		}
-		public const string SOS2version = "SteamV2.7.4";
+		public const string SOS2version = "SteamV2.7.20";
 		public const int SOS2ReqCurrentMinor = 5;
-		public const int SOS2ReqCurrentBuild = 4062;
+		// 1.5.4063 public build (4062 constant) was not enough as there is no AnomalyUtility.TryDuplicatePawn_NewTemp method to harmony patch it.
+		// Historical builds are not available, so for sure can be increased just to next build, 4066
+		// Should be increased further if on old game version clean modlist fails with error applying harmony patch.
+		public const int SOS2ReqCurrentBuild = 4066;
 
 		public const float altitudeNominal = 1000f; //nominal altitude for ship map background render
 		public const float altitudeLand = 110f; //min altitude for ship map background render
@@ -148,6 +154,7 @@ namespace SaveOurShip2
 		public static Map shipOriginMap = null; //used to check for shipmove map size problem in placeworker, reset after move
 		public static bool SaveShipFlag; //used in patch to trigger ending scene
 		public static bool LoadShipFlag; //set to true in ScenPart_LoadShip.PostWorldGenerate and false in the patch to MapGenerator.GenerateMap
+		public static bool LoadShipClassicIdeoMode; // Has to be applied with a delay when loading ship
 		public static bool StartShipFlag; //as above but for ScenPart_StartInSpace
 		public static bool ArchoIdeoFlag;
 		public static bool MoveShipFlag //set on ship move/remove
@@ -184,7 +191,6 @@ namespace SaveOurShip2
 		public static List<ThingDef> randomPlants;
 		public static Dictionary<ThingDef, ThingDef> wreckDictionary;
 		public static Dictionary<ThingDef, ThingDef> archoConversions;
-		private static Type adaptiveStorageType;
 
 		public override void DoSettingsWindowContents(Rect inRect)
 		{
@@ -509,6 +515,9 @@ namespace SaveOurShip2
 			}
 			return -1;
 		}
+
+		// Can override world tile selection in dev Launch sommmand, launching ship over specified tile
+		public static int worldTileOverride = -1;
 		public static int FindWorldTilePlayer() //slower, will find tile nearest to ship object pos
 		{
 			float bestAbsLatitude = float.MaxValue;
@@ -541,7 +550,14 @@ namespace SaveOurShip2
 			WorldObjectOrbitingShip orbiter = (WorldObjectOrbitingShip)WorldObjectMaker.MakeWorldObject(ResourceBank.WorldObjectDefOf.ShipOrbiting);
 			orbiter.SetNominalPos();
 			orbiter.SetFaction(Faction.OfPlayer);
-			orbiter.Tile = FindWorldTilePlayer();
+			if (worldTileOverride == -1)
+			{
+				orbiter.Tile = FindWorldTilePlayer();
+			}
+			else
+			{
+				orbiter.Tile = worldTileOverride;
+			}
 			Find.WorldObjects.Add(orbiter);
 			Map map = MapGenerator.GenerateMap(size, orbiter, orbiter.MapGeneratorDef,null,null,false);
 			//map.fogGrid.ClearAllFog();
@@ -639,12 +655,14 @@ namespace SaveOurShip2
 					return check.RandomElement();
 				ships.Where(def => !def.neverAttacks && !def.neverRandom && (allowNavyExc || !def.navyExclusive)).RandomElement();
 			}
-            Log.Warning($"SOS2: found no suitable enemy ship at all, very final fallback, allowNavyExc: {allowNavyExc}, randomFleet: {randomFleet}");
-            // final_final_2_usethis.docx check: Prevents NRE attacking moonbase, should be almost never reached otherwise: 
-            check = ships.Where(def => ValidShipDef(def, 0, 100000f, tradeShip, allowNavyExc, randomFleet, 0, minZ, maxZ)).ToList();
-            if (check.Any())
-                return check.RandomElement();
-            return null;
+			Log.Warning($"SOS2: found no suitable enemy ship at all, very final fallback, allowNavyExc: {allowNavyExc}, randomFleet: {randomFleet}");
+			// final_final_2_usethis.docx check: Prevents NRE attacking moonbase, should be almost never reached otherwise:
+			check = ships.Where(def => ValidShipDef(def, 0, 100000f, tradeShip, allowNavyExc, randomFleet, 0, minZ, maxZ)).ToList();
+			if (check.Any())
+			{
+				return check.RandomElement();
+			}
+			return null;
 		}
 		public static bool ValidShipDef(ShipDef def, float CRmin, float CRmax, bool tradeShip, bool allowNavyExc, bool randomFleet, int rarity = 0, int minZ = 0, int maxZ = 0)
 		{
@@ -1415,6 +1433,7 @@ namespace SaveOurShip2
 				List<Pawn> pawnsToKill = new List<Pawn>();
 				foreach (Pawn p in pawnsOnShip)
 				{
+					bool killPawn = false;
 					if (wreckLevel == 5 && !p.RaceProps.IsFlesh)
 					{
 						continue;
@@ -1423,15 +1442,28 @@ namespace SaveOurShip2
 					{
 						if (!p.RaceProps.IsFlesh && Rand.Chance(0.1f)) //small chance for derp mechs
 							continue;
-						HealthUtility.DamageUntilDead(p);
+						killPawn = true;
 					}
 					else if (wreckLevel == 2)
 					{
 						int chance = Rand.RangeInclusive(1, 3);
 						if (chance == 1)
-							HealthUtility.DamageUntilDead(p);
+							killPawn = true;
 						else if (chance == 2)
 							HealthUtility.DamageUntilDowned(p);
+					}
+					if (killPawn)
+					{
+						if (ModLister.HasActiveModWithName("Mechanoid Upgrades") && p.RaceProps.IsMechanoid)
+						{
+							// Compatibility fix: damage until dead will cause NREs on mechanoids with shield upgrade from that mod.
+							// This is slightly less optimal way to kill tho, there wom't be multiple injures shown.
+							p.Kill(null);
+						}
+						else
+						{
+							HealthUtility.DamageUntilDead(p);
+						}
 					}
 				}
 				//invaders - pick faction, spawn lord + pawns
@@ -1961,8 +1993,6 @@ namespace SaveOurShip2
 			List<CompEngineTrail> nukeExplosions = new List<CompEngineTrail>();
 			List<Pawn> pawns = new List<Pawn>();
 			List<Plant> plants = new List<Plant>();
-			Dictionary<Thing, int> adaptiveStorageCapacities = new Dictionary<Thing, int>();
-			adaptiveStorageType = Type.GetType("AdaptiveStorage.ThingClass, AdaptiveStorageFramework", false);
 			int rotb = 4 - rotNum;
 
 			// Transforms vector from initial position to final according to desired movement/rotation.
@@ -2007,6 +2037,52 @@ namespace SaveOurShip2
 			if (sourceMapComp.ShipMapState == ShipMapState.inCombat && sourceMapComp.Docked.Any()) //undock all in combat
 			{
 				sourceMapComp.UndockAllFrom(shipIndex);
+			}
+			// Have to uninstall in separatre loop over tiles, as uninstalling can create minified thing it other tile if current on already contains items.
+			List<Building> toUninstall = new List<Building>();
+			List<MinifiedThing> toInstallAfterMove = new List<MinifiedThing>();
+			foreach (IntVec3 pos in sourceArea)
+			{
+				// Uninstall connected buildings which can't be "just moved"
+				foreach (Thing t in pos.GetThingList(sourceMap))
+				{
+					if (t is Building b)
+					{
+						if (b.def.defName == "CashRegister_CashRegister")
+						{
+							toUninstall.Add(b);
+						}
+						// Life support system moved to separate mod from questionable ethics. Uninstalling it does not work straight up,
+						// but unpowering disables well enough for ship move.
+						if (b.def.defName == "QE_LifeSupportSystem")
+						{
+							CompFlickable flickComp = b.TryGetComp<CompFlickable>();
+							if (flickComp != null && flickComp.SwitchIsOn)
+							{
+								flickComp.DoFlick();
+							}
+						}
+					}
+				}
+			}
+			foreach (Building item in toUninstall)
+			{
+				IntVec3 oldPosition = item.Position;
+				try
+				{
+					MinifiedThing uninstalled = item.Uninstall();
+					// Force uninstalled to original posion in order to install it back in that position too
+					uninstalled.Position = oldPosition;
+					toInstallAfterMove.Add(uninstalled);
+				}
+				catch (Exception e)
+				{
+					if (item != null)
+					{
+						Log.Warning("Error uninstaling during ship move: " + item.def.defName + " at " + item.Position);
+					}
+					throw e;
+				}
 			}
 			foreach (IntVec3 pos in sourceArea)
 			{
@@ -2096,7 +2172,9 @@ namespace SaveOurShip2
 						}
 						else if (t is Plant plant)
 							plants.Add(plant);
-						toMoveThings.Add(t);
+						// Explosion is a thing too, but it's better not move. Otherwise, will cause erors when moving to another map
+						if (!(t is Explosion))
+							toMoveThings.Add(t);
 					}
 				}
 				foreach (Pawn p in pawns) //drop carried things, add to move list
@@ -2228,7 +2306,20 @@ namespace SaveOurShip2
 					pawn.Notify_Teleported();
 				}
 				else if (!thing.Destroyed)
-					thing.Destroy();
+				{
+					try
+					{
+						thing.Destroy();
+					}
+					catch (Exception e)
+					{
+						if (thing != null)
+						{
+							Log.Warning("Error destroying during ship move: " + thing.def.defName + " at " + thing.Position);
+						}
+						throw e;
+					}
+				}
 			}
 			if (devMode)
 				watch.Record("destroySource");
@@ -2242,7 +2333,9 @@ namespace SaveOurShip2
 				try
 				{
 					if (spawnThing.Spawned)
+					{
 						spawnThing.DeSpawn();
+					}
 				}
 				catch (Exception e)
 				{
@@ -2267,16 +2360,15 @@ namespace SaveOurShip2
 					{
 						if (spawnThing.Spawned)
 						{
-							// The issue with adaptive storage is when de-spawned and later spwned in new shiup location, storage buildings have
-							// TotalSlots proerty incottectly set to 1.
-							// Saving that property, then applying after ship move is not ideal, but fixes everthing that was found to be wrong when testng.
-							// Check with IsAssignableFrom is for derived types to be handled too, as their existence is supported by Adaptive Storage design.
-							if (spawnThing.def.building != null && spawnThing.def.building.maxItemsInCell > 1)
+							// If it is a dining table in Gastronomy, it was reported that when actullly set to allow dining, broke ship launch
+							// With the use of that option on modded table.
+							ThingComp diningComp = (spawnThing as ThingWithComps)?.AllComps?.FirstOrDefault((ThingComp t) => t.GetType().Name == "CompCanDineAt");
+							if (diningComp != null)
 							{
-								if (adaptiveStorageType != null && adaptiveStorageType.IsAssignableFrom(spawnThing.GetType()))
+								MethodInfo tryRemoveDiningSpots = diningComp.GetType().GetMethod("TryRemoveDiningSpots", BindingFlags.NonPublic | BindingFlags.Instance);
+								if (tryRemoveDiningSpots != null)
 								{
-									int totalSlots = (int)spawnThing.GetType().GetProperty("TotalSlots", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).GetValue(spawnThing);
-									adaptiveStorageCapacities.Add(spawnThing, totalSlots);
+									tryRemoveDiningSpots.Invoke(diningComp, new object[] { });
 								}
 							}
 							spawnThing.DeSpawn();
@@ -2343,17 +2435,34 @@ namespace SaveOurShip2
 			}
 			foreach (Thing spawnThing in toMoveShipParts)
 			{
-				ReSpawnThingOnMap(spawnThing, targetMap, adjustment, rotb, null, fac);
+				ReSpawnThingOnMap(spawnThing, targetMap, adjustment, rotb, fac);
 			}
 			foreach (Thing spawnThing in toMoveBuildings)
 			{
-				// adaptiveStorageCapacities only needed when respawning buldings
-				ReSpawnThingOnMap(spawnThing, targetMap, adjustment, rotb, adaptiveStorageCapacities, fac);
+				try
+				{
+					ReSpawnThingOnMap(spawnThing, targetMap, adjustment, rotb, fac);
+				}
+				catch (Exception e)
+				{
+					if (spawnThing != null)
+					{
+						Log.Warning("Error respawning during ship move: " + spawnThing.def.defName + " at " + spawnThing.Position);
+					}
+					throw e;
+				}
 			}
 			foreach (Thing spawnThing in toMoveThings)
 			{
 				if(!(spawnThing is Plant))
-					ReSpawnThingOnMap(spawnThing, targetMap, adjustment, rotb, null, fac);
+					ReSpawnThingOnMap(spawnThing, targetMap, adjustment, rotb, fac);
+			}
+			foreach (MinifiedThing minified in toInstallAfterMove)
+			{
+				Thing toInstall = minified.InnerThing;
+				GenSpawn.Spawn(toInstall, minified.Position, targetMap, toInstall.Rotation);
+				minified.InnerThing = null;
+				minified.Destroy();
 			}
 			if (devMode)
 				watch.Record("moveThings");
@@ -2496,7 +2605,7 @@ namespace SaveOurShip2
 			}
 			foreach(Plant plant in plants)
             {
-				ReSpawnThingOnMap(plant, targetMap, adjustment, rotb, null, fac);
+				ReSpawnThingOnMap(plant, targetMap, adjustment, rotb, fac);
 			}
 			if (devMode)
 				watch.Record("moveTerrain");
@@ -2573,7 +2682,11 @@ namespace SaveOurShip2
 			}
 			foreach (Section sec in sourceSec)
 			{
-				sec.RegenerateAllLayers(); //RegenerateDirtyLayers - some layers are not set dirty properly (zones), slower
+				// In transit map is not expected to have all layers set up, neither needs them
+				if (sourceMapComp.ShipMapState != ShipMapState.inTransit)
+				{
+					sec.RegenerateAllLayers(); //RegenerateDirtyLayers - some layers are not set dirty properly (zones), slower
+				}
 			}
 			List<Section> targetSec = new List<Section>();
 			foreach (IntVec3 pos in targetArea)
@@ -2592,7 +2705,7 @@ namespace SaveOurShip2
 				Log.Message("SOS2: ".Colorize(Color.cyan) + sourceMap + " Ship move complete in ".Colorize(Color.green) + watch.MakeReport());
 			}
 		}
-		private static void ReSpawnThingOnMap(Thing spawnThing, Map targetMap, IntVec3 adjustment, int rotb, Dictionary<Thing, int> adaptiveStorageCapacities, Faction fac = null)
+		private static void ReSpawnThingOnMap(Thing spawnThing, Map targetMap, IntVec3 adjustment, int rotb, Faction fac = null)
 		{
 			if (spawnThing.Destroyed)
 				return;
@@ -2609,8 +2722,10 @@ namespace SaveOurShip2
 				}
 				else if (spawnThing.def.rotatable == false && spawnThing.def.size.x % 2 == 0)
 					adjx -= 1;
-				rot.x = targetMap.Size.x - spawnThing.Position.z + adjx;
-				rot.z = spawnThing.Position.x;
+				IntVec3 additionalAdj = new IntVec3(adjx, 0, adjz);
+				additionalAdj = additionalAdj.RotatedBy(spawnThing.Rotation);
+				rot.x = targetMap.Size.x - spawnThing.Position.z + additionalAdj.x;
+				rot.z = spawnThing.Position.x + additionalAdj.z;
 				spawnThing.Position = rot + adjustment;
 			}
 			else if (rotb == 2)
@@ -2621,19 +2736,32 @@ namespace SaveOurShip2
 					spawnThing.Rotation = new Rot4(spawnThing.Rotation.AsByte + rotb);
 				}
 				else if (spawnThing.def.rotatable == false && spawnThing.def.size.x % 2 == 0)
+				{
 					adjx -= 1;
+				}
+				IntVec3 additionalAdj = new IntVec3(adjx, 0, adjz);
+				additionalAdj = additionalAdj.RotatedBy(spawnThing.Rotation);
+				rot.x = targetMap.Size.x - spawnThing.Position.z + additionalAdj.x;
+				rot.z = spawnThing.Position.x + additionalAdj.z;
+				IntVec3 tempPos = rot;
+				// Code repetiotion here, get adjustment again, rotate from tempPos again
+				int secondAdjx = 0;
+				int secondAdjz = 0;
+				if (spawnThing.def.rotatable == false && spawnThing.def.size.x % 2 == 0)
+				{
+					secondAdjx -= 1;
+				}
 				if (spawnThing.def.rotatable == false && spawnThing.def.size.x != spawnThing.def.size.z)
 				{
 					if (spawnThing.def.size.z % 2 == 0) //5x2
-						adjz -= 1;
+						secondAdjz -= 1;
 					else //6x3,6x7
-						adjz += 1;
+						secondAdjz += 1;
 				}
-				rot.x = targetMap.Size.x - spawnThing.Position.z + adjx;
-				rot.z = spawnThing.Position.x;
-				IntVec3 tempPos = rot;
-				rot.x = targetMap.Size.x - tempPos.z + adjx;
-				rot.z = tempPos.x + adjz;
+				IntVec3 secondAdj = new IntVec3(secondAdjx, 0, secondAdjz);
+				secondAdj = secondAdj.RotatedBy(spawnThing.Rotation);
+				rot.x = targetMap.Size.x - tempPos.z + secondAdj.x;
+				rot.z = tempPos.x + secondAdj.z;
 				spawnThing.Position = rot + adjustment;
 			}
 			else
@@ -2643,24 +2771,6 @@ namespace SaveOurShip2
 				spawnThing.SetFaction(fac);
 
 			spawnThing.SpawnSetup(targetMap, !spawnThing.def.HasModExtension<SoSSpawnOverride>());
-
-			if (spawnThing.def.building != null && spawnThing.def.building.maxItemsInCell > 1)
-			{
-				if (adaptiveStorageType != null && adaptiveStorageType.IsAssignableFrom(spawnThing.GetType()))
-				{
-					if (adaptiveStorageCapacities.ContainsKey(spawnThing))
-					{
-						try
-						{
-							spawnThing.GetType().GetProperty("TotalSlots", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).SetValue(spawnThing, adaptiveStorageCapacities[spawnThing]);
-						}
-						catch (Exception e)
-						{
-							Log.Warning("Error applying adaptive storage capacity: " + e.Message);
-						}
-					}
-				}
-			}
 
 			if (spawnThing is Pawn pawn)
 				pawn.pather.ResetToCurrentPosition();
@@ -2851,6 +2961,7 @@ namespace SaveOurShip2
 				Scribe_Values.Look(ref playerFactionName, "playerFactionName");
 				//typeof(GameDataSaveLoader).GetField("isSavingOrLoadingExternalIdeo", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).SetValue(null, true);
 				Scribe_Deep.Look(ref playerFactionIdeo, "playerFactionIdeo");
+				Scribe_Values.Look(ref Find.IdeoManager.classicMode, "classicMode", forceSave:true);
 				//typeof(GameDataSaveLoader).GetField("isSavingOrLoadingExternalIdeo", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).SetValue(null, false);
 
 				Scribe_Deep.Look<TickManager>(ref Current.Game.tickManager, true, "tickManager");
@@ -3222,11 +3333,24 @@ namespace SaveOurShip2
 					else //fighter
 					{
 						Log.Message("Speccing shuttle as heavy fighter");
-						vehicle.CompUpgradeTree.FinishUnlock(vehicle.CompUpgradeTree.Props.def.GetNode("TurretPlasmaA"));
-						if (vehicle.statHandler.GetStatValue(ResourceBank.VehicleStatDefOf.Hardpoints) >= 2)
-							vehicle.CompUpgradeTree.FinishUnlock(vehicle.CompUpgradeTree.Props.def.GetNode("TurretPlasmaB"));
-						if (vehicle.statHandler.GetStatValue(ResourceBank.VehicleStatDefOf.Hardpoints) >= 3)
-							vehicle.CompUpgradeTree.FinishUnlock(vehicle.CompUpgradeTree.Props.def.GetNode("TurretPlasmaC"));
+						if (!ModIntegration.IsCEEnabled())
+						{
+							vehicle.CompUpgradeTree.FinishUnlock(vehicle.CompUpgradeTree.Props.def.GetNode("TurretPlasmaA"));
+							if (vehicle.statHandler.GetStatValue(ResourceBank.VehicleStatDefOf.Hardpoints) >= 2)
+								vehicle.CompUpgradeTree.FinishUnlock(vehicle.CompUpgradeTree.Props.def.GetNode("TurretPlasmaB"));
+							if (vehicle.statHandler.GetStatValue(ResourceBank.VehicleStatDefOf.Hardpoints) >= 3)
+								vehicle.CompUpgradeTree.FinishUnlock(vehicle.CompUpgradeTree.Props.def.GetNode("TurretPlasmaC"));
+						}
+						else
+						{
+							// Temporary fix, don't give plasma weapons to shuttles in CE.
+							Log.Message("Speccing shuttle as interceptor");
+							vehicle.CompUpgradeTree.FinishUnlock(vehicle.CompUpgradeTree.Props.def.GetNode("TurretLaserA"));
+							if (vehicle.statHandler.GetStatValue(ResourceBank.VehicleStatDefOf.Hardpoints) >= 2)
+								vehicle.CompUpgradeTree.FinishUnlock(vehicle.CompUpgradeTree.Props.def.GetNode("TurretLaserB"));
+							if (vehicle.statHandler.GetStatValue(ResourceBank.VehicleStatDefOf.Hardpoints) >= 3)
+								vehicle.CompUpgradeTree.FinishUnlock(vehicle.CompUpgradeTree.Props.def.GetNode("TurretLaserC"));
+						}
 					}
 				}
 				else //transport
@@ -3238,11 +3362,10 @@ namespace SaveOurShip2
 				if (Rand.RangeInclusive(chance, 10) > 5) //shields
 				{
 					shields = true;
-					// TODO: Temporary disable spawning enemy shields
-					/*if (size > 2 || (size > 1 && Rand.Bool))
+					if (size > 2 || (size > 1 && Rand.Bool))
 						vehicle.CompUpgradeTree.FinishUnlock(vehicle.CompUpgradeTree.Props.def.GetNode("ShieldsHeavy"));
 					else
-						vehicle.CompUpgradeTree.FinishUnlock(vehicle.CompUpgradeTree.Props.def.GetNode("ShieldsBasic"));*/
+						vehicle.CompUpgradeTree.FinishUnlock(vehicle.CompUpgradeTree.Props.def.GetNode("ShieldsBasic"));
 				}
 				if (Rand.RangeInclusive(chance, 10) > 6) //armor
 				{
@@ -3265,13 +3388,12 @@ namespace SaveOurShip2
 				}
 				if (Rand.RangeInclusive(chance, 10) > 7) //util
 				{
-					// TODO: Temporary disable spawning cloak and heatsink too
-
-					/*if (size > 1 && Rand.Bool)
+					if (size > 1 && Rand.Bool)
 						vehicle.CompUpgradeTree.FinishUnlock(vehicle.CompUpgradeTree.Props.def.GetNode("CargoCloaking"));
 					else if (shields)
-						vehicle.CompUpgradeTree.FinishUnlock(vehicle.CompUpgradeTree.Props.def.GetNode("CargoHeatsink"));*/
+						vehicle.CompUpgradeTree.FinishUnlock(vehicle.CompUpgradeTree.Props.def.GetNode("CargoHeatsink"));
 				}
+				vehicle.RecacheComponents();
 			}
 		}
 	}
@@ -3316,7 +3438,7 @@ namespace SaveOurShip2
 		{
 			// For now, issue was found with Escape Ship map due to that map not being linked to world object
 			// So, fixing onlyy that case for now
-			WorldObject worldObject = Find.WorldObjects.ObjectsAt(tile).Where(t => t is EscapeShip).First();
+			WorldObject worldObject = Find.WorldObjects.ObjectsAt(tile).FirstOrDefault(t => t is EscapeShip);
 			if (worldObject != null && worldObject.Faction != Faction.OfPlayer)
 			{
 				// Link map to Escap ship object sho that it gets "Home" icon and when selected on world map, there is Abadon option 

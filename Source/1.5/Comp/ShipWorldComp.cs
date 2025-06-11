@@ -18,12 +18,15 @@ namespace SaveOurShip2
 		public List<Building_ShipSensor> Sensors = new List<Building_ShipSensor>();
 		public bool MoveShipFlag = false;
 		public int nextUniqueMissionID = 0;
-		public const int StarhipBowTimeout = 1800000;
+		public const int StarhipBowTimeout = 720000; // 12 days
 		public int LastStarshipBowTick = -StarhipBowTimeout;
+		public Dictionary<Pawn, float> MinorBreakThresholds = new Dictionary<Pawn, float>();
+		public Dictionary<Pawn, float> MajorBreakThresholds = new Dictionary<Pawn, float>();
+		public Dictionary<Pawn, float> ExtremeBreakThresholds = new Dictionary<Pawn, float>();
 
 		public ShipWorldComp(World world) : base(world)
 		{
-
+			ShipInteriorMod2.PurgeWorldComp();
 		}
 
 		private int nextShipId = 0;
@@ -92,6 +95,9 @@ namespace SaveOurShip2
 			if (Scribe.mode != LoadSaveMode.PostLoadInit)
 			{
 				ShipInteriorMod2.PurgeWorldComp();
+				MinorBreakThresholds.Clear();
+				MajorBreakThresholds.Clear();
+				ExtremeBreakThresholds.Clear();
 			}
 			/*if (Scribe.mode!=LoadSaveMode.Saving)
 			{

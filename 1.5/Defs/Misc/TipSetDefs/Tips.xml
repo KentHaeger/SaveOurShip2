@@ -40,6 +40,8 @@
       <li TKey="SoSTipShuttles">Shuttlecraft come in four sizes. Only the smallest among them is powered by chemfuel; larger cargo shuttles require nuclear fuel.</li>
       <li TKey="SoSTipShuttleBay">Shuttle bays allow cargo and passengers to enter a ship without ever risking vacuum exposure.</li>
       <li TKey="SoSTipShuttleUpgrades">By default, a shuttlecraft has one seat for its pilot. Your colonists can add passenger capacity, weapons, shields, and other upgrades - at some cost in cargo space.</li>
+	  <li TKey="SoSTipShuttlesEnemy">Due to technical limitations, enemy shuttles count as enemy pawns on their ship, preventing deconstruction and claiminig buildings.</li>
+	  <li TKey="SoSTipImprovisedShuttleBay">Hardpoint can be used as improvised shuttle bay for personal shuttle or even 3 by 3 shuttle on small ships. Unlike proper bay, hardpoint will make room exposed to vacuum.</li>
 
       <!-- Misc ship stuff -->
       <li TKey="SoSTipVacuum">Vacuum exposure is not fun. Be sure to have EVA suits on hand in case of a hull breach.</li>

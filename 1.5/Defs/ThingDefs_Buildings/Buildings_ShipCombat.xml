@@ -36,6 +36,7 @@
 		<pathCost>50</pathCost>
 		<tickerType>Normal</tickerType>
 		<terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
+		<holdsRoof>true</holdsRoof>
 		<designationCategory>Ship</designationCategory>
 		<statBases>
 			<MaxHitPoints>1000</MaxHitPoints>
@@ -45,6 +46,10 @@
 			<Beauty>0</Beauty>
 			<RangedWeapon_DamageMultiplier>1.0</RangedWeapon_DamageMultiplier>
 		</statBases>
+		<building>
+			<!-- When not enough energy to fire, Vanilla sound logic would cause enemy turrets to beep continually and annoyingly, so disabled -->
+			<playTargetAcquiredSound>false</playTargetAcquiredSound>
+		</building>
 		<uiIconScale>1.0</uiIconScale>
 		<seeThroughFog>true</seeThroughFog>
 	</ThingDef>
@@ -291,6 +296,7 @@
 	<ThingDef ParentName="ShipHeatsinkBase">
 		<defName>ShipHeatsink</defName>
 		<label>heatsink</label>
+		<holdsRoof>true</holdsRoof>
 		<altitudeLayer>Gas</altitudeLayer>
 		<description>A heatsink that slowly removes heat from the heat network. Will take damage if coolant gets near maximum heat capacity and release all heat stored if destroyed. Will slowly replenish capacity from depletion when not in battle. Does not function if the ship is cloaked.\n\nHeat capacity: 200Hu\nHeat vented to space: 4Hu/s\nHeat loss: 1Hu/s</description>
 		<size>(2,2)</size>
@@ -340,6 +346,7 @@
 	<ThingDef ParentName="ShipHeatsinkBase">
 		<defName>ShipHeatsinkLarge</defName>
 		<label>large heatsink</label>
+		<holdsRoof>true</holdsRoof>
 		<altitudeLayer>Gas</altitudeLayer>
 		<description>A large heatsink that slowly removes heat from the heat network. Will take damage if coolant gets near maximum heat capacity and release all heat stored if destroyed. Will slowly replenish capacity from depletion when not in battle. Does not function if the ship is cloaked.\n\nHeat capacity: 1000Hu\nHeat vented to space: 16Hu/s\nHeat loss: 3Hu/s</description>
 		<size>(4,4)</size>
@@ -468,7 +475,7 @@
 		<defName>ShipPurgePort</defName>
 		<label>emergency purge port</label>
 		<altitudeLayer>Gas</altitudeLayer>
-		<description>A system for channeling heat into low-melting-point metals like silver. Ejecting molten silver into space is a costly way to quickly purge stored heat. Shields will be dropped during a purge.</description>
+		<description>A system for channeling heat into low-melting-point metals like silver. Ejecting molten silver into space is a costly way to quickly purge stored heat. Shields will be dropped during a purge.\n\nFully fueled purge port can dump 20 000 heat units from ship heat network.</description>
 		<size>(2,2)</size>
 		<graphicData>
 			<texPath>Things/Building/Ship/PurgePort</texPath>
@@ -525,7 +532,7 @@
 		<defName>ShipPurgePortLarge</defName>
 		<label>large emergency purge port</label>
 		<altitudeLayer>Gas</altitudeLayer>
-		<description>A system for rapidly channeling heat into low-melting-point metals like silver. Ejecting molten silver into space is a costly way to quickly purge stored heat. Shields will be dropped during a purge.</description>
+		<description>A system for rapidly channeling heat into low-melting-point metals like silver. Ejecting molten silver into space is a costly way to quickly purge stored heat. Shields will be dropped during a purge.\n\nFully fueled large purge port can dump 100 000 heat units from ship heat network.</description>
 		<size>(4,4)</size>
 		<graphicData>
 			<texPath>Things/Building/Ship/PurgePortLarge</texPath>
@@ -2157,6 +2164,7 @@
 				<emits>false</emits>
 				<receives>true</receives>
 				<color>(0.5,0,0)</color>
+				<wipeoutWidth>3</wipeoutWidth>
 			</li>
 			<li Class="SaveOurShip2.CompProps_ShipHeat">
 				<compClass>SaveOurShip2.CompShipHeat</compClass>
@@ -2267,6 +2275,7 @@
 				<emits>false</emits>
 				<receives>true</receives>
 				<color>(0,0.5,0)</color>
+				<wipeoutWidth>3</wipeoutWidth>
 			</li>
 			<li Class="SaveOurShip2.CompProps_ShipHeat">
 				<compClass>SaveOurShip2.CompShipHeat</compClass>
@@ -2397,6 +2406,7 @@
 				<emits>false</emits>
 				<receives>true</receives>
 				<color>(0,0,0.5)</color>
+				<wipeoutWidth>3</wipeoutWidth>
 			</li>
 			<li Class="SaveOurShip2.CompProps_ShipHeat">
 				<compClass>SaveOurShip2.CompShipHeat</compClass>

@@ -26,6 +26,7 @@
 			<ArmorRating_Heat>0.75</ArmorRating_Heat>
 			<Insulation_Cold>100</Insulation_Cold>
 			<Insulation_Heat>25</Insulation_Heat>
+			<SellPriceFactor>0.35</SellPriceFactor>
 		</statBases>
 		<equippedStatOffsets>
 			<MoveSpeed>-0.25</MoveSpeed>
@@ -66,6 +67,10 @@
 			</tags>
 			<defaultOutfitTags />
 		</apparel>
+		<tradeability>Sellable</tradeability>
+		<tradeTags>
+			<li>Clothing</li>
+		</tradeTags>
 		<comps>
 			<li>
 				<compClass>SaveOurShip2.CompEVA</compClass>
@@ -99,6 +104,7 @@
 			<ArmorRating_Heat>0.75</ArmorRating_Heat>
 			<Insulation_Cold>100</Insulation_Cold>
 			<Insulation_Heat>25</Insulation_Heat>
+			<SellPriceFactor>0.35</SellPriceFactor>
 		</statBases>
 		<equippedStatOffsets>
 			<MoveSpeed>-0.25</MoveSpeed>
@@ -141,6 +147,10 @@
 			</tags>
 			<defaultOutfitTags />
 		</apparel>
+		<tradeability>Sellable</tradeability>
+		<tradeTags>
+			<li>Clothing</li>
+		</tradeTags>
 		<comps>
 			<li>
 				<compClass>SaveOurShip2.CompEVA</compClass>
@@ -168,12 +178,13 @@
 		<statBases>
 			<WorkToMake>16000</WorkToMake>
 			<MaxHitPoints>160</MaxHitPoints>
-			<Mass>2.7</Mass>
+			<Mass>1.5</Mass>
 			<ArmorRating_Blunt>0.4</ArmorRating_Blunt>
 			<ArmorRating_Sharp>0.4</ArmorRating_Sharp>
 			<ArmorRating_Heat>0.75</ArmorRating_Heat>
 			<Insulation_Cold>50</Insulation_Cold>
 			<Insulation_Heat>25</Insulation_Heat>
+			<SellPriceFactor>0.35</SellPriceFactor>
 		</statBases>
 		<equippedStatOffsets>
 			<MoveSpeed>-0.04</MoveSpeed>
@@ -232,12 +243,13 @@
 		<statBases>
 			<WorkToMake>16000</WorkToMake>
 			<MaxHitPoints>160</MaxHitPoints>
-			<Mass>2.7</Mass>
+			<Mass>1</Mass>
 			<ArmorRating_Blunt>0.4</ArmorRating_Blunt>
 			<ArmorRating_Sharp>0.4</ArmorRating_Sharp>
 			<ArmorRating_Heat>0.75</ArmorRating_Heat>
 			<Insulation_Cold>50</Insulation_Cold>
 			<Insulation_Heat>25</Insulation_Heat>
+			<SellPriceFactor>0.35</SellPriceFactor>
 		</statBases>
 		<equippedStatOffsets>
 			<MoveSpeed>-0.04</MoveSpeed>
@@ -307,6 +319,7 @@
 			<Insulation_Cold>100</Insulation_Cold>
 			<Insulation_Heat>25</Insulation_Heat>
 			<EquipDelay>15</EquipDelay>
+			<SellPriceFactor>0.35</SellPriceFactor>
 		</statBases>
 		<equippedStatOffsets>
 			<MoveSpeed>-0.4</MoveSpeed>
@@ -364,6 +377,11 @@
 				</li>
 			</options>
 		</colorGenerator>
+		<tradeability>Sellable</tradeability>
+		<tradeTags>
+			<li>HiTechArmor</li>
+			<li>Armor</li>
+		</tradeTags>
 		<comps>
 			<li>
 				<compClass>SaveOurShip2.CompEVA</compClass>
@@ -394,7 +412,7 @@
 		<statBases>
 			<WorkToMake>21000</WorkToMake>
 			<MaxHitPoints>150</MaxHitPoints>
-			<Mass>1.5</Mass>
+			<Mass>2.7</Mass>
 			<Flammability>0.4</Flammability>
 			<ArmorRating_Sharp>1.06</ArmorRating_Sharp>
 			<ArmorRating_Blunt>0.45</ArmorRating_Blunt>
@@ -402,6 +420,7 @@
 			<Insulation_Cold>50</Insulation_Cold>
 			<Insulation_Heat>25</Insulation_Heat>
 			<EquipDelay>4</EquipDelay>
+			<SellPriceFactor>0.35</SellPriceFactor>
 		</statBases>
 		<equippedStatOffsets>
 			<MoveSpeed>-0.04</MoveSpeed>
@@ -430,6 +449,11 @@
 			</tags>
 			<defaultOutfitTags />
 		</apparel>
+		<tradeability>Sellable</tradeability>
+		<tradeTags>
+			<li>HiTechArmor</li>
+			<li>Armor</li>
+		</tradeTags>
 		<comps>
 			<li>
 				<compClass>SaveOurShip2.CompEVA</compClass>
