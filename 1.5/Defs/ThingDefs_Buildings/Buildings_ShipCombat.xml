@@ -475,7 +475,7 @@
 		<defName>ShipPurgePort</defName>
 		<label>emergency purge port</label>
 		<altitudeLayer>Gas</altitudeLayer>
-		<description>A system for channeling heat into low-melting-point metals like silver. Ejecting molten silver into space is a costly way to quickly purge stored heat. Shields will be dropped during a purge.</description>
+		<description>A system for channeling heat into low-melting-point metals like silver. Ejecting molten silver into space is a costly way to quickly purge stored heat. Shields will be dropped during a purge.\n\nFully fueled purge port can dump 20 000 heat units from ship heat network.</description>
 		<size>(2,2)</size>
 		<graphicData>
 			<texPath>Things/Building/Ship/PurgePort</texPath>
@@ -532,7 +532,7 @@
 		<defName>ShipPurgePortLarge</defName>
 		<label>large emergency purge port</label>
 		<altitudeLayer>Gas</altitudeLayer>
-		<description>A system for rapidly channeling heat into low-melting-point metals like silver. Ejecting molten silver into space is a costly way to quickly purge stored heat. Shields will be dropped during a purge.</description>
+		<description>A system for rapidly channeling heat into low-melting-point metals like silver. Ejecting molten silver into space is a costly way to quickly purge stored heat. Shields will be dropped during a purge.\n\nFully fueled large purge port can dump 100 000 heat units from ship heat network.</description>
 		<size>(4,4)</size>
 		<graphicData>
 			<texPath>Things/Building/Ship/PurgePortLarge</texPath>

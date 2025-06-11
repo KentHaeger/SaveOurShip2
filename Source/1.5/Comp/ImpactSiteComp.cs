@@ -51,7 +51,7 @@ namespace SaveOurShip2
 				}
 				if (flag2 && !flag && !flag3)
 				{
-					Find.LetterStack.ReceiveLetter(TranslatorFormattedStringExtensions.Translate("ImpactSiteLostLabel"), TranslatorFormattedStringExtensions.Translate("ImpactSiteLost"), LetterDefOf.NegativeEvent);
+					Find.LetterStack.ReceiveLetter(TranslatorFormattedStringExtensions.Translate("SoS.ImpactSiteLost"), TranslatorFormattedStringExtensions.Translate("SoS.ImpactSiteLostDesc"), LetterDefOf.NegativeEvent);
 					Find.WorldObjects.Remove(this.parent);
 					ShipInteriorMod2.GenerateSite("ShipEngineImpactSite");
 				}

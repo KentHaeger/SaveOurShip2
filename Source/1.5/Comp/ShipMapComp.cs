@@ -3009,7 +3009,8 @@ namespace SaveOurShip2
 				// New option ignores given coordintes (v) for now.
 				ShipMapComp mapComp = targetMap.GetComponent<ShipMapComp>();
 				SpaceShipCache mainShip = mapComp.ShipsOnMap.Values.OrderByDescending(x => x.Threat).First();
-				IntVec3 location = mainShip.Core.Position;
+				// Center is for rare case when player was bridgekilled while emeny boarding party was on the way.
+				IntVec3 location = mainShip?.Core?.Position ?? targetMap.Center;
 				Rot4 moveRot = mainShip.Engines.Any() ? mainShip.Engines.First().parent.Rotation : mainShip.Core.Rotation;
 				IntVec3 moveDirection = moveRot.AsVector2.ToVector3().ToIntVec3();
 

@@ -1028,26 +1028,6 @@ namespace SaveOurShip2
 						yield return returnShip;
 					}
 				}
-				Command_Action selectOuterdoors = new Command_Action
-				{
-					groupable = false,
-					action = delegate
-					{
-						Find.Selector.ClearSelection();
-						foreach (Building building in Ship.Buildings)
-						{
-							if (building is Building_ShipAirlock airlock && airlock.Outerdoor())
-							{
-								Find.Selector.Select(airlock, false);
-							}
-						}
-					},
-					// Uses single door of the standard airlock as icon
-					icon = ContentFinder<Texture2D>.Get("Things/Building/Ship/Airlock_Mover"),
-					defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.BridgeSelectOuterdoors"),
-					defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.BridgeSelectOuterdoorsDesc")
-				};
-				yield return selectOuterdoors;
 			}
 			else //launch
 			{
@@ -1110,6 +1090,26 @@ namespace SaveOurShip2
 					yield return launchToSpecificTile;
 				}
 			}
+			Command_Action selectOuterdoors = new Command_Action
+			{
+				groupable = false,
+				action = delegate
+				{
+					Find.Selector.ClearSelection();
+					foreach (Building building in Ship.Buildings)
+					{
+						if (building is Building_ShipAirlock airlock && airlock.Outerdoor())
+						{
+							Find.Selector.Select(airlock, false);
+						}
+					}
+				},
+				// Uses single door of the standard airlock as icon
+				icon = ContentFinder<Texture2D>.Get("Things/Building/Ship/Airlock_Mover"),
+				defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.BridgeSelectOuterdoors"),
+				defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.BridgeSelectOuterdoorsDesc")
+			};
+			yield return selectOuterdoors;
 		}
 		private bool ChoseWorldTarget(GlobalTargetInfo target)
 		{
@@ -1153,7 +1153,7 @@ namespace SaveOurShip2
 			if (countdownComp != null && mapComp.ShipMapState != ShipMapState.isGraveyard && countdownComp.ForceExitAndRemoveMapCountdownActive)
 			{
 				countdownComp.ResetForceExitAndRemoveMapCountdown();
-				Messages.Message("SoS.BurnUpPlayerPrevented", this, MessageTypeDefOf.PositiveEvent);
+				Messages.Message(TranslatorFormattedStringExtensions.Translate("SoS.BurnUpPlayerPrevented"), this, MessageTypeDefOf.PositiveEvent);
 			}
 		}
 		public override void Destroy(DestroyMode mode = DestroyMode.Vanish)

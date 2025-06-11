@@ -40,7 +40,7 @@ namespace SaveOurShip2
 
 		// These ships/stations were manually picked as not interesting (not actual combat ship)/not intended to start with.
 		// To make ship list easier to use, it's huge
-		private static readonly string excludedShipsString = "AbandonedMiningStation,ContainerFurniture,ContainerLoot,ContainerMech,ContainerSecure," +
+		private static readonly string excludedShipsString = "AfterlifeVaultStart,AbandonedMiningStation,ContainerFurniture,ContainerLoot,ContainerMech,ContainerSecure," +
 			"ContainerSecurity,ContainerTV,DefenseInstallation,DefenseInstallation4,DefenseInstallation6,MechanoidMoonBase,SatelliteLarge2," +
 			"SatelliteLarge2Eng,SatelliteLarge2Eng2,SatelliteLarge3Eng,SatelliteLarge3Eng2,SatelliteLarge4,SatelliteSmall2,SatelliteSmall2Eng," +
 			"SatelliteSmall2Eng2,SatelliteSmall3,SatelliteSmall3Eng,SatelliteSmall3Eng2,SatelliteSmall4,SmallSatellite,StarshipBowDungeon,StartSiteAsteroidA," +
