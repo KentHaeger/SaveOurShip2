@@ -4909,6 +4909,16 @@ namespace SaveOurShip2
 		}
 	}
 
+	[HarmonyPatch(typeof(VehiclePawn), "AddTimedExplosion")]
+	public static class NoExplosionsOffMap
+	{
+		public static bool Prefix(VehiclePawn __instance)
+		{
+			return __instance.Map != null;
+		}
+	}
+
+
 	[HarmonyPatch(typeof(VehicleAI), "AITick")]
 	public static class NoAITick
 	{
