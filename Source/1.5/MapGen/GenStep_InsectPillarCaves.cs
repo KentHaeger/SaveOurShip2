@@ -29,10 +29,6 @@ namespace SaveOurShip2
 					thing.Destroy();
 				MapGenerator.Caves[cell] = 0;
 			}
-			foreach(IntVec3 cell in cells.Where(c=>c.DistanceToEdge(map) <= 5)) //Failsafe for shuttle landing areas
-            {
-				map.roofGrid.SetRoof(cell, null);
-			}
 			for (int i = 0; i < 5; i++)
 			{
 				Dig(new IntVec3(0, 0, Rand.Range(5, map.Size.z - 5)), 90, 20 , cells, map, false);
@@ -41,7 +37,8 @@ namespace SaveOurShip2
 				Dig(new IntVec3(Rand.Range(5, map.Size.x - 5), 0, map.Size.z - 1), 180, 20, cells, map, false);
 			}
 			bool foundPillarSpot = false;
-			IEnumerable<IntVec3> centerArea = cells.Where(c => c.x > map.Size.x / 4 && c.x < map.Size.x - map.Size.x / 4 && c.z > map.Size.z / 4 && c.z < map.Size.z - map.Size.z / 4);
+			IntVec3 pillarCell = IntVec3.Invalid;
+            IEnumerable<IntVec3> centerArea = cells.Where(c => c.x > map.Size.x / 4 && c.x < map.Size.x - map.Size.x / 4 && c.z > map.Size.z / 4 && c.z < map.Size.z - map.Size.z / 4);
 			do {
 				IntVec3 cell = centerArea.RandomElement();
 				if (cell.GetThingList(map).Count == 0)
@@ -54,8 +51,36 @@ namespace SaveOurShip2
 						Pawn spider = (Pawn)GenSpawn.Spawn(PawnGenerator.GeneratePawn(PawnKindDef.Named("Archospider"), Faction.OfInsects), cell, map);
 						theLord.AddPawn(spider);
 					}
+					pillarCell = cell;
 				}
 			} while (!foundPillarSpot);
+
+			for (int breaches = 0; breaches < 3; breaches++)
+			{
+				//Find a spot that's near the edge and also has a cave, then turn it into a breach point for shuttle landings
+				IntVec3 breachPoint = IntVec3.Invalid;
+				do
+				{
+					IntVec3 possibleCell = CellFinder.RandomNotEdgeCell(7, map);
+					if (possibleCell.DistanceTo(pillarCell) > 30 && possibleCell.GetEdifice(map) == null)
+						breachPoint = possibleCell;
+
+				} while (breachPoint == IntVec3.Invalid);
+
+				Log.Message("Found breach point at " + breachPoint);
+
+				for (int x = breachPoint.x - 4; x <= breachPoint.x + 4; x++)
+				{
+					for (int z = breachPoint.z - 4; z <= breachPoint.z + 4; z++)
+					{
+						IntVec3 breachCell = new IntVec3(x, 0, z);
+						map.roofGrid.SetRoof(breachCell, null);
+						Building wall = breachCell.GetEdifice(map);
+						if (wall != null)
+							wall.Destroy();
+					}
+				}
+			}
 
 			foreach(Pawn p in map.mapPawns.AllPawnsSpawned.Where(p=>p.Faction!=Faction.OfPlayer))
 			{
