@@ -170,7 +170,7 @@ namespace SaveOurShip2
 									Messages.Message(TranslatorFormattedStringExtensions.Translate("SoS.CombatPodDestroyedPlayer"), null, MessageTypeDefOf.NegativeEvent);
 								else
 									Messages.Message(TranslatorFormattedStringExtensions.Translate("SoS.CombatPodDestroyedEnemy"), null, MessageTypeDefOf.PositiveEvent);
-								ShipMapComp.ShuttleMissionData shuttleMission = mapComp.TargetMapComp.ShuttleMissions.Where(mission => mission.shuttle == shuttleHit).DefaultIfEmpty(null).First();
+								ShipMapComp.ShuttleMissionData shuttleMission = mapComp.TargetMapComp.ShuttleMissions.Where(mission => mission.shuttle == shuttleHit).FirstOrDefault();
 								if (shuttleMission != null)
 								{
 									mapComp.TargetMapComp.DeRegisterShuttleMission(shuttleMission, true);
@@ -201,7 +201,7 @@ namespace SaveOurShip2
 							}
 							else if(shuttleHit.statHandler.GetStatValue(VehicleStatDefOf.BodyIntegrity) <= ((CompShuttleLauncher)shuttleHit.CompVehicleLauncher).retreatAtHealth)
                             {
-                                ShipMapComp.ShuttleMissionData missionData = mapComp.TargetMapComp.ShuttleMissions.Where(mission => mission.shuttle == shuttleHit).DefaultIfEmpty(null).First();
+                                ShipMapComp.ShuttleMissionData missionData = mapComp.TargetMapComp.ShuttleMissions.Where(mission => mission.shuttle == shuttleHit).FirstOrDefault();
 								if (missionData != null)
 								{
 									if (missionData.mission != ShipMapComp.ShuttleMission.RETURN)

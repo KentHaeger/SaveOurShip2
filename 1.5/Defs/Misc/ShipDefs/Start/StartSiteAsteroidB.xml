@@ -7,7 +7,7 @@
 		<offsetZ>6</offsetZ>
 		<sizeX>240</sizeX>
 		<sizeZ>233</sizeZ>
-		<label>Asteroid Base</label>
+		<label>Deteriorating Asteroid Mine (High Difficulty)</label>
 		<combatPoints>2135</combatPoints>
 		<neverRandom>True</neverRandom>
 		<startingShip>True</startingShip>
