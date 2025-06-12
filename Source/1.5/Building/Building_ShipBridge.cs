@@ -1113,7 +1113,8 @@ namespace SaveOurShip2
 		}
 		private bool ChoseWorldTarget(GlobalTargetInfo target)
 		{
-			foreach (CompCryptoLaunchable pod in Ship.Pods)
+			List<CompCryptoLaunchable> pods = Ship.Pods.ListFullCopy();
+			foreach (CompCryptoLaunchable pod in pods)
 			{
 				pod.ChoseWorldTarget(target);
 			}
