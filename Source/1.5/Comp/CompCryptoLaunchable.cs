@@ -64,7 +64,7 @@ namespace SaveOurShip2
 			CameraJumper.TryJump(CameraJumper.GetWorldTarget(this.parent));
 			Find.WorldSelector.ClearSelection();
 			int tile = this.parent.Map.Tile;
-			Find.WorldTargeter.BeginTargeting(new Func<GlobalTargetInfo, bool>(this.ChoseWorldTarget), true, TargeterMouseAttachment, true, delegate
+			Find.WorldTargeter.BeginTargeting(new Func<GlobalTargetInfo, bool>(this.ChoseGroupWorldTarget), true, TargeterMouseAttachment, true, delegate
 			{
 			}, delegate (GlobalTargetInfo target)
 			{
@@ -82,6 +82,21 @@ namespace SaveOurShip2
 					return TranslatorFormattedStringExtensions.Translate("MustLaunchFromOrbit");
 				return null;
 			});
+		}
+
+		bool ChoseGroupWorldTarget(GlobalTargetInfo target)
+		{
+			bool anyFoundTargets = false;
+			foreach(object obj in Find.Selector.selected.ToList()) //To avoid modifying collection
+			{
+				if(obj is ThingWithComps twc)
+                {
+                    CompCryptoLaunchable launchable = twc.TryGetComp<CompCryptoLaunchable>();
+                    if (launchable != null && !launchable.NotReadyToLaunch)
+						anyFoundTargets = anyFoundTargets | launchable.ChoseWorldTarget(target);
+                }
+			}
+			return anyFoundTargets;
 		}
 
 		public bool ChoseWorldTarget(GlobalTargetInfo target)
