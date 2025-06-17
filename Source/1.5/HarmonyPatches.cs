@@ -4909,6 +4909,28 @@ namespace SaveOurShip2
 		}
 	}
 
+	[HarmonyPatch(typeof(VehiclePawn), "DisembarkAll")]
+	public static class UnfogOnDisembark
+	{
+		public static void Postfix(VehiclePawn __instance)
+		{
+			if (__instance.Faction == Faction.OfPlayer && __instance.Spawned)
+			{
+				// Failsafe - unfog from vehicle location.
+				// When landing on ship bay it is already unfogged, but not the whle room where the bay is located. So unfog adjacent.
+				FloodFillerFog.FloodUnfog(__instance.Position, __instance.Map);
+				Building bay = (Building)__instance.Position.GetThingList(__instance.Map).Where(t => ((t as ThingWithComps)?.TryGetComp<CompShipBay>() ?? null) != null).DefaultIfEmpty(null).First();
+				if (bay != null)
+				{
+					foreach(IntVec3 cellToUnfog in GenAdj.CellsAdjacentCardinal(bay).Where(cell => !cell.Impassable(__instance.Map)))
+					{
+						FloodFillerFog.FloodUnfog(cellToUnfog, __instance.Map);
+					}
+				}
+			}
+		}
+	}
+
 	[HarmonyPatch(typeof(VehiclePawn), "AddTimedExplosion")]
 	public static class NoExplosionsOffMap
 	{
@@ -4917,7 +4939,6 @@ namespace SaveOurShip2
 			return __instance.Map != null;
 		}
 	}
-
 
 	[HarmonyPatch(typeof(VehicleAI), "AITick")]
 	public static class NoAITick
