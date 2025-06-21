@@ -1092,15 +1092,19 @@ namespace SaveOurShip2
 			{
 				foreach (CompHullFoamDistributor dist in FoamDistributors.Where(d => d.fuelComp.Fuel > 0 && d.powerComp.PowerOn))
 				{
-					Tuple<bool, IntVec3, int> toReplace = BuildingsToFoam.OrderBy(t => t.Item3).First(); 
-
-					Thing replacer = ThingMaker.MakeThing(toReplace.Item1 ? ResourceBank.ThingDefOf.HullFoamWall : ResourceBank.ThingDefOf.ShipHullfoamTile);
-
-					replacer.SetFaction(Faction);
-					if (GenPlace.TryPlaceThing(replacer, toReplace.Item2, map, ThingPlaceMode.Direct))
+					// Re-check that still have something to patch after previous iteration
+					if (BuildingsToFoam.Any())
 					{
-						BuildingsToFoam.Remove(toReplace);
-						dist.fuelComp.ConsumeFuel(1);
+						Tuple<bool, IntVec3, int> toReplace = BuildingsToFoam.OrderBy(t => t.Item3).First();
+
+						Thing replacer = ThingMaker.MakeThing(toReplace.Item1 ? ResourceBank.ThingDefOf.HullFoamWall : ResourceBank.ThingDefOf.ShipHullfoamTile);
+
+						replacer.SetFaction(Faction);
+						if (GenPlace.TryPlaceThing(replacer, toReplace.Item2, map, ThingPlaceMode.Direct))
+						{
+							BuildingsToFoam.Remove(toReplace);
+							dist.fuelComp.ConsumeFuel(1);
+						}
 					}
 				}
 			}

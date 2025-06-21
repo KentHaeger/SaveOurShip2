@@ -51,8 +51,17 @@ namespace SaveOurShip2.Vehicles
             get
             {
                 if (isTorpedo)
+                {
                     return base.SubGizmos;
-                return new List<SubGizmo>();
+                }
+                else if (autoTargeting)
+                {
+                    return new List<SubGizmo>() { SubGizmo_AutoTarget(this) };
+                }
+                else
+				{
+                    return new List<SubGizmo>();
+                }
             }
         }
 

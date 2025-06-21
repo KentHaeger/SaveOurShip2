@@ -115,6 +115,33 @@ namespace SaveOurShip2
 			}
 			return true;
 		}
+
+		public Command_Action GetTargetShuttlesCommand()
+		{
+			Command_Action result = new Command_Action
+			{
+				action = delegate
+				{
+					SoundDefOf.Tick_Tiny.PlayOneShotOnCamera();
+					CameraJumper.TryJump(mapComp.ShipCombatTargetMap.Center, mapComp.ShipCombatTargetMap);
+					Targeter targeter = Find.Targeter;
+					TargetingParameters parms = new TargetingParameters();
+					parms.canTargetPawns = true;
+					parms.canTargetBuildings = true;
+					parms.canTargetLocations = true;
+					Find.Targeter.BeginTargeting(parms, (Action<LocalTargetInfo>)delegate (LocalTargetInfo x)
+					{
+						mapComp.TargetMapComp.ShuttleTarget = x.Cell;
+					}, (Pawn)null, delegate { CameraJumper.TryJump(this.Position, mapComp.ShipCombatOriginMap); });
+				},
+				defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.TargetShuttles"),
+				defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.TargetShuttlesDesc"),
+				groupable = false,
+				icon = ContentFinder<Texture2D>.Get("UI/ShuttleMissionStrafe")
+			};
+			return result;
+		}
+
 		[DebuggerHidden]
 		public override IEnumerable<Gizmo> GetGizmos()
 		{
@@ -530,27 +557,7 @@ namespace SaveOurShip2
                     }
 					if (mapComp.ShuttleMissions.Any(mission => mission.mission==ShipMapComp.ShuttleMission.STRAFE || mission.mission==ShipMapComp.ShuttleMission.BOMB))
                     {
-						Command_Action targetShuttles = new Command_Action
-						{
-							action = delegate
-							{
-								SoundDefOf.Tick_Tiny.PlayOneShotOnCamera();
-								CameraJumper.TryJump(mapComp.ShipCombatTargetMap.Center, mapComp.ShipCombatTargetMap);
-								Targeter targeter = Find.Targeter;
-								TargetingParameters parms = new TargetingParameters();
-								parms.canTargetPawns = true;
-								parms.canTargetBuildings = true;
-								parms.canTargetLocations = true;
-								Find.Targeter.BeginTargeting(parms, (Action<LocalTargetInfo>)delegate (LocalTargetInfo x)
-								{
-									mapComp.TargetMapComp.ShuttleTarget = x.Cell;
-								}, (Pawn)null, delegate { CameraJumper.TryJump(this.Position, mapComp.ShipCombatOriginMap); });
-							},
-							defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.TargetShuttles"),
-							defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.TargetShuttlesDesc"),
-							groupable = false,
-							icon = ContentFinder<Texture2D>.Get("UI/ShuttleMissionStrafe")
-						};
+						Command_Action targetShuttles = GetTargetShuttlesCommand();
 						yield return targetShuttles;
                     }
 					if (ckActive)
@@ -1028,26 +1035,6 @@ namespace SaveOurShip2
 						yield return returnShip;
 					}
 				}
-				Command_Action selectOuterdoors = new Command_Action
-				{
-					groupable = false,
-					action = delegate
-					{
-						Find.Selector.ClearSelection();
-						foreach (Building building in Ship.Buildings)
-						{
-							if (building is Building_ShipAirlock airlock && airlock.Outerdoor())
-							{
-								Find.Selector.Select(airlock, false);
-							}
-						}
-					},
-					// Uses single door of the standard airlock as icon
-					icon = ContentFinder<Texture2D>.Get("Things/Building/Ship/Airlock_Mover"),
-					defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.BridgeSelectOuterdoors"),
-					defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.BridgeSelectOuterdoorsDesc")
-				};
-				yield return selectOuterdoors;
 			}
 			else //launch
 			{
@@ -1110,10 +1097,31 @@ namespace SaveOurShip2
 					yield return launchToSpecificTile;
 				}
 			}
+			Command_Action selectOuterdoors = new Command_Action
+			{
+				groupable = false,
+				action = delegate
+				{
+					Find.Selector.ClearSelection();
+					foreach (Building building in Ship.Buildings)
+					{
+						if (building is Building_ShipAirlock airlock && airlock.Outerdoor())
+						{
+							Find.Selector.Select(airlock, false);
+						}
+					}
+				},
+				// Uses single door of the standard airlock as icon
+				icon = ContentFinder<Texture2D>.Get("Things/Building/Ship/Airlock_Mover"),
+				defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.BridgeSelectOuterdoors"),
+				defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.BridgeSelectOuterdoorsDesc")
+			};
+			yield return selectOuterdoors;
 		}
 		private bool ChoseWorldTarget(GlobalTargetInfo target)
 		{
-			foreach (CompCryptoLaunchable pod in Ship.Pods)
+			List<CompCryptoLaunchable> pods = Ship.Pods.ListFullCopy();
+			foreach (CompCryptoLaunchable pod in pods)
 			{
 				pod.ChoseWorldTarget(target);
 			}
@@ -1153,7 +1161,7 @@ namespace SaveOurShip2
 			if (countdownComp != null && mapComp.ShipMapState != ShipMapState.isGraveyard && countdownComp.ForceExitAndRemoveMapCountdownActive)
 			{
 				countdownComp.ResetForceExitAndRemoveMapCountdown();
-				Messages.Message("SoS.BurnUpPlayerPrevented", this, MessageTypeDefOf.PositiveEvent);
+				Messages.Message(TranslatorFormattedStringExtensions.Translate("SoS.BurnUpPlayerPrevented"), this, MessageTypeDefOf.PositiveEvent);
 			}
 		}
 		public override void Destroy(DestroyMode mode = DestroyMode.Vanish)

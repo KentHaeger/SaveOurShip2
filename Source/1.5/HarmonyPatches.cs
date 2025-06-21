@@ -4829,6 +4829,19 @@ namespace SaveOurShip2
         }
     }
 
+	[HarmonyPatch(typeof(Command_CooldownAction), "DrawBottomBar")]
+	public static class DontDrawExtraBarForVehicleTurrets
+	{
+		public static bool Prefix(Command_CooldownAction __instance)
+		{
+			if(__instance.turret.turretDef.defName == "SoS2ShuttlePlasma" || (__instance.turret.turretDef.defName == "SoS2ShuttleLaser"))
+			{
+				return false;
+			}
+			return true;
+		}
+	}
+
 	[HarmonyPatch(typeof(VehiclePawn), "ExposeData")]
 	public static class VehicleExposeData
 	{
@@ -4863,6 +4876,20 @@ namespace SaveOurShip2
 
 		public static void Postfix(VehiclePawn __instance, bool respawningAfterLoad)
 		{
+			if (__instance.Faction == Faction.OfPlayer && __instance.Spawned)
+			{
+				// Failsafe - unfog from vehicle location.
+				FloodFillerFog.FloodUnfog(__instance.Position, __instance.Map);
+				// When landing on ship bay that is already unfogged (bay feature) within fogged room need to unfog adjacent.
+				Building bay = (Building)__instance.Position.GetThingList(__instance.Map).Where(t => ((t as ThingWithComps)?.TryGetComp<CompShipBay>() ?? null) != null).DefaultIfEmpty(null).First();
+				if (bay != null)
+				{
+					foreach (IntVec3 cellToUnfog in GenAdj.CellsAdjacentCardinal(bay).Where(cell => !cell.Impassable(__instance.Map)))
+					{
+						FloodFillerFog.FloodUnfog(cellToUnfog, __instance.Map);
+					}
+				}
+			}
 			if (!respawningAfterLoad)
 			{
 				CompVehicleHeatNet net2 = __instance.GetComp<CompVehicleHeatNet>();
@@ -4893,6 +4920,15 @@ namespace SaveOurShip2
 					mapComp.Shields.Add(compShield);
 				}
 			}
+		}
+	}
+
+	[HarmonyPatch(typeof(VehiclePawn), "AddTimedExplosion")]
+	public static class NoExplosionsOffMap
+	{
+		public static bool Prefix(VehiclePawn __instance)
+		{
+			return __instance.Map != null;
 		}
 	}
 

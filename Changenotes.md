@@ -1,4 +1,4 @@
-Changes published Nov 24 2026
+Changes published Nov 24 2024
 
 New things and notable changes:
 - Quest shuttles can land on Shuttle Bays and Salvage Bays and don't need shuttle landing beacons in this case.
@@ -189,3 +189,22 @@ June 1 2025
 
 June 3 2025
 - Added support for unlocking all ships as starting ship options in submod. Nothing to use yet, wait for submod release.
+
+June 11 2025
+- Allow select outer airlocks command on planet surface, as requested by players.
+- Fixed error when enemy boarding party arrived to defeated player ship.
+- Stop forced target command made available for forced target in ground defense mode.
+- Spinal weapons will auto-update and find their amplifiers and capacitor, no longer needed to select-to-update.
+- Fixed several in-game texts
+- Shuttle Laser and Plasma turrets can now auto-fire, toggle-able on turret gizmo. With this ability, they are too strong, so aiming time changed from 1.5 to 3.5 seconds.
+
+June 12 2025
+- Delta Pillar site now generates roof breaches large enough for a superheavy shuttle.
+- Fixed few minor shuttle issues in ship battles.
+- Delta Pillar site now generates roof breaches large enough for a superheavy shuttle.
+- Fixed missing RCS thrusters on starting Garden Vessel.
+- Fixed a missing texture error for players who don't own Biotech.
+
+June 18 2025
+- Sending shuttle to strafe or bomn mission now auto-activeates sarget selection for shuttles.
+- Added unfogging on shuttle arrival, to fix the issue with landing to enemy shuttle bays.

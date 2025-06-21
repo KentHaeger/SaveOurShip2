@@ -478,7 +478,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Krafs.Publicizer">
-      <Version>2.2.1</Version>
+      <Version>2.3.0</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>

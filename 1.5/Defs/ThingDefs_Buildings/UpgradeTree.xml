@@ -978,7 +978,7 @@
 								<turretDef>SoS2ShuttleLaser</turretDef>
 								
 								<gizmoLabel>Laser Turret A</gizmoLabel>
-								<autoTargeting>false</autoTargeting>
+								<autoTargeting>true</autoTargeting>
 								
 								<key>laserTurretA</key>
 							</li>
@@ -1024,7 +1024,7 @@
 								<turretDef>SoS2ShuttlePlasma</turretDef>
 								
 								<gizmoLabel>Plasma Turret A</gizmoLabel>
-								<autoTargeting>false</autoTargeting>
+								<autoTargeting>true</autoTargeting>
 								
 								<key>plasmaTurretA</key>
 							</li>
@@ -1114,7 +1114,7 @@
 								<turretDef>SoS2ShuttleLaser</turretDef>
 								
 								<gizmoLabel>Laser Turret B</gizmoLabel>
-								<autoTargeting>false</autoTargeting>
+								<autoTargeting>true</autoTargeting>
 								
 								<key>laserTurretB</key>
 							</li>
@@ -1160,7 +1160,7 @@
 								<turretDef>SoS2ShuttlePlasma</turretDef>
 								
 								<gizmoLabel>Plasma Turret B</gizmoLabel>
-								<autoTargeting>false</autoTargeting>
+								<autoTargeting>true</autoTargeting>
 								
 								<key>plasmaTurretB</key>
 							</li>
@@ -1250,7 +1250,7 @@
 								<turretDef>SoS2ShuttleLaser</turretDef>
 								
 								<gizmoLabel>Laser Turret C</gizmoLabel>
-								<autoTargeting>false</autoTargeting>
+								<autoTargeting>true</autoTargeting>
 								
 								<key>laserTurretC</key>
 							</li>
@@ -1296,7 +1296,7 @@
 								<turretDef>SoS2ShuttlePlasma</turretDef>
 								
 								<gizmoLabel>Plasma Turret C</gizmoLabel>
-								<autoTargeting>false</autoTargeting>
+								<autoTargeting>true</autoTargeting>
 								
 								<key>plasmaTurretC</key>
 							</li>
@@ -1374,9 +1374,9 @@
 		<shotSound>ShipCombatLaser</shotSound>
 		
 		<reloadTimer>25.0</reloadTimer>
-		
+
 		<projectile>Shuttle_Laser</projectile>
-		<warmUpTimer>1.5</warmUpTimer>
+		<warmUpTimer>3.5</warmUpTimer>
 		
 		<magazineCapacity>6</magazineCapacity>
 		
@@ -1456,7 +1456,7 @@
 		<reloadTimer>25.0</reloadTimer>
 		
 		<projectile>Shuttle_Plasma</projectile>
-		<warmUpTimer>1.5</warmUpTimer>
+		<warmUpTimer>3.5</warmUpTimer>
 		
 		<autoSnapTargeting>false</autoSnapTargeting>
 		<rotationSpeed>2</rotationSpeed>

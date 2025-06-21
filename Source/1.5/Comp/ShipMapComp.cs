@@ -691,6 +691,18 @@ namespace SaveOurShip2
 			}
 			return -1;
 		}
+		public SpaceShipCache ShipOnVec(IntVec3 vec)
+		{
+			int shipIndex = ShipIndexOnVec(vec);
+			if (shipIndex != -1)
+			{
+				return shipsOnMap[shipIndex];
+			}
+			else
+			{
+				return null;
+			}
+		}
 		public bool VecHasLS(IntVec3 vec)
 		{
 			int shipIndex = ShipIndexOnVec(vec);
@@ -2507,7 +2519,8 @@ namespace SaveOurShip2
 				Log.Warning("SOS2: ".Colorize(Color.cyan) + map + " Ship ".Colorize(Color.green) + shipIndex + " Removing with: " + core);
 				if (ShipGraveyard == null)
 					SpawnGraveyard(map.Parent);
-				IReadOnlyList<Pawn> pawns = map.mapPawns.AllPawnsSpawned;
+				// Make a copy of AllPawnsSpawned because disembarking changes that list
+				List<Pawn> pawns = map.mapPawns.AllPawnsSpawned.ToList();
 				foreach (Pawn pawn in pawns)
                 {
 					if (pawn.Faction != Faction.OfPlayer && ship.Area.Contains(pawn.Position))
@@ -3009,7 +3022,8 @@ namespace SaveOurShip2
 				// New option ignores given coordintes (v) for now.
 				ShipMapComp mapComp = targetMap.GetComponent<ShipMapComp>();
 				SpaceShipCache mainShip = mapComp.ShipsOnMap.Values.OrderByDescending(x => x.Threat).First();
-				IntVec3 location = mainShip.Core.Position;
+				// Center is for rare case when player was bridgekilled while emeny boarding party was on the way.
+				IntVec3 location = mainShip?.Core?.Position ?? targetMap.Center;
 				Rot4 moveRot = mainShip.Engines.Any() ? mainShip.Engines.First().parent.Rotation : mainShip.Core.Rotation;
 				IntVec3 moveDirection = moveRot.AsVector2.ToVector3().ToIntVec3();
 
