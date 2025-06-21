@@ -354,7 +354,7 @@ namespace SaveOurShip2
 			rect.x = offset;
 			rect.height = Text.LineHeight;
 			if (bridge.powerCap > 0)
-				Widgets.Label(rect,  + bridge.power + " / " + bridge.powerCap);
+				Widgets.Label(rect,  bridge.power.ToString("N0") + " / " + bridge.powerCap.ToString("N0"));
 			else
 				Widgets.Label(rect, "<color=red>"+"SoSCombatNoEnergy".Translate()+"</color>");
 		}
@@ -366,7 +366,7 @@ namespace SaveOurShip2
 			rect.x = offset;
 			rect.height = Text.LineHeight;
 			if (bridge.heatCap > 0)
-				Widgets.Label(rect, "SoSCombatHeat".Translate() + Mathf.Floor(bridge.heat) + " / " + bridge.heatCap);
+				Widgets.Label(rect, "SoSCombatHeat".Translate() + Mathf.Floor(bridge.heat).ToString("N0") + " / " + bridge.heatCap.ToString("N0"));
 			else
 				Widgets.Label(rect, "<color=red>" + "SoSCombatNoHeat".Translate() + "</color>");
 		}
