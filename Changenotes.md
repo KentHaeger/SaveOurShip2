@@ -1,4 +1,4 @@
-Changes published Nov 24 2026
+Changes published Nov 24 2024
 
 New things and notable changes:
 - Quest shuttles can land on Shuttle Bays and Salvage Bays and don't need shuttle landing beacons in this case.
