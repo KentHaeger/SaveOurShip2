@@ -206,5 +206,5 @@ June 12 2025
 - Fixed a missing texture error for players who don't own Biotech.
 
 June 18 2025
-- Sending shuttle to strafe or bomn mission now auto-activeates sarget selection for shuttles.
+- Sending shuttle to strafe or bomb mission now auto-activeates sarget selection for shuttles.
 - Added unfogging on shuttle arrival, to fix the issue with landing to enemy shuttle bays.
