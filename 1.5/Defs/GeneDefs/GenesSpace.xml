@@ -72,7 +72,7 @@
     </comps>
   </AbilityDef>
   
-  <ThingDef ParentName="BuildingBase" MayRequire="Ludeon.RimWorld.Biotech">
+  <ThingDef ParentName="BuildingBase">
     <defName>SoS2CryptosleepCocoon</defName>
     <label>cryptosleep cocoon</label>
     <description>A cocoon containing a person deep in cryptosleep.</description>
@@ -80,7 +80,8 @@
     <containedPawnsSelectable>true</containedPawnsSelectable>
     <drawerType>MapMeshAndRealTime</drawerType>
     <graphicData>
-      <texPath MayRequire="Ludeon.RimWorld.Biotech">Things/Building/Natural/CocoonSpelopede</texPath>
+      <!-- Stub texture, pathed in xml self-patch due to MayRequire not working properly and Biotech texture used here -->
+      <texPath>Things/Plant/Vanoroot</texPath>
       <graphicClass>Graphic_Random</graphicClass>
       <drawSize>(1, 1)</drawSize>
     </graphicData>

@@ -354,7 +354,7 @@ namespace SaveOurShip2
 			rect.x = offset;
 			rect.height = Text.LineHeight;
 			if (bridge.powerCap > 0)
-				Widgets.Label(rect,  + bridge.power + " / " + bridge.powerCap);
+				Widgets.Label(rect,  bridge.power.ToString("N0") + " / " + bridge.powerCap.ToString("N0"));
 			else
 				Widgets.Label(rect, "<color=red>"+"SoSCombatNoEnergy".Translate()+"</color>");
 		}
@@ -366,7 +366,7 @@ namespace SaveOurShip2
 			rect.x = offset;
 			rect.height = Text.LineHeight;
 			if (bridge.heatCap > 0)
-				Widgets.Label(rect, "SoSCombatHeat".Translate() + Mathf.Floor(bridge.heat) + " / " + bridge.heatCap);
+				Widgets.Label(rect, "SoSCombatHeat".Translate() + Mathf.Floor(bridge.heat).ToString("N0") + " / " + bridge.heatCap.ToString("N0"));
 			else
 				Widgets.Label(rect, "<color=red>" + "SoSCombatNoHeat".Translate() + "</color>");
 		}
@@ -4876,6 +4876,20 @@ namespace SaveOurShip2
 
 		public static void Postfix(VehiclePawn __instance, bool respawningAfterLoad)
 		{
+			if (__instance.Faction == Faction.OfPlayer && __instance.Spawned)
+			{
+				// Failsafe - unfog from vehicle location.
+				FloodFillerFog.FloodUnfog(__instance.Position, __instance.Map);
+				// When landing on ship bay that is already unfogged (bay feature) within fogged room need to unfog adjacent.
+				Building bay = (Building)__instance.Position.GetThingList(__instance.Map).Where(t => ((t as ThingWithComps)?.TryGetComp<CompShipBay>() ?? null) != null).DefaultIfEmpty(null).First();
+				if (bay != null)
+				{
+					foreach (IntVec3 cellToUnfog in GenAdj.CellsAdjacentCardinal(bay).Where(cell => !cell.Impassable(__instance.Map)))
+					{
+						FloodFillerFog.FloodUnfog(cellToUnfog, __instance.Map);
+					}
+				}
+			}
 			if (!respawningAfterLoad)
 			{
 				CompVehicleHeatNet net2 = __instance.GetComp<CompVehicleHeatNet>();
@@ -4917,7 +4931,6 @@ namespace SaveOurShip2
 			return __instance.Map != null;
 		}
 	}
-
 
 	[HarmonyPatch(typeof(VehicleAI), "AITick")]
 	public static class NoAITick
