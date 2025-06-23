@@ -51,6 +51,8 @@ namespace SaveOurShip2
 		// Need to cache game setting in order to update when it's cchanged
 		public bool ShowRoofOverlayCached;
 
+		AccuracyCalculator accuracyCalculator;
+
 		public ShipMapComp(Map map) : base(map)
 		{
 			grid = new int[map.cellIndices.NumGridCells];
@@ -61,6 +63,13 @@ namespace SaveOurShip2
 		{
 			AccessExtensions.Utility.shipHeatMapCompCache.Remove(this);
 			base.MapRemoved();
+		}
+		public bool IsValid
+		{
+			get
+			{
+				return AccessExtensions.Utility.shipHeatMapCompCache.Contains(this);
+			}
 		}
 		public override void MapComponentUpdate()
 		{
@@ -248,6 +257,7 @@ namespace SaveOurShip2
 				Scribe_Collections.Look<ShipCombatProjectile>(ref TorpsInRange, "ShipTorpsInRange");
 				Scribe_References.Look<Map>(ref ShipCombatOriginMap, "ShipCombatOriginMap");
 				Scribe_References.Look<Map>(ref ShipCombatTargetMap, "ShipCombatTargetMap");
+				Scribe_Deep.Look<AccuracyCalculator>(ref accuracyCalculator, "AccuracyCalculator");
 
 				//SC only - origin only
 				originMapComp = null;
@@ -848,6 +858,8 @@ namespace SaveOurShip2
 			Log.Message("SOS2: ".Colorize(Color.cyan) + map + " Starting combat vs map: ".Colorize(Color.green) + ShipCombatTargetMap);
 			TargetMapComp.ShipCombatTargetMap = ShipCombatOriginMap;
 			TargetMapComp.ShipCombatOriginMap = ShipCombatOriginMap;
+			accuracyCalculator = new AccuracyCalculator(this, TargetMapComp);
+			TargetMapComp.accuracyCalculator = new AccuracyCalculator(TargetMapComp, this);
 			//start caches
 			RepathMap();
 			ResetCombatVars();
@@ -1225,34 +1237,44 @@ namespace SaveOurShip2
 						//td determine miss, remove proj
 						//factors for miss: range+,pilot console+,mass-,thrusters+
 						//factors when fired/registered:weapacc-,tac console-
-						Projectile projectile;
+						Projectile newProjectile;
 						IntVec3 spawnCell;
 						if (proj.burstLoc == IntVec3.Invalid)
 							spawnCell = FindClosestEdgeCell(ShipCombatTargetMap, proj.target.Cell);
 						else
 							spawnCell = proj.burstLoc;
 						//Log.Message("Spawning " + proj.turret + " projectile on player ship at " + proj.target);
-						projectile = (Projectile)GenSpawn.Spawn(proj.spawnProjectile, spawnCell, ShipCombatTargetMap);
+						newProjectile = (Projectile)GenSpawn.Spawn(proj.spawnProjectile, spawnCell, ShipCombatTargetMap);
 
 						//get angle
 						IntVec3 a = proj.target.Cell - spawnCell;
 						float angle = a.AngleFlat;
-						//get miss
-						float missAngle = Rand.Range(-proj.missRadius, proj.missRadius); //base miss from xml
-						float rng = proj.range - proj.turret.heatComp.Props.optRange;
-						if (rng > 0)
+
+						float missAngle = 0;
+						if (!ModSettings_SoS.newAccuracySystem || !(accuracyCalculator?.IsValid ?? false))
 						{
-							//add miss to angle
-							missAngle *= (float)Math.Sqrt(rng); //-20 - 20
-							//Log.Message("angle: " + angle + ", missangle: " + missAngle);
+							// Base miss from xml
+							missAngle = Rand.Range(-proj.missRadius, proj.missRadius); 
+							// Inaccuracy at above optimal range
+							float rng = proj.range - proj.turret.heatComp.Props.optRange;
+							if (rng > 0)
+							{
+								//add miss to angle
+								missAngle *= (float)Math.Sqrt(rng); //-20 - 20
+																	//Log.Message("angle: " + angle + ", missangle: " + missAngle);
+							}
+							//shooter adj 0-50%
+							missAngle *= (100 - proj.accBoost * 2.5f) / 100;
 						}
-						//shooter adj 0-50%
-						missAngle *= (100 - proj.accBoost * 2.5f) / 100;
+						else
+						{
+							missAngle = accuracyCalculator.GetMissAngle(proj);
+						}
 						angle += missAngle;
 						//new vec from origin + angle
 						IntVec3 c = spawnCell + new Vector3(1000 * Mathf.Sin(Mathf.Deg2Rad * angle), 0, 1000 * Mathf.Cos(Mathf.Deg2Rad * angle)).ToIntVec3();
 						//Log.Message("Target cell was " + proj.target.Cell + ", adjusted to " + c);
-						projectile.Launch(proj.turret, spawnCell.ToVector3Shifted(), c, proj.target.Cell, ProjectileHitFlags.All, equipment: proj.turret);
+						newProjectile.Launch(proj.turret, spawnCell.ToVector3Shifted(), c, proj.target.Cell, ProjectileHitFlags.All, equipment: proj.turret);
 						toRemove.Add(proj);
 					}
 					else if ((proj.spawnProjectile.thingClass == typeof(Projectile_ExplosiveShipTorpedo) || proj.spawnProjectile.thingClass == typeof(Projectile_ExplosiveShipAntigrain)) && !TorpsInRange.Contains(proj) && OriginMapComp.Range - proj.range < 65)

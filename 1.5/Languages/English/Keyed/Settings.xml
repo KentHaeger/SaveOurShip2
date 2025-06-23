@@ -21,6 +21,8 @@
 	<SoS.Settings.EasyMode.Desc>If checked, will prevent player pawns in shuttles from dying to point defense. Default: off</SoS.Settings.EasyMode.Desc>
 	<SoS.Settings.ShipMapPhysics>Ship map physics</SoS.Settings.ShipMapPhysics>
 	<SoS.Settings.ShipMapPhysics.Desc>If enabled pawns and things not on a ship while it is moving will be sent to the graveyard. This will also restrict shuttle landings to bays or outer hull. Default: off</SoS.Settings.ShipMapPhysics.Desc>
+	<SoS.Settings.NewAccuiracySystem>New accuracy system</SoS.Settings.NewAccuiracySystem>
+	<SoS.Settings.NewAccuiracySystem.Desc>Fast and small ships can now actually dodge less accurate long-ranged weapons, enabling new comat tactics. Default: on</SoS.Settings.NewAccuiracySystem.Desc>
 	<SoS.Settings.ArchoRemove>Failsafe: Archolife Spawning</SoS.Settings.ArchoRemove>
 	<SoS.Settings.ArchoRemove.Desc>If a third-party mod spawns archolife creatures before the archotech spore has been built, this setting will cause them to vanish. Default: off</SoS.Settings.ArchoRemove.Desc>
 	<SoS.Settings.ArchoKill>Archotech creatures die without spore</SoS.Settings.ArchoKill>
