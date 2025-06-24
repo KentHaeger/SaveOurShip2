@@ -29,7 +29,7 @@ namespace SaveOurShip2.Vehicles
                 yield break;
             yield return new ShuttleRetreatGizmo(this);
 			VehiclePawn vehicle = (VehiclePawn)parent;
-			if (mapComp?.ShipMapState == ShipMapState.inCombat && vehicle.handlers[0].handlers.Count > 0)
+			if (mapComp?.ShipMapState == ShipMapState.inCombat && vehicle.handlers[0].handlers.Count >= vehicle.handlers[0].role.SlotsToOperate)
 			{
                 Map map = vehicle.Map;
                 IntVec3 cell = vehicle.Position;

@@ -3267,8 +3267,8 @@ namespace SaveOurShip2
 		public static bool ShuttleHasTorp(VehiclePawn vehicle)
 		{
 			var u = vehicle.CompUpgradeTree.upgrades;
-			return u.Contains("TurretTorpedoA") || u.Contains("TurretTorpedoB") || u.Contains("TurretTorpedoC")
-					&& vehicle.carryTracker.GetDirectlyHeldThings().Any(t => t.HasThingCategory(ResourceBank.ThingCategoryDefOf.SpaceTorpedoes));
+			return (u.Contains("TurretTorpedoA") || u.Contains("TurretTorpedoB") || u.Contains("TurretTorpedoC"))
+					&& vehicle.inventory.innerContainer.Any(t => t.HasThingCategory(ResourceBank.ThingCategoryDefOf.SpaceTorpedoes));
 		}
 		public static bool ShuttleIsArmed(VehiclePawn vehicle)
 		{
