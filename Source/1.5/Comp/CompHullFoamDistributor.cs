@@ -60,9 +60,9 @@ namespace SaveOurShip2
 			fuelComp = parent.TryGetComp<CompRefuelable>();
 			powerComp = parent.TryGetComp<CompPowerTrader>();
 		}
-		public override void PostDeSpawn(Map map)
+		public override void PostDeSpawn(Map map, DestroyMode mode = DestroyMode.Vanish)
 		{
-			base.PostDeSpawn(map);
+			base.PostDeSpawn(map, mode);
 		}
 	}
 }

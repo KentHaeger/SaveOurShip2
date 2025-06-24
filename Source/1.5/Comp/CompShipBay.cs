@@ -167,10 +167,10 @@ namespace SaveOurShip2
 			compRefuelable = parent.GetComp<CompRefuelable>();
 			compPowerTrader = parent.GetComp<CompPowerTrader>();
 		}
-		public override void PostDeSpawn(Map map)
+		public override void PostDeSpawn(Map map, DestroyMode mode = DestroyMode.Vanish)
 		{
 			mapComp.Bays.Remove(this);
-			base.PostDeSpawn(map);
+			base.PostDeSpawn(map, mode);
 		}
 
         public override void CompTick()

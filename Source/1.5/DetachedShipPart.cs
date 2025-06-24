@@ -34,7 +34,7 @@ namespace SaveOurShip2
 			mapComp = Map.GetComponent<ShipMapComp>();
 		}
 
-		public override void Tick() //slow steady drift, gain accel when ship engines on
+		protected override void Tick() //slow steady drift, gain accel when ship engines on
 		{
 			float driftx;
 			if (mapComp.MapEnginePower == 0)

@@ -795,11 +795,16 @@ namespace SaveOurShip2
 			List<VehiclePawn> shuttles = new List<VehiclePawn>();
 			foreach (Thing t in map.listerThings.AllThings)
 			{
+				Pawn pawn = null;
+				if (t is Pawn)
+				{
+					pawn = (Pawn)t;
+				}
 				if (t is Building b && b.def.CanHaveFaction && b.Faction != Faction.OfPlayer)
 					buildings.Add(b);
 				else if (t is VehiclePawn p && p.Faction != Faction.OfPlayer)
 					shuttles.Add(p);
-				else if (t is Pawn pawn && pawn.IsNonMutantAnimal && pawn.Faction != Faction.OfPlayer)
+				else if (pawn != null && !pawn.IsMutant && pawn.IsAnimal && pawn.Faction != Faction.OfPlayer)
 					animals.Add(pawn);
 				else if (t is DetachedShipPart)
 					things.Add(t);
@@ -829,7 +834,7 @@ namespace SaveOurShip2
 			}
 			foreach (Pawn animal in animals)
             {
-				if (animal.RaceProps.wildness <= 0.5f)
+				if (animal.GetStatValue(StatDefOf.Wildness) <= 0.5f)
 					animal.SetFaction(Faction.OfPlayer);
 				else
 					animal.SetFaction(null);

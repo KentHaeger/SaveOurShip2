@@ -25,10 +25,10 @@ namespace SaveOurShip2
 			mapComp = parent.Map.GetComponent<ShipMapComp>();
 			ventTo = (parent.Position + IntVec3.South.RotatedBy(parent.Rotation));//.ToVector3();
 		}
-		public override void PostDeSpawn(Map map)
+		public override void PostDeSpawn(Map map, DestroyMode mode = DestroyMode.Vanish)
 		{
 			mapComp = null;
-			base.PostDeSpawn(map);
+			base.PostDeSpawn(map, mode);
 		}
 	}
 }

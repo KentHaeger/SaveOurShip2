@@ -67,9 +67,9 @@ namespace SaveOurShip2
 			ShipsOnMap[mergeToIndex].RebuildCache(core, mergeToIndex);
 			return mergeToIndex;
 		}
-		public override void FinalizeInit()
+		public override void FinalizeInit(bool fromLoad)
 		{
-			base.FinalizeInit();
+			base.FinalizeInit(fromLoad);
 			/*foreach (Faction f in Find.FactionManager.AllFactions)
 			{
 				Log.Message("fac: " + f + " defName: " + f.def.defName);

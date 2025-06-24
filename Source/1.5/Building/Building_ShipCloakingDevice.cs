@@ -27,7 +27,7 @@ namespace SaveOurShip2
 			flickComp = this.TryGetComp<CompFlickable>();
 		}
 
-		public override void Tick()
+		protected override void Tick()
 		{
 			base.Tick();
 			if (Find.TickManager.TicksGame % 60 == 0)

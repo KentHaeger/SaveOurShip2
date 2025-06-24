@@ -32,7 +32,7 @@ namespace SaveOurShip2
 				parent.Map.terrainGrid.SetTerrain(position, ResourceBank.TerrainDefOf.FakeFloorInsideShipFoam);
 			}
 		}
-		public override void PostDeSpawn(Map map)
+		public override void PostDeSpawn(Map map, DestroyMode mode = DestroyMode.Vanish)
 		{
 			if (Props.isPlating)
 			{
@@ -40,7 +40,7 @@ namespace SaveOurShip2
 				map.terrainGrid.RemoveTopLayer(position);
 				mapComp.MapExtenderCells.Remove(position);
 			}
-			base.PostDeSpawn(map);
+			base.PostDeSpawn(map, mode);
 			if (!removedByDock) //if any part is destroyed, destroy entire assembly + one extender
 			{
 				dockParent?.DeSpawnDock();

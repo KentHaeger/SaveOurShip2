@@ -128,7 +128,7 @@ namespace SaveOurShip2
 				else
 				{
 					Site site = targetMapParent as Site;
-					this.TryLaunch(target, new TransportPodsArrivalAction_VisitSite(site, PawnsArrivalModeDefOf.EdgeDrop));
+					this.TryLaunch(target, new TransportersArrivalAction_VisitSite(site, PawnsArrivalModeDefOf.EdgeDrop));
 					//Launch(targetMapParent);
 					return true;
 				}
@@ -150,7 +150,7 @@ namespace SaveOurShip2
 							{
 								return;
 							}
-							this.TryLaunch(target, new TransportPodsArrivalAction_VisitSettlement(settlement));
+							this.TryLaunch(target, new TransportersArrivalAction_VisitSettlement(settlement, "ArrivalKey"));
 							CameraJumper.TryHideWorld();
 						}, MenuOptionPriority.Default, null, null, 0f, null, null));
 				}
@@ -161,7 +161,7 @@ namespace SaveOurShip2
 							target.WorldObject.Label
 						}), delegate
 						{
-							TryLaunch(target, new TransportPodsArrivalAction_AttackSettlement(settlement, PawnsArrivalModeDefOf.EdgeDrop));
+							TryLaunch(target, new TransportersArrivalAction_AttackSettlement(settlement, PawnsArrivalModeDefOf.EdgeDrop));
 							//CameraJumper.TryHideWorld();
 						}, MenuOptionPriority.Default, null, null, 0f, null, null));
 					list.Add(new FloatMenuOption(TranslatorFormattedStringExtensions.Translate("AttackAndDropInCenter",new NamedArgument[]
@@ -169,7 +169,7 @@ namespace SaveOurShip2
 							target.WorldObject.Label
 						}), delegate
 						{
-							TryLaunch(target, new TransportPodsArrivalAction_AttackSettlement(settlement, PawnsArrivalModeDefOf.CenterDrop));
+							TryLaunch(target, new TransportersArrivalAction_AttackSettlement(settlement, PawnsArrivalModeDefOf.CenterDrop));
 							//CameraJumper.TryHideWorld();
 						}, MenuOptionPriority.Default, null, null, 0f, null, null));
 				}
@@ -180,7 +180,7 @@ namespace SaveOurShip2
 							target.WorldObject.Label
 						}), delegate
 						{
-							TryLaunch(target, new TransportPodsArrivalAction_VisitSite((Site)targetMapParent, PawnsArrivalModeDefOf.EdgeDrop));
+							TryLaunch(target, new TransportersArrivalAction_VisitSite((Site)targetMapParent, PawnsArrivalModeDefOf.EdgeDrop));
 							//CameraJumper.TryHideWorld();
 						}, MenuOptionPriority.Default, null, null, 0f, null, null));
 					list.Add(new FloatMenuOption(TranslatorFormattedStringExtensions.Translate("DropInCenter",new NamedArgument[]
@@ -188,7 +188,7 @@ namespace SaveOurShip2
 							target.WorldObject.Label
 						}), delegate
 						{
-							TryLaunch(target, new TransportPodsArrivalAction_VisitSite((Site)targetMapParent, PawnsArrivalModeDefOf.CenterDrop));
+							TryLaunch(target, new TransportersArrivalAction_VisitSite((Site)targetMapParent, PawnsArrivalModeDefOf.CenterDrop));
 							//CameraJumper.TryHideWorld();
 						}, MenuOptionPriority.Default, null, null, 0f, null, null));
 				}
@@ -203,7 +203,7 @@ namespace SaveOurShip2
 			//ship to caravan
 			else if(target.WorldObject != null && target.WorldObject is Caravan && (this.parent.Map.Parent is WorldObjectOrbitingShip))
 			{
-				this.TryLaunch(target, new TransportPodsArrivalAction_GiveToCaravan((Caravan)target.WorldObject));
+				this.TryLaunch(target, new TransportersArrivalAction_GiveToCaravan((Caravan)target.WorldObject));
 				return true;
 			}
 			else if (target.WorldObject != null && !(this.parent.Map.Parent is WorldObjectOrbitingShip))
@@ -221,7 +221,7 @@ namespace SaveOurShip2
 				Messages.Message(TranslatorFormattedStringExtensions.Translate("MessageTransportPodsDestinationIsInvalid"), MessageTypeDefOf.RejectInput);
 				return false;
 			}
-			TryLaunch(target, new TransportPodsArrivalAction_FormCaravan());
+			TryLaunch(target, new TransportersArrivalAction_FormCaravan());
 			return true;
 		}
 		public void Launch(MapParent targetMapParent)
@@ -245,10 +245,10 @@ namespace SaveOurShip2
 				{
 					return;
 				}
-				this.TryLaunch(x.ToGlobalTargetInfo(map), new TransportPodsArrivalAction_LandInSpecificCell(targetMapParent, x.Cell));
+				this.TryLaunch(x.ToGlobalTargetInfo(map), new TransportersArrivalAction_LandInSpecificCell(targetMapParent, x.Cell));
 			}, null, actionWhenFinished, TargeterMouseAttachment);
 		}
-		public void TryLaunch(GlobalTargetInfo target, TransportPodsArrivalAction arrivalAction)
+		public void TryLaunch(GlobalTargetInfo target, TransportersArrivalAction arrivalAction)
 		{
 			if (!this.parent.Spawned)
 			{
@@ -261,8 +261,8 @@ namespace SaveOurShip2
 			}
 			Map map = this.parent.Map;
 			int groupID = Find.UniqueIDsManager.GetNextTransporterGroupID();
-			ActiveDropPod activeDropPod = (ActiveDropPod)ThingMaker.MakeThing(ThingDefOf.ActiveDropPod, null);
-			activeDropPod.Contents = new ActiveDropPodInfo();
+			ActiveTransporter activeDropPod = (ActiveTransporter)ThingMaker.MakeThing(ThingDefOf.ActiveDropPod, null);
+			activeDropPod.Contents = new ActiveTransporterInfo();
 
 			if (this.parent is Building_CryptosleepCasket casket)
 				activeDropPod.Contents.innerContainer.TryAddRangeOrTransfer(casket.GetDirectlyHeldThings(), true, true);

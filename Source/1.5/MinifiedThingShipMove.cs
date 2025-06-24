@@ -21,7 +21,7 @@ namespace SaveOurShip2
 		public float fuelPaidByTarget = 0;
 		public Faction fac = null;
 
-		public override void Tick()
+		protected override void Tick()
 		{
 			base.Tick();
 			if (Find.Selector.SelectedObjects.Count > 1 || !Find.Selector.SelectedObjects.Contains(this))

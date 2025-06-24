@@ -9,8 +9,23 @@ using Vehicles;
 
 namespace SaveOurShip2
 {
+	public static class ProjectileExtensions
+	{
+		public static float GetWeaponDamageMultiplier(this Projectile proj)
+		{
+			if (proj is Projectile_ExplosiveShip)
+			{
+				return (proj as Projectile_ExplosiveShip).weaponDamageMultiplier;
+			}
+			else
+			{
+				return 1f;
+			}
+		}
+	}
 	public class Projectile_ExplosiveShip : Projectile_Explosive
 	{
+		public float weaponDamageMultiplier = 1f;
 		protected override void Impact(Thing hitThing, bool blockedByShield = false)
 		{
 			// Projectile position can be inaccurate by several tiles if it travels several tiles per tick, Verse issue
@@ -116,7 +131,7 @@ namespace SaveOurShip2
 
 			base.Impact(hitThing, blockedByShield);
 		}
-		public override void Tick()
+		protected override void Tick()
 		{
 			base.Tick();
 			//Replaced by new Harmony shield patch

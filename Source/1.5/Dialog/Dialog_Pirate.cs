@@ -280,7 +280,7 @@ namespace SaveOurShip2
 			List<CompShipBay> bays = map.GetComponent<ShipMapComp>().Bays.Where(b => b is CompShipBaySalvage && b.parent.Faction == Faction.OfPlayer).ToList();
 			for (int i = 0; i < numSalvageBays; i++)
 			{
-				ActiveDropPodInfo activeDropPodInfo = new ActiveDropPodInfo();
+				ActiveTransporterInfo activeDropPodInfo = new ActiveTransporterInfo();
 				activeDropPodInfo.innerContainer = transporters[i];
 				activeDropPodInfo.leaveSlag = false;
 				DropPodUtility.MakeDropPodAt(bays[i].parent.Position, map, activeDropPodInfo);

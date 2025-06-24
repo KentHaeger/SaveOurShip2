@@ -227,7 +227,7 @@ namespace SaveOurShip2
 			return false;
 		}
 		private bool WarmingUp => burstWarmupTicksLeft > 0;
-		public override void Tick()
+		protected override void Tick()
 		{
 			base.Tick();
 			// Update spinal weapons reasonable rare

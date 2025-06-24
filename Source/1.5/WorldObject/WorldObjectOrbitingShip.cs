@@ -103,7 +103,7 @@ namespace SaveOurShip2
 			base.SpawnSetup();
 		}
 
-		public override void Tick()
+		protected override void Tick()
 		{
 			base.Tick();
 			//move ship to next pos if player owned, on raretick, if nominal, not durring shuttle use
@@ -120,7 +120,7 @@ namespace SaveOurShip2
 					orbitalMove.Stop();
 					return;
 				}
-				foreach (TravelingTransportPods obj in Find.WorldObjects.TravelingTransportPods)
+				foreach (TravellingTransporters obj in Find.WorldObjects.TravellingTransporters)
 				{
 					int initialTile = obj.initialTile;
 					if (initialTile == Tile || obj.destinationTile == Tile)
@@ -151,8 +151,8 @@ namespace SaveOurShip2
 
 		public override void Print(LayerSubMesh subMesh)
 		{
-			float averageTileSize = Find.WorldGrid.averageTileSize;
-			WorldRendererUtility.PrintQuadTangentialToPlanet(DrawPos, 1.7f * averageTileSize, 0.015f, subMesh, false, false, true);
+			float averageTileSize = Find.WorldGrid.AverageTileSize;
+			WorldRendererUtility.PrintQuadTangentialToPlanet(DrawPos, 1.7f * averageTileSize, 0.015f, subMesh, false, 0f, true);
 		}
 
 		public override IEnumerable<Gizmo> GetGizmos()
@@ -190,12 +190,12 @@ namespace SaveOurShip2
 							Map map = this.Map;
 							if (map == null)
 							{
-								Abandon();
+								Destroy();
 								SoundDefOf.Tick_High.PlayOneShotOnCamera();
 								return;
 							}
 
-							foreach (TravelingTransportPods obj in Find.WorldObjects.TravelingTransportPods)
+							foreach (TravellingTransporters obj in Find.WorldObjects.TravellingTransporters)
 							{
 								int initialTile = (int)Traverse.Create(obj).Field("initialTile").GetValue();
 								if (initialTile == this.Tile || obj.destinationTile == this.Tile)
@@ -222,14 +222,14 @@ namespace SaveOurShip2
 							PawnDiedOrDownedThoughtsUtility.BuildMoodThoughtsListString(source, PawnDiedOrDownedThoughtsKind.Died, stringBuilder, null, "\n\n" + "ConfirmAbandonHomeNegativeThoughts_Everyone".Translate(), "ConfirmAbandonHomeNegativeThoughts");
 							if (stringBuilder.Length == 0)
 							{
-								Abandon();
+								Destroy();
 								SoundDefOf.Tick_High.PlayOneShotOnCamera();
 							}
 							else
 							{
 								Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation(stringBuilder.ToString(), delegate
 								{
-									Abandon();
+									Destroy();
 								}));
 							}
 						}
@@ -405,7 +405,7 @@ namespace SaveOurShip2
 			}
 			return stringBuilder.ToString().TrimEndNewlines();
 		}
-		public override void Abandon()
+		public override void Destroy()
 		{
 			if (mapComp.ShipMapState == ShipMapState.inCombat)
 				mapComp.EndBattle(Map, false);
@@ -414,7 +414,7 @@ namespace SaveOurShip2
 				Find.GameEnder.CheckOrUpdateGameOver();
 			}
 			Current.Game.DeinitAndRemoveMap(Map, false);
-			Destroy();
+			base.Destroy();
 			//base.Abandon();
 		}
 
@@ -432,7 +432,7 @@ namespace SaveOurShip2
 		}
 
 		[DebuggerHidden]
-		public override IEnumerable<FloatMenuOption> GetTransportPodsFloatMenuOptions(IEnumerable<IThingHolder> pods, CompLaunchable representative)
+		public override IEnumerable<FloatMenuOption> GetTransportersFloatMenuOptions(IEnumerable<IThingHolder> pods, Action<PlanetTile, TransportersArrivalAction> launchAction)
 		{
 			return new List<FloatMenuOption>();
 		}
@@ -442,7 +442,7 @@ namespace SaveOurShip2
 			if (mapComp.ShipMapState == ShipMapState.burnUpSet)
 			{
 				//td recheck all of this after VF, generally pods need origin to exist till they land
-				foreach (TravelingTransportPods obj in Find.WorldObjects.TravelingTransportPods)
+				foreach (TravellingTransporters obj in Find.WorldObjects.TravellingTransporters)
 				{
 					int initialTile = obj.initialTile;
 					if (initialTile == Tile) //dont remove if pods in flight from this WO

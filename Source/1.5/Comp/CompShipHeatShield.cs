@@ -48,10 +48,10 @@ namespace SaveOurShip2
 			powerComp = parent.TryGetComp<CompPowerTrader>();
 			breakComp = parent.TryGetComp<CompBreakdownable>();
 		}
-		public override void PostDeSpawn(Map map)
+		public override void PostDeSpawn(Map map, DestroyMode mode = DestroyMode.Vanish)
 		{
 			map.GetComponent<ShipMapComp>().Shields.Remove(this);
-			base.PostDeSpawn(map);
+			base.PostDeSpawn(map, mode);
 		}
 		public override void CompTick()
 		{
@@ -126,7 +126,7 @@ namespace SaveOurShip2
 				if (proj.Launcher != null && proj.Launcher.TryGetComp<CompShipHeat>()!=null)
 				{
 					obj.color = proj.Launcher.TryGetComp<CompShipHeat>().Props.laserColor;
-					if (proj.weaponDamageMultiplier > 1f)
+					if (proj.GetWeaponDamageMultiplier() > 1f)
 						obj.large = true;
 				}
 				else

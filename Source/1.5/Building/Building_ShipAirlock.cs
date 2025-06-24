@@ -181,7 +181,7 @@ namespace SaveOurShip2
 			dockedTo = null;
 			base.DeSpawn(mode);
 		}
-		public override void Tick()
+		protected override void Tick()
 		{
 			base.Tick();
 			int ticks = Find.TickManager.TicksGame;

@@ -29,7 +29,7 @@ namespace SaveOurShip2
 			toil.tickAction = delegate
 			{
 				pawn.rotationTracker.FaceTarget(base.TargetA);
-				LearningUtility.LearningTickCheckEnd(pawn);
+				LearningUtility.LearningTickCheckEnd(pawn, TimeDeltas.LearnDelta);
 			};
 			// toil.WithEffect(EffecterDefOf.Radiotalking, TargetIndex.A);
 			toil.handlingFacing = true;

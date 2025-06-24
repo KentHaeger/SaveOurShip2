@@ -59,9 +59,9 @@ namespace SaveOurShip2
 				PushHeat(0, Props.heatCapacity * myNet.RatioInNetworkRaw * HeatPushMult);
 			base.PostDestroy(mode, previousMap);
 		}
-		public override void PostDeSpawn(Map map)
+		public override void PostDeSpawn(Map map, DestroyMode mode = DestroyMode.Vanish)
 		{
-			base.PostDeSpawn(map);
+			base.PostDeSpawn(map, mode);
 		}
 		public override void PostExposeData()
 		{

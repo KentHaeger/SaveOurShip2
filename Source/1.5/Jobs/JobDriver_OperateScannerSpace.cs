@@ -27,7 +27,7 @@ namespace SaveOurShip2
 				Building building = (Building)actor.CurJob.targetA.Thing;
 				scannerComp.Used(actor);
 				actor.skills?.Learn(SkillDefOf.Intellectual, 0.035f);
-				actor.GainComfortFromCellIfPossible();
+				actor.GainComfortFromCellIfPossible(TimeDeltas.ComfortDelta);
 			};
 			//work.PlaySustainerOrSound(scannerComp.Props.soundWorking, 1f);
 			work.AddFailCondition(() => !scannerComp.CanUseNow);

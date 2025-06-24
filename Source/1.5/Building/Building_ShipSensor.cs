@@ -77,7 +77,7 @@ namespace SaveOurShip2
 					LongEventHandler.QueueLongEvent(delegate
 					{
 						GetOrGenerateMapUtility.GetOrGenerateMap(target.WorldObject.Tile, target.WorldObject.def);
-						GetOrGenerateMapUtility.UnfogMapFromEdge(observedMap.Map);
+						GenStep_Fog.UnfogMapFromEdge(observedMap.Map);
 						MapHelper.TryLinkMapToWorldObject(observedMap.Map, target.Tile);
 					}, "GeneratingMap", false, delegate { });
 					return true;
@@ -94,7 +94,7 @@ namespace SaveOurShip2
 				{
 					SettleUtility.AddNewHome(target.Tile, Faction.OfPlayer);
 					observedMap = GetOrGenerateMapUtility.GetOrGenerateMap(target.Tile, Find.World.info.initialMapSize, null).Parent;
-					GetOrGenerateMapUtility.UnfogMapFromEdge(observedMap.Map);
+					GenStep_Fog.UnfogMapFromEdge(observedMap.Map);
 					((Settlement)observedMap).Name = "Observed Area "+ this.thingIDNumber;
 				}, "GeneratingMap", false, delegate { });
 				return true;

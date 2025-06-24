@@ -12,7 +12,7 @@ namespace SaveOurShip2
 {
 	class JobDriver_Holodeck : JobDriver_WatchTelevision
 	{
-
+		const int delta = 60;
 		protected override IEnumerable<Toil> MakeNewToils()
 		{
 			this.EndOnDespawnedOrNull(TargetIndex.A);
@@ -29,7 +29,7 @@ namespace SaveOurShip2
 			Toil watch = new Toil();
 			watch.AddPreTickAction(delegate
 			{
-				WatchTickAction();
+				WatchTickAction(delta);
 			});
 			watch.AddFinishAction(delegate
 			{
@@ -59,7 +59,7 @@ namespace SaveOurShip2
 			}
 		}
 
-		protected override void WatchTickAction()
+		protected override void WatchTickAction(int delta)
 		{
 			if (TargetThingA == null)
 				return;
@@ -88,7 +88,7 @@ namespace SaveOurShip2
 			CompHolodeck deck = TargetThingA.TryGetComp<CompHolodeck>();
 			if(deck.CurSkill!=null && pawn.skills!=null && pawn.skills.GetSkill(deck.CurSkill)!=null)
 				pawn.skills.GetSkill(deck.CurSkill).Learn(job.def.joyXpPerTick*TargetThingA.GetStatValue(StatDefOf.JoyGainFactor));
-			JoyUtility.JoyTickCheckEnd(pawn, JoyTickFullJoyAction.EndJob, 1f, (Building)TargetThingA);
+			JoyUtility.JoyTickCheckEnd(pawn, delta, JoyTickFullJoyAction.EndJob, 1f, (Building)TargetThingA);
 		}
 	}
 }

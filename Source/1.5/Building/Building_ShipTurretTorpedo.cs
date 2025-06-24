@@ -69,7 +69,7 @@ namespace SaveOurShip2
 			}
 		}
 
-		public override void Tick()
+		protected override void Tick()
 		{
 			base.Tick();
 			if (mapComp.ShipMapState == ShipMapState.inCombat)

@@ -175,7 +175,7 @@ namespace SaveOurShip2
 						newNode.options[0].resolveTree = true;
 						Dialog_NodeTree newTree = new Dialog_NodeTree(newNode);
 						Consciousness.ideo.SetIdeo(ideo);
-						foreach (Pawn convertee in PawnsFinder.AllMapsCaravansAndTravelingTransportPods_Alive_FreeColonists_NoLodgers)
+						foreach (Pawn convertee in PawnsFinder.AllMapsCaravansAndTravellingTransporters_Alive_FreeColonists_NoLodgers)
 						{
 							convertee.ideo.IdeoConversionAttempt(0.9f, ideo);
 						}
@@ -1154,7 +1154,7 @@ namespace SaveOurShip2
 			}
 
 			builder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.GameOverColonists", Consciousness.Name.ToStringFull));
-			foreach(Pawn p in PawnsFinder.AllMapsCaravansAndTravelingTransportPods_Alive_Colonists)
+			foreach(Pawn p in PawnsFinder.AllMapsCaravansAndTravellingTransporters_Alive_Colonists)
 			{
 				builder.AppendLine(p.NameFullColored);
 			}

@@ -486,12 +486,12 @@ namespace SaveOurShip2
 			compPower = parent.TryGetComp<CompPowerTrader>();
 		}
 
-		public override void PostDeSpawn(Map map)
+		public override void PostDeSpawn(Map map, DestroyMode mode = DestroyMode.Vanish)
 		{
 			map.GetComponent<ShipMapComp>().Consciousness.Remove(this);
 			if(Consciousness != null && !ShipInteriorMod2.MoveShipFlag)
 				Consciousness.health.AddHediff(HediffDef.Named("HologramDisconnected"));
-			base.PostDeSpawn(map);
+			base.PostDeSpawn(map, mode);
 		}
 
 		public void InstallConsciousness(Thing newConsc, List<Apparel> overrideApparel = null, bool graphicsDirty = true)

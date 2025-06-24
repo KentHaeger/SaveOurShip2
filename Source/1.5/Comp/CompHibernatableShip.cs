@@ -58,9 +58,9 @@ namespace SaveOurShip2
 			explosionPos = this.parent.Position;
 		}
 
-		public override void PostDeSpawn(Map map)
+		public override void PostDeSpawn(Map map, DestroyMode mode = DestroyMode.Vanish)
 		{
-			base.PostDeSpawn(map);
+			base.PostDeSpawn(map, mode);
 			map.info.parent.Notify_HibernatableChanged();
 		}
 

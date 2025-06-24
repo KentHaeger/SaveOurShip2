@@ -37,7 +37,7 @@ namespace SaveOurShip2
 		}
 
 		[DebuggerHidden]
-		public override IEnumerable<FloatMenuOption> GetTransportPodsFloatMenuOptions(IEnumerable<IThingHolder> pods, CompLaunchable representative)
+		public override IEnumerable<FloatMenuOption> GetTransportersFloatMenuOptions(IEnumerable<IThingHolder> pods, Action<PlanetTile, TransportersArrivalAction> launchAction)
 		{
 			return new List<FloatMenuOption>();
 		}
@@ -64,14 +64,14 @@ namespace SaveOurShip2
 
 		public override void Print(LayerSubMesh subMesh)
 		{
-			float averageTileSize = Find.WorldGrid.averageTileSize;
-			WorldRendererUtility.PrintQuadTangentialToPlanet(this.DrawPos, 1.7f * averageTileSize, 0.008f, subMesh, false, false, true);
+			float averageTileSize = Find.WorldGrid.AverageTileSize;
+			WorldRendererUtility.PrintQuadTangentialToPlanet(this.DrawPos, 1.7f * averageTileSize, 0.008f, subMesh, false, 0f, true);
 		}
 
 		public override bool ShouldRemoveMapNow(out bool alsoRemoveWorldObject)
 		{
 			alsoRemoveWorldObject = true;
-			if (Find.World.worldObjects.AllWorldObjects.Any(ob => ob is TravelingTransportPods && ((int)typeof(TravelingTransportPods).GetField("initialTile", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(ob) == this.Tile || ((TravelingTransportPods)ob).destinationTile == this.Tile)))
+			if (Find.World.worldObjects.AllWorldObjects.Any(ob => ob is TravellingTransporters && ((int)typeof(TravellingTransporters).GetField("initialTile", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(ob) == this.Tile || ((TravellingTransporters)ob).destinationTile == this.Tile)))
 				return false;
 			if (this.Map.listerBuildings.allBuildingsNonColonist.Any(t => t.TryGetComp<CompBlackBoxAI>() != null))
 				return false;

@@ -110,9 +110,9 @@ namespace SaveOurShip2
 			mapComp.cachedPipes.Add(this);
 			mapComp.heatGridDirty = true;
 		}
-		public override void PostDeSpawn(Map map)
+		public override void PostDeSpawn(Map map, DestroyMode mode = DestroyMode.Vanish)
 		{
-			base.PostDeSpawn(map);
+			base.PostDeSpawn(map, mode);
 			if (myNet != null)
 				myNet.DeRegister(this);
 			if (this.parent is VehiclePawn)

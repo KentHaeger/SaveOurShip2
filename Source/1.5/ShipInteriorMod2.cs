@@ -1566,7 +1566,7 @@ namespace SaveOurShip2
 				p.ageTracker.AgeBiologicalTicks = 36000000;
 				p.ageTracker.AgeChronologicalTicks = 36000000;
 			}
-			if (p.IsNonMutantAnimal && p.RaceProps.wildness <= 0.5f)
+			if (p.IsAnimal && !p.IsMutant && p.GetStatValue(StatDefOf.Wildness) <= 0.5f)
 				p.SetFactionDirect(Faction.OfAncients);
 			else
 				lord?.AddPawn(p);
@@ -1610,7 +1610,7 @@ namespace SaveOurShip2
 				}
 				foreach (IntVec3 cell in shipArea.Except(outdoors.Cells.Concat(outdoors.BorderCells.Where(c => c.InBounds(map)))))
 				{
-					map.fogGrid.fogGrid[map.cellIndices.CellToIndex(cell)] = true;
+					map.fogGrid.fogGrid.Set(map.cellIndices.CellToIndex(cell), value:true);
 					//validRooms.Add(cell.GetRoom(map));
 				}
 			}
@@ -1865,9 +1865,10 @@ namespace SaveOurShip2
 		public static List<int> PossibleShipLandingTiles(int root, float min, float max)
 		{
 			List<int> tiles = new List<int>();
-			Find.WorldFloodFiller.FloodFill(root, (int tile) => CanLandShip(tile, root, min, max), delegate (int tile)
+			PlanetTile planetTile = new PlanetTile(root);
+			planetTile.Layer.Filler.FloodFill(root, (PlanetTile tile) => CanLandShip(tile.tileId, root, min, max), delegate (PlanetTile tile, int dist)
 			{
-				tiles.Add(tile);
+				tiles.Add(tile.tileId);
 			}, 20, null);
 			return tiles;
 		}
@@ -2628,7 +2629,7 @@ namespace SaveOurShip2
 			//move fog
 			foreach (IntVec3 pos in fogToCopy)
 			{
-				targetMap.fogGrid.fogGrid[targetMap.cellIndices.CellToIndex(pos)] = true;
+				targetMap.fogGrid.fogGrid.Set(targetMap.cellIndices.CellToIndex(pos), value:true);
 				targetMap.mapDrawer.MapMeshDirty(pos, (ulong)MapMeshFlagDefOf.FogOfWar);// | (ulong)MapMeshFlagDefOf.Things);
 			}
 
@@ -3462,5 +3463,11 @@ namespace SaveOurShip2
 				worldObject.SetFaction(Faction.OfPlayer);
 			}
 		}
+	}
+
+	public static class TimeDeltas
+	{
+		public const int ComfortDelta = 15;
+		public const int LearnDelta = 15;
 	}
 }

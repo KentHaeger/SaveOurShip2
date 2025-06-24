@@ -177,14 +177,14 @@ namespace SaveOurShip2
 				ExhaustArea.Add(v);
 			}
 		}
-		public override void PostDeSpawn(Map map)
+		public override void PostDeSpawn(Map map, DestroyMode mode = DestroyMode.Vanish)
 		{
 			var mapComp = map.GetComponent<ShipMapComp>();
 			if (mapComp.ShipsOnMap.Values.Any(s => !s.IsWreck && s.Engines.Any()))
 				mapComp.EngineRot = -1;
 			Off();
 			//sustainer = null;
-			base.PostDeSpawn(map);
+			base.PostDeSpawn(map, mode);
 		}
 		public override void PostDraw()
 		{

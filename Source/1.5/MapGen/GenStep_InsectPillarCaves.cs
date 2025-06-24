@@ -12,7 +12,7 @@ using RimWorld;
 
 namespace SaveOurShip2
 {
-	class GenStep_InsectPillarCaves : GenStep_Caves
+	class GenStep_InsectPillarCaves : GenStep_CaveHives
 	{
 		public override void Generate(Map map, GenStepParams parms)
 		{

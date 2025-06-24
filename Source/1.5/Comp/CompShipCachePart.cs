@@ -325,9 +325,9 @@ namespace SaveOurShip2
 
 			mapComp.breathableZoneDirty = true;
 		}
-		public override void PostDeSpawn(Map map) //proper parts only - terrain, roof removal, foam replacers
+		public override void PostDeSpawn(Map map, DestroyMode mode = DestroyMode.Vanish) //proper parts only - terrain, roof removal, foam replacers
 		{
-			base.PostDeSpawn(map);
+			base.PostDeSpawn(map, mode);
 			if (!Props.AnyPart && !Props.isCorner)
 				return;
 

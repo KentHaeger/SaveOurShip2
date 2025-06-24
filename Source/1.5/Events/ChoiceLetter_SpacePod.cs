@@ -89,7 +89,7 @@ namespace SaveOurShip2
 				thing = ThingMaker.MakeThing(thingDef, stuff);
 				thing.stackCount = Math.Min(Rand.RangeInclusive(10, 40), thing.def.stackLimit);
 			}
-			ActiveDropPodInfo activeDropPodInfo = new ActiveDropPodInfo();
+			ActiveTransporterInfo activeDropPodInfo = new ActiveTransporterInfo();
 			activeDropPodInfo.innerContainer.TryAdd(thing);
 			activeDropPodInfo.leaveSlag = true;
 			IntVec3 intVec = DropCellFinder.TradeDropSpot(map);

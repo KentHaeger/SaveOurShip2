@@ -6,7 +6,8 @@ namespace SaveOurShip2
 {
 	public class BiomeWorker_OuterSpace : BiomeWorker
 	{
-		public override float GetScore(Tile tile, int tileID)
+
+		public override float GetScore(BiomeDef biome, Tile tile, PlanetTile planetTile)
 		{
 			return -999f;
 		}
