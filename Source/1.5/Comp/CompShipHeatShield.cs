@@ -97,7 +97,7 @@ namespace SaveOurShip2
 		}
 
 		public static Dictionary<ThingDef, float> ProjectileToMult = new Dictionary<ThingDef, float>() {
-			{ThingDef.Named("Proj_ShipSpinalBeamPlasma"), 1.5f},
+			{ThingDef.Named("Proj_ShipSpinalBeamPlasma"), 2.4f},
 			{ThingDef.Named("Bullet_Torpedo_HighExplosive"), 0.33f},
 			{ThingDef.Named("Bullet_Torpedo_EMP"), 10f},
 			{ThingDef.Named("Bullet_Torpedo_Antimatter"), 0.33f},
