@@ -208,3 +208,8 @@ June 12 2025
 June 18 2025
 - Sending shuttle to strafe or bomn mission now auto-activeates sarget selection for shuttles.
 - Added unfogging on shuttle arrival, to fix the issue with landing to enemy shuttle bays.
+
+June 23 2025
+- New accuracy system added, initial release.
+- Fixed shuttle mission gizmos not showing when they had AI pilots set up in submod.
+- Added support for slightly different implementation of Junebox to fix existing errors.
