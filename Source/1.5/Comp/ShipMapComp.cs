@@ -1251,7 +1251,7 @@ namespace SaveOurShip2
 						float angle = a.AngleFlat;
 
 						float missAngle = 0;
-						if (!ModSettings_SoS.newAccuracySystem || !(accuracyCalculator?.IsValid ?? false))
+						if (newProjectile is Projectile_ExplosiveShipTorpedo || !ModSettings_SoS.newAccuracySystem || !(accuracyCalculator?.IsValid ?? false))
 						{
 							// Base miss from xml
 							missAngle = Rand.Range(-proj.missRadius, proj.missRadius); 
