@@ -29,7 +29,8 @@ namespace SaveOurShip2
 		{
 			List<Gizmo> giz = new List<Gizmo>();
 			giz.AddRange(base.GetGizmos());
-			if (Faction == Faction.OfPlayer && this.TryGetComp<CompPowerTrader>().PowerOn && Map.IsSpace())
+			CompPowerTrader compPowerTrader = this.TryGetComp<CompPowerTrader>();
+			if (Faction == Faction.OfPlayer && (compPowerTrader?.PowerOn ?? true) && Map.IsSpace())
 			{
 				giz.Add(new Command_Action
 				{

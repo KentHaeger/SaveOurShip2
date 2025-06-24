@@ -94,6 +94,7 @@ namespace SaveOurShip2
 			Scribe_Values.Look(ref persistShipUI, "persistShipUI", false);
 			Scribe_Values.Look(ref archoRemove, "archoRemove", false);
 			Scribe_Values.Look(ref archoKill, "archoKill", false);
+			Scribe_Values.Look(ref newAccuracySystem, "newAccuracySystem", true);
 			Scribe_Values.Look(ref debugMode, "debugMode", false);
 
 			Scribe_Values.Look(ref minTravelTime, "minTravelTime", 5);
@@ -113,6 +114,7 @@ namespace SaveOurShip2
 		public static bool
 			easyMode = false,
 			shipMapPhysics = false,
+			newAccuracySystem = true,
 			//useVacuumPathfinding = true,
 			renderPlanet = true,
 			useSplashScreen = true,
@@ -224,6 +226,8 @@ namespace SaveOurShip2
 			options.GapLine();
 			options.CheckboxLabeled("SoS.Settings.ShipMapPhysics".Translate(), ref shipMapPhysics, "SoS.Settings.ShipMapPhysics.Desc".Translate());
 			options.CheckboxLabeled("SoS.Settings.EasyMode".Translate(), ref easyMode, "SoS.Settings.EasyMode.Desc".Translate());
+			options.CheckboxLabeled(TranslatorFormattedStringExtensions.Translate("SoS.Settings.NewAccuiracySystem"), ref newAccuracySystem,
+				TranslatorFormattedStringExtensions.Translate("SoS.Settings.NewAccuiracySystem.Desc"));
 			options.CheckboxLabeled("SoS.Settings.ArchoRemove".Translate(), ref archoRemove, "SoS.Settings.ArchoRemove.Desc".Translate());
 			options.CheckboxLabeled("SoS.Settings.ArchoKill".Translate(), ref archoKill, "SoS.Settings.ArchoKill.Desc".Translate());
 			options.CheckboxLabeled("SoS.Settings.Debug".Translate(), ref debugMode, "SoS.Settings.Debug.Desc".Translate());

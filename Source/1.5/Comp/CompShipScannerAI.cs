@@ -19,7 +19,7 @@ namespace SaveOurShip2
 		public override void CompTick()
 		{
 			base.CompTick();
-			if (Find.TickManager.TicksGame % 250 != 0 || !this.parent.Map.IsSpace() || !this.powerComp.PowerOn || this.parent.Faction != Faction.OfPlayer)
+			if (Find.TickManager.TicksGame % 250 != 0 || !this.parent.Map.IsSpace() || !(this.powerComp?.PowerOn ?? true) || this.parent.Faction != Faction.OfPlayer)
 				return;
 
 			if (mapComp.ShipMapState == ShipMapState.inCombat)
