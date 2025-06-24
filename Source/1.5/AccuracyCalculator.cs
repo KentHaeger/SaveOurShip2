@@ -23,18 +23,27 @@ namespace SaveOurShip2
 			new CurvePoint(0f, 1f * multiplierForDodge)
 		};
 
-		private static readonly SimpleCurve DodgeMultiplierFromRange = new SimpleCurve
+		private static readonly SimpleCurve DodgeMultiplierFromWeaponRange = new SimpleCurve
 		{
-			new CurvePoint(0f, 0.25f),
-			new CurvePoint(50f, 0.33f),   // Small laser/cannon
-			new CurvePoint(100f, 0.45f),  // Large/spinal laser/cannon, small plasma
-			new CurvePoint(150f, 0.8f),  // Large/spinal plasma, small rail
+			new CurvePoint(0f, 0.10f),
+			new CurvePoint(50f, 0.15f),   // Small laser/cannon
+			new CurvePoint(100f, 0.28f),  // Large/spinal laser/cannon, small plasma
+			new CurvePoint(150f, 0.72f),  // Large/spinal plasma, small rail
 			new CurvePoint(250f, 1f),    // Large/spinal rail
 			new CurvePoint(300f, 1.2f),
 		};
+		private static readonly SimpleCurve DodgeMultiplierFromCurrentRange = new SimpleCurve
+		{
+			new CurvePoint(0f, 0.7f),
+			new CurvePoint(50f, 0.75f),   // Small laser/cannon
+			new CurvePoint(100f, 0.8f),  // Large/spinal laser/cannon, small plasma
+			new CurvePoint(150f, 0.9f),  // Large/spinal plasma, small rail
+			new CurvePoint(250f, 1f),    // Large/spinal rail
+			new CurvePoint(300f, 1f),
+		};
 		// Counter to presious, spread decreased baseed on attacking map TWR, so that fast ship dodges large one,
 		// but a battle of 2 small sips is not 95% misses.
-		private const float multiplierForDodgePenalty = 2.5f;
+		private const float multiplierForDodgePenalty = 3.2f;
 		private static readonly SimpleCurve DodgePenaltyMultiplier = new SimpleCurve
 		{
 			new CurvePoint(7f, 4f * multiplierForDodgePenalty),
@@ -112,7 +121,13 @@ namespace SaveOurShip2
 				dodgeAngle *= DodgePenaltyMultiplier.Evaluate(SourceMapComp.MapEnginePower);
 			}
 			// Dodge angle reduced for short-ranged weapons
-			dodgeAngle *= DodgeMultiplierFromRange.Evaluate(proj.turret.heatComp.Props.maxRange);
+			dodgeAngle *= DodgeMultiplierFromWeaponRange.Evaluate(proj.turret.heatComp.Props.maxRange);
+			// And for current range too
+			dodgeAngle *= DodgeMultiplierFromCurrentRange.Evaluate(proj.range);
+			//shooter adj 0-70% for miss angle
+			dodgeAngle *= (100 - proj.accBoost * 2f) / 100;
+
+
 			if (ModSettings_SoS.debugMode)
 			{
 				Log.Warning("+CalculatedAngles: dodge: " + dodgeAngle.ToString("F2") + ", miss: " + missAngle.ToString("F2"));
