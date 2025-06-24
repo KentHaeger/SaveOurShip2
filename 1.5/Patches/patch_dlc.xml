@@ -204,9 +204,9 @@
 
 				<!-- EVA stats -->
 				<li Class="PatchOperationConditional">
-					<xpath>Defs/ThingDef[@ParentName="ApparelArmorCataphractBase" or @ParentName="ApparelArmorHelmetCataphractBase" or defName="Apparel_ArmorLocust"][not(equippedStatOffsets)]</xpath>
+					<xpath>Defs/ThingDef[@ParentName="ApparelArmorCataphractBase" or @ParentName="ApparelArmorHelmetCataphractBase" or defName="Apparel_ArmorLocust" or defName="Apparel_PackJump"][not(equippedStatOffsets)]</xpath>
 					<match Class="PatchOperationAdd">
-						<xpath>Defs/ThingDef[@ParentName="ApparelArmorCataphractBase" or @ParentName="ApparelArmorHelmetCataphractBase" or defName="Apparel_ArmorLocust"][not(equippedStatOffsets)]</xpath>
+						<xpath>Defs/ThingDef[@ParentName="ApparelArmorCataphractBase" or @ParentName="ApparelArmorHelmetCataphractBase" or defName="Apparel_ArmorLocust" or defName="Apparel_PackJump"][not(equippedStatOffsets)]</xpath>
 						<value>
 							<equippedStatOffsets />
 						</value>
@@ -248,9 +248,9 @@
 
 				<!-- Locust Armor VacuumSpeedMultiplier -->
 				<li Class="PatchOperationConditional">
-					<xpath>Defs/ThingDef[defName="Apparel_ArmorLocust"]/equippedStatOffsets[not(VacuumSpeedMultiplier)]</xpath>
+					<xpath>Defs/ThingDef[defName="Apparel_ArmorLocust" or defName="Apparel_PackJump"]/equippedStatOffsets[not(VacuumSpeedMultiplier)]</xpath>
 					<match Class="PatchOperationAdd">
-						<xpath>Defs/ThingDef[defName="Apparel_ArmorLocust"]/equippedStatOffsets[not(VacuumSpeedMultiplier)]</xpath>
+						<xpath>Defs/ThingDef[defName="Apparel_ArmorLocust" or defName="Apparel_PackJump"]/equippedStatOffsets[not(VacuumSpeedMultiplier)]</xpath>
 						<value>
 							<VacuumSpeedMultiplier>4</VacuumSpeedMultiplier>
 						</value>
