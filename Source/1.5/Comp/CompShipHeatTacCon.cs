@@ -13,12 +13,14 @@ namespace SaveOurShip2
 	{
 		public bool PointDefenseMode = false;
 		public bool HoldFire = false;
+		public bool AutoFire = false;
 
 		public override void PostExposeData()
 		{
 			base.PostExposeData();
 			Scribe_Values.Look<bool>(ref PointDefenseMode, "PointDefenseMode", false);
 			Scribe_Values.Look<bool>(ref HoldFire, "HoldFire", false);
+			Scribe_Values.Look<bool>(ref AutoFire, "AutoFire", false);
 		}
 		public override IEnumerable<Gizmo> CompGetGizmosExtra()
 		{
@@ -185,6 +187,23 @@ namespace SaveOurShip2
 				};
 				yield return select;
 			}
+			Command_Toggle command_ToggleAutoFire = new Command_Toggle
+			{
+				defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.ToggleAutoFire"),
+				defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.ToggleAutoFirDesc"),
+				icon = ContentFinder<Texture2D>.Get("UI/Capture_Ship_Icon"),
+				toggleAction = delegate
+				{
+					AutoFire = !AutoFire;
+					foreach (Building_ShipBridge bridge in myNet.TacCons)
+					{
+						CompShipHeatTacCon tacCon = bridge.GetComp<CompShipHeatTacCon>();
+						tacCon.AutoFire = AutoFire;
+					}
+				},
+				isActive = (() => AutoFire)
+			};
+			yield return command_ToggleAutoFire;
 		}
 	}
 }
