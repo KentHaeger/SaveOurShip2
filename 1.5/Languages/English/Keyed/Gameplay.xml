@@ -68,6 +68,8 @@
 	<SoS.HoldFireDesc>Stop all connected ship-to-ship weapons from firing on enemy ship</SoS.HoldFireDesc>
 	<SoS.TogglePointDefense>Stop all connected ship-to-ship weapons from firing on enemy ship</SoS.TogglePointDefense>
 	<SoS.TogglePointDefenseDesc>Stop all connected ship-to-ship weapons from firing on enemy ship</SoS.TogglePointDefenseDesc>
+	<SoS.ToggleAutoFire>Toggle automatically firing all ship weapons</SoS.ToggleAutoFire>
+	<SoS.ToggleAutoFirDesc>All ship weapons, including torpedoes, will automatically target enemy ship bridge and fire. Hold fire option on individual weapons overrides that. Turning off this option doesn't order weapons to cease fire, that needs to be done separately if desired.</SoS.ToggleAutoFirDesc>
 	<SoS.NotAtMaxRange>Not at maximum range</SoS.NotAtMaxRange>
 	<SoS.OnUnstableMap>Ship is in unstable orbit.</SoS.OnUnstableMap>
 	<SoS.EnemyShipRetreating>Enemy ship is attempting to retreat!</SoS.EnemyShipRetreating>

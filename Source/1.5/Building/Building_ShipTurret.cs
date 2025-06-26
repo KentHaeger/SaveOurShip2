@@ -373,7 +373,12 @@ namespace SaveOurShip2
 					ResetCurrentTarget();
 					return;
 				}
-				if (!PlayerControlled && mapComp.HasShipMapAI) //AI targeting
+				bool autoFireForPlayer = false;
+				if (PlayerControlled && heatComp.myNet.TacCons.Any())
+				{
+					autoFireForPlayer = heatComp.myNet.TacCons.First().GetComp<CompShipHeatTacCon>().AutoFire;
+				}
+				if (!PlayerControlled && mapComp.HasShipMapAI || (autoFireForPlayer && !holdFire && (shipTarget == LocalTargetInfo.Invalid))) //AI targeting
 				{
 					//Target pawns with the Psychic Flayer
 					if (spinalComp != null && !spinalComp.Props.destroysHull && mapComp.ShipCombatTargetMap.mapPawns.FreeColonistsAndPrisoners.Any())
