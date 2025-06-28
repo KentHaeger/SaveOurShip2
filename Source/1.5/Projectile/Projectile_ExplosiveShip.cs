@@ -148,7 +148,9 @@ namespace SaveOurShip2
 
 		public override void Destroy(DestroyMode mode = DestroyMode.Vanish)
 		{
-			this.Map.GetComponent<ShipMapComp>().AccuracyCalc.RegisterDespawn(this);
+			ShipMapComp mapComp = this.Map.GetComponent<ShipMapComp>();
+			mapComp.AccuracyCalc.RegisterDespawn(this);
+			mapComp.incomingProjectiles.Remove(this);
 			base.Destroy(mode);
 		}
 

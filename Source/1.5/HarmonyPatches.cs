@@ -857,6 +857,19 @@ namespace SaveOurShip2
 		}
 	}
 
+	//Time
+	[HarmonyPatch(typeof(TickManager), "get_TickRateMultiplier")]
+	public static class SlowTimeForDodge
+	{
+		public static void Postfix(ref float __result)
+		{
+			if (ShipInteriorMod2.SlowTimeFlag)
+			{
+				__result = 0.33f;
+			}
+		}
+	}
+
 	[HarmonyPatch(typeof(PenFoodCalculator), "ProcessTerrain")]
 	public static class SpaceHasNoWildPlants
 	{

@@ -36,6 +36,10 @@ namespace SaveOurShip2
 		public List<ShipHeatNet> cachedNets = new List<ShipHeatNet>();
 		public List<CompShipHeat> cachedPipes = new List<CompShipHeat>();
 
+		public HashSet<Projectile> incomingProjectiles = new HashSet<Projectile>();
+		// Temporary - simplest evasion tryout case
+		public bool isEvading = false;
+
 		public int[] grid;
 		public bool heatGridDirty;
 		public bool breathableZoneDirty;
@@ -1199,9 +1203,32 @@ namespace SaveOurShip2
 		}
 
 		//battle
+		static SimpleCurve evasionSpeedMultiplierCurve = new SimpleCurve()
+		{
+			new CurvePoint(0f, 0f),
+			new CurvePoint(1f, 0.15f),
+			new CurvePoint(2f, 0.5f),
+			new CurvePoint(3f, 1f),
+			new CurvePoint(4f, 1.2f),
+		};
 		public override void MapComponentTick()
 		{
 			base.MapComponentTick();
+			//Update Projectiles
+			if (isEvading)
+			{
+				// Ship with baseline dodger TWR = 3 has base evasion of 10 tiles per second. 0.8-1.1 seconds is ETA for projectiles shot at the small ship at the center of the map
+				const float baseEvasionPerSecond = 30f;
+				float evasionSpeedMultiplier = 1; //  evasionSpeedMultiplierCurve.Evaluate(MapEnginePower);
+
+				foreach (Projectile proj in incomingProjectiles)
+				{
+					// very small change in coordinates every tick. Not handled here, will be taken into account for next projectile tick. 
+					proj.destination.z -= baseEvasionPerSecond / 60f * evasionSpeedMultiplier;
+					proj.origin.z -= baseEvasionPerSecond / 60f * evasionSpeedMultiplier;
+					proj.intendedTarget = new LocalTargetInfo(proj.destination.ToIntVec3());
+				}
+			}
 			List<SpaceShipCache> shipToRemove = new List<SpaceShipCache>();
 			foreach (SpaceShipCache ship in ShipsOnMap.Values)
 			{
@@ -1254,6 +1281,11 @@ namespace SaveOurShip2
 							spawnCell = proj.burstLoc;
 						//Log.Message("Spawning " + proj.turret + " projectile on player ship at " + proj.target);
 						newProjectile = (Projectile)GenSpawn.Spawn(proj.spawnProjectile, spawnCell, ShipCombatTargetMap);
+						// Not allowed to dodge torpedoes as they are guided
+						if (newProjectile is Projectile_ExplosiveShip && !(proj is Projectile_ExplosiveShipTorpedo))
+						{
+							ShipCombatTargetMap.GetComponent<ShipMapComp>().incomingProjectiles.Add(newProjectile);
+						}
 
 						//get angle
 						IntVec3 a = proj.target.Cell - spawnCell;

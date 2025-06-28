@@ -520,7 +520,39 @@ namespace SaveOurShip2
 						};
 						yield return selectWeapons;
 					}
-					foreach(ShipMapComp.ShuttleMissionData mission in mapComp.ShuttleMissions)
+					Command_Toggle toggleSlowTime = new Command_Toggle
+					{
+						toggleAction = delegate
+						{
+							ShipInteriorMod2.SlowTimeFlag = !ShipInteriorMod2.SlowTimeFlag;
+						},
+						defaultLabel = "Toggle slow time",
+						defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.ToggleCloakDesc"),
+						isActive = () => ShipInteriorMod2.SlowTimeFlag
+					};
+					if (ShipInteriorMod2.SlowTimeFlag)
+						toggleSlowTime.icon = ContentFinder<Texture2D>.Get("UI/CloakingDeviceOn");
+					else
+						toggleSlowTime.icon = ContentFinder<Texture2D>.Get("UI/CloakingDeviceOff");
+					yield return toggleSlowTime;
+
+					Command_Toggle toggleEvade = new Command_Toggle
+					{
+						toggleAction = delegate
+						{
+							mapComp.isEvading  = !mapComp.isEvading;
+						},
+						defaultLabel = "Toggle evasion",
+						defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.ToggleCloakDesc"),
+						isActive = () => mapComp.isEvading
+					};
+					if (ShipInteriorMod2.SlowTimeFlag)
+						toggleEvade.icon = ContentFinder<Texture2D>.Get("UI/CloakingDeviceOn");
+					else
+						toggleEvade.icon = ContentFinder<Texture2D>.Get("UI/CloakingDeviceOff");
+					yield return toggleEvade;
+
+					foreach (ShipMapComp.ShuttleMissionData mission in mapComp.ShuttleMissions)
                     {
 						Command_Action changeShuttleMission = new Command_Action
 						{
