@@ -52,6 +52,13 @@ namespace SaveOurShip2
 		public bool ShowRoofOverlayCached;
 
 		AccuracyCalculator accuracyCalculator;
+		public AccuracyCalculator AccuracyCalc
+		{
+			get
+			{
+				return accuracyCalculator;
+			}
+		}
 
 		public ShipMapComp(Map map) : base(map)
 		{
@@ -1224,7 +1231,9 @@ namespace SaveOurShip2
 				if (Heading == 1)
 					OriginMapComp.Range -= MapEnginePower; //reduce distance
 				else if (Heading == -1)
+				{
 					OriginMapComp.Range += MapEnginePower; //inrease distance
+				}
 
 				OriginMapComp.Range = Mathf.Clamp(OriginMapComp.Range, 0f, 400f);
 
@@ -2492,7 +2501,7 @@ namespace SaveOurShip2
 			float enginePower = float.MaxValue;
 			foreach (SpaceShipCache ship in ShipsOnMap.Values)
 			{
-				if (ship.BuildingCount < 5)
+				if (ship.BuildingCount < 5 && ship.ThrustToWeight() == 0)
 					continue;
 				if (!ship.CanMove())
 					return 0;

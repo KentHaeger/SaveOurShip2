@@ -374,7 +374,7 @@ namespace SaveOurShip2
 					return;
 				}
 				bool autoFireForPlayer = false;
-				if (PlayerControlled && heatComp.myNet.TacCons.Any())
+				if (PlayerControlled && (heatComp?.myNet?.TacCons.Any() ?? false))
 				{
 					autoFireForPlayer = heatComp.myNet.TacCons.First().GetComp<CompShipHeatTacCon>().AutoFire;
 				}
@@ -387,10 +387,11 @@ namespace SaveOurShip2
 					}
 					else //try bridges, else random
 					{
+						ShipMapComp compToTarget = autoFireForPlayer ? mapComp.ShipCombatTargetMap.GetComponent<ShipMapComp>() : mapComp.OriginMapComp;
 						if (mapComp.OriginMapComp.MapRootListAll.Any(b => !b.Destroyed))
-							shipTarget = mapComp.OriginMapComp.MapRootListAll.RandomElement();
+							shipTarget = compToTarget.MapRootListAll.RandomElement();
 						else
-							shipTarget = mapComp.ShipCombatTargetMap.listerBuildings.allBuildingsColonist.RandomElement();
+							shipTarget = compToTarget.map.listerBuildings.allBuildingsColonist.RandomElement();
 					}
 				}
 				if (shipTarget.IsValid)

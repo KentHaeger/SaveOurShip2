@@ -61,6 +61,10 @@ namespace SaveOurShip2
 		private Map thisMap;
 		private Map sourceMap;
 
+		// Statistics
+		private int hitCount = 0;
+		private int projectileCount = 0;
+
 		private ShipMapComp ThisMapComp
 		{
 			get
@@ -114,11 +118,12 @@ namespace SaveOurShip2
 			}
 			//shooter adj 0-50%
 			missAngle *= (100 - proj.accBoost * 2.5f) / 100;
-			dodgeAngle = DodgeChanceMultiplier.Evaluate(ThisMapComp.MapEnginePower);
+			// Use reasonable clamp when working with MapEnginePower
+			dodgeAngle = Mathf.Clamp(DodgeChanceMultiplier.Evaluate(ThisMapComp.MapEnginePower), 0f, 40f);
 			// There can be orphan projectiles on the way after battle ends
 			if (SourceMapComp.IsValid)
 			{
-				dodgeAngle *= DodgePenaltyMultiplier.Evaluate(SourceMapComp.MapEnginePower);
+				dodgeAngle *= Mathf.Clamp(DodgePenaltyMultiplier.Evaluate(SourceMapComp.MapEnginePower), 0.05f, 20f);
 			}
 			// Dodge angle reduced for short-ranged weapons
 			dodgeAngle *= DodgeMultiplierFromWeaponRange.Evaluate(proj.turret.heatComp.Props.maxRange);
@@ -133,6 +138,12 @@ namespace SaveOurShip2
 				Log.Warning("+CalculatedAngles: dodge: " + dodgeAngle.ToString("F2") + ", miss: " + missAngle.ToString("F2"));
 			}
 			float totalSpread = dodgeAngle + missAngle;
+			const float maxTotalSpread = 35f;
+			if(totalSpread > maxTotalSpread)
+			{
+				Log.Warning("TotalSpread too high:" + totalSpread.ToString("F2"));
+			}
+			totalSpread = Mathf.Clamp(totalSpread, 0f, maxTotalSpread);
 			return Rand.Range(-totalSpread, totalSpread);
 		}
 
@@ -148,6 +159,21 @@ namespace SaveOurShip2
 			{
 				return (SourceMapComp?.IsValid ?? false) && (ThisMapComp?.IsValid ?? false);
 			}
+		}
+
+		// Statistics
+		public void RegisterDespawn(Projectile proj)
+		{
+			projectileCount++;
+			const int loggingInterval = 20;
+			if (projectileCount % loggingInterval == 0)
+			{
+				Log.Warning("Hit rate: " + ((float)hitCount/projectileCount).ToString("F2"));
+			}
+		}
+		public void RegisterExplosion(Projectile proj)
+		{
+			hitCount++;
 		}
 	}
 }
