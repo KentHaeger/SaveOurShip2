@@ -139,6 +139,19 @@ namespace SaveOurShip2
 				}
 			}
 		}
+
+		protected override void Explode()
+		{
+			this.Map.GetComponent<ShipMapComp>().AccuracyCalc.RegisterExplosion(this);
+			base.Explode();
+		}
+
+		public override void Destroy(DestroyMode mode = DestroyMode.Vanish)
+		{
+			this.Map.GetComponent<ShipMapComp>().AccuracyCalc.RegisterDespawn(this);
+			base.Destroy(mode);
+		}
+
 		/*
 		public override Vector3 ExactPosition
 		{
