@@ -131,14 +131,31 @@ namespace SaveOurShip2.Vehicles
             };
         }
 
+        // Strafe and bomb common action postfixed by target selection command
+        Action CommandAttack(VehiclePawn vehicle, ShipMapComp.ShuttleMission mission)
+		{
+            return delegate
+            {
+                SpaceShipCache carrier = null;
+                if (vehicle.Spawned)
+                {
+                    ShipMapComp mapComp = vehicle.Map?.GetComponent<ShipMapComp>() ?? null;
+                    carrier = mapComp?.ShipOnVec(vehicle.Position) ?? null;
+                }
+                ShuttleTakeoff.LaunchShuttleToCombatManager(vehicle, mission);
+                if (carrier != null && carrier.Core != null)
+                {
+                    Command_Action targetShuttles = carrier.Core.GetTargetShuttlesCommand();
+                    targetShuttles.action();
+                }
+            };
+		}
+
         Command_Action CommandStrafe(VehiclePawn vehicle)
         {
             return new Command_Action
             {
-                action = delegate
-                {
-                    ShuttleTakeoff.LaunchShuttleToCombatManager(vehicle, ShipMapComp.ShuttleMission.STRAFE);
-                },
+                action = CommandAttack(vehicle, ShipMapComp.ShuttleMission.STRAFE),
                 defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.ShuttleMissionStrafe"),
                 defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.ShuttleMissionStrafeDesc"),
                 icon = ContentFinder<Texture2D>.Get("UI/ShuttleMissionStrafe", true)
@@ -149,10 +166,7 @@ namespace SaveOurShip2.Vehicles
         {
             return new Command_Action
             {
-                action = delegate
-                {
-                    ShuttleTakeoff.LaunchShuttleToCombatManager(vehicle, ShipMapComp.ShuttleMission.BOMB);
-                },
+                action = CommandAttack(vehicle, ShipMapComp.ShuttleMission.BOMB),
                 defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.ShuttleMissionBomb"),
                 defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.ShuttleMissionBombDesc"),
                 icon = ContentFinder<Texture2D>.Get("UI/ShuttleMissionBomb", true)

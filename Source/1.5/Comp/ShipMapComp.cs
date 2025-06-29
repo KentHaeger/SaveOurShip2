@@ -691,6 +691,18 @@ namespace SaveOurShip2
 			}
 			return -1;
 		}
+		public SpaceShipCache ShipOnVec(IntVec3 vec)
+		{
+			int shipIndex = ShipIndexOnVec(vec);
+			if (shipIndex != -1)
+			{
+				return shipsOnMap[shipIndex];
+			}
+			else
+			{
+				return null;
+			}
+		}
 		public bool VecHasLS(IntVec3 vec)
 		{
 			int shipIndex = ShipIndexOnVec(vec);
