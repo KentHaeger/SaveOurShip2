@@ -557,7 +557,7 @@ namespace SaveOurShip2
 				//sync
 				((Verb_LaunchProjectileShip)AttackVerb).shipTarget = shipTarget;
 				if (AttackVerb.verbProps.burstShotCount > 0 && mapComp.ShipCombatTargetMap != null)
-					SynchronizedBurstLocation = mapComp.FindClosestEdgeCell(mapComp.ShipCombatTargetMap, shipTarget.Cell);
+					SynchronizedBurstLocation = mapComp.FindClosestEdgeCellLowSpread(mapComp.ShipCombatTargetMap, shipTarget.Cell);
 				else
 					SynchronizedBurstLocation = IntVec3.Invalid;
 				//spinal weapons fire straight and destroy things in the way

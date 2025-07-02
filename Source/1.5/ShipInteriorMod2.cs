@@ -171,6 +171,18 @@ namespace SaveOurShip2
 			}
 		}
 
+		public static bool SlowTimeFlag
+		{
+			get
+			{
+				return WorldComp.SlowTimeFlag;
+			}
+			set
+			{
+				WorldComp.SlowTimeFlag = value;
+			}
+		}
+
 		private static ShipWorldComp worldComp = null;
 		public static ShipWorldComp WorldComp
 		{

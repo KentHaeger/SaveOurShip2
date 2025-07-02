@@ -460,6 +460,14 @@
 	<SoSAIName>AI name: {0}</SoSAIName>
 	<SoSNoMapObserve>This type of map cannot be observed from orbit. Its owners have likely deployed sensor scrambling technology.</SoSNoMapObserve>
 	<SoSBreathable>Breathable</SoSBreathable>
+	<!-- Dodge mechanics -->
+	<SoS.DodgeNoEnginePower>Can't dodge because of no working engines or wrecks present. Remove wrecks to dodge.</SoS.DodgeNoEnginePower>
+	<SoS.DodgeNoRCSOnShip>Ship {0} needs RCS thrusters to perform dodge.</SoS.DodgeNoRCSOnShip>
+	<SoS.DodgeOnCooldown>RCS thrusters are cooling down. Nex dodge maneur will be doable in {0} seconds.</SoS.DodgeOnCooldown>
+	<SoS.DodgeLeft>Dodge left</SoS.DodgeLeft>
+	<SoS.DodgeLeftDesc>Dodge incoming shots, engaging right side RCS thrusters and moving ship to the left.</SoS.DodgeLeftDesc>
+	<SoS.DodgeRight>Dodge right</SoS.DodgeRight>
+	<SoS.DodgeRightDesc>Dodge incoming shots, engaging left side RCS thrusters and moving ship to the right.</SoS.DodgeRightDesc>
 	
 	<!-- obsolete/unused
 	<SoS.PirateTradeEmpire>Our act of piracy against the Empire has not gone unnoticed!</SoS.PirateTradeEmpire>

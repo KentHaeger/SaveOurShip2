@@ -17,6 +17,7 @@ namespace SaveOurShip2
 		public bool renderedThatAlready = false;
 		public List<Building_ShipSensor> Sensors = new List<Building_ShipSensor>();
 		public bool MoveShipFlag = false;
+		public bool SlowTimeFlag = false;
 		public int nextUniqueMissionID = 0;
 		public const int StarhipBowTimeout = 720000; // 12 days
 		public int LastStarshipBowTick = -StarhipBowTimeout;
@@ -91,6 +92,7 @@ namespace SaveOurShip2
 			Scribe_Values.Look<bool>(ref startedEndgame, "StartedEndgame");
 			Scribe_Values.Look<int>(ref nextUniqueMissionID, "UniqueMissionID");
 			Scribe_Values.Look<int>(ref LastStarshipBowTick, "LastStarshipBowTick", -StarhipBowTimeout);
+			Scribe_Values.Look<bool>(ref SlowTimeFlag, "SlowTimeFlag", false);
 
 			if (Scribe.mode != LoadSaveMode.PostLoadInit)
 			{
@@ -98,6 +100,14 @@ namespace SaveOurShip2
 				MinorBreakThresholds.Clear();
 				MajorBreakThresholds.Clear();
 				ExtremeBreakThresholds.Clear();
+			}
+			// Devmode-only flag should be reset to false if devmode is not enabled after loading a save where it is set to true
+			if (Scribe.mode == LoadSaveMode.PostLoadInit)
+			{
+				if (!Prefs.DevMode)
+				{
+					SlowTimeFlag = false;
+				}
 			}
 			/*if (Scribe.mode!=LoadSaveMode.Saving)
 			{

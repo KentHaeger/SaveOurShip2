@@ -119,6 +119,7 @@
     <Compile Include="GlobalUnlockDef.cs" />
     <Compile Include="HediffCompProperties_GearRepair.cs" />
     <Compile Include="HediffComp_GearRepair.cs" />
+    <Compile Include="MapDodgeAbility.cs" />
     <Compile Include="ModIntegration.cs" />
     <Compile Include="Obs-Shuttle\TransportPodsArrivalAction_MoonBase.cs" />
     <Compile Include="Obs-Shuttle\TransportPodsArrivalAction_ShipAssault.cs" />
