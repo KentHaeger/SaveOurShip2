@@ -37,8 +37,14 @@ namespace SaveOurShip2
 		public List<CompShipHeat> cachedPipes = new List<CompShipHeat>();
 
 		public HashSet<Projectile> incomingProjectiles = new HashSet<Projectile>();
-		// Temporary - simplest evasion tryout case
-		public bool isEvading = false;
+		MapDodgeAbility dodgeAbility = new MapDodgeAbility();
+		public MapDodgeAbility DodgeAbility
+		{
+			get
+			{
+				return dodgeAbility;
+			}
+		}
 
 		public int[] grid;
 		public bool heatGridDirty;
@@ -68,6 +74,7 @@ namespace SaveOurShip2
 		{
 			grid = new int[map.cellIndices.NumGridCells];
 			heatGridDirty = true;
+			dodgeAbility.map = map;
 			AccessExtensions.Utility.shipHeatMapCompCache.Add(this);
 		}
 		public override void MapRemoved()
@@ -247,6 +254,12 @@ namespace SaveOurShip2
 			Scribe_References.Look<Map>(ref PrevMap, "PrevMap");
 			Scribe_Values.Look<int>(ref PrevTile, "PrevTile");
 			Scribe_Values.Look<bool>(ref Takeoff, "Takeoff");
+			Scribe_Deep.Look<MapDodgeAbility>(ref dodgeAbility, "dodgeAbility");
+			if (dodgeAbility == null && Scribe.mode == LoadSaveMode.PostLoadInit)
+			{
+				dodgeAbility = new MapDodgeAbility();
+				dodgeAbility.map = map;
+			}
 
 			Scribe_Values.Look<ShipMapState>(ref ShipMapState, "ShipMapState", 0);
 			Scribe_Values.Look<bool>(ref EnginesOn, "ToggleEngines", false);
@@ -293,6 +306,8 @@ namespace SaveOurShip2
 				Scribe_Collections.Look<Building_ShipBridge>(ref MapRootListAll, "MapRootListAll", LookMode.Reference); //td rem?
 				Scribe_Deep.Look(ref ShuttlesOnMissions, "ShuttlesOnMissions", this);
 				Scribe_Collections.Look<ShuttleMissionData>(ref ShuttleMissions, "ShuttleMissions", LookMode.Deep);
+
+				Scribe_Collections.Look<Projectile>(ref incomingProjectiles, "incomingProjectiles", LookMode.Reference);
 			}
 			if (Scribe.mode == LoadSaveMode.LoadingVars)
 			{
@@ -1203,32 +1218,10 @@ namespace SaveOurShip2
 		}
 
 		//battle
-		static SimpleCurve evasionSpeedMultiplierCurve = new SimpleCurve()
-		{
-			new CurvePoint(0f, 0f),
-			new CurvePoint(1f, 0.15f),
-			new CurvePoint(2f, 0.5f),
-			new CurvePoint(3f, 1f),
-			new CurvePoint(4f, 1.2f),
-		};
 		public override void MapComponentTick()
 		{
 			base.MapComponentTick();
-			//Update Projectiles
-			if (isEvading)
-			{
-				// Ship with baseline dodger TWR = 3 has base evasion of 10 tiles per second. 0.8-1.1 seconds is ETA for projectiles shot at the small ship at the center of the map
-				const float baseEvasionPerSecond = 30f;
-				float evasionSpeedMultiplier = 1; //  evasionSpeedMultiplierCurve.Evaluate(MapEnginePower);
-
-				foreach (Projectile proj in incomingProjectiles)
-				{
-					// very small change in coordinates every tick. Not handled here, will be taken into account for next projectile tick. 
-					proj.destination.z -= baseEvasionPerSecond / 60f * evasionSpeedMultiplier;
-					proj.origin.z -= baseEvasionPerSecond / 60f * evasionSpeedMultiplier;
-					proj.intendedTarget = new LocalTargetInfo(proj.destination.ToIntVec3());
-				}
-			}
+			dodgeAbility.CompTick();
 			List<SpaceShipCache> shipToRemove = new List<SpaceShipCache>();
 			foreach (SpaceShipCache ship in ShipsOnMap.Values)
 			{
@@ -1276,7 +1269,7 @@ namespace SaveOurShip2
 						Projectile newProjectile;
 						IntVec3 spawnCell;
 						if (proj.burstLoc == IntVec3.Invalid)
-							spawnCell = FindClosestEdgeCell(ShipCombatTargetMap, proj.target.Cell);
+							spawnCell = FindClosestEdgeCellLowSpread(ShipCombatTargetMap, proj.target.Cell);
 						else
 							spawnCell = proj.burstLoc;
 						//Log.Message("Spawning " + proj.turret + " projectile on player ship at " + proj.target);
@@ -2308,6 +2301,21 @@ namespace SaveOurShip2
 					}
 				}
 			}
+			// Active RCS, add flecks decently often to show "progressive heating/burning"
+			if (tick % 40 == 0)
+			{
+				if (dodgeAbility.IsActive() && dodgeAbility.NeedThrowFlecks())
+				{
+					foreach (SpaceShipCache ship in ShipsOnMap.Values)
+					{
+						foreach (CompRCSThruster rcs in ship.RCSs)
+						{
+							if (rcs.parent.Rotation == dodgeAbility.DodgeDirection) //td need better fx, not affected by wind
+								FleckMaker.ThrowHeatGlow(rcs.ventTo, rcs.parent.Map, 1.6f);
+						}
+					}
+				}
+			}
 			if (tick % 300 == 0)
 			{
 				if (tick % 6000 == 0) //decomp
@@ -2681,6 +2689,8 @@ namespace SaveOurShip2
 			if (loser.GetComponent<ShipMapComp>().ShipMapState != ShipMapState.inCombat)
 				return;
 			Log.Message("SOS2: ".Colorize(Color.cyan) + loser + " Lost ship battle!".Colorize(Color.red));
+			// In case slow time was enabled, it is now no longer needed
+			ShipInteriorMod2.SlowTimeFlag = false;
 			//tgtMap is opponent of origin
 			Map tgtMap = OriginMapComp.ShipCombatTargetMap;
 			var tgtMapComp = OriginMapComp.TargetMapComp;
@@ -2802,7 +2812,7 @@ namespace SaveOurShip2
 		}
 		
 		//proj
-		public IntVec3 FindClosestEdgeCell(Map map, IntVec3 targetCell)
+		private Rot4 FindProjectileSpawnDirection(Map map, IntVec3 targetCell)
 		{
 			Rot4 dir;
 			var mapComp = map.GetComponent<ShipMapComp>();
@@ -2825,7 +2835,47 @@ namespace SaveOurShip2
 				else
 					dir = Rot4.South;
 			}
+			return dir;
+		}
+		// Original function finds some cell on closest map edge to spawn incoming projectile
+		// spread is whole map edge
+		public IntVec3 FindClosestEdgeCell(Map map, IntVec3 targetCell)
+		{
+			Rot4 dir = FindProjectileSpawnDirection(map, targetCell);
 			return CellFinder.RandomEdgeCell(dir, map);
+		}
+
+		// Smarter choice of spawn cell for incoming projectile
+		// limits coordinates, so that not the whol map edge is used, lesser variety of incoming deirections.
+		public IntVec3 FindClosestEdgeCellLowSpread(Map map, IntVec3 targetCell)
+		{
+			Rot4 dir = FindProjectileSpawnDirection(map, targetCell);
+			if (dir == Rot4.North || dir == Rot4.South)
+			{
+				int x = targetCell.x + Rand.Range(-map.Size.x / 4, map.Size.x / 4);
+				x = Mathf.Clamp(x, 0, map.Size.x - 1);
+				// This is for South
+				int z = 0;
+				if (dir == Rot4.North)
+				{
+					z = map.Size.z - 1;
+				}
+				return new IntVec3(x, 0, z);
+			}
+			if (dir == Rot4.West || dir == Rot4.East)
+			{
+				int z = targetCell.z + Rand.Range(-map.Size.z / 4, map.Size.z / 4);
+				z = Mathf.Clamp(z, 0, map.Size.z - 1);
+				// This is for West
+				int x = 0;
+				if (dir == Rot4.East)
+				{
+					x = map.Size.x - 1;
+				}
+				return new IntVec3(x, 0, z);
+			}
+			// Fixed location for projectiles with error in rot
+			return new IntVec3(0, 0, 0);
 		}
 
 		//shuttles

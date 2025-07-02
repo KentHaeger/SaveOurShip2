@@ -870,6 +870,19 @@ namespace SaveOurShip2
 		}
 	}
 
+	//Disable slow time when leaving devmode
+	[HarmonyPatch(typeof(Prefs), "set_DevMode")]
+	public static class AutoDisableSlowTime
+	{
+		public static void Postfix(bool value)
+		{
+			if (!value)
+			{
+				ShipInteriorMod2.SlowTimeFlag = false;
+			}
+		}
+	}
+
 	[HarmonyPatch(typeof(PenFoodCalculator), "ProcessTerrain")]
 	public static class SpaceHasNoWildPlants
 	{
