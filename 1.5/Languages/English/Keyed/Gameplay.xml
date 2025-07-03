@@ -255,6 +255,7 @@
 	<SoS.TurretOptimalRangeDesc>Enable to only fire on targets within optimal range</SoS.TurretOptimalRangeDesc>
 	<SoS.TurretPointDefense>Point Defense mode</SoS.TurretPointDefense>
 	<SoS.TurretPointDefenseDesc>Use this turret to intercept incoming torpedoes and shuttles</SoS.TurretPointDefenseDesc>
+	<SoS.TurretNotConnected>Not connected to the ship bridge via heat network, can't fire!</SoS.TurretNotConnected>
 	<SoS.TorpedoAllowedDesc>Toggle to prevent or allow firing of this type of torpedo.</SoS.TorpedoAllowedDesc>
 	<SoS.TorpedoNotLoaded>Not loaded</SoS.TorpedoNotLoaded>
 	<SoS.TorpedoFullyLoaded>Fully loaded</SoS.TorpedoFullyLoaded>
@@ -463,7 +464,7 @@
 	<!-- Dodge mechanics -->
 	<SoS.DodgeNoEnginePower>Can't dodge because of no working engines or wrecks present. Remove wrecks to dodge.</SoS.DodgeNoEnginePower>
 	<SoS.DodgeNoRCSOnShip>Ship {0} needs RCS thrusters to perform dodge.</SoS.DodgeNoRCSOnShip>
-	<SoS.DodgeOnCooldown>RCS thrusters are cooling down. Nex dodge maneur will be doable in {0} seconds.</SoS.DodgeOnCooldown>
+	<SoS.DodgeOnCooldown>RCS thrusters are cooling down. Next dodge maneur will be doable in {0} seconds.</SoS.DodgeOnCooldown>
 	<SoS.DodgeLeft>Dodge left</SoS.DodgeLeft>
 	<SoS.DodgeLeftDesc>Dodge incoming shots, engaging right side RCS thrusters and moving ship to the left.</SoS.DodgeLeftDesc>
 	<SoS.DodgeRight>Dodge right</SoS.DodgeRight>
