@@ -1275,7 +1275,7 @@ namespace SaveOurShip2
 						//Log.Message("Spawning " + proj.turret + " projectile on player ship at " + proj.target);
 						newProjectile = (Projectile)GenSpawn.Spawn(proj.spawnProjectile, spawnCell, ShipCombatTargetMap);
 						// Not allowed to dodge torpedoes as they are guided
-						if (newProjectile is Projectile_ExplosiveShip && !(proj is Projectile_ExplosiveShipTorpedo))
+						if (newProjectile is Projectile_ExplosiveShip && !(newProjectile is Projectile_ExplosiveShipTorpedo))
 						{
 							ShipCombatTargetMap.GetComponent<ShipMapComp>().incomingProjectiles.Add(newProjectile);
 						}
