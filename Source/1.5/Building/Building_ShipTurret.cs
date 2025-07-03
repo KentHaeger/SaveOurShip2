@@ -41,13 +41,20 @@ namespace SaveOurShip2
 		public override LocalTargetInfo CurrentTarget => currentTargetInt;
 		public override Verb AttackVerb => GunCompEq.PrimaryVerb;
 		public override bool IsEverThreat => Faction == Faction.OfPlayer && !Map.IsSpace(); //prevent player pawns auto attacking
+		public bool ConnectedToBridge
+		{
+			get
+			{
+				return heatComp != null && heatComp.myNet != null && (heatComp.myNet.PilCons.Any() || heatComp.myNet.AICores.Any() || heatComp.myNet.TacCons.Any());
+			}
+		}
 		public bool Active //needs power, heat and bridge on net
 		{
 			get
 			{
 				//if (SpinalHasNoAmps) //td req recheck system when parts placed by player, AI skip
 				//	return false;
-				if (Spawned && heatComp != null && heatComp.myNet != null && !heatComp.myNet.venting && (powerComp == null || powerComp.PowerOn) && (heatComp.myNet.PilCons.Any() || heatComp.myNet.AICores.Any() || heatComp.myNet.TacCons.Any()))
+				if (Spawned && heatComp != null && heatComp.myNet != null && !heatComp.myNet.venting && (powerComp == null || powerComp.PowerOn) && ConnectedToBridge)
 				{
 					return true;
 				}
@@ -689,6 +696,10 @@ namespace SaveOurShip2
 			if (!inspectString.NullOrEmpty())
 			{
 				stringBuilder.AppendLine(inspectString);
+			}
+			if (!ConnectedToBridge)
+			{
+				stringBuilder.AppendLine("SoS.TurretNotConnected".Translate());
 			}
 			if (AttackVerb.verbProps.minRange > 0f && GroundDefenseMode)
 			{
