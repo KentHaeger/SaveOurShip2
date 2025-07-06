@@ -3304,15 +3304,22 @@ namespace SaveOurShip2
 	{
 		public static void Postfix(MainTabWindow_Research __instance, IEnumerable ___tabs)
 		{
-			if (!ShipInteriorMod2.WorldComp.Unlocks.Contains("ArchotechUplink"))
+			List<TabRecord> hiddenTabs = new List<TabRecord>();
+			foreach (TabRecord tab in ___tabs)
 			{
-				TabRecord archoTab = null;
-				foreach (TabRecord tab in ___tabs)
+				// Hide Archotech tab
+				if (tab.label.Equals("Archotech") && (!ShipInteriorMod2.WorldComp.Unlocks.Contains("ArchotechUplink")))
 				{
-					if (tab.label.Equals("Archotech"))
-						archoTab = tab;
+					hiddenTabs.Add(tab);
 				}
-				___tabs.GetType().GetMethod("Remove").Invoke(___tabs, new object[] { archoTab });
+				else if (tab.label.Equals("SOS2_Debug"))
+				{
+					hiddenTabs.Add(tab);
+				}
+			}
+			foreach (TabRecord tab in hiddenTabs)
+			{
+				___tabs.GetType().GetMethod("Remove").Invoke(___tabs, new object[] { tab });
 			}
 		}
 	}

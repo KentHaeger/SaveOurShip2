@@ -984,7 +984,7 @@
 
 	<ResearchProjectDef ParentName="ShipResearchProjectBase">
 		<defName>ResearchShipDebugItems</defName>
-		<label>debug ship navigation</label>
+		<label>debug items</label>
 		<description>debug - Allow your colonists to pilot a ship, with basic computer assistance.</description>
 		<baseCost>80000</baseCost>
 		<techLevel>Spacer</techLevel>
@@ -993,6 +993,7 @@
 			<li>ShipEngine</li>
 		</prerequisites>
 		<hideWhen IsNull="True" />
+		<tab>ResearchTabDebug</tab>
 		<generalRules>
 		  <rulesStrings>
 			<li>subject->starship navigation</li>
