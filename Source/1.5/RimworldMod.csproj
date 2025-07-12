@@ -98,6 +98,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccuracyCalculator.cs" />
+    <Compile Include="Alert\AlertDodgeChanceBase.cs" />
+    <Compile Include="Alert\AlertDodgeChanceEnemy.cs" />
+    <Compile Include="Alert\AlertDodgeChancePlayer.cs" />
     <Compile Include="Alert_ArchotechSporeMoodLow.cs" />
     <Compile Include="Alert_MechanitesInHomeArea.cs" />
     <Compile Include="ApparelHolographic.cs" />

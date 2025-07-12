@@ -87,7 +87,69 @@ namespace SaveOurShip2
 			thisMap = thisMapComp.map;
 			sourceMap = sourceMapComp.map;
 		}
+		public float DodgeCance(ShipCombatProjectile proj)
+		{
+			return GetDodgeCanceImpl(proj.turret.heatComp.Props.optRange);
+		}
 
+		public float ShortRangedWeaponDodgeChance
+		{
+			get
+			{
+				// Lasers/cannons has has 50 range
+				return GetDodgeCanceImpl(LaserOptimalRange);
+			}
+		}
+		public float AverageDodgeChance
+		{
+			get
+			{
+				// Plasma has 100 range
+				return GetDodgeCanceImpl(PlasmaOptimalRange);
+			}
+		}
+		public float LongRangedWeaponDodgeChance
+		{
+			get
+			{
+				// Lasers/cannons has has 50 range
+				return GetDodgeCanceImpl(RailOptimalRange);
+			}
+		}
+		// Dodge chance multiplier based on shooter skill
+		private static readonly SimpleCurve DodgeChanceMultiplierFromShooting = new SimpleCurve
+		{
+			new CurvePoint(0f, 1.6f),
+			new CurvePoint(20f, 0.4f)
+		};
+		private static readonly SimpleCurve DodgeChanceMultiplierFromPiloting = new SimpleCurve
+		{
+			new CurvePoint(0f, 1.6f),
+			new CurvePoint(20f, 0.4f)
+		};
+		private float GetDodgeCanceImpl(float weaponRange)
+		{
+			float baseChance = 0.3f;
+			// Moodify base chance for weapon range
+			if (weaponRange > (PlasmaOptimalRange + RailOptimalRange) / 2f)
+				baseChance *= 1.5f;
+			else if (weaponRange < (LaserOptimalRange + PlasmaOptimalRange) / 2f)
+				baseChance *= 0.5f;
+			// lower chances for lower TWR, higher chances for higher TWR
+			// Complete/critical miss system is mainly for fighters, so firhter TWR is baseline
+			const float baselineTWR = 3.5f;
+			// attacker tactician shooting skill
+			float dodgeMultiplierFromShooting = DodgeChanceMultiplierFromShooting.Evaluate(SourceMapAccuracyBoost);
+			// pilot skill
+			float dodgeMultiplierFromPiloting = DodgeChanceMultiplierFromPiloting.Evaluate(ThisMapEvasionBoost);
+			float finalChance = baseChance * dodgeMultiplierFromShooting * dodgeMultiplierFromPiloting * ThisMapComp.SlowestThrustRatio() / baselineTWR;
+			return finalChance;
+		}
+
+		public bool PerformDodgeCheck(ShipCombatProjectile proj)
+		{
+			return Rand.Chance(DodgeCance(proj));
+		}
 		// Initial calc function, that can catch up things from old code work
 		public float GetMissAngle(ShipCombatProjectile proj)
 		{
@@ -119,11 +181,11 @@ namespace SaveOurShip2
 			//shooter adj 0-50%
 			missAngle *= (100 - proj.accBoost * 2.5f) / 100;
 			// Use reasonable clamp when working with MapEnginePower
-			dodgeAngle = Mathf.Clamp(DodgeChanceMultiplier.Evaluate(ThisMapComp.MapEnginePower), 0f, 40f);
+			dodgeAngle = Mathf.Clamp(DodgeChanceMultiplier.Evaluate(ThisMapComp.SlowestThrustRatio()), 0f, 40f);
 			// There can be orphan projectiles on the way after battle ends
 			if (SourceMapComp.IsValid)
 			{
-				dodgeAngle *= Mathf.Clamp(DodgePenaltyMultiplier.Evaluate(SourceMapComp.MapEnginePower), 0.05f, 20f);
+				dodgeAngle *= Mathf.Clamp(DodgePenaltyMultiplier.Evaluate(SourceMapComp.SlowestThrustRatio()), 0.05f, 20f);
 			}
 			// Dodge angle reduced for short-ranged weapons
 			dodgeAngle *= DodgeMultiplierFromWeaponRange.Evaluate(proj.turret.heatComp.Props.maxRange);
@@ -158,6 +220,48 @@ namespace SaveOurShip2
 			get
 			{
 				return (SourceMapComp?.IsValid ?? false) && (ThisMapComp?.IsValid ?? false);
+			}
+		}
+
+		// Map-wide accuracy boost by intellectual skill
+		public int SourceMapAccuracyBoost
+		{
+			get
+			{
+				int result = 0;
+				foreach (SpaceShipCache ship in SourceMapComp.ShipsOnMap.Values)
+				{
+					foreach (Building_ShipBridge bridge in ship.Bridges)
+					{
+						result = Mathf.Max(result, bridge.heatComp.myNet.AccuracyBoost);
+					}
+				}
+				return result;
+			}
+		}
+
+		public int ThisMapEvasionBoost
+		{
+			get
+			{
+				int result = 0;
+				foreach (SpaceShipCache ship in SourceMapComp.ShipsOnMap.Values)
+				{
+					foreach (Building_ShipBridge bridge in ship.Bridges)
+					{
+						if (bridge.mannableComp.MannedNow)
+						{
+							int skill = bridge.mannableComp.ManningPawn.skills?.GetSkill(SkillDefOf.Shooting).Level ?? 0;
+							result = Mathf.Max(result, skill);
+						}
+					}
+					// AI core counst as shooting 10
+					if (ship.AICores.Any())
+					{
+						result = Mathf.Max(result, 10);
+					}
+				}
+				return result;
 			}
 		}
 

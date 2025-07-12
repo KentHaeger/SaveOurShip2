@@ -98,6 +98,7 @@ namespace SaveOurShip2
 					if (GlobalUnlockDef.AllShipsUnlocked())
 					{
 						// 00A0 is non-breakable space
+						// This is not main SOS2 content, so no translation fon now
 						CRString = " CR:\u00A0" + localTd2.combatPoints;
 					}
 					list.Add(new FloatMenuOption(localTd.label + " (" + localTd.defName + ")" + CRString, delegate ()

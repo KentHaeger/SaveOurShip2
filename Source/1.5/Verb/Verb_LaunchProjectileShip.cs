@@ -273,11 +273,7 @@ namespace SaveOurShip2
 			var mapComp = caster.Map.GetComponent<ShipMapComp>();
 
 			//inc acc if any manning pawn shooting or aicore
-			int accBoost = 0;
-			if (turret.heatComp.myNet.TacCons.Any(b => b.mannableComp.MannedNow))
-				accBoost = turret.heatComp.myNet.TacCons.Where(b => b.mannableComp.MannedNow).Max(b => b.mannableComp.ManningPawn.skills.GetSkill(SkillDefOf.Shooting).Level);
-			if (accBoost < 10 && turret.heatComp.myNet.AICores.Any())
-				accBoost = 10;
+			int accBoost = turret.heatComp.myNet.AccuracyBoost;
 			ShipCombatProjectile proj = new ShipCombatProjectile
 			{
 				turret = turret,

@@ -461,6 +461,18 @@
 	<SoSAIName>AI name: {0}</SoSAIName>
 	<SoSNoMapObserve>This type of map cannot be observed from orbit. Its owners have likely deployed sensor scrambling technology.</SoSNoMapObserve>
 	<SoSBreathable>Breathable</SoSBreathable>
+	<!-- Projectiles missing map-->
+	<SoS.ActorPlayer>Player</SoS.ActorPlayer>
+	<SoS.ActorEnemy>Enemy</SoS.ActorEnemy>
+	<SoS.DodgeChanceAlert>{0} dodge chance: {1}</SoS.DodgeChanceAlert>
+	<SoS.DodgeChanceExplanation>Long-range weapons dodge chance: {0}
+Medium-range weapons dodge chance: {1}
+Short-range weapons dodge chance: {2}
+
+Long-range weapons are railguns, plasma has medum range, lasers and cannons have short range.
+Dodge chance is based on target ship Thrust To Weight ratio, so only fast ships dodge very well. Pilot Intellectual skill increases dodge chance. Tactician with high shooting skill on attacking ship decreases enemy dodge chance.
+For Thrust to weight ratio, slowest ship on the map is taken into account.
+Successful dodge means miss by a lot, projectile doesn't even enter target map.</SoS.DodgeChanceExplanation>
 	<!-- Dodge mechanics -->
 	<SoS.DodgeNoEnginePower>Can't dodge because of no working engines or wrecks present. Remove wrecks to dodge.</SoS.DodgeNoEnginePower>
 	<SoS.DodgeNoRCSOnShip>Ship {0} needs RCS thrusters to perform dodge.</SoS.DodgeNoRCSOnShip>

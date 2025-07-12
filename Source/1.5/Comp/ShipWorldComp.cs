@@ -92,7 +92,6 @@ namespace SaveOurShip2
 			Scribe_Values.Look<bool>(ref startedEndgame, "StartedEndgame");
 			Scribe_Values.Look<int>(ref nextUniqueMissionID, "UniqueMissionID");
 			Scribe_Values.Look<int>(ref LastStarshipBowTick, "LastStarshipBowTick", -StarhipBowTimeout);
-			Scribe_Values.Look<bool>(ref SlowTimeFlag, "SlowTimeFlag", false);
 
 			if (Scribe.mode != LoadSaveMode.PostLoadInit)
 			{

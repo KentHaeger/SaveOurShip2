@@ -1263,6 +1263,15 @@ namespace SaveOurShip2
 				{
 					if (proj.range >= OriginMapComp.Range)
 					{
+						bool useNewAccuracySystem = ModSettings_SoS.newAccuracySystem && (accuracyCalculator?.IsValid ?? false);
+						if (useNewAccuracySystem)
+						{
+							if (accuracyCalculator.PerformDodgeCheck(proj))
+							{
+								toRemove.Add(proj);
+								continue;
+							}
+						}
 						//td determine miss, remove proj
 						//factors for miss: range+,pilot console+,mass-,thrusters+
 						//factors when fired/registered:weapacc-,tac console-
@@ -1274,6 +1283,8 @@ namespace SaveOurShip2
 							spawnCell = proj.burstLoc;
 						//Log.Message("Spawning " + proj.turret + " projectile on player ship at " + proj.target);
 						newProjectile = (Projectile)GenSpawn.Spawn(proj.spawnProjectile, spawnCell, ShipCombatTargetMap);
+
+
 						// Not allowed to dodge torpedoes as they are guided
 						if (newProjectile is Projectile_ExplosiveShip && !(newProjectile is Projectile_ExplosiveShipTorpedo))
 						{
@@ -1285,10 +1296,14 @@ namespace SaveOurShip2
 						float angle = a.AngleFlat;
 
 						float missAngle = 0;
-						if (newProjectile is Projectile_ExplosiveShipTorpedo || !ModSettings_SoS.newAccuracySystem || !(accuracyCalculator?.IsValid ?? false))
+						if (useNewAccuracySystem && !(newProjectile is Projectile_ExplosiveShipTorpedo))
+						{
+							missAngle = accuracyCalculator.GetMissAngle(proj);
+						}
+						else
 						{
 							// Base miss from xml
-							missAngle = Rand.Range(-proj.missRadius, proj.missRadius); 
+							missAngle = Rand.Range(-proj.missRadius, proj.missRadius);
 							// Inaccuracy at above optimal range
 							float rng = proj.range - proj.turret.heatComp.Props.optRange;
 							if (rng > 0)
@@ -1299,10 +1314,6 @@ namespace SaveOurShip2
 							}
 							//shooter adj 0-50%
 							missAngle *= (100 - proj.accBoost * 2.5f) / 100;
-						}
-						else
-						{
-							missAngle = accuracyCalculator.GetMissAngle(proj);
 						}
 						angle += missAngle;
 						//new vec from origin + angle
@@ -2533,6 +2544,7 @@ namespace SaveOurShip2
 				ship.MoveAtThrustToWeight(MapEnginePower);
 			}
 		}
+		//find worst t/w ship. Internal value, not final, different from what is shown in the UI.
 		public float SlowestThrustToWeight() //find worst t/w ship
 		{
 			if (ShipsOnMap.NullOrEmpty())
@@ -2552,6 +2564,27 @@ namespace SaveOurShip2
 					enginePower = currPower;
 			}
 			return enginePower * 14;
+		}
+		//find worst t/w ship, getting final value, same as T/W shown in UI. 
+		public float SlowestThrustRatio() 
+		{
+			if (ShipsOnMap.NullOrEmpty())
+				return 0f;
+
+			float minThrustRatio = float.MaxValue;
+			foreach (SpaceShipCache ship in ShipsOnMap.Values)
+			{
+				if (ship.BuildingCount < 5 && ship.ThrustRatio == 0)
+					continue;
+				if (!ship.CanMove())
+					return 0;
+				float currenThrustRatio = ship.ThrustRatio;
+				if (currenThrustRatio == 0)
+					return 0;
+				if (currenThrustRatio < minThrustRatio)
+					minThrustRatio = currenThrustRatio;
+			}
+			return minThrustRatio;
 		}
 		public void MapFullStop()
 		{
