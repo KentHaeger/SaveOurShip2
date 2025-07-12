@@ -83,6 +83,21 @@ namespace SaveOurShip2
 			}
 			return turretCEtype.IsAssignableFrom(thing.GetType());
 		}
+		// Accuracy boost from tactical console is per-heat-net.
+		// However, dodge chance boost for completel dodging projectiles is map-wide 
+		public int AccuracyBoost
+		{
+			get
+			{
+				int result = 0;
+				if (TacCons.Any(b => b.mannableComp.MannedNow))
+					result = TacCons.Where(b => b.mannableComp.MannedNow).Max(b => b.mannableComp.ManningPawn.skills.GetSkill(SkillDefOf.Shooting).Level);
+				if (result < 10 && AICores.Any())
+					result = 10;
+				return result;
+			}
+		}
+					
 		public float StorageCapacity //usable capacity (minus depletion)
 		{ 
 			get

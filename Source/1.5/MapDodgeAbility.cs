@@ -131,7 +131,6 @@ namespace SaveOurShip2
 		{
 			dodgeDirection = Rot4.Invalid;
 			evasionThrust = 0f;
-			// TODO 1.6: Remove flecks here
 		}
 
 		public void ExposeData()

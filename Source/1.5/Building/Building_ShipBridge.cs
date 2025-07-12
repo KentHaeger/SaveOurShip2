@@ -520,39 +520,43 @@ namespace SaveOurShip2
 						};
 						yield return selectWeapons;
 					}
-					Command_Action dodgeLeft = new Command_Action
+					// Manual dodge is complicated, so hidden under devmode. Expected to be replaced with dodge chance.
+					if(Prefs.DevMode)
 					{
-						action = delegate
+						Command_Action dodgeLeft = new Command_Action
 						{
-							mapComp.DodgeAbility.ActivateLeft();
-						},
-						defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.DodgeLeft"),
-						defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.DodgeLeftDesc"),
-						icon = ContentFinder<Texture2D>.Get("UI/Ship_Icon_Dodge_Left")
-					};
-					if (!mapComp.DodgeAbility.CanActivate())
-					{
-						dodgeLeft.Disable();
-						dodgeLeft.disabledReason = mapComp.DodgeAbility.CanActivate().Reason;
-					}
-					yield return dodgeLeft;
+							action = delegate
+							{
+								mapComp.DodgeAbility.ActivateLeft();
+							},
+							defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.DodgeLeft"),
+							defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.DodgeLeftDesc"),
+							icon = ContentFinder<Texture2D>.Get("UI/Ship_Icon_Dodge_Left")
+						};
+						if (!mapComp.DodgeAbility.CanActivate())
+						{
+							dodgeLeft.Disable();
+							dodgeLeft.disabledReason = mapComp.DodgeAbility.CanActivate().Reason;
+						}
+						yield return dodgeLeft;
 
-					Command_Action dodgeRight = new Command_Action
-					{
-						action = delegate
+						Command_Action dodgeRight = new Command_Action
 						{
-							mapComp.DodgeAbility.ActivateRight();
-						},
-						defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.DodgeRight"),
-						defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.DodgeRightDesc"),
-						icon = ContentFinder<Texture2D>.Get("UI/Ship_Icon_Dodge_Right")
-					};
-					if (!mapComp.DodgeAbility.CanActivate())
-					{
-						dodgeRight.Disable();
-						dodgeRight.disabledReason = mapComp.DodgeAbility.CanActivate().Reason;
+							action = delegate
+							{
+								mapComp.DodgeAbility.ActivateRight();
+							},
+							defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.DodgeRight"),
+							defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.DodgeRightDesc"),
+							icon = ContentFinder<Texture2D>.Get("UI/Ship_Icon_Dodge_Right")
+						};
+						if (!mapComp.DodgeAbility.CanActivate())
+						{
+							dodgeRight.Disable();
+							dodgeRight.disabledReason = mapComp.DodgeAbility.CanActivate().Reason;
+						}
+						yield return dodgeRight;
 					}
-					yield return dodgeRight;
 
 					// Not known if it's compicated for the player to have slow time option or rather
 					// it's complicated to watch dodging at normal speed and understand things
