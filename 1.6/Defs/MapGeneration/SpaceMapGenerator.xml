@@ -50,9 +50,8 @@
 		<ignoreAreaRevealedLetter>true</ignoreAreaRevealedLetter>
 		<genSteps>
 			<li>ElevationFertility</li>
-			<li>Caves</li>
 			<li>Terrain</li>
-			<li>CavesTerrain</li>
+			<li>CaveHives</li>
 			<li>FindPlayerStartSpot</li>
 			<li>ScenParts</li>
 			<li>Fog</li>
@@ -89,9 +88,8 @@
 		<ignoreAreaRevealedLetter>true</ignoreAreaRevealedLetter>
 		<genSteps>
 			<li>ElevationFertility</li>
-			<li>Caves</li>
 			<li>Terrain</li>
-			<li>CavesTerrain</li>
+			<li>CaveHives</li>
 			<li>Roads</li>
 			<li>RockChunks</li>
 			<li>ScatterRuinsSimple</li>

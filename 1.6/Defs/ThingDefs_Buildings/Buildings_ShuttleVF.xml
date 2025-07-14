@@ -62,7 +62,6 @@
 		<size>(1, 1)</size>
 		<uiIconScale>0.65</uiIconScale>
 		
-		<vehicleMovementPermissions LockSetting="True">DriverNeeded</vehicleMovementPermissions>
 		<canCaravan LockSetting = "True">true</canCaravan>
 		<vehicleCategory>Transport</vehicleCategory>
 		<techLevel>Industrial</techLevel>
@@ -641,11 +640,10 @@
 		
 		<nameable>true</nameable>
 
-		<buildDef>SoS2_Shuttle_Blueprint</buildDef>
+		<buildDef>SoS2_Shuttle_Standard_Blueprint</buildDef>
 
 		<size>(3, 3)</size>
 		
-		<vehicleMovementPermissions LockSetting="True">DriverNeeded</vehicleMovementPermissions>
 		<canCaravan LockSetting = "True">true</canCaravan>
 		<vehicleCategory>Transport</vehicleCategory>
 		<techLevel>Spacer</techLevel>
@@ -1329,7 +1327,6 @@
 
 		<size>(5, 5)</size>
 		
-		<vehicleMovementPermissions LockSetting="True">DriverNeeded</vehicleMovementPermissions>
 		<canCaravan LockSetting = "True">true</canCaravan>
 		<vehicleCategory>Transport</vehicleCategory>
 		<techLevel>Spacer</techLevel>
@@ -2159,7 +2156,6 @@
 
 		<size>(7, 7)</size>
 		
-		<vehicleMovementPermissions LockSetting="True">DriverNeeded</vehicleMovementPermissions>
 		<canCaravan LockSetting = "True">true</canCaravan>
 		<vehicleCategory>Transport</vehicleCategory>
 		<techLevel>Spacer</techLevel>

@@ -1237,6 +1237,7 @@
 		<comps>
 			<li Class="CompProperties_EggLayer">
 				<eggFertilizedDef>EggArchotortoiseFertilized</eggFertilizedDef>
+				<eggUnfertilizedDef>EggArchotortoiseUnrtilized</eggUnfertilizedDef>
 				<eggFertilizationCountMax>1</eggFertilizationCountMax>
 				<eggLayIntervalDays>15</eggLayIntervalDays>
 				<eggProgressUnfertilizedMax>0.5</eggProgressUnfertilizedMax>
@@ -1318,6 +1319,21 @@
 				<hatcherPawn>Archotortoise</hatcherPawn>
 			</li>
 		</comps>
+		<tradeability>Sellable</tradeability>
+	</ThingDef>
+		<ThingDef ParentName="EggUnfertBase">
+		<defName>EggArchotortoiseUnrtilized</defName>
+		<label>archotortoise egg (unfert.)</label>
+		<description>An unfertilized archotortoise egg. It can be eaten raw, but it's much, much better cooked.</description>
+		<graphicData>
+			<color>(255,255,255)</color>
+			<drawSize>1.3</drawSize>
+			<texPath>Things/Item/Resource/EggArchotortoise</texPath>
+			<graphicClass>Graphic_StackCount</graphicClass>
+		</graphicData>
+		<statBases>
+			<MarketValue>25</MarketValue>
+		</statBases>
 		<tradeability>Sellable</tradeability>
 	</ThingDef>
 
