@@ -194,7 +194,7 @@ namespace SaveOurShip2
 						if (component != null)
 						{
 							component.HealComponent(Props.autoRepair);
-							comp.Vehicle.CrashLanded = false;
+							comp.Vehicle.crashLanded = false;
 							FleckMaker.ThrowMicroSparks(GenAdj.CellsOccupiedBy(comp.Vehicle).RandomElement().ToVector3Shifted(), parent.Map);
 						}
 					}

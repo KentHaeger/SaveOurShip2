@@ -620,7 +620,7 @@ namespace SaveOurShip2
 
 				foreach(Pawn soul in soulsHeld)
                 {
-					Command_Action_PawnDrawer downloadSoul = new Command_Action_PawnDrawer
+					Command_ActionPawnDrawer downloadSoul = new Command_ActionPawnDrawer
 					{
 						action = delegate
 						{

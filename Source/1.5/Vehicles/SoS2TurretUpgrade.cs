@@ -24,7 +24,7 @@ namespace SaveOurShip2.Vehicles
             newTurret.isTorpedo = !useShuttleFuel;
             newTurret.hardpoint = turretSlot;
             if(useShuttleFuel)
-                newTurret.shellCount = newTurret.turretDef.magazineCapacity;
+                newTurret.shellCount = newTurret.def.magazineCapacity;
 
             vehicle.CompVehicleTurrets.AddTurret(newTurret, node.key);
         }

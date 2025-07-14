@@ -8,6 +8,7 @@ using RimWorld.Planet;
 using HarmonyLib;
 using RimWorld;
 using Vehicles;
+using Vehicles.World;
 using SaveOurShip2;
 using SaveOurShip2.Vehicles;
 
@@ -141,7 +142,7 @@ namespace SaveOurShip2
 				else if(enemyShuttlesInRange.Any())
                 {
 					VehiclePawn shuttleHit = enemyShuttlesInRange.First();
-					int? targetIntellectualSkill = (shuttleHit.FindPawnWithBestStat(StatDefOf.ResearchSpeed)?.skills?.GetSkill(SkillDefOf.Intellectual)?.Level);
+					int? targetIntellectualSkill = (shuttleHit.FindPawnWithBestStat(StatDefOf.ResearchSpeed, (Pawn p) => true)?.skills?.GetSkill(SkillDefOf.Intellectual)?.Level);
 					int skill = 0;
 					if (targetIntellectualSkill.HasValue)
 						skill = targetIntellectualSkill.Value;

@@ -21,7 +21,7 @@ namespace SaveOurShip2.Vehicles
         public override void Unlock(VehiclePawn vehicle, bool unlockingAfterLoad)
         {
             //Check for existing passengers... unlocking on load is unpredictable
-            VehicleHandler passengerHandler = vehicle.handlers.Where(handler => handler.role.key == "passenger").FirstOrDefault();
+            VehicleRoleHandler passengerHandler = vehicle.handlers.Where(handler => handler.role.key == "passenger").FirstOrDefault();
             if (passengerHandler.role.slots>0)
                 return;
 

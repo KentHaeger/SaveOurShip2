@@ -25,7 +25,7 @@ namespace SaveOurShip2.Vehicles
 
         }
 
-        public override IEnumerable<FloatMenuOption> GetFloatMenuOptionsAt(int tile)
+        /*public override IEnumerable<FloatMenuOption> GetFloatMenuOptionsAt(int tile)
 		{
             //td not sure the limits we want on this, right now you could assault from anywhere, should it be only from ship-ship?
             var mp = Find.World.worldObjects.MapParentAt(tile);
@@ -61,7 +61,7 @@ namespace SaveOurShip2.Vehicles
                     yield return option;
             }
             
-        }
+        }*/
 
         public IEnumerable<FloatMenuOption> FloatMenuMissions(int tile, ShipMapComp mapComp)
 		{

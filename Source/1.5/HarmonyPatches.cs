@@ -17,6 +17,8 @@ using RimWorld.QuestGen;
 using System.Collections;
 using System.Threading.Tasks;
 using Vehicles;
+using Vehicles.World;
+using Vehicles.Rendering;
 using SaveOurShip2.Vehicles;
 using SmashTools;
 using static Vehicles.LandingTargeter;
@@ -4845,14 +4847,14 @@ namespace SaveOurShip2
 				else
 					turret.renderProperties.north = new Vector2(0, 3);
 			}
-			turret.renderProperties.east = turret.rootDrawPos_East = Vector2Utility.RotatedBy(turret.renderProperties.north.Value, 90);
-			turret.renderProperties.southEast = turret.rootDrawPos_SouthEast = Vector2Utility.RotatedBy(turret.renderProperties.north.Value, 45);
-			turret.renderProperties.south = turret.rootDrawPos_South = Vector2Utility.RotatedBy(turret.renderProperties.north.Value, 0);
-			turret.renderProperties.southWest = turret.rootDrawPos_SouthWest = Vector2Utility.RotatedBy(turret.renderProperties.north.Value, 315);
-			turret.renderProperties.west = turret.rootDrawPos_West = Vector2Utility.RotatedBy(turret.renderProperties.north.Value, 270);
-			turret.renderProperties.northWest = turret.rootDrawPos_NorthWest = Vector2Utility.RotatedBy(turret.renderProperties.north.Value, 225);
-			turret.renderProperties.northEast = turret.rootDrawPos_NorthEast = Vector2Utility.RotatedBy(turret.renderProperties.north.Value, 135);
-			turret.renderProperties.north = turret.rootDrawPos_North = Vector2Utility.RotatedBy(turret.renderProperties.north.Value, 180);
+			turret.renderProperties.east = turret.rootDrawPosEast = Vector2Utility.RotatedBy(turret.renderProperties.north.Value, 90);
+			turret.renderProperties.southEast = turret.rootDrawPosSouthEast = Vector2Utility.RotatedBy(turret.renderProperties.north.Value, 45);
+			turret.renderProperties.south = turret.rootDrawPosSouth = Vector2Utility.RotatedBy(turret.renderProperties.north.Value, 0);
+			turret.renderProperties.southWest = turret.rootDrawPosSouthWest = Vector2Utility.RotatedBy(turret.renderProperties.north.Value, 315);
+			turret.renderProperties.west = turret.rootDrawPosWest = Vector2Utility.RotatedBy(turret.renderProperties.north.Value, 270);
+			turret.renderProperties.northWest = turret.rootDrawPosNorthWest = Vector2Utility.RotatedBy(turret.renderProperties.north.Value, 225);
+			turret.renderProperties.northEast = turret.rootDrawPosNorthEast = Vector2Utility.RotatedBy(turret.renderProperties.north.Value, 135);
+			turret.renderProperties.north = turret.rootDrawPosNorth = Vector2Utility.RotatedBy(turret.renderProperties.north.Value, 180);
 		}
     }
 
@@ -4870,7 +4872,7 @@ namespace SaveOurShip2
 	{
 		public static bool Prefix(Command_CooldownAction __instance)
 		{
-			if(__instance.turret.turretDef.defName == "SoS2ShuttlePlasma" || (__instance.turret.turretDef.defName == "SoS2ShuttleLaser"))
+			if(__instance.turret.def.defName == "SoS2ShuttlePlasma" || (__instance.turret.def.defName == "SoS2ShuttleLaser"))
 			{
 				return false;
 			}
@@ -4980,7 +4982,7 @@ namespace SaveOurShip2
 	}
 
 	// Additional null checks when loading
-	[HarmonyPatch(typeof(WorldHandling), "AllAerialVehicles_AliveOrDead")]
+	[HarmonyPatch(typeof(Patch_WorldHandling), "AllAerialVehicles_AliveOrDead")]
 	public static class AllAerialVehiclesOnLoad
 	{
 		public static bool Prefix()

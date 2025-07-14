@@ -8,6 +8,7 @@ using RimWorld.Planet;
 using UnityEngine;
 using Verse.AI.Group;
 using Vehicles;
+using Vehicles.World;
 using SaveOurShip2.Vehicles;
 using Verse.AI;
 
@@ -1407,7 +1408,7 @@ namespace SaveOurShip2
 							mission.weaponCooldown -= 1;
 							if (mission.weaponCooldown <= 0 && mission.rangeTraveled >= OriginMapComp.Range - 50f)
 							{
-								int? bestSkill = mission.shuttle.FindPawnWithBestStat(StatDefOf.ShootingAccuracyPawn)?.skills?.GetSkill(SkillDefOf.Shooting)?.Level;
+								int? bestSkill = mission.shuttle.FindPawnWithBestStat(StatDefOf.ShootingAccuracyPawn, (Pawn p) => true)?.skills?.GetSkill(SkillDefOf.Shooting)?.Level;
 								int skill = 0;
 								if (bestSkill.HasValue)
 									skill = bestSkill.Value;
@@ -1426,7 +1427,7 @@ namespace SaveOurShip2
 								IntVec3 spawnCell = FindClosestEdgeCell(ShipCombatTargetMap, targetCell);
 								foreach (VehicleTurret turret in mission.shuttle.CompVehicleTurrets.turrets)
 								{
-									if (turret.turretDef == ResourceBank.VehicleTurretDefOf.SoS2ShuttleLaser)
+									if (turret.def == ResourceBank.VehicleTurretDefOf.SoS2ShuttleLaser)
 									{
 										Projectile projectile = (Projectile)GenSpawn.Spawn(ResourceBank.ThingDefOf.Shuttle_Laser_Space, spawnCell, ShipCombatTargetMap);
 										IntVec3 a = targetCell - spawnCell;
@@ -1435,7 +1436,7 @@ namespace SaveOurShip2
 										projectile.Launch(mission.shuttle, spawnCell.ToVector3Shifted(), c, targetCell, ProjectileHitFlags.All);
 										mission.shuttle.compFuel.ConsumeFuel(2);
 									}
-									else if (turret.turretDef == ResourceBank.VehicleTurretDefOf.SoS2ShuttlePlasma)
+									else if (turret.def == ResourceBank.VehicleTurretDefOf.SoS2ShuttlePlasma)
 									{
 										Projectile projectile = (Projectile)GenSpawn.Spawn(ResourceBank.ThingDefOf.Shuttle_Plasma, spawnCell, ShipCombatTargetMap);
 										IntVec3 a = targetCell - spawnCell;
@@ -1453,7 +1454,7 @@ namespace SaveOurShip2
 							mission.weaponCooldown -= 1;
 							if (mission.weaponCooldown <= 0 && mission.rangeTraveled >= OriginMapComp.Range - 10f)
 							{
-								int? bestSkill = mission.shuttle.FindPawnWithBestStat(StatDefOf.ShootingAccuracyPawn)?.skills?.GetSkill(SkillDefOf.Shooting)?.Level;
+								int? bestSkill = mission.shuttle.FindPawnWithBestStat(StatDefOf.ShootingAccuracyPawn, (Pawn p) => true)?.skills?.GetSkill(SkillDefOf.Shooting)?.Level;
 								int skill = 0;
 								if (bestSkill.HasValue)
 									skill = bestSkill.Value;
@@ -1462,7 +1463,7 @@ namespace SaveOurShip2
 								IntVec3 spawnCell = FindClosestEdgeCell(ShipCombatTargetMap, targetCell);
 								foreach (VehicleTurret turret in mission.shuttle.CompVehicleTurrets.turrets)
 								{
-									if (turret.turretDef == ResourceBank.VehicleTurretDefOf.SoS2ShuttleTorpedo && turret.loadedAmmo != null)
+									if (turret.def == ResourceBank.VehicleTurretDefOf.SoS2ShuttleTorpedo && turret.loadedAmmo != null)
 									{
 										Projectile projectile = (Projectile)GenSpawn.Spawn(turret.loadedAmmo.projectileWhenLoaded.interactionCellIcon, spawnCell, ShipCombatTargetMap);
 										IntVec3 a = targetCell - spawnCell;
@@ -1481,10 +1482,10 @@ namespace SaveOurShip2
 										else
                                         {
 											turret.shellCount=0;
-											turret.AutoReloadCannon();
+											turret.AutoReload();
                                         }
 									}
-									else if (turret.turretDef == ResourceBank.VehicleTurretDefOf.SoS2ShuttleLaser)
+									else if (turret.def == ResourceBank.VehicleTurretDefOf.SoS2ShuttleLaser)
 									{
 										for (int i = 0; i < 6; i++)
 										{
@@ -1496,7 +1497,7 @@ namespace SaveOurShip2
 										}
 										mission.shuttle.compFuel.ConsumeFuel(2);
 									}
-									else if (turret.turretDef == ResourceBank.VehicleTurretDefOf.SoS2ShuttlePlasma)
+									else if (turret.def == ResourceBank.VehicleTurretDefOf.SoS2ShuttlePlasma)
 									{
 										Projectile projectile = (Projectile)GenSpawn.Spawn(ResourceBank.ThingDefOf.Shuttle_Plasma, spawnCell, ShipCombatTargetMap);
 										IntVec3 a = targetCell - spawnCell;
@@ -1514,13 +1515,13 @@ namespace SaveOurShip2
 							mission.weaponCooldown -= 1;
 							if (mission.weaponCooldown <= 0)
 							{
-								int? bestSkill = mission.shuttle.FindPawnWithBestStat(StatDefOf.ShootingAccuracyPawn)?.skills?.GetSkill(SkillDefOf.Shooting)?.Level;
+								int? bestSkill = mission.shuttle.FindPawnWithBestStat(StatDefOf.ShootingAccuracyPawn, (Pawn p) => true)?.skills?.GetSkill(SkillDefOf.Shooting)?.Level;
 								int pilotShootingSkill = 0;
 								if (bestSkill.HasValue)
 									pilotShootingSkill = bestSkill.Value;
 								if (TargetMapComp.TorpsInRange.Any())
 								{
-									int numLasers = mission.shuttle.CompVehicleTurrets.turrets.Where(turret => turret.turretDef == ResourceBank.VehicleTurretDefOf.SoS2ShuttleLaser).Count();
+									int numLasers = mission.shuttle.CompVehicleTurrets.turrets.Where(turret => turret.def == ResourceBank.VehicleTurretDefOf.SoS2ShuttleLaser).Count();
 									for (int i = 0; i < numLasers; i++)
 									{
 										if (Rand.Chance(Mathf.Lerp(0.75f, 1.25f, pilotShootingSkill / 20f)))
@@ -1535,10 +1536,10 @@ namespace SaveOurShip2
 								}
 								else if (TargetMapComp.ShuttlesInRange.Where(shuttle => shuttle.Faction != mission.shuttle.Faction).Any())
 								{
-									foreach (VehicleTurret laser in mission.shuttle.CompVehicleTurrets.turrets.Where(turret => turret.turretDef == ResourceBank.VehicleTurretDefOf.SoS2ShuttleLaser))
+									foreach (VehicleTurret laser in mission.shuttle.CompVehicleTurrets.turrets.Where(turret => turret.def == ResourceBank.VehicleTurretDefOf.SoS2ShuttleLaser))
 									{
 										VehiclePawn shuttleHit = TargetMapComp.ShuttlesInRange.Where(shuttle => shuttle.Faction != mission.shuttle.Faction).RandomElement();
-										int? bestIntellectual = shuttleHit.FindPawnWithBestStat(StatDefOf.ResearchSpeed)?.skills?.GetSkill(SkillDefOf.Intellectual)?.Level;
+										int? bestIntellectual = shuttleHit.FindPawnWithBestStat(StatDefOf.ResearchSpeed, (Pawn p) => true)?.skills?.GetSkill(SkillDefOf.Intellectual)?.Level;
 										int targetIntellectualSkill = 0;
 										if (bestIntellectual.HasValue)
 											targetIntellectualSkill = bestIntellectual.Value;
@@ -1972,7 +1973,7 @@ namespace SaveOurShip2
 							List<VehiclePawn> shuttles = new List<VehiclePawn>();
 							foreach (VehiclePawn vehicle in ship.ShuttlesOnShip(ship.Faction))
 							{
-								if (ShipInteriorMod2.IsShuttle(vehicle) && IsShuttleCombatReady(vehicle) && vehicle.CompUpgradeTree != null && ShipInteriorMod2.ShuttleIsArmed(vehicle) && vehicle.NextAvailableHandler() != null)
+								if (ShipInteriorMod2.IsShuttle(vehicle) && IsShuttleCombatReady(vehicle) && vehicle.CompUpgradeTree != null && ShipInteriorMod2.ShuttleIsArmed(vehicle) && vehicle.GetNextAvailableHandler(HandlingType.Movement) != null)
 									shuttles.Add(vehicle);
 							}
 							List<VehiclePawn> shuttlesToBeFilled = new List<VehiclePawn>(shuttles);
@@ -1989,7 +1990,7 @@ namespace SaveOurShip2
 										Job job = new Job(JobDefOf_Vehicles.Board, myShuttle);
 										p.jobs.StopAll();
 										p.jobs.StartJob(job);
-										map.GetComponent<VehicleReservationManager>().Reserve<VehicleHandler, VehicleHandlerReservation>(myShuttle, p, job, myShuttle.NextAvailableHandler());
+										map.GetComponent<VehicleReservationManager>().Reserve<VehicleRoleHandler, VehicleHandlerReservation>(myShuttle, p, job, myShuttle.GetNextAvailableHandler(HandlingType.Movement));
 										shuttlesToBeFilled.Remove(myShuttle);
 										shuttlesYetToLaunch.Add(myShuttle);
 										Log.Message("[SoS2] Assigning " + p + " to shuttle (laser: " + ShipInteriorMod2.ShuttleHasLaser(myShuttle) + ") (plasma: " + ShipInteriorMod2.ShuttleHasPlasma(myShuttle) + ") (torpedo: " + ShipInteriorMod2.ShuttleHasTorp(myShuttle) + ")");
@@ -2008,7 +2009,7 @@ namespace SaveOurShip2
 							List<CompShipBay> bays = new List<CompShipBay>();
 							foreach (VehiclePawn vehicle in ship.ShuttlesOnShip(ship.Faction))
 							{
-								if (ShipInteriorMod2.IsShuttle(vehicle) && (vehicle.CompUpgradeTree == null || !ShipInteriorMod2.ShuttleIsArmed(vehicle)) && vehicle.NextAvailableHandler() != null)
+								if (ShipInteriorMod2.IsShuttle(vehicle) && (vehicle.CompUpgradeTree == null || !ShipInteriorMod2.ShuttleIsArmed(vehicle)) && vehicle.GetNextAvailableHandler(HandlingType.Movement) != null)
 								{
 									if (ShipInteriorMod2.IsPod(vehicle) || !ModSettings_SoS.shipMapPhysics)
 										shuttles.Add(vehicle);
@@ -2034,10 +2035,10 @@ namespace SaveOurShip2
 								{
 									p.mindState.duty.transportersGroup = 1;
 									VehiclePawn myShuttle = shuttlesToBeFilled.Where(shuttle => p.CanReserveAndReach(shuttle, PathEndMode.Touch, Danger.Deadly)).RandomElement();
-									if (myShuttle != null && myShuttle.NextAvailableHandler() != null)
+									if (myShuttle != null && myShuttle.GetNextAvailableHandler(HandlingType.Movement) != null)
 									{
-										myShuttle.PromptToBoardVehicle(p, myShuttle.NextAvailableHandler());
-										if (myShuttle.NextAvailableHandler() == null)
+										myShuttle.PromptToBoardVehicle(p, myShuttle.GetNextAvailableHandler(HandlingType.Movement));
+										if (myShuttle.GetNextAvailableHandler(HandlingType.Movement) == null)
 											shuttlesToBeFilled.Remove(myShuttle);
 										if (!shuttlesWantingBoarders.Contains(myShuttle))
 											shuttlesWantingBoarders.Add(myShuttle);

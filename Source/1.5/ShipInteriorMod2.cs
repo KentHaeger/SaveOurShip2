@@ -3333,7 +3333,7 @@ namespace SaveOurShip2
 						if (vehicle.statHandler.GetStatValue(ResourceBank.VehicleStatDefOf.Hardpoints) >= 3)
 							vehicle.CompUpgradeTree.FinishUnlock(vehicle.CompUpgradeTree.Props.def.GetNode("TurretTorpedoC"));
 						foreach (VehicleTurret torp in vehicle.CompVehicleTurrets.turrets)
-							torp.ReloadCannon(ResourceBank.ThingDefOf.ShipTorpedo_HighExplosive, true);
+							torp.Reload(ResourceBank.ThingDefOf.ShipTorpedo_HighExplosive, true);
 						int torps = Rand.Range(3, 6);
 						for (int i = 0; i < torps; i++)
 							vehicle.GetDirectlyHeldThings().AddItem(ThingMaker.MakeThing(ResourceBank.ThingDefOf.ShipTorpedo_HighExplosive));

@@ -39,7 +39,7 @@ namespace SaveOurShip2.Vehicles
         {
             if (!isTorpedo && vehicle.compFuel.fuel >= 1)
             {
-                vehicle.compFuel.ConsumeFuel(2f/turretDef.magazineCapacity);
+                vehicle.compFuel.ConsumeFuel(2f/def.magazineCapacity);
                 base.FireTurret();
             }
             else if (isTorpedo)
@@ -71,14 +71,5 @@ namespace SaveOurShip2.Vehicles
             Scribe_Values.Look<int>(ref hardpoint, "hardpoint");
         }
 
-        public override void DrawAt(Vector3 drawPos, Rot8 rot)
-        {
-            if (!vehicle.Spawned)
-            {
-                VehicleGraphics.DrawTurret(this, drawPos, Rot8.East);
-            }
-            else
-                base.DrawAt(drawPos, rot);
-        }
     }
 }

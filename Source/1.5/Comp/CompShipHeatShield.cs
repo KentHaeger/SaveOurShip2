@@ -144,7 +144,7 @@ namespace SaveOurShip2
 				{
 					parentVehicle.statHandler.SetComponentHealth("shieldGenerator", 0);
 					if(parentVehicle.Spawned)
-						parentVehicle.Map.GetComponent<ListerVehiclesRepairable>().Notify_VehicleTookDamage(parentVehicle);
+						parentVehicle.Map.GetComponent<ListerVehiclesRepairable>().NotifyVehicleTookDamage(parentVehicle);
 				}
 				if(parent.Spawned)
 					GenExplosion.DoExplosion(parent.Position, parent.Map, 1.9f, DamageDefOf.Flame, parent);

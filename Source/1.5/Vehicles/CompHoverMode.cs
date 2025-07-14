@@ -1,4 +1,5 @@
 ﻿using RimWorld;
+using RimWorld.Planet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,6 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using Vehicles;
+using Vehicles.World;
+using SmashTools.Targeting;
 using Verse;
 
 namespace SaveOurShip2.Vehicles
@@ -35,8 +38,11 @@ namespace SaveOurShip2.Vehicles
                         Vehicle.CompFueledTravel.ConsumeFuel(5);
                         LandingTargeter.Instance.BeginTargeting(Vehicle, Vehicle.Map, delegate (LocalTargetInfo target, Rot4 rot)
                         {
-                            LaunchTargeter.FlightPath = new List<FlightNode> { new FlightNode(Vehicle.Map.Tile) };
-                            Vehicle.CompVehicleLauncher.TryLaunch(Vehicle.Map.Tile, new AerialVehicleArrivalAction_LandSpecificCell(Vehicle, Vehicle.Map.Parent, Vehicle.Map.Tile, target.Cell, rot));
+                            // CHANGE 1.6 LaunchTargeter.FlightPath = new List<FlightNode> { new FlightNode(Vehicle.Map.Tile) };
+                            // CHANGE 1.6
+                            TargetData<GlobalTargetInfo> targetData = new TargetData<GlobalTargetInfo>();
+                            targetData.targets.Add(new GlobalTargetInfo(Vehicle.Map.Tile));
+                            Vehicle.CompVehicleLauncher.Launch(targetData, new ArrivalAction_LandToCell(Vehicle, Vehicle.Map.Parent, target.Cell, rot));
                         }, (LocalTargetInfo targetInfo) => !Ext_Vehicles.IsRoofRestricted(Vehicle.VehicleDef, targetInfo.Cell, Vehicle.Map), null, null, true);
                     },
                     disabled = Vehicle.CompFueledTravel.Fuel < 5.1 || Ext_Vehicles.IsRoofRestricted(Vehicle.VehicleDef, Vehicle.Position, Vehicle.Map),

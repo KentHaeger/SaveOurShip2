@@ -7,7 +7,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>RimworldMod</RootNamespace>
     <AssemblyName>ShipsHaveInsides</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
@@ -61,8 +61,7 @@
       <HintPath>..\..\..\..\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="SmashTools">
-      <HintPath>..\..\..\..\..\..\workshop\content\294100\3014915404\1.5\Assemblies\SmashTools.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\..\Vehicle-Framework\1.6\Assemblies\SmashTools.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
@@ -90,8 +89,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Vehicles">
-      <HintPath>..\..\..\..\..\..\workshop\content\294100\3014915404\1.5\Assemblies\Vehicles.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\..\Vehicle-Framework\1.6\Assemblies\Vehicles.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -490,7 +488,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Publicize Include="Assembly-CSharp" IncludeVirtualMembers="true" />
+    <Publicize Include="Assembly-CSharp" IncludeVirtualMembers="false" />
     <Publicize Include="Vehicles" IncludeVirtualMembers="true" />
   </ItemGroup>
 </Project>
