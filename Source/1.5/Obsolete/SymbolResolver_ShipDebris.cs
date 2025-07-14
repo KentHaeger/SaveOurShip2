@@ -29,7 +29,7 @@ namespace SaveOurShip2
 			}
 			float num2 = (float)rp.rect.Area / 144f * 0.17f;
 			BaseGen.globalSettings.minEmptyNodes = ((num2 >= 1f) ? GenMath.RoundRandom(num2) : 0);
-			Lord singlePawnLord = LordMaker.MakeNewLord(faction, new LordJob_DefendBase(faction, rp.rect.CenterCell), map, null);
+			Lord singlePawnLord = LordMaker.MakeNewLord(faction, new LordJob_DefendBase(faction, rp.rect.CenterCell, AISettings.TimeBeforeAssault), map, null);
 			TraverseParms traverseParms = TraverseParms.For(TraverseMode.PassDoors, Danger.Some, false);
 			ResolveParams resolveParams = rp;
 			resolveParams.rect = rp.rect;

@@ -16,7 +16,7 @@ namespace SaveOurShip2
 			Map map = BaseGen.globalSettings.map;
 			InteriorSymbolResolverUtility.PushBedroomHeatersCoolersAndLightSourcesSymbols(rp, true);
 			ThingDef filth = ThingDefOf.Filth_Blood;
-			Lord singlePawnLord = rp.singlePawnLord ?? LordMaker.MakeNewLord(rp.faction, new LordJob_DefendBase(rp.faction, rp.rect.CenterCell), map, null);
+			Lord singlePawnLord = rp.singlePawnLord ?? LordMaker.MakeNewLord(rp.faction, new LordJob_DefendBase(rp.faction, rp.rect.CenterCell, AISettings.TimeBeforeAssault), map, null);
 			ResolveParams resolveParams = rp;
 			resolveParams.rect = rp.rect;
 			resolveParams.singlePawnLord = singlePawnLord;

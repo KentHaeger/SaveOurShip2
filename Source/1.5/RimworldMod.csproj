@@ -96,6 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccuracyCalculator.cs" />
+    <Compile Include="AISettings.cs" />
     <Compile Include="Alert\AlertDodgeChanceBase.cs" />
     <Compile Include="Alert\AlertDodgeChanceEnemy.cs" />
     <Compile Include="Alert\AlertDodgeChancePlayer.cs" />
@@ -104,6 +105,7 @@
     <Compile Include="ApparelHolographic.cs" />
     <Compile Include="ArrivalAction\AerialVehicleArrivalAction_LoadMapAndDefog.cs" />
     <Compile Include="ArrivalAction\AerialVehicleArrivalAction_ShipAssault.cs" />
+    <Compile Include="ArrivalAction\PawnPublicizer.cs" />
     <Compile Include="Comp\CompHyperchargingBattery.cs" />
     <Compile Include="Comp\CompShipBay.cs" />
     <Compile Include="Def\ArchoGiftDef.cs" />

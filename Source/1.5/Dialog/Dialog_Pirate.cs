@@ -112,7 +112,7 @@ namespace SaveOurShip2
 			Widgets.Label(rect, TranslatorFormattedStringExtensions.Translate("SalvageShip"));
 			Text.Font = GameFont.Small;
 			Text.Anchor = TextAnchor.UpperLeft;
-			CaravanUIUtility.DrawCaravanInfo(new CaravanUIUtility.CaravanInfo(MassUsage, MassCapacity, "", 0, "", new Pair<float, float>(0, 0), new Pair<ThingDef, float>(null, 0), "", 0, ""), null, map.Tile, null, lastMassFlashTime, new Rect(12f, 35f, inRect.width - 24f, 40f), lerpMassColor: true, ((TaggedString)null));
+			CaravanUIUtility.DrawCaravanInfo(new CaravanUIUtility.CaravanInfo(MassUsage, MassCapacity, "", 0, "", (0, 0), (null, 0), "", 0, ""), null, map.Tile, null, lastMassFlashTime, new Rect(12f, 35f, inRect.width - 24f, 40f), lerpMassColor: true, ((TaggedString)null));
 			tabsList.Clear();
 			tabsList.Add(new TabRecord(TranslatorFormattedStringExtensions.Translate("PawnsTab"), delegate
 			{

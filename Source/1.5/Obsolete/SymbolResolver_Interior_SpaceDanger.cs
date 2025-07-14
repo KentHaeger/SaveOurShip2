@@ -22,7 +22,7 @@ namespace SaveOurShip2
 				case 0:
 					faction = Faction.OfAncientsHostile;
 					filth = ThingDefOf.Filth_Blood;
-					Lord singlePawnLord = rp.singlePawnLord ?? LordMaker.MakeNewLord(faction, new LordJob_DefendBase(faction, rp.rect.CenterCell), map, null);
+					Lord singlePawnLord = rp.singlePawnLord ?? LordMaker.MakeNewLord(faction, new LordJob_DefendBase(faction, rp.rect.CenterCell, AISettings.TimeBeforeAssault), map, null);
 					ResolveParams resolveParams = rp;
 					resolveParams.rect = rp.rect;
 					resolveParams.faction = faction;

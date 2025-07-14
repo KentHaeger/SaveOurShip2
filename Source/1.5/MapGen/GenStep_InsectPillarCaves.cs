@@ -45,7 +45,7 @@ namespace SaveOurShip2
 				{
 					foundPillarSpot = true;
 					GenSpawn.Spawn(ThingDef.Named("ShipArchotechPillarD"), cell, map);
-					Lord theLord = LordMaker.MakeNewLord(Faction.OfInsects, new LordJob_DefendBase(Faction.OfInsects,cell), map);
+					Lord theLord = LordMaker.MakeNewLord(Faction.OfInsects, new LordJob_DefendBase(Faction.OfInsects, cell, AISettings.TimeBeforeAssault), map);
 					for (int i = 0; i < 6; i++)
 					{
 						Pawn spider = (Pawn)GenSpawn.Spawn(PawnGenerator.GeneratePawn(PawnKindDef.Named("Archospider"), Faction.OfInsects), cell, map);

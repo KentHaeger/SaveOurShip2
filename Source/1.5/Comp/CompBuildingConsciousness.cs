@@ -592,7 +592,7 @@ namespace SaveOurShip2
 		{
 			base.CompTick();
 			if (Consciousness != null && !Consciousness.Spawned)
-				Consciousness.Tick();
+				PawnPublicizer.DoTick(Consciousness);
 			if (Find.TickManager.TicksGame % 60 == 0)
 			{
 				if (Consciousness != null && Consciousness.health.hediffSet.GetFirstHediff<HediffPawnIsHologram>() != null)

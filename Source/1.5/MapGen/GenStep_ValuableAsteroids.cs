@@ -129,7 +129,7 @@ namespace SaveOurShip2
 				else
 				{
 					int totalMechPoints = (int)StorytellerUtility.DefaultSiteThreatPointsNow();
-					Lord MechLord = LordMaker.MakeNewLord(Faction.OfMechanoids, new LordJob_DefendBase(Faction.OfMechanoids, centerOffset), map, null);
+					Lord MechLord = LordMaker.MakeNewLord(Faction.OfMechanoids, new LordJob_DefendBase(Faction.OfMechanoids, centerOffset, AISettings.TimeBeforeAssault), map, null);
 					while (totalMechPoints > 0)
 					{
 						PawnKindDef pawnKindDef = (from kind in DefDatabase<PawnKindDef>.AllDefsListForReading
