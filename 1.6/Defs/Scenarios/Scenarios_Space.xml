@@ -10,6 +10,13 @@
 				<def>PlayerFaction</def>
 				<factionDef>PlayerColony</factionDef>
 			</playerFaction>
+			<surfaceLayer>
+				<def>SurfaceLayerFixed</def>
+				<tag>Surface</tag>
+				<layer>Surface</layer>
+				<settingsDef>Surface</settingsDef>
+				<hide>true</hide>
+			</surfaceLayer>
 			<parts>
 				<!-- Config pages -->
 				<li Class="ScenPart_ConfigPage_ConfigureStartingPawns">
@@ -110,6 +117,13 @@
 				<def>PlayerFaction</def>
 				<factionDef>PlayerColony</factionDef>
 			</playerFaction>
+			<surfaceLayer>
+				<def>SurfaceLayerFixed</def>
+				<tag>Surface</tag>
+				<layer>Surface</layer>
+				<settingsDef>Surface</settingsDef>
+				<hide>true</hide>
+			</surfaceLayer>
 			<parts>
 				<!-- Config pages -->
 				<li Class="ScenPart_ConfigPage_ConfigureStartingPawns">
@@ -210,6 +224,13 @@
 				<def>PlayerFaction</def>
 				<factionDef>PlayerColony</factionDef>
 			</playerFaction>
+			<surfaceLayer>
+				<def>SurfaceLayerFixed</def>
+				<tag>Surface</tag>
+				<layer>Surface</layer>
+				<settingsDef>Surface</settingsDef>
+				<hide>true</hide>
+			</surfaceLayer>
 			<parts>
 				<li Class="ScenPart_ConfigPage_ConfigureStartingPawns">
 					<def>ConfigPage_ConfigureStartingPawns</def>
@@ -240,6 +261,13 @@
 				<def>PlayerFaction</def>
 				<factionDef>PlayerColony</factionDef>
 			</playerFaction>
+			<surfaceLayer>
+				<def>SurfaceLayerFixed</def>
+				<tag>Surface</tag>
+				<layer>Surface</layer>
+				<settingsDef>Surface</settingsDef>
+				<hide>true</hide>
+			</surfaceLayer>
 			<parts>
 				<li Class="ScenPart_ConfigPage_ConfigureStartingPawns">
 					<def>ConfigPage_ConfigureStartingPawns</def>
