@@ -176,7 +176,6 @@
 			<WorkToBuild>800</WorkToBuild>
 			<Flammability>0</Flammability>
 		</statBases>
-		<placingDraggableDimensions>1</placingDraggableDimensions>
 		<rotatable>true</rotatable>
 	</ThingDef>
 	<ThingDef ParentName="ShipCornerBase" Name="ShipCorner" Abstract="True">
@@ -679,7 +678,7 @@
 			<Flammability>0</Flammability>
 		</statBases>
 		<description>Allows access to a ship or divides rooms inside it. Low-energy plasma barriers prevent gases from escaping.</description>
-		<placingDraggableDimensions>1</placingDraggableDimensions>
+		<drawStyleCategory>Walls</drawStyleCategory>
 		<comps>
 			<li Class="SaveOurShip2.CompProps_ShipCachePart">
 				<isHull>true</isHull>
@@ -746,7 +745,7 @@
 		<coversFloor>false</coversFloor>
 		<altitudeLayer>LowPlant</altitudeLayer>
 		<passability>Standable</passability>
-		<placingDraggableDimensions>2</placingDraggableDimensions>
+		<drawStyleCategory>Foundations</drawStyleCategory>
 		<statBases>
 			<MaxHitPoints>300</MaxHitPoints>
 			<WorkToBuild>900</WorkToBuild>
@@ -2950,7 +2949,7 @@
 		<castEdgeShadows>true</castEdgeShadows>
 		<fillPercent>1</fillPercent>
 		<coversFloor>true</coversFloor>
-		<placingDraggableDimensions>1</placingDraggableDimensions>
+		<drawStyleCategory>Walls</drawStyleCategory>
 		<tickerType>Never</tickerType>
 		<rotatable>false</rotatable>
 		<selectable>true</selectable>
@@ -3006,7 +3005,7 @@
 		<coversFloor>false</coversFloor>
 		<altitudeLayer>LowPlant</altitudeLayer>
 		<passability>Standable</passability>
-		<placingDraggableDimensions>2</placingDraggableDimensions>
+		<drawStyleCategory>Foundations</drawStyleCategory>
 		<statBases>
 			<MaxHitPoints>50</MaxHitPoints>
 			<WorkToBuild>50</WorkToBuild>
@@ -3062,7 +3061,7 @@
 		<castEdgeShadows>true</castEdgeShadows>
 		<fillPercent>1</fillPercent>
 		<coversFloor>true</coversFloor>
-		<placingDraggableDimensions>1</placingDraggableDimensions>
+		<drawStyleCategory>Walls</drawStyleCategory>
 		<tickerType>Never</tickerType>
 		<rotatable>false</rotatable>
 		<selectable>true</selectable>
@@ -3118,7 +3117,7 @@
 		<castEdgeShadows>true</castEdgeShadows>
 		<fillPercent>1</fillPercent>
 		<coversFloor>true</coversFloor>
-		<placingDraggableDimensions>1</placingDraggableDimensions>
+		<drawStyleCategory>Walls</drawStyleCategory>
 		<tickerType>Never</tickerType>
 		<rotatable>false</rotatable>
 		<selectable>true</selectable>
@@ -3166,7 +3165,7 @@
 		<coversFloor>false</coversFloor>
 		<altitudeLayer>LowPlant</altitudeLayer>
 		<passability>Standable</passability>
-		<placingDraggableDimensions>2</placingDraggableDimensions>
+		<drawStyleCategory>Foundations</drawStyleCategory>
 		<statBases>
 			<MaxHitPoints>50</MaxHitPoints>
 			<Flammability>0.0</Flammability>
@@ -3588,7 +3587,7 @@
 			<Flammability>0</Flammability>
 		</statBases>
 		<description>The outer structural elements of a ship's hull. Includes conduits for power, life-support gases, and coolant.</description>
-		<placingDraggableDimensions>1</placingDraggableDimensions>
+		<drawStyleCategory>Walls</drawStyleCategory>
 		<building>
 			<blueprintGraphicData>
 				<texPath>Things/Building/Linked/Wall_Blueprint_Atlas</texPath>
@@ -3781,7 +3780,7 @@
 		<coversFloor>false</coversFloor>
 		<altitudeLayer>LowPlant</altitudeLayer>
 		<passability>Standable</passability>
-		<placingDraggableDimensions>2</placingDraggableDimensions>
+		<drawStyleCategory>Foundations</drawStyleCategory>
 		<statBases>
 			<MaxHitPoints>100000</MaxHitPoints>
 			<WorkToBuild>900</WorkToBuild>
@@ -3849,7 +3848,7 @@
 		</statBases>
 		<description>DO NOT USE IN ACTUAL GAMEPLAY. The outer structural elements of a ship's hull. Includes conduits for power, life-support gases, and coolant.</description>
 		<designationCategory>Ship</designationCategory>
-		<placingDraggableDimensions>1</placingDraggableDimensions>
+		<drawStyleCategory>Walls</drawStyleCategory>
 		<comps>
 			<li Class="SaveOurShip2.CompProps_ShipCachePart">
 				<isHull>true</isHull>

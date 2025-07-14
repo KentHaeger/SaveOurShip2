@@ -32,7 +32,7 @@
 		</statBases>
 		<tickerType>Normal</tickerType>
 		<description>The outer structural elements of a ship's hull that have been damaged beyond repair. No longer spaceworthy.</description>
-		<placingDraggableDimensions>1</placingDraggableDimensions>
+		
 		<comps>
 			<li Class="SaveOurShip2.CompProps_ShipCachePart">
 				<isHull>true</isHull>
@@ -150,7 +150,7 @@
 		<coversFloor>true</coversFloor>
 		<altitudeLayer>Floor</altitudeLayer>
 		<passability>Standable</passability>
-		<placingDraggableDimensions>2</placingDraggableDimensions>
+		<drawStyleCategory>Foundations</drawStyleCategory>
 		<statBases>
 			<MaxHitPoints>200</MaxHitPoints>
 			<WorkToBuild>100</WorkToBuild>

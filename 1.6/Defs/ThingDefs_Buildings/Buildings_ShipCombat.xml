@@ -239,7 +239,7 @@
 			<Flammability>0.7</Flammability>
 			<Beauty>-2</Beauty>
 		</statBases>
-		<placingDraggableDimensions>1</placingDraggableDimensions>
+		<drawStyleCategory>Conduits</drawStyleCategory>
 		<costList>
 			<Steel>1</Steel>
 			<Plasteel>1</Plasteel>

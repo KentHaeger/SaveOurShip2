@@ -36,7 +36,7 @@
 		</statBases>
 		<tickerType>Normal</tickerType>
 		<description>The outer structural elements of a mechanoid ship's hull. Does not include conduits for power or coolant.</description>
-		<placingDraggableDimensions>1</placingDraggableDimensions>
+		<drawStyleCategory>Walls</drawStyleCategory>
 		<comps>
 			<li Class="SaveOurShip2.CompProps_ShipCachePart">
 				<isHull>true</isHull>
@@ -95,7 +95,7 @@
 		</statBases>
 		<tickerType>Normal</tickerType>
 		<description>The outer structural elements of a mechanoid ship's hull. Includes conduits for power and coolant.</description>
-		<placingDraggableDimensions>1</placingDraggableDimensions>
+		<drawStyleCategory>Walls</drawStyleCategory>
 		<comps>
 			<li Class="SaveOurShip2.CompProps_ShipCachePart">
 				<isHull>true</isHull>
@@ -528,7 +528,7 @@
 		<coversFloor>false</coversFloor>
 		<altitudeLayer>LowPlant</altitudeLayer>
 		<passability>Standable</passability>
-		<placingDraggableDimensions>2</placingDraggableDimensions>
+		<drawStyleCategory>Foundations</drawStyleCategory>
 		<statBases>
 			<MaxHitPoints>300</MaxHitPoints>
 			<WorkToBuild>900</WorkToBuild>

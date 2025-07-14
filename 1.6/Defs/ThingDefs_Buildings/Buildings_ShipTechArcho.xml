@@ -36,7 +36,7 @@
 			<Beauty>1</Beauty>
 		</statBases>
 		<description>The outer structural elements of an archotech-designed ship's hull. Does not include conduits for power or coolant.</description>
-		<placingDraggableDimensions>1</placingDraggableDimensions>
+		<drawStyleCategory>Walls</drawStyleCategory>
 		<comps>
 			<li Class="SaveOurShip2.CompProps_ShipCachePart">
 				<isHull>true</isHull>
@@ -101,7 +101,7 @@
 			<Beauty>1</Beauty>
 		</statBases>
 		<description>The outer structural elements of an archotech-designed ship's hull. Includes conduits for power and coolant.</description>
-		<placingDraggableDimensions>1</placingDraggableDimensions>
+		<drawStyleCategory>Walls</drawStyleCategory>
 		<comps>
 			<li Class="SaveOurShip2.CompProps_ShipCachePart">
 				<isHull>true</isHull>
@@ -563,7 +563,7 @@
 		<coversFloor>false</coversFloor>
 		<altitudeLayer>LowPlant</altitudeLayer>
 		<passability>Standable</passability>
-		<placingDraggableDimensions>2</placingDraggableDimensions>
+		<drawStyleCategory>Foundations</drawStyleCategory>
 		<statBases>
 			<MaxHitPoints>500</MaxHitPoints>
 			<WorkToBuild>1200</WorkToBuild>
