@@ -36,11 +36,8 @@ namespace SaveOurShip2
 
 		public override AlertReport GetReport()
 		{
-			if (Find.TickManager.TicksGame % 30 == 0)
-				Log.Warning("Get report for" + actorXMLKey);
 			if (!IsActive())
 			{
-				Log.Warning("NotActive");
 				return false;
 			}
 			string actor = TranslatorFormattedStringExtensions.Translate(actorXMLKey);
