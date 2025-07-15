@@ -654,18 +654,18 @@ namespace SaveOurShip2
 		}
 	}
 
-	[HarmonyPatch(typeof(SectionLayer), "FinalizeMesh", null)]
+	[HarmonyPatch(typeof(MapDrawLayer), "FinalizeMesh", null)]
 	public static class GenerateSpaceSubMesh
 	{
-		public static bool Prefix(SectionLayer __instance, Section ___section)
+		public static bool Prefix(SectionLayer __instance, MeshParts tags)
 		{
 			if (__instance.GetType().Name != "SectionLayer_Terrain")
 				return true;
 
 			bool foundSpace = false;
-			foreach (IntVec3 cell in ___section.CellRect.Cells)
+			foreach (IntVec3 cell in __instance.GetBoundaryRect().Cells)
 			{
-				TerrainDef terrain1 = ___section.map.terrainGrid.TerrainAt(cell);
+				TerrainDef terrain1 = __instance.map.terrainGrid.TerrainAt(cell);
 				if (terrain1 == ResourceBank.TerrainDefOf.EmptySpace)
 				{
 					foundSpace = true;
@@ -1258,10 +1258,10 @@ namespace SaveOurShip2
 	[HarmonyPatch(typeof(Building), "ClaimableBy")]
 	public static class NoClaimingEnemyShip //prevent claiming when all enemy pawns are dead but bridges exist
 	{
-		public static void Postfix(Building __instance, ref bool __result)
+		public static void Postfix(Building __instance, ref AcceptanceReport __result)
 		{
 			if (__instance.Map.IsSpace() && __instance.Map.GetComponent<ShipMapComp>().MapRootListAll.Any())
-				__result = false;
+				__result = AcceptanceReport.WasRejected;
 		}
 	}
 
@@ -1497,7 +1497,7 @@ namespace SaveOurShip2
 		}
 	}
 
-	[HarmonyPatch(typeof(TimedDetectionRaids), "CompTick")]
+	[HarmonyPatch(typeof(TimedDetectionRaids), "CompTickInterval")]
 	public static class NoScanRaids //prevents raids on scanned sites
 	{
 		static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
@@ -2188,11 +2188,12 @@ namespace SaveOurShip2
 	[HarmonyPatch(typeof(RimWorld.CompScanner), "CanUseNow", MethodType.Getter)]
 	public static class NoUseInSpace
 	{
-		public static bool Postfix(bool __result, RimWorld.CompScanner __instance)
+		public static void Postfix(AcceptanceReport __result, RimWorld.CompScanner __instance)
 		{
 			if (__instance.parent.Map.IsSpace())
-				return false;
-			return __result;
+			{
+				__result = AcceptanceReport.WasRejected;
+			}
 		}
 	}
 
@@ -2678,14 +2679,21 @@ namespace SaveOurShip2
 		}
 	}
 
-	[HarmonyPatch(typeof(FloatMenuMakerMap), "AddHumanlikeOrders")]
+	[HarmonyPatch(typeof(FloatMenuMakerMap), "GetOptions")]
 	public static class EggFix
 	{
-		public static void Postfix(Vector3 clickPos, Pawn pawn, ref List<FloatMenuOption> opts)
+		public static void Postfix(List<Pawn> selectedPawns, Vector3 clickPos, ref List<FloatMenuOption> __result)
 		{
-			if (pawn == null || clickPos == null)
+			if (selectedPawns == null || clickPos == null)
+			{
 				return;
+			}
 			IntVec3 c = IntVec3.FromVector3(clickPos);
+			if (selectedPawns.Count != 1)
+			{
+				return;
+			}
+			Pawn pawn = selectedPawns.First();
 			if (pawn.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation))
 			{
 				foreach (Thing current in c.GetThingList(pawn.Map))
@@ -2721,7 +2729,7 @@ namespace SaveOurShip2
 						};
 						string label = text2;
 						Action action = action2;
-						opts.Add(FloatMenuUtility.DecoratePrioritizedTask(
+						__result.Add(FloatMenuUtility.DecoratePrioritizedTask(
 							new FloatMenuOption(label, action, MenuOptionPriority.Default, null, current, 0f, null,
 								null), pawn, current, "ReservedBy"));
 					}
@@ -2758,6 +2766,7 @@ namespace SaveOurShip2
 		}
 	}
 
+	/* CHANGES 1.6 This is commented out, not ticking at all or moved to yet unknown location in code
 	[HarmonyPatch(typeof(Building_Casket), "Tick")]
 	public static class EggsDontHatch
 	{
@@ -2779,7 +2788,7 @@ namespace SaveOurShip2
 			}
 			return true;
 		}
-	}
+	} */
 
 	[HarmonyPatch(typeof(Building_CryptosleepCasket), "GetFloatMenuOptions")]
 	public static class CantEnterCryptonest
@@ -4961,7 +4970,7 @@ namespace SaveOurShip2
 		}
 	}
 
-	[HarmonyPatch(typeof(VehiclePawn), "AddTimedExplosion")]
+	[HarmonyPatch(typeof(VehiclePawn), "AddTimedExplosion", typeof(TimedExplosion))]
 	public static class NoExplosionsOffMap
 	{
 		public static bool Prefix(VehiclePawn __instance)
@@ -5021,12 +5030,12 @@ namespace SaveOurShip2
     }
   }
 	// Temporary patch preventing losing control of player pawn that eneters enemy shuttle
-	[HarmonyPatch(typeof(VehiclePawn), "Notify_Boarded")]
+	[HarmonyPatch(typeof(VehiclePawn), "BoardPawn")]
 	public static class VehicleBoarded
 	{
-		public static void Postfix(VehiclePawn __instance, Pawn pawnToBoard, ref bool __result)
+		public static void Postfix(VehiclePawn __instance, Pawn pawn, ref bool __result)
 		{
-			if (pawnToBoard.Faction == Faction.OfPlayer && __instance.Faction != Faction.OfPlayer && __result)
+			if (pawn.Faction == Faction.OfPlayer && __instance.Faction != Faction.OfPlayer && __result)
 			{
 				__instance.SetFaction(Faction.OfPlayer);
 			}
@@ -5298,7 +5307,7 @@ namespace SaveOurShip2
         }
     }
 
-	[HarmonyPatch(typeof(AnomalyUtility), "TryDuplicatePawn_NewTemp")]
+	[HarmonyPatch(typeof(AnomalyUtility), "TryDuplicatePawn")]
 	public static class NoDuplicatingFormgels
     {
 		public static bool Prefix(Pawn originalPawn, ref Pawn duplicatePawn)
