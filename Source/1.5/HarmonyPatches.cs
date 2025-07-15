@@ -654,7 +654,7 @@ namespace SaveOurShip2
 		}
 	}
 
-	[HarmonyPatch(typeof(MapDrawLayer), "FinalizeMesh", null)]
+	[HarmonyPatch(typeof(MapDrawLayer), "FinalizeMesh")]
 	public static class GenerateSpaceSubMesh
 	{
 		public static bool Prefix(SectionLayer __instance, MeshParts tags)
