@@ -1203,7 +1203,6 @@ namespace SaveOurShip2
 			{
 				mesh.finalized = false;
 				mesh.Clear(MeshParts.UVs1);
-				mesh.Clear(MeshParts.UVs2);
 				for (var i = 0; i < mesh.verts.Count; i++)
 				{
 					var xdiff = mesh.verts[i].x - SectionThreadManager.Center.x;
@@ -1216,7 +1215,6 @@ namespace SaveOurShip2
 				}
 
 				mesh.FinalizeMesh(MeshParts.UVs1);
-				mesh.FinalizeMesh(MeshParts.UVs2);
 			}
 		}
 	}
