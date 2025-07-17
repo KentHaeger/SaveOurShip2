@@ -25,20 +25,20 @@ namespace SaveOurShip2
 			}
 		}
 
-		//[DebugAction("Map", null, false, false, false, false, 0, false, actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
+		[DebugAction("Map", null, false, false, false, false, false, 0, false, actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
 		// Using mod name to prevent conflict with this command expected to be added to base game
 		private static void KillAllEnemiesOnMapSos2()
 		{
 			DoEnemyPawnsAction((Pawn p) => p.Kill(null));
 		}
 
-		//[DebugAction("Map", null, false, false, false, false, 0, false, actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
+		[DebugAction("Map", null, false, false, false, false, false, 0, false, actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
 		private static void VanishAllEnemiesOnMapSos2()
 		{
 			DoEnemyPawnsAction((Pawn p) => p.Destroy(DestroyMode.Vanish));
 		}
 
-		//[DebugAction("S0S 2", null, false, false, false, false, 0, false, actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
+		[DebugAction("S0S 2", null, false, false, false, false, false, 0, false, actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
 		private static void WinShipBattle()
 		{
 			Map playerShipMap = ShipInteriorMod2.FindPlayerShipMap();

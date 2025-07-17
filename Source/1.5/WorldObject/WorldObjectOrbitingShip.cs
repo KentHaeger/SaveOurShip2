@@ -39,7 +39,7 @@ namespace SaveOurShip2
 			}
 		}
 
-		ShipMapComp mapComp => Map.GetComponent<ShipMapComp>();
+		ShipMapComp mapComp => Map?.GetComponent<ShipMapComp>() ?? null;
 		//used for orbit transition only
 		public override Vector3 DrawPos
 		{
@@ -407,13 +407,12 @@ namespace SaveOurShip2
 		}
 		public override void Destroy()
 		{
-			if (mapComp.ShipMapState == ShipMapState.inCombat)
+			if (mapComp != null && mapComp.ShipMapState == ShipMapState.inCombat)
 				mapComp.EndBattle(Map, false);
-			if (Map.mapPawns.AnyColonistSpawned)
+			if (Map != null && Map.mapPawns.AnyColonistSpawned)
 			{
 				Find.GameEnder.CheckOrUpdateGameOver();
 			}
-			Current.Game.DeinitAndRemoveMap(Map, false);
 			base.Destroy();
 			//base.Abandon();
 		}

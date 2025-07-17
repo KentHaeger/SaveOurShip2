@@ -119,13 +119,13 @@ namespace SaveOurShip2
 		// Dodge chance multiplier based on shooter skill
 		private static readonly SimpleCurve DodgeChanceMultiplierFromShooting = new SimpleCurve
 		{
-			new CurvePoint(0f, 1.6f),
-			new CurvePoint(20f, 0.4f)
+			new CurvePoint(0f, 1.5f),
+			new CurvePoint(20f, 0.5f)
 		};
 		private static readonly SimpleCurve DodgeChanceMultiplierFromPiloting = new SimpleCurve
 		{
-			new CurvePoint(0f, 1.6f),
-			new CurvePoint(20f, 0.4f)
+			new CurvePoint(0f, 0.5f),
+			new CurvePoint(20f, 1.5f)
 		};
 		private float GetDodgeCanceImpl(float weaponRange)
 		{
@@ -143,7 +143,7 @@ namespace SaveOurShip2
 			// pilot skill
 			float dodgeMultiplierFromPiloting = DodgeChanceMultiplierFromPiloting.Evaluate(ThisMapEvasionBoost);
 			float finalChance = baseChance * dodgeMultiplierFromShooting * dodgeMultiplierFromPiloting * ThisMapComp.SlowestThrustRatio() / baselineTWR;
-			return finalChance;
+			return Mathf.Clamp(finalChance, 0f, 1f);
 		}
 
 		public bool PerformDodgeCheck(ShipCombatProjectile proj)
@@ -233,7 +233,10 @@ namespace SaveOurShip2
 				{
 					foreach (Building_ShipBridge bridge in ship.Bridges)
 					{
-						result = Mathf.Max(result, bridge.heatComp.myNet.AccuracyBoost);
+						if (bridge.heatComp.myNet != null)
+						{
+							result = Mathf.Max(result, bridge.heatComp.myNet.AccuracyBoost);
+						}
 					}
 				}
 				return result;
@@ -245,17 +248,17 @@ namespace SaveOurShip2
 			get
 			{
 				int result = 0;
-				foreach (SpaceShipCache ship in SourceMapComp.ShipsOnMap.Values)
+				foreach (SpaceShipCache ship in ThisMapComp.ShipsOnMap.Values)
 				{
 					foreach (Building_ShipBridge bridge in ship.Bridges)
 					{
-						if (bridge.mannableComp.MannedNow)
+						if (bridge.mannableComp?.MannedNow ?? false)
 						{
-							int skill = bridge.mannableComp.ManningPawn.skills?.GetSkill(SkillDefOf.Shooting).Level ?? 0;
+							int skill = bridge.mannableComp.ManningPawn.skills?.GetSkill(SkillDefOf.Intellectual).Level ?? 0;
 							result = Mathf.Max(result, skill);
 						}
 					}
-					// AI core counst as shooting 10
+					// AI core counst as intellectual 10
 					if (ship.AICores.Any())
 					{
 						result = Mathf.Max(result, 10);
