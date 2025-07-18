@@ -1162,17 +1162,17 @@ namespace SaveOurShip2
 			builder.AppendLine(GameVictoryUtility.InMemoryOfSection());
 			builder.AppendLine("Save Our Ship 2 was developed by Kentington, Thain, and SonicTHI");
 			builder.AppendLine();
-			builder.AppendLine("Special thanks to Owlchemist for his code contributions.");
+			builder.AppendLine("2.7 Maintainer: Boris");
 			builder.AppendLine();
-			builder.AppendLine("Other contributors (code, art, design or QA):");
-			builder.AppendLine("Oskar Potocki, Thamuzz1331, Trollam, Boris, K', Sarg, Karim, Saakra, Revolus, MatthewTeply, dkargin, HG, DianaWinters, UrbanMonkey, M.A.G.Gen., Epicguru, sdanchenko, m00nl1ght-dev");
+			builder.AppendLine("Testers: Dreamingofstarlight(Lunarium), I Forgot, Sym/Grimmy, Clever Ape, Dragoncri, Epoch_soc, Doubleface1369, Stylish, Splinter, TheGruntBox, Zeah, Svanovsky, Rappers101, Pikita, the pelusho, Destro, Djrvywfbjr, Ms Mommy Memer, Zym, Balarak, H.G.");
+			builder.AppendLine();
+			builder.AppendLine("Submod Support: Ms Mommy Memer, I Forgot, Cruel Moose and thamuzz");
+			builder.AppendLine();
+			builder.AppendLine("Contributors: Boris, SonicTHI, Owlchemist, Oskar Potocki, Thamuzz1331, Trollam, K', Sarg, Karim, Saakra, Revolus, MatthewTeply, dkargin, HG, Morphium, Halno, Argón, DianaWinters, UrbanMonkey, M.A.G.Gen., Epicguru, sdanchenko, m00nl1ght-dev, Shinrar");
 			builder.AppendLine();
 			builder.AppendLine("Shipwrights: Oninnaise, VVither_Skeleton, (Insert Boi here), AlfadorZero, choppytehbear, Dammerung, Foxtrot, Inert, Jameson, Moonshine Dusk");
 			builder.AppendLine();
-			builder.AppendLine("Testing squad: Buns Buns Cat, Phsarjk, i am has yes, Fuji, Reviire, Ian, Generic Scout, Waipa, Xanthos, BUTTERSKY, firethestars, Haldicar, jamhax, Jenden, maraworf, Red_Bunny, rostock, sprocket, El Jojo, Zahc, Dutchman, Zero Jackal, Tiberiumkyle, swordspell, Shabm, Kasodus, Red_Bunny, melandor, Madman, Jenden, Insert Witty Joke, Ifailatgaming, Capitão Escarlate, Bunkier, Bumblybear, Bubbadoge, Abraxas, Rage Nova, twsta, transcendant, thecaffiend, Manifold Paradox, WhiteGiverMa, Gago, Nerevarest");
-
-			//Log.Message(builder.ToString());
-
+			builder.AppendLine("OG Testing Squad: Buns Buns Cat, Phsarjk, i am has yes, Fuji, Reviire, Ian, Generic Scout, Waipa, Xanthos, BUTTERSKY, firethestars, Haldicar, jamhax, Jenden, maraworf, Red_Bunny, rostock, sprocket, El Jojo, Zahc, Dutchman, Zero Jackal, Tiberiumkyle, swordspell, Shabm, Kasodus, Red_Bunny, melandor, Madman, Jenden, Insert Witty Joke, Ifailatgaming, Capitão Escarlate, Bunkier, Bumblybear, Bubbadoge, Abraxas, Rage Nova, twsta, transcendant, thecaffiend, Manifold Paradox, WhiteGiverMa, Gago, Nerevarest");
 			ShipInteriorMod2.WorldComp.SoSWin = true;
 			GameVictoryUtility.ShowCredits(builder.ToString(), null, exitToMainMenu: true);
 		}
