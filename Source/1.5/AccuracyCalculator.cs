@@ -272,7 +272,7 @@ namespace SaveOurShip2
 		public void RegisterDespawn(Projectile proj)
 		{
 			projectileCount++;
-			const int loggingInterval = 20;
+			const int loggingInterval = 40;
 			if (projectileCount % loggingInterval == 0)
 			{
 				Log.Warning("Hit rate: " + ((float)hitCount/projectileCount).ToString("F2"));
