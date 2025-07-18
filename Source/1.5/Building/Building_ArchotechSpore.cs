@@ -1174,7 +1174,7 @@ namespace SaveOurShip2
 			//Log.Message(builder.ToString());
 
 			ShipInteriorMod2.WorldComp.SoSWin = true;
-			GameVictoryUtility.ShowCredits(builder.ToString(), null);
+			GameVictoryUtility.ShowCredits(builder.ToString(), null, exitToMainMenu: true);
 		}
 
         public void GetChildHolders(List<IThingHolder> outChildren)
