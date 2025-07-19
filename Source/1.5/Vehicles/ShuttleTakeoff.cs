@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Vehicles;
 using Verse;
+using RimWorld;
+using RimWorld.Planet;
+using Vehicles;
+using Vehicles.World;
 using static SaveOurShip2.ShipMapComp;
 
 namespace SaveOurShip2.Vehicles
@@ -25,10 +29,19 @@ namespace SaveOurShip2.Vehicles
 
         }
 
-        /*public override IEnumerable<FloatMenuOption> GetFloatMenuOptionsAt(int tile)
+
+        public override IEnumerable<ArrivalOption> GetArrivalOptions(GlobalTargetInfo target)
 		{
+            if (target.Tile == PlanetTile.Invalid)
+			{
+                foreach(ArrivalOption option in base.GetArrivalOptions(target))
+				{
+                    yield return option;
+				}
+                yield break;
+            }
             //td not sure the limits we want on this, right now you could assault from anywhere, should it be only from ship-ship?
-            var mp = Find.World.worldObjects.MapParentAt(tile);
+            var mp = Find.World.worldObjects.MapParentAt(target.Tile);
             if (mp != null && (mp.def == ResourceBank.WorldObjectDefOf.ShipOrbiting || mp.def == ResourceBank.WorldObjectDefOf.ShipEnemy)) //target is ship
 			{
 				var mapComp = mp.Map.GetComponent<ShipMapComp>();
@@ -36,75 +49,81 @@ namespace SaveOurShip2.Vehicles
 				{
 					if (mapComp.map != mapComp.ShipCombatOriginMap) //target is enemy ship
 					{
-						foreach (FloatMenuOption giz in FloatMenuMissions(tile, mapComp))
+						foreach (ArrivalOption giz in FloatMenuMissions(target.Tile, mapComp))
 							yield return giz;
                         yield break;
 					}
 					else //target is player ship
 					{
-						yield return FloatMenuOption_ReturnFromEnemy(tile);
+						yield return ArrivalOption_ReturnFromEnemy(target.Tile);
 					}
 				}
 			}
-            List<FloatMenuOption> baseOptions = new List<FloatMenuOption>(base.GetFloatMenuOptionsAt(tile));
-            if(baseOptions.Count==0)
+            List<ArrivalOption> baseOptions = new List<ArrivalOption>(base.GetArrivalOptions(target));
+            // In this case, only allowed to fofm caravan at the tile with map parent, which is nether site, nor settlement
+            bool vehicleCaravanCondition = WorldVehiclePathGrid.Instance.Passable(target.Tile, vehicle.VehicleDef) &&
+                !Find.WorldObjects.AnySettlementBaseAt(target.Tile) && !Find.WorldObjects.AnySiteAt(target.Tile);
+            if (mp != null && vehicleCaravanCondition)
             {
-                if (mp!=null&&!mp.HasMap)
-                {
-                    foreach (FloatMenuOption option in VehicleArrivalActionUtility.GetFloatMenuOptions(() => true, () => new AerialVehicleArrivalAction_LoadMapAndDefog(vehicle, this, tile, AerialVehicleArrivalModeDefOf.TargetedLanding), TranslatorFormattedStringExtensions.Translate("VF_LandVehicleTargetedLanding", mp, vehicle, tile), vehicle, tile))
-                        yield return option;
-                }
+                yield return new ArrivalOption(TranslatorFormattedStringExtensions.Translate("SoS.ChooseLocationAndLand"), 
+                    new AerialVehicleArrivalAction_LoadMapAndDefog(vehicle, this, target.Tile, AerialVehicleArrivalModeDefOf.TargetedLanding));
+                /*foreach (FloatMenuOption option in VehicleArrivalActionUtility.GetFloatMenuOptions(() => true, () => new AerialVehicleArrivalAction_LoadMapAndDefog(vehicle, this, tile, AerialVehicleArrivalModeDefOf.TargetedLanding), TranslatorFormattedStringExtensions.Translate("VF_LandVehicleTargetedLanding", mp, vehicle, tile), vehicle, tile))
+                    yield return option;*/
+            }
+            if (baseOptions.Count==0)
+            {
+
             }
             else
             {
-                foreach (FloatMenuOption option in baseOptions)
+                foreach (ArrivalOption option in baseOptions)
                     yield return option;
             }
             
-        }*/
+        }
 
-        public IEnumerable<FloatMenuOption> FloatMenuMissions(int tile, ShipMapComp mapComp)
+        public IEnumerable<ArrivalOption> FloatMenuMissions(int tile, ShipMapComp mapComp)
 		{
-			yield return FloatMenuOption_Board(tile, mapComp);
+			yield return ArrivalOption_Board(tile, mapComp);
 			//samey in CompShuttleLauncher.CompGetGizmosExtra
 			if (vehicle.CompUpgradeTree != null)
 			{
 				bool hasLaser = ShipInteriorMod2.ShuttleHasLaser(vehicle);
 				if (hasLaser)
-					yield return FloatMenuOption_Intercept(tile);
+					yield return ArrivalOption_Intercept(tile);
 				if (hasLaser || ShipInteriorMod2.ShuttleHasPlasma(vehicle))
-					yield return FloatMenuOption_Strafe(tile);
+					yield return ArrivalOption_Strafe(tile);
 				if (ShipInteriorMod2.ShuttleHasTorp(vehicle))
-					yield return FloatMenuOption_Bomb(tile);
+					yield return ArrivalOption_Bomb(tile);
 			}
         }
 
-        FloatMenuOption FloatMenuOption_Board(int tile, ShipMapComp mapComp)
+        ArrivalOption ArrivalOption_Board(int tile, ShipMapComp mapComp)
         {
             string text = "SoS.ShuttleMissionFloatBoardWarn".Translate();
             if (ShipInteriorMod2.ShuttleShouldBoard(mapComp, vehicle))
                 text = "SoS.ShuttleMissionFloatBoard".Translate();
-            return new FloatMenuOption(text, delegate { LaunchShuttleToCombatManager(vehicle, ShuttleMission.BOARD); });
+            return new ArrivalOption(text, delegate { LaunchShuttleToCombatManager(vehicle, ShuttleMission.BOARD); });
         }
 
-        FloatMenuOption FloatMenuOption_Intercept(int tile)
+        ArrivalOption ArrivalOption_Intercept(int tile)
         {
-            return new FloatMenuOption("SoS.ShuttleMissionFloatIntercept".Translate(), delegate { LaunchShuttleToCombatManager(vehicle, ShuttleMission.INTERCEPT); });
+            return new ArrivalOption("SoS.ShuttleMissionFloatIntercept".Translate(), delegate { LaunchShuttleToCombatManager(vehicle, ShuttleMission.INTERCEPT); });
         }
 
-        FloatMenuOption FloatMenuOption_Strafe(int tile)
+        ArrivalOption ArrivalOption_Strafe(int tile)
         {
-            return new FloatMenuOption("SoS.ShuttleMissionFloatStrafe".Translate(), delegate { LaunchShuttleToCombatManager(vehicle, ShuttleMission.STRAFE); });
+            return new ArrivalOption("SoS.ShuttleMissionFloatStrafe".Translate(), delegate { LaunchShuttleToCombatManager(vehicle, ShuttleMission.STRAFE); });
         }
 
-        FloatMenuOption FloatMenuOption_Bomb(int tile)
+        ArrivalOption ArrivalOption_Bomb(int tile)
         {
-            return new FloatMenuOption("SoS.ShuttleMissionFloatTorpedo".Translate(), delegate { LaunchShuttleToCombatManager(vehicle, ShuttleMission.BOMB); });
+            return new ArrivalOption("SoS.ShuttleMissionFloatTorpedo".Translate(), delegate { LaunchShuttleToCombatManager(vehicle, ShuttleMission.BOMB); });
         }
 
-        FloatMenuOption FloatMenuOption_ReturnFromEnemy(int tile)
+        ArrivalOption ArrivalOption_ReturnFromEnemy(int tile)
         {
-            return new FloatMenuOption("SoS.ShuttleMissionFloatReturn".Translate(), delegate { LaunchShuttleToCombatManager(vehicle, ShuttleMission.BOARD); });
+            return new ArrivalOption("SoS.ShuttleMissionFloatReturn".Translate(), delegate { LaunchShuttleToCombatManager(vehicle, ShuttleMission.BOARD); });
         }
 
         public static void LaunchShuttleToCombatManager(VehiclePawn vehicle, ShuttleMission mission, bool fromEnemy=false)

@@ -412,6 +412,7 @@
 	<SoS.TargetShuttlesDesc>Choose where shuttles on strafing and bombing missions should aim</SoS.TargetShuttlesDesc>
 	<SoS.ToggleField>Toggle hull access</SoS.ToggleField>
 	<SoS.ToggleFieldDesc>Allow pawns and vehicles to pass through this region of permeable hull.</SoS.ToggleFieldDesc>
+	<SoS.ChooseLocationAndLand>Set landing location and land here</SoS.ChooseLocationAndLand>
 	<!-- Temporary fix for VehFW to show fule cost. This key wa missing, also resulting strin is crooped, so got to have the number at the start so it is not lost -->
 	<VF_VehicleFuelCost>{0} Fuel cost</VF_VehicleFuelCost>
 	<!-- Temporary fix for Vehicke Framework message-->
