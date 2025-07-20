@@ -11,6 +11,7 @@ using RimWorld;
 using RimWorld.Planet;
 using Vehicles;
 using Vehicles.World;
+using SmashTools.Targeting;
 using static SaveOurShip2.ShipMapComp;
 
 namespace SaveOurShip2.Vehicles
@@ -60,15 +61,38 @@ namespace SaveOurShip2.Vehicles
 				}
 			}
             List<ArrivalOption> baseOptions = new List<ArrivalOption>(base.GetArrivalOptions(target));
-            // In this case, only allowed to fofm caravan at the tile with map parent, which is nether site, nor settlement
+            // In this case, framework only allows to form caravan at the tile with map parent, which is nether site, nor settlement
             bool vehicleCaravanCondition = WorldVehiclePathGrid.Instance.Passable(target.Tile, vehicle.VehicleDef) &&
                 !Find.WorldObjects.AnySettlementBaseAt(target.Tile) && !Find.WorldObjects.AnySiteAt(target.Tile);
+            // But when there is SOS 2 map parent, add option to land at that map
             if (mp != null && vehicleCaravanCondition)
             {
-                yield return new ArrivalOption(TranslatorFormattedStringExtensions.Translate("SoS.ChooseLocationAndLand"), 
-                    new AerialVehicleArrivalAction_LoadMapAndDefog(vehicle, this, target.Tile, AerialVehicleArrivalModeDefOf.TargetedLanding));
-                /*foreach (FloatMenuOption option in VehicleArrivalActionUtility.GetFloatMenuOptions(() => true, () => new AerialVehicleArrivalAction_LoadMapAndDefog(vehicle, this, tile, AerialVehicleArrivalModeDefOf.TargetedLanding), TranslatorFormattedStringExtensions.Translate("VF_LandVehicleTargetedLanding", mp, vehicle, tile), vehicle, tile))
-                    yield return option;*/
+                yield return new ArrivalOption("LandInExistingMap".Translate(vehicle.Label),
+                    continueWith: delegate (TargetData<GlobalTargetInfo> targetData)
+                    {
+                        Current.Game.CurrentMap = mp.Map;
+                        CameraJumper.TryHideWorld();
+                        LandingTargeter.Instance.BeginTargeting(vehicle,
+                                action: delegate (LocalTargetInfo landingCell, Rot4 rot)
+                        {
+                            if (vehicle.Spawned)
+                            {
+                                vehicle.CompVehicleLauncher.Launch(targetData,
+                                        new ArrivalAction_LandToCell(vehicle, mp, landingCell.Cell, rot));
+                            }
+                            else
+                            {
+                                AerialVehicleInFlight aerialVehicle = vehicle.GetOrMakeAerialVehicle();
+                                List<FlightNode> nodes = targetData.targets.Select(tgt => new FlightNode(tgt)).ToList();
+                                aerialVehicle.OrderFlyToTiles(nodes,
+                                        new ArrivalAction_LandToCell(vehicle, mp, landingCell.Cell, rot));
+                                vehicle.CompVehicleLauncher.inFlight = true;
+                                CameraJumper.TryShowWorld();
+                            }
+                        }, allowRotating: vehicle.VehicleDef.rotatable,
+                                targetValidator: targetInfo =>
+                                    !Ext_Vehicles.IsRoofRestricted(vehicle.VehicleDef, targetInfo.Cell, mp.Map));
+                    });
             }
             if (baseOptions.Count==0)
             {
