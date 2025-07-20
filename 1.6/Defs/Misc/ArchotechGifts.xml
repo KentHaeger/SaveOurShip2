@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Defs>
+
+  <SaveOurShip2.ArchoGiftDef>
+    <defName>ArchotechExotics</defName>
+	<research>ArchotechExotics</research>
+	<thing>ArchotechExoticParticles</thing>
+  </SaveOurShip2.ArchoGiftDef>
+
+  <SaveOurShip2.ArchoGiftDef>
+    <defName>ArchotechMechanites</defName>
+	<research>ArchotechMechanites</research>
+	<thing>ArchotechRepairGel</thing>
+  </SaveOurShip2.ArchoGiftDef>
+  
+  <SaveOurShip2.ArchoGiftDef>
+    <defName>Luci</defName>
+	<research>ArchotechBioMechanites</research>
+	<thing>Luciferium</thing>
+  </SaveOurShip2.ArchoGiftDef>
+  
+  <SaveOurShip2.ArchoGiftDef>
+    <defName>Glittermeds</defName>
+	<research>ArchotechBioMechanites</research>
+	<thing>MedicineUltratech</thing>
+  </SaveOurShip2.ArchoGiftDef>
+  
+  <SaveOurShip2.ArchoGiftDef>
+    <defName>HealerMech</defName>
+	<research>ArchotechBioMechanitesTwo</research>
+	<thing>MechSerumHealer</thing>
+  </SaveOurShip2.ArchoGiftDef>
+  
+  <SaveOurShip2.ArchoGiftDef>
+    <defName>ResurrectorMech</defName>
+	<research>ArchotechBioMechanitesTwo</research>
+	<thing>MechSerumResurrector</thing>
+  </SaveOurShip2.ArchoGiftDef>
+  
+  <SaveOurShip2.ArchoGiftDef>
+    <defName>ArchotechEye</defName>
+	<research>SoSArchotechOrgans</research>
+	<thing>ArchotechEye</thing>
+  </SaveOurShip2.ArchoGiftDef>
+  
+  <SaveOurShip2.ArchoGiftDef>
+    <defName>ArchotechArm</defName>
+	<research>SoSArchotechOrgans</research>
+	<thing>ArchotechArm</thing>
+  </SaveOurShip2.ArchoGiftDef>
+  
+  <SaveOurShip2.ArchoGiftDef>
+    <defName>ArchotechLeg</defName>
+	<research>SoSArchotechOrgans</research>
+	<thing>ArchotechLeg</thing>
+  </SaveOurShip2.ArchoGiftDef>
+  
+  <SaveOurShip2.ArchoGiftDef>
+    <defName>ArchotechEar</defName>
+	<research>SoSArchotechOrgans</research>
+	<thing>SoSArchotechEar</thing>
+  </SaveOurShip2.ArchoGiftDef>
+  
+  <SaveOurShip2.ArchoGiftDef>
+    <defName>ArchotechNose</defName>
+	<research>SoSArchotechOrgans</research>
+	<thing>SoSArchotechNose</thing>
+  </SaveOurShip2.ArchoGiftDef>
+  
+  <!--SaveOurShip2.ArchoGiftDef>
+    <defName>ArchotechJaw</defName>
+	<research>SoSArchotechOrgans</research>
+	<thing>SoSArchotechJaw</thing>
+  </SaveOurShip2.ArchoGiftDef-->
+  
+  <SaveOurShip2.ArchoGiftDef>
+    <defName>ArchotechHeart</defName>
+	<research>SoSArchotechOrgans</research>
+	<thing>SoSArchotechHeart</thing>
+  </SaveOurShip2.ArchoGiftDef>
+  
+  <SaveOurShip2.ArchoGiftDef>
+    <defName>ArchotechLung</defName>
+	<research>SoSArchotechOrgans</research>
+	<thing>SoSArchotechLung</thing>
+  </SaveOurShip2.ArchoGiftDef>
+  
+  <SaveOurShip2.ArchoGiftDef>
+    <defName>ArchotechStomach</defName>
+	<research>SoSArchotechOrgans</research>
+	<thing>SoSArchotechStomach</thing>
+  </SaveOurShip2.ArchoGiftDef>
+  
+  <SaveOurShip2.ArchoGiftDef>
+    <defName>ArchotechKidney</defName>
+	<research>SoSArchotechOrgans</research>
+	<thing>SoSArchotechKidney</thing>
+  </SaveOurShip2.ArchoGiftDef>
+  
+  <SaveOurShip2.ArchoGiftDef>
+    <defName>ArchotechLiver</defName>
+	<research>SoSArchotechOrgans</research>
+	<thing>SoSArchotechLiver</thing>
+  </SaveOurShip2.ArchoGiftDef>
+  
+  <SaveOurShip2.ArchoGiftDef>
+    <defName>ArchotechSpine</defName>
+	<research>SoSArchotechOrgans</research>
+	<thing>SoSArchotechSpine</thing>
+  </SaveOurShip2.ArchoGiftDef>
+  
+  <SaveOurShip2.ArchoGiftDef>
+    <defName>ArchotechSkin</defName>
+	<research>SoSArchotechOrgans</research>
+	<thing>SoSArchotechSkin</thing>
+  </SaveOurShip2.ArchoGiftDef>
+  
+  <SaveOurShip2.ArchoGiftDef>
+    <defName>ArchotechPsychicManipulator</defName>
+	<research>SoSArchotechOrgans</research>
+	<thing>SoSPsychicManipulator</thing>
+  </SaveOurShip2.ArchoGiftDef>
+  
+  <SaveOurShip2.ArchoGiftDef>
+    <defName>ArchotechPsychicPredictor</defName>
+	<research>SoSArchotechOrgans</research>
+	<thing>SoSPsychicPredictor</thing>
+  </SaveOurShip2.ArchoGiftDef>
+  
+  <SaveOurShip2.ArchoGiftDef>
+    <defName>ArchotechLifePod</defName>
+	<research>ArchotechAnimals</research>
+	<thing>ArcholifePod</thing>
+  </SaveOurShip2.ArchoGiftDef>
+  
+  <SaveOurShip2.ArchoGiftDef>
+    <defName>ArchotechMechaniteWeapon</defName>
+	<research>ArchotechMechaniteWeapon</research>
+	<thing>ArchotechMechaniteCore</thing>
+  </SaveOurShip2.ArchoGiftDef>
+  
+  <SaveOurShip2.ArchoGiftDef>
+    <defName>ArchotechPsychicWeapon</defName>
+	<research>ArchotechPsychicWeapon</research>
+	<thing>ArchotechPsychicCore</thing>
+  </SaveOurShip2.ArchoGiftDef>
+  
+  <SaveOurShip2.ArchoGiftDef>
+    <defName>ArchotechPsychicEffectorA</defName>
+	<research>ArchotechPsychicEffectors</research>
+	<thing>PsychicAnimalPulser</thing>
+  </SaveOurShip2.ArchoGiftDef>
+  
+  <SaveOurShip2.ArchoGiftDef>
+    <defName>ArchotechPsychicEffectorB</defName>
+	<research>ArchotechPsychicEffectors</research>
+	<thing>PsychicSoothePulser</thing>
+  </SaveOurShip2.ArchoGiftDef>
+  
+  <SaveOurShip2.ArchoGiftDef>
+    <defName>ArchotechPsychicEffectorC</defName>
+	<research>ArchotechPsychicEffectors</research>
+	<thing>Apparel_PsychicShockLance</thing>
+  </SaveOurShip2.ArchoGiftDef>
+  
+  <SaveOurShip2.ArchoGiftDef>
+    <defName>ArchotechPsychicEffectorD</defName>
+	<research>ArchotechPsychicEffectors</research>
+	<thing>Apparel_PsychicInsanityLance</thing>
+  </SaveOurShip2.ArchoGiftDef>
+
+  <SaveOurShip2.ArchoGiftDef>
+    <defName>ArchotechPsychicEffectorE</defName>
+	<research>ArchotechPsychicEffectors</research>
+	<thing>PsychicEmanator</thing>
+  </SaveOurShip2.ArchoGiftDef>
+</Defs>
