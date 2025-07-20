@@ -11,8 +11,7 @@ namespace SaveOurShip2
 {
     class Designator_RestoreHull : Designator_Cells
     {
-		// TODO: 1.6
-		// public override int DraggableDimensions => 2;
+		public override DrawStyleCategoryDef DrawStyleCategory => DrawStyleCategoryDefOf.Areas;
 
 		public override bool DragDrawMeasurements => true;
 
