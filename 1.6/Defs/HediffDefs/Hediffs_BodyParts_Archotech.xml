@@ -292,6 +292,7 @@
 			<li>
 				<statOffsets>
 					<HypoxiaResistance>1</HypoxiaResistance>
+					<VacuumResistance MayRequire="Ludeon.RimWorld.Odyssey">0.5</VacuumResistance>
 				</statOffsets>
 			</li>
 		</stages>
