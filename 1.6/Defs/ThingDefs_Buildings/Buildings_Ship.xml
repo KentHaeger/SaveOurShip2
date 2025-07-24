@@ -2084,6 +2084,7 @@
 				<cornerBR>Damage/Corner</cornerBR>
 			</damageData>
 		</graphicData>
+		<uiIconScale>0.75</uiIconScale>
 		<researchPrerequisites>
 			<li>ShipReactor</li>
 		</researchPrerequisites>
