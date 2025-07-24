@@ -264,6 +264,7 @@
 			<ComfyTemperatureMin>-100</ComfyTemperatureMin>
 			<HypoxiaResistance>1</HypoxiaResistance>
 			<DecompressionResistance>1</DecompressionResistance>
+			<VacuumResistance MayRequire="Ludeon.RimWorld.Odyssey">1</VacuumResistance>
 			<LeatherAmount>0</LeatherAmount>
 		</statBases>
 		<race>
