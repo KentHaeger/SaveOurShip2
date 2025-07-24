@@ -11,6 +11,7 @@
       <DecompressionResistance>1</DecompressionResistance>
 	  <HypoxiaResistance>1</HypoxiaResistance>
 	  <VacuumSpeedMultiplier>4</VacuumSpeedMultiplier>
+      <VacuumResistance MayRequire="Ludeon.RimWorld.Odyssey">1</VacuumResistance>
     </statOffsets>
     <biostatMet>-2</biostatMet>
 	<biostatCpx>2</biostatCpx>
