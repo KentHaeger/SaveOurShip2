@@ -7,6 +7,7 @@
 			<ComfyTemperatureMax>100</ComfyTemperatureMax>
 			<HypoxiaResistance>1</HypoxiaResistance>
 			<DecompressionResistance>1</DecompressionResistance>
+			<VacuumResistance MayRequire="Ludeon.RimWorld.Odyssey">1</VacuumResistance>
 		</statBases>
 		<race>
 			<baseHungerRate>0.01</baseHungerRate>
@@ -27,6 +28,7 @@
 			<ComfyTemperatureMax>100</ComfyTemperatureMax>
 			<HypoxiaResistance>1</HypoxiaResistance>
 			<DecompressionResistance>1</DecompressionResistance>
+			<VacuumResistance MayRequire="Ludeon.RimWorld.Odyssey">1</VacuumResistance>
 		</statBases>
 		<race>
 			<baseHealthScale>4.0</baseHealthScale>
@@ -50,6 +52,7 @@
 			<ComfyTemperatureMax>100</ComfyTemperatureMax>
 			<HypoxiaResistance>1</HypoxiaResistance>
 			<DecompressionResistance>1</DecompressionResistance>
+			<VacuumResistance MayRequire="Ludeon.RimWorld.Odyssey">1</VacuumResistance>
 			<LeatherAmount>0</LeatherAmount>
 		</statBases>
 		<race>
