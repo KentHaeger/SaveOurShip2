@@ -308,6 +308,7 @@
 					<DecompressionResistance>1</DecompressionResistance>
 					<HypoxiaResistance>1</HypoxiaResistance>
 					<VacuumSpeedMultiplier>4</VacuumSpeedMultiplier>
+					<VacuumResistance MayRequire="Ludeon.RimWorld.Odyssey">1</VacuumResistance>
 				</statOffsets>
 			</li>
 		</stages>
@@ -362,6 +363,7 @@
 					<VacuumSpeedMultiplier>4</VacuumSpeedMultiplier>
 					<MechFormingSpeed MayRequire="Ludeon.RimWorld.Biotech">1</MechFormingSpeed>
 					<WorkSpeedGlobalOffsetMech MayRequire="Ludeon.RimWorld.Biotech">0.18</WorkSpeedGlobalOffsetMech>
+					<VacuumResistance MayRequire="Ludeon.RimWorld.Odyssey">1</VacuumResistance>
 				</statOffsets>
 				<capMods>
 					<li>
@@ -431,6 +433,7 @@
 					<VacuumSpeedMultiplier>4</VacuumSpeedMultiplier>
 					<MechFormingSpeed MayRequire="Ludeon.RimWorld.Biotech">2</MechFormingSpeed>
 					<WorkSpeedGlobalOffsetMech MayRequire="Ludeon.RimWorld.Biotech">0.36</WorkSpeedGlobalOffsetMech>
+					<VacuumResistance MayRequire="Ludeon.RimWorld.Odyssey">1</VacuumResistance>
 				</statOffsets>
 				<capMods>
 					<li>
