@@ -33,6 +33,7 @@
 			<WorkSpeedGlobal>-0.075</WorkSpeedGlobal>
 			<DecompressionResistance>0.75</DecompressionResistance>
 			<VacuumSpeedMultiplier>4</VacuumSpeedMultiplier>
+			<VacuumResistance MayRequire="Ludeon.RimWorld.Odyssey">0.75</VacuumResistance>
 		</equippedStatOffsets>
 		<thingCategories>
 			<li>ApparelArmor</li>
@@ -111,6 +112,7 @@
 			<WorkSpeedGlobal>-0.075</WorkSpeedGlobal>
 			<DecompressionResistance>0.75</DecompressionResistance>
 			<VacuumSpeedMultiplier>4</VacuumSpeedMultiplier>
+			<VacuumResistance MayRequire="Ludeon.RimWorld.Odyssey">0.75</VacuumResistance>
 		</equippedStatOffsets>
 		<thingCategories>
 			<li>ApparelArmor</li>
@@ -192,6 +194,7 @@
 			<ToxicEnvironmentResistance>1.0</ToxicEnvironmentResistance>
 			<HypoxiaResistance>1</HypoxiaResistance>
 			<DecompressionResistance>0.25</DecompressionResistance>
+			<VacuumResistance MayRequire="Ludeon.RimWorld.Odyssey">0.25</VacuumResistance>
 		</equippedStatOffsets>
 		<thingCategories>
 			<li>ArmorHeadgear</li>
@@ -257,6 +260,7 @@
 			<ToxicEnvironmentResistance>1.0</ToxicEnvironmentResistance>
 			<HypoxiaResistance>1</HypoxiaResistance>
 			<DecompressionResistance>0.25</DecompressionResistance>
+			<VacuumResistance MayRequire="Ludeon.RimWorld.Odyssey">0.25</VacuumResistance>
 		</equippedStatOffsets>
 		<thingCategories>
 			<li>ArmorHeadgear</li>
@@ -326,6 +330,7 @@
 			<WorkSpeedGlobal>-0.1</WorkSpeedGlobal>
 			<DecompressionResistance>0.75</DecompressionResistance>
 			<VacuumSpeedMultiplier>4</VacuumSpeedMultiplier>
+			<VacuumResistance MayRequire="Ludeon.RimWorld.Odyssey">0.75</VacuumResistance>
 		</equippedStatOffsets>
 		<thingCategories>
 			<li>ApparelArmor</li>
@@ -428,6 +433,7 @@
 			<ToxicEnvironmentResistance>1.0</ToxicEnvironmentResistance>
 			<HypoxiaResistance>1</HypoxiaResistance>
 			<DecompressionResistance>0.25</DecompressionResistance>
+			<VacuumResistance MayRequire="Ludeon.RimWorld.Odyssey">0.25</VacuumResistance>
 		</equippedStatOffsets>
 		<costList>
 			<ComponentSpacer>2</ComponentSpacer>
