@@ -156,6 +156,7 @@
 					<HypoxiaResistance>1</HypoxiaResistance>
 					<DecompressionResistance>1</DecompressionResistance>
 					<ComfyTemperatureMin>-100</ComfyTemperatureMin>
+					<VacuumResistance MayRequire="Ludeon.RimWorld.Odyssey">1</VacuumResistance>
 				</statOffsets>
 			</li>
 		</stages>
