@@ -629,6 +629,7 @@
 					<ArmorRating_Heat>0.4</ArmorRating_Heat>
 					<ComfyTemperatureMin>-20</ComfyTemperatureMin>
 					<ComfyTemperatureMax>20</ComfyTemperatureMax>
+					<VacuumResistance MayRequire="Ludeon.RimWorld.Odyssey">1</VacuumResistance>
 				</statOffsets>
 			</li>
 		</stages>
