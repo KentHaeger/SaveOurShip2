@@ -396,4 +396,65 @@
 			</operations>
 		</match>
 	</Operation>
+	<Operation Class="PatchOperationFindMod">
+		<mods>
+			<li>Odyssey</li>
+		</mods>		
+		<match Class="PatchOperationSequence">
+			<success>Normal</success>
+			<operations>
+				<!-- Drones -->
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/ThingDef[@Name="BaseDrone"]/statBases</xpath>
+					<value>
+						<HypoxiaResistance>1</HypoxiaResistance>
+						<DecompressionResistance>1</DecompressionResistance>
+						<VacuumSpeedMultiplier>4</VacuumSpeedMultiplier>
+					</value>
+				</li>
+				<!-- Breathless Gene -->
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/GeneDef[defName="VacuumResistance_Total"]/statOffsets</xpath>
+					<value>
+						<HypoxiaResistance>1</HypoxiaResistance>
+					</value>
+				</li>
+				<!-- Vacuum Resistant Gene -->
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/GeneDef[defName="VacuumResistance_Partial"]/statOffsets</xpath>
+					<value>
+						<DecompressionResistance>0.75</DecompressionResistance>
+					</value>
+				</li>
+				<!-- Odyssey Space Headgear -->
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/ThingDef[defName="Apparel_VacsuitHelmet"]/equippedStatOffsets[not(DecompressionResistance)]</xpath>
+					<value>
+						<DecompressionResistance>0.25</DecompressionResistance>
+					</value>
+				</li>
+				<!-- Odyssey Space Headgear -->
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/ThingDef[defName="Apparel_VacsuitHelmet"]/equippedStatOffsets[not(HypoxiaResistance)]</xpath>
+					<value>
+						<HypoxiaResistance>1</HypoxiaResistance>
+					</value>
+				</li>
+				<!-- Odyssey Space Suits -->
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/ThingDef[defName="Apparel_Vacsuit" or defName="Apparel_VacsuitChildren"]/equippedStatOffsets[not(DecompressionResistance)]</xpath>
+					<value>
+						<DecompressionResistance>0.75</DecompressionResistance>
+					</value>
+				</li>
+				<!-- Odyssey Space Suits -->
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/ThingDef[defName="Apparel_Vacsuit" or defName="Apparel_VacsuitChildren"]/equippedStatOffsets[not(VacuumSpeedMultiplier)]</xpath>
+					<value>
+						<VacuumSpeedMultiplier>4</VacuumSpeedMultiplier>
+					</value>
+				</li>
+			</operations>
+		</match>
+	</Operation>
 </Patch>
