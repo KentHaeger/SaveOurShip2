@@ -527,10 +527,21 @@ namespace SaveOurShip2
 				Consciousness = pawn;
 				SetupConsciousness(overrideApparel, graphicsDirty);
 			}
-			else
+			else if (newConsc.def == ThingDefOf.AIPersonaCore)
 			{
 				GenerateAIPawn();
-				newConsc.DeSpawn();
+				if (newConsc.stackCount > 1)
+				{
+					newConsc.stackCount -= 1;
+				}
+				else
+				{
+					newConsc.Destroy(DestroyMode.Vanish);
+				}
+			}
+			else
+			{
+				Log.Error("Error installing consciousness, new one:" + newConsc);
 			}
 			SoundDefOf.PsychicPulseGlobal.PlayOneShotOnCamera(Find.CurrentMap);
 			FleckMaker.Static(parent.Position, parent.Map, FleckDefOf.PsycastAreaEffect, 5f);
