@@ -58,8 +58,12 @@ namespace SaveOurShip2
 			//Needs an init delay
 			if (useSplashScreen) LongEventHandler.QueueLongEvent(() => ShipInteriorMod2.UseCustomSplashScreen(), "ShipInteriorMod2", false, null);
 			// Poke SectionLayer_Gas to inituilize it's static resources, so that when space start scenario needs to create a map, that
-			// doesn't result in those resources loading from separate thread, whiuch is an error.
-			// CHANGES 1.6 this had to be disabled. 
+			// doesn't result in those resources loading from separate thread, whiuch is an error. 
+			LongEventHandler.QueueLongEvent(delegate
+			{
+				Section dummySection = new Section(new IntVec3(0, 0, 0), null);
+				SectionLayer_Gas dummyGasLayer = new SectionLayer_Gas(dummySection);
+			}, "PrepareGasLayer", false, null);
 			// SectionLayer_Gas dummyGasLayer = new SectionLayer_Gas(null);
 		}
 	}
@@ -1031,7 +1035,8 @@ namespace SaveOurShip2
 								else if (def == ResourceBank.ThingDefOf.Turret_Sniper)
 									def = DefDatabase<ThingDef>.GetNamed("Turret_AutoInferno");
 							}
-							else if (!royActive && def.Equals(ThingDefOf.Throne))
+							// When Royaly is disabled, even their defs are null, so should compare against explicitly specified strings here
+							else if (!royActive && (def.defName == "Throne" || def.defName == "GrandThrone"))
 							{
 								def = DefDatabase<ThingDef>.GetNamed("Armchair");
 							}
