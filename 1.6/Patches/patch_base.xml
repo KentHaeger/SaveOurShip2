@@ -227,5 +227,13 @@
 			<li>SaveOurShip2.Designator_RestoreHull</li>
 		</value>
 	</Operation>
+	<!-- Insects -->
+	<Operation Class="PatchOperationAdd">
+		<xpath>Defs/ThingDef[@Name="BaseInsect"]/statBases</xpath>
+		<value>
+			<HypoxiaResistance>1</HypoxiaResistance>
+			<DecompressionResistance>1</DecompressionResistance>
+		</value>
+	</Operation>
 	
 </Patch>
