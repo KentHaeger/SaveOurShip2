@@ -1046,9 +1046,18 @@ namespace SaveOurShip2
 			TerrainType = AccessTools.TypeByName("SectionLayer_Terrain");
 		}
 
+		public static bool Prefix(Map map)
+		{
+			// This allows creating dummy section for creatring dummy SectionLayer_Gas that loads resources,
+			// and cannot be properly initialized im modded scenario map start because of not on main thread
+			return map != null;
+		}
 		public static void Postfix(Map map, Section __instance, List<SectionLayer> ___layers)
 		{
-			if (!map.IsSpace()) return;
+			if (map == null || !map.IsSpace())
+			{
+				return;
+			}
 
 			// Kill shadows
 			___layers.RemoveAll(layer => SunShadowsType.IsInstanceOfType(layer));
