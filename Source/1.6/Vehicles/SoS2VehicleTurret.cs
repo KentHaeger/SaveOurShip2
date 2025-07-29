@@ -71,5 +71,18 @@ namespace SaveOurShip2.Vehicles
             Scribe_Values.Look<int>(ref hardpoint, "hardpoint");
         }
 
+        public override void ResetPrefireTimer()
+        {
+            PrefireTickCount = WarmupTicks;
+            EventRegistry[VehicleTurretEventDefOf.Warmup].ExecuteEvents();
+            burstsTillWarmup = CurrentFireMode.burstsTillWarmup;
+        }
+
+        public override void PushTurretToQueue()
+		{
+            ActivateBurstTimer();
+            CompVehicleTurrets.TurretData data = GenerateTurretData();
+            vehicle.CompVehicleTurrets.QueueTurret(data);
+        }
     }
 }
