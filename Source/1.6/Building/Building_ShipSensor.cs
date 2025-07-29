@@ -113,7 +113,9 @@ namespace SaveOurShip2
 			string inspectString = base.GetInspectString();
 			if(observedMap!=null)
 			{
-				inspectString += "\nObserving " + observedMap.Label;
+				inspectString += "\n" +
+				                 TranslatorFormattedStringExtensions.Translate("SoS.ShipSensorObserving",
+					                 observedMap.Label);
 			}
 			return inspectString;
 		}
