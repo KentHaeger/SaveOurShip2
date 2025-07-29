@@ -39,7 +39,6 @@ namespace SaveOurShip2.Vehicles
                         LandingTargeter.Instance.BeginTargeting(Vehicle, Vehicle.Map, delegate (LocalTargetInfo target, Rot4 rot)
                         {
                             // CHANGE 1.6 LaunchTargeter.FlightPath = new List<FlightNode> { new FlightNode(Vehicle.Map.Tile) };
-                            // CHANGE 1.6
                             TargetData<GlobalTargetInfo> targetData = new TargetData<GlobalTargetInfo>();
                             targetData.targets.Add(new GlobalTargetInfo(Vehicle.Map.Tile));
                             Vehicle.CompVehicleLauncher.Launch(targetData, new ArrivalAction_LandToCell(Vehicle, Vehicle.Map.Parent, target.Cell, rot));

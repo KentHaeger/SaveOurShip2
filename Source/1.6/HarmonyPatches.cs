@@ -2508,20 +2508,20 @@ namespace SaveOurShip2
 		}
 	}
 
-	/*[HarmonyPatch(typeof(Projectile), "Launch", new Type[] {
+	[HarmonyPatch(typeof(Projectile), "Launch", new Type[] {
 		typeof(Thing), typeof(Vector3), typeof(LocalTargetInfo), typeof(LocalTargetInfo),
 		typeof(ProjectileHitFlags), typeof(bool), typeof(Thing), typeof(ThingDef) })] //td? move this into ship turret/launch code
 	public static class TransferAmplifyBonus
 	{
-		public static void Postfix(Projectile __instance, Thing equipment, ref float ___weaponDamageMultiplier)
+		public static void Postfix(Projectile __instance, Thing equipment)
 		{
 			if (__instance is Projectile_ExplosiveShip && equipment is Building_ShipTurret turret &&
 				turret.AmplifierDamageBonus > 0)
 			{
-				___weaponDamageMultiplier = 1 + turret.AmplifierDamageBonus;
+				(__instance as Projectile_ExplosiveShip).weaponDamageMultiplier = 1 + turret.AmplifierDamageBonus;
 			}
 		}
-	}*/
+	}
 
 	//crypto
 	[HarmonyPatch(typeof(Building_CryptosleepCasket), "FindCryptosleepCasketFor")]
