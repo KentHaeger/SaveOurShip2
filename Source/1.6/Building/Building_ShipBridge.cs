@@ -157,8 +157,8 @@ namespace SaveOurShip2
 						{
 							Success(null);
 						},
-						defaultLabel = "Dev: Hack bridge",
-						defaultDesc = "Instantly take control of this ship"
+						defaultLabel = "SoS.Dev.ShipBridgeHackLabel".Translate(),
+						defaultDesc = "SoS.Dev.ShipBridgeHackDesc".Translate()
 					};
 					yield return hackMe;
 				}
@@ -568,8 +568,8 @@ namespace SaveOurShip2
 							{
 								ShipInteriorMod2.SlowTimeFlag = !ShipInteriorMod2.SlowTimeFlag;
 							},
-							defaultLabel = "Toggle slow time",
-							defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.ToggleCloakDesc"),
+							defaultLabel = "SoS.ToggleCloakLabel".Translate(),
+							defaultDesc = "SoS.ToggleCloakDesc".Translate(),
 							isActive = () => ShipInteriorMod2.SlowTimeFlag
 						};
 						if (ShipInteriorMod2.SlowTimeFlag)
@@ -592,15 +592,15 @@ namespace SaveOurShip2
 								bool hasTorpedo = u.Contains("TurretTorpedoA") || u.Contains("TurretTorpedoB") || u.Contains("TurretTorpedoC")
 									&& mission.shuttle.carryTracker.GetDirectlyHeldThings().Any(t => t.HasThingCategory(ResourceBank.ThingCategoryDefOf.SpaceTorpedoes));
 								if (hasLaser && mission.mission != ShipMapComp.ShuttleMission.INTERCEPT)
-									options.Add(new FloatMenuOption("Intercept", delegate { mission.mission = ShipMapComp.ShuttleMission.INTERCEPT; }));
+									options.Add(new FloatMenuOption("SoS.ShipMapMission.Intercept".Translate(), delegate { mission.mission = ShipMapComp.ShuttleMission.INTERCEPT; }));
 								if ((hasLaser || hasPlasma) && mission.mission != ShipMapComp.ShuttleMission.STRAFE)
-									options.Add(new FloatMenuOption("Strafe", delegate { mission.mission = ShipMapComp.ShuttleMission.STRAFE; }));
+									options.Add(new FloatMenuOption("SoS.ShipMapMission.Strafe".Translate(), delegate { mission.mission = ShipMapComp.ShuttleMission.STRAFE; }));
 								if (hasTorpedo && mission.mission != ShipMapComp.ShuttleMission.BOMB)
-									options.Add(new FloatMenuOption("Bomb", delegate { mission.mission = ShipMapComp.ShuttleMission.BOMB; }));
+									options.Add(new FloatMenuOption("SoS.ShipMapMission.Bomb".Translate(), delegate { mission.mission = ShipMapComp.ShuttleMission.BOMB; }));
 								if (mission.mission != ShipMapComp.ShuttleMission.BOARD)
-									options.Add(new FloatMenuOption("Board", delegate { mission.mission = ShipMapComp.ShuttleMission.BOARD; }));
+									options.Add(new FloatMenuOption("SoS.ShipMapMission.Board".Translate(), delegate { mission.mission = ShipMapComp.ShuttleMission.BOARD; }));
 								if (mission.mission != ShipMapComp.ShuttleMission.RETURN)
-									options.Add(new FloatMenuOption("Return", delegate { mission.mission = ShipMapComp.ShuttleMission.RETURN; }));
+									options.Add(new FloatMenuOption("SoS.ShipMapMission.Return".Translate(), delegate { mission.mission = ShipMapComp.ShuttleMission.RETURN; }));
 								Find.WindowStack.Add(new FloatMenu(options));
 
 							},
@@ -628,7 +628,7 @@ namespace SaveOurShip2
 							{
 								mapComp.TargetMapComp.hasAnyPartDetached = true;
 							},
-							defaultLabel = "Dev: Start enemy boarding",
+							defaultLabel = "SoS.Dev.StartEnemyBoardingLabel".Translate(),
 						};
 						yield return forceBoard;
 					}
@@ -914,7 +914,7 @@ namespace SaveOurShip2
 										Find.TickManager.TogglePaused();
 									mapComp.StartShipEncounter();
 								},
-								defaultLabel = "Dev: Start ship battle",
+								defaultLabel = "SoS.Dev.StartShipBattle".Translate(),
 							};
 							startBattle.hotKey = KeyBindingDefOf.Misc9;
 							yield return startBattle;
@@ -927,7 +927,7 @@ namespace SaveOurShip2
 										Find.TickManager.TogglePaused();
 									mapComp.StartShipEncounter(fleet: true);
 								},
-								defaultLabel = "Dev: Start random fleet battle",
+								defaultLabel = "SoS.Dev.StartRandomFleetBattle".Translate(),
 							};
 							startFleetBattle.hotKey = KeyBindingDefOf.Misc10;
 							yield return startFleetBattle;
@@ -938,7 +938,7 @@ namespace SaveOurShip2
 								{
 									Find.WindowStack.Add(new Dialog_LoadShipDef("shipdeftoload", this.Map));
 								},
-								defaultLabel = "Dev: load ship from database",
+								defaultLabel = "SoS.Dev.LoadShipFromDatabase".Translate(),
 							};
 							loadshipdef.hotKey = KeyBindingDefOf.Misc11;
 							yield return loadshipdef;
@@ -949,7 +949,7 @@ namespace SaveOurShip2
 								{
 									Find.WindowStack.Add(new Dialog_LoadShipDef("shipdeftoload", this.Map, isWreck : true));
 								},
-								defaultLabel = "Dev: load wreck from database",
+								defaultLabel = "SoS.Dev.LoadWreckFromDatabase".Translate(),
 							};
 							yield return loadWreckDef;
 						}
@@ -1141,9 +1141,8 @@ namespace SaveOurShip2
 							Find.WorldTargeter.BeginTargeting(DevChooseLaunchTarget, canTargetTiles: true, closeWorldTabWhenFinished: true);
 						},
 						hotKey = KeyBindingDefOf.Misc1,
-						defaultLabel = "Dev: Launch to specific tile",
-						defaultDesc = "Pick a surface tile that will be associated with the ship. Based on selected tile latitude, solar panels will work great or bad. " +
-							"Quests and Ideology work sites will be genarated near picked surface tile."
+						defaultLabel = "SoS.Dev.LaunchToSpecificTileLabel".Translate(),
+						defaultDesc = "SoS.Dev.LaunchToSpecificTileDesc".Translate()
 					};
 					if (!CanLaunchNow)
 					{
@@ -1367,13 +1366,13 @@ namespace SaveOurShip2
 		}
 		public void PawnsAbandonWarning()
 		{
-			DiaNode theNode = new DiaNode(TranslatorFormattedStringExtensions.Translate("SoS.CombatAbandonPawns"));
-			DiaOption accept = new DiaOption("Accept");
+			DiaNode theNode = new DiaNode("SoS.CombatAbandonPawns".Translate());
+			DiaOption accept = new DiaOption("SoS.CombatAbandonPawnsAccept".Translate());
 			accept.resolveTree = true;
 			accept.action = delegate { mapComp.EndBattle(Map, true); };
 			theNode.options.Add(accept);
 
-			DiaOption cancel = new DiaOption("Cancel");
+			DiaOption cancel = new DiaOption("SoS.CombatAbandonPawnsCancel".Translate());
 			cancel.resolveTree = true;
 			theNode.options.Add(cancel);
 
