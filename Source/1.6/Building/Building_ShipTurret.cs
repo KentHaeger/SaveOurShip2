@@ -737,15 +737,15 @@ namespace SaveOurShip2
 							torp++;
 					}
 					if (torp > 0)
-						stringBuilder.AppendLine(torp + " HE torpedoes");
+						stringBuilder.AppendLine(torp + " " + "SoS.LoadedTorpedoHE".Translate());
 					if (torpEMP > 0)
-						stringBuilder.AppendLine(torpEMP + " EMP torpedoes");
+						stringBuilder.AppendLine(torpEMP + " " + "SoS.LoadedTorpedoEMP".Translate());
 					if (torpAM > 0)
-						stringBuilder.AppendLine(torpAM + " AM torpedoes");
+						stringBuilder.AppendLine(torpAM + " " + "SoS.LoadedTorpedoAM".Translate());
 				}
 				else
 				{
-					stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.TorpedoNotLoaded"));
+					stringBuilder.AppendLine("SoS.TorpedoNotLoaded".Translate());
 				}
 			}
 			return stringBuilder.ToString().TrimEndNewlines();
@@ -827,8 +827,8 @@ namespace SaveOurShip2
 				{
 					Command_TargetShipCombat command_VerbTargetShip = new Command_TargetShipCombat
 					{
-						defaultLabel = TranslatorFormattedStringExtensions.Translate("CommandSetForceAttackTarget"),
-						defaultDesc = TranslatorFormattedStringExtensions.Translate("CommandSetForceAttackTargetDesc"),
+						defaultLabel = "CommandSetForceAttackTarget".Translate(),
+						defaultDesc = "CommandSetForceAttackTargetDesc".Translate(),
 						icon = ContentFinder<Texture2D>.Get("UI/Commands/Attack"),
 						verb = AttackVerb,
 						turrets = Find.Selector.SelectedObjects.OfType<Building_ShipTurret>().ToList(),
@@ -998,8 +998,7 @@ namespace SaveOurShip2
 			List<FloatMenuOption> unloadOptions = new List<FloatMenuOption>();
 			foreach (ThingDef loadedType in loadedTypes)
 			{
-				String commandText = TranslatorFormattedStringExtensions.Translate("SoS.TurretExtract") + " " +
-					loadedType.label;
+				String commandText = TranslatorFormattedStringExtensions.Translate("SoS.TurretExtract", loadedType.label);
 				unloadOptions.Add(new FloatMenuOption(commandText, delegate
 				{
 					Thing torp = torpComp.RemoveOneShellOfType(loadedType);

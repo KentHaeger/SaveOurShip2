@@ -250,7 +250,7 @@
 	<SoS.TurretExtractTorpedoDesc>Unloads the current torpedoes so they can be replaced with different ammunition.</SoS.TurretExtractTorpedoDesc>
 	<SoS.TurretExtractOneTorpedo>Extract one torpedo</SoS.TurretExtractOneTorpedo>
 	<SoS.TurretExtractOneTorpedoDesc>Unloads just one torpedo so it can be replaced with different ammunition.</SoS.TurretExtractOneTorpedoDesc>
-	<SoS.TurretExtract>Extract</SoS.TurretExtract>
+	<SoS.TurretExtract>Extract {0}</SoS.TurretExtract>
 	<SoS.TurretOptimalRange>Use optimal range</SoS.TurretOptimalRange>
 	<SoS.TurretOptimalRangeDesc>Enable to only fire on targets within optimal range</SoS.TurretOptimalRangeDesc>
 	<SoS.TurretPointDefense>Point Defense mode</SoS.TurretPointDefense>
