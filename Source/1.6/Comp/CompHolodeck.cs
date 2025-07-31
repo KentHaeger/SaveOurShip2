@@ -179,8 +179,8 @@ namespace SaveOurShip2
 		public override string CompInspectStringExtra()
 		{
 			if(CurSkill!=null)
-				return "Current program: "+programs[CurSkill].programName;
-			return "Offline";
+				return "SoS.HolodeckOnline".Translate(programs[CurSkill].programName);
+			return "SoS.HolodeckOffline".Translate();
 		}
 
 		public override void PostDraw()
