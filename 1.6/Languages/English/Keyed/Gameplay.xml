@@ -460,7 +460,7 @@
 	<SoSConsciousness>Consciousness: {0}</SoSConsciousness>
 	<SoSAIName>AI name: {0}</SoSAIName>
 	<SoSNoMapObserve>This type of map cannot be observed from orbit. Its owners have likely deployed sensor scrambling technology.</SoSNoMapObserve>
-	<SoSBreathable>Breathable</SoSBreathable>
+	<SoS.Breathable>Breathable</SoS.Breathable>
 	<!-- Projectiles missing map-->
 	<SoS.ActorPlayer>Player</SoS.ActorPlayer>
 	<SoS.ActorEnemy>Enemy</SoS.ActorEnemy>
