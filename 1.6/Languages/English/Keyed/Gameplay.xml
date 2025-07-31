@@ -242,7 +242,6 @@
 	<SoS.CloakBroken>Cloak disengaged due to heat depletion</SoS.CloakBroken>
 	<SoS.HeatCritical>DANGER! Heat level critical!</SoS.HeatCritical>
 	<SoS.HeatNotConnected>Not connected to a thermal network</SoS.HeatNotConnected>
-	<SoS.HeatTurretEnergy>Energy to fire:</SoS.HeatTurretEnergy>
 	<!-- turret -->
 	<SoS.TurretNotInShipCombat>Warning: Turret will not fire because you are not in ship combat.</SoS.TurretNotInShipCombat>
 	<SoS.TurretInPointDefense>Warning: Turret will not target the enemy ship because it is set to Point Defense mode</SoS.TurretInPointDefense>
