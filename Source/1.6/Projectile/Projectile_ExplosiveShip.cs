@@ -26,6 +26,13 @@ namespace SaveOurShip2
 	public class Projectile_ExplosiveShip : Projectile_Explosive
 	{
 		public float weaponDamageMultiplier = 1f;
+		public override int DamageAmount
+		{
+			get
+			{
+				return (int)(weaponDamageMultiplier * base.DamageAmount);
+			}
+		}
 		protected override void Impact(Thing hitThing, bool blockedByShield = false)
 		{
 			// Projectile position can be inaccurate by several tiles if it travels several tiles per tick, Verse issue
