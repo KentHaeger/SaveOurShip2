@@ -4805,7 +4805,8 @@ namespace SaveOurShip2
 			{
 				return;
 			}
-			if (node.upgrades.Where(upgrade=>upgrade is SoS2TurretUpgrade sosUpgrade && sosUpgrade.turretSlot >= __instance.Vehicle.GetStatValue(ResourceBank.VehicleStatDefOf.Hardpoints)).Count()>0)
+			int vehicleHardpoints = Mathf.RoundToInt(__instance.Vehicle.GetStatValue(ResourceBank.VehicleStatDefOf.Hardpoints));
+			if (node.upgrades.Where(upgrade=>upgrade is SoS2TurretUpgrade sosUpgrade && sosUpgrade.turretSlot >= vehicleHardpoints).Count()>0)
             {
 				__result = true;
             }
