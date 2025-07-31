@@ -20,6 +20,7 @@ namespace SaveOurShip2
 		string filename = "Select ship to load";
 		bool discardLog = true;
 		bool discardTales = true;
+		bool triedLoadLatest = false;
 		string playerFactionName;
 		FactionDef playerFactionDef;
 		List<GameComponent> components;
@@ -69,7 +70,11 @@ namespace SaveOurShip2
 				//set true here since somehow it gets set to false
 				discardLog = true;
 				discardTales = true;
-				LoadLatest();
+				if (!triedLoadLatest)
+				{
+					triedLoadLatest = true;
+					LoadLatest();
+				}
 			}
 
 			if (Widgets.ButtonText(rect1, filename))
