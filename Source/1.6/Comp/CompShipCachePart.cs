@@ -90,13 +90,14 @@ namespace SaveOurShip2
 				{
 					path = mapComp.MapShipCells[parent.Position].Item2;
 				}
+
 				if (parent.def.building.shipPart) //proper parts
-					stringBuilder.Append("shipIndex: " + index + " / corePath: " + path);
+					stringBuilder.Append("SoS.Dev.ShipIndexAndPath".Translate(index, path));
 				else //other parts
 				{
-					stringBuilder.Append("shipIndex: " + index);
+					stringBuilder.Append("SoS.Dev.ShipIndex".Translate(index));
 					if (parent is Building_ShipBridge && parent == mapComp.ShipsOnMap[index].Core)
-						stringBuilder.Append(" PRIMARY CORE");
+						stringBuilder.Append("SoS.Dev.IsPrimaryCore".Translate());
 				}
 			}
 			return stringBuilder.ToString();
