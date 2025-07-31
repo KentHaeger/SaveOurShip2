@@ -268,8 +268,8 @@
 	<SoS.ShieldRadius>Radius current/set: {0}/{1}</SoS.ShieldRadius>
 	<SoS.ResetShieldRadius>Reset shield radius</SoS.ResetShieldRadius>
 	<SoS.ResetShieldRadiusDesc>Reset shield radius to 40.</SoS.ResetShieldRadiusDesc>
-	<SoS.DecShieldRadius>Decrease shield radius</SoS.DecShieldRadius>
-	<SoS.IncShieldRadius>Increase shield radius</SoS.IncShieldRadius>
+	<SoS.DecreaseShieldRadiusDesc>Decrease shield radius</SoS.DecreaseShieldRadiusDesc>
+	<SoS.IncreaseShieldRadiusDesc>Increase shield radius</SoS.IncreaseShieldRadiusDesc>
 	<SoS.FoamFill>Fill destroyed</SoS.FoamFill>
 	<SoS.FoamFillDesc>Fill destroyed areas of your ship with hullfoam from its distributors.</SoS.FoamFillDesc>
 	<SoS.FoamFillDisabled>Nothing to fill or no fuel in distributors.</SoS.FoamFillDisabled>
@@ -443,8 +443,8 @@
 	<SoSHackBridge>Hack bridge</SoSHackBridge>
 	<SoSCantPlaceCocoon>Unable to place cryptosleep cocoon!</SoSCantPlaceCocoon>
 	<SoSAlreadyMalnourished>User is already malnourished</SoSAlreadyMalnourished>
-	<SoSToggleShield>Toggle shield</SoSToggleShield>
-	<SoSToggleShieldDesc>Toggle this shield on or off</SoSToggleShieldDesc>
+	<SoS.ToggleShield>Toggle shield</SoS.ToggleShield>
+	<SoS.ToggleShieldDesc>Toggle this shield on or off</SoS.ToggleShieldDesc>
 	<SoSCantVentCloaked>Cannot vent: Cloaked</SoSCantVentCloaked>
 	<SoSMoreShuttles> more shuttles</SoSMoreShuttles>
 	<SoSCombatEnergy>Energy: </SoSCombatEnergy>

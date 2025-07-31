@@ -243,8 +243,8 @@ namespace SaveOurShip2
 				{
 					ChangeShieldSize(-10f);
 				},
-				defaultLabel = "- 10",
-				defaultDesc = "SoS.DecShieldRadius".Translate(),
+				defaultLabel = "SoS.DecreaseShieldRadius10Label".Translate(),
+				defaultDesc = "SoS.DecreaseShieldRadiusDesc".Translate(),
 				hotKey = KeyBindingDefOf.Misc5,
 				icon = ContentFinder<Texture2D>.Get("UI/Commands/TempLower", true)
 			};
@@ -254,8 +254,8 @@ namespace SaveOurShip2
 				{
 					ChangeShieldSize(-1f);
 				},
-				defaultLabel = "- 1",
-				defaultDesc = "SoS.DecShieldRadius".Translate(),
+				defaultLabel = "SoS.DecreaseShieldRadius1Label".Translate(),
+				defaultDesc = "SoS.DecreaseShieldRadiusDesc".Translate(),
 				hotKey = KeyBindingDefOf.Misc4,
 				icon = ContentFinder<Texture2D>.Get("UI/Commands/TempLower", true)
 			};
@@ -279,8 +279,8 @@ namespace SaveOurShip2
 				{
 					ChangeShieldSize(1f);
 				},
-				defaultLabel = "+ 1",
-				defaultDesc = "SoS.IncShieldRadius".Translate(),
+				defaultLabel = "SoS.IncreaseShieldRadius1Label".Translate(),
+				defaultDesc = "SoS.IncreaseShieldRadiusDesc".Translate(),
 				hotKey = KeyBindingDefOf.Misc2,
 				icon = ContentFinder<Texture2D>.Get("UI/Commands/TempRaise", true)
 			};
@@ -290,8 +290,8 @@ namespace SaveOurShip2
 				{
 					ChangeShieldSize(10f);
 				},
-				defaultLabel = "+ 10",
-				defaultDesc = "SoS.IncShieldRadius".Translate(),
+				defaultLabel = "SoS.IncreaseShieldRadius10Label".Translate(),
+				defaultDesc = "SoS.IncreaseShieldRadiusDesc".Translate(),
 				hotKey = KeyBindingDefOf.Misc3,
 				icon = ContentFinder<Texture2D>.Get("UI/Commands/TempRaise", true)
 			};
@@ -304,8 +304,8 @@ namespace SaveOurShip2
 						vehicleWantsShutDown = !vehicleWantsShutDown;
 					},
 					isActive = delegate () { return !vehicleWantsShutDown; },
-					defaultLabel = "SoSToggleShield".Translate(),
-					defaultDesc = "SoSToggleShieldDesc".Translate(),
+					defaultLabel = "SoS.ToggleShield".Translate(),
+					defaultDesc = "SoS.ToggleShieldDesc".Translate(),
 					icon = ContentFinder<Texture2D>.Get("UI/Shield_On")
 				};
             }
