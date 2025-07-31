@@ -335,7 +335,9 @@ namespace SaveOurShip2
 							action = delegate ()
 							{
 								orbitalMove.Stop();
-								drawPos = NominalPos;
+								// -1 is closer to being above partially generated planet surface than 0.
+								Theta = -1f;
+								Phi = 0f;
 							},
 							defaultLabel = "Dev: Reset position",
 							defaultDesc = "Reset ship location to default.",
@@ -505,10 +507,10 @@ namespace SaveOurShip2
 		// 0 is stop, -1 is move backwards, 1 is move forward
 		public int Phi;
 		public int Theta;
-		public static OrbitalMovementDirection West = new OrbitalMovementDirection(0, 1);
-		public static OrbitalMovementDirection East = new OrbitalMovementDirection(0, -1);
-		public static OrbitalMovementDirection North = new OrbitalMovementDirection(1, 0);
-		public static OrbitalMovementDirection South = new OrbitalMovementDirection(-1, 0);
+		public static readonly OrbitalMovementDirection West = new OrbitalMovementDirection(0, 1);
+		public static readonly OrbitalMovementDirection East = new OrbitalMovementDirection(0, -1);
+		public static readonly OrbitalMovementDirection North = new OrbitalMovementDirection(1, 0);
+		public static readonly OrbitalMovementDirection South = new OrbitalMovementDirection(-1, 0);
 		public OrbitalMovementDirection()
 		{
 		}
