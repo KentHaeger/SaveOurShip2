@@ -253,8 +253,8 @@ namespace SaveOurShip2
 							{
 								SpawnHologram();
 							},
-							defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.SpawnHologram"),
-							defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.SpawnHologramDesc"),
+							defaultLabel = "SoS.SpawnHologram".Translate(),
+							defaultDesc = "SoS.SpawnHologramDesc".Translate(),
 							icon = ContentFinder<Texture2D>.Get("UI/SpawnHologram", true)
 						};
 						if (Find.TickManager.TicksGame < this.HologramRespawnTick)
@@ -269,8 +269,8 @@ namespace SaveOurShip2
 									{
 										SpawnHologram();
 									},
-									defaultLabel = "Dev: Spawn formgel immediately",
-									defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.SpawnHologramDesc")
+									defaultLabel = "SoS.SpawnHologramLabel".Translate(),
+									defaultDesc = "SoS.SpawnHologramDesc".Translate()
 								};
 								gizmos.Add(spawn2);
 							}
