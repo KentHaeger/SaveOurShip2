@@ -54,7 +54,11 @@ namespace SaveOurShip2
 					output += "\n" + TranslatorFormattedStringExtensions.Translate("SoS.HeatCritical").Colorize(Color.red);
 				if (Prefs.DevMode)
 				{
-					output += "\n"+ "SoS.Dev.HeatDetailed".Translate(myNet.GridID, myNet.RatioInNetworkRaw.ToString("F2"), myNet.DepletionRatio.ToString("F2"), Mathf.Lerp(0, 200, myNet.RatioInNetworkRaw).ToString("F0"))
+					output += "\n" + "SoS.Dev.HeatDetailed".Translate(
+						myNet.GridID,
+						myNet.RatioInNetworkRaw.ToString("F2"),
+						myNet.DepletionRatio.ToString("F2"),
+						Mathf.Lerp(0, 200, myNet.RatioInNetworkRaw).ToString("F0"));
 				}
 			}
 			else
