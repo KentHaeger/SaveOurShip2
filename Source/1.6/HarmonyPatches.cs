@@ -50,7 +50,7 @@ namespace SaveOurShip2
 				float debugY = 350f;
 				Rect rect1 = new Rect(20, debugY, 280, 35);
 				Widgets.DrawMenuSection(rect1);
-				Widgets.Label(rect1.ContractedBy(7), "SOS2 " + ShipInteriorMod2.SOS2version + " | Ships: " + mapComp.ShipsOnMap?.Count + " | Cells: " + mapComp.MapShipCells.Keys.Count);
+				Widgets.Label(rect1.ContractedBy(7), "SoS.Combat.MapShipInfo".Translate(ShipInteriorMod2.SOS2version, mapComp.ShipsOnMap?.Count, mapComp.MapShipCells.Keys.Count));
 
 				if (mapComp.MapShipCells.NullOrEmpty())
 					return;
@@ -71,9 +71,11 @@ namespace SaveOurShip2
 					{
 						string str2 = "";
 						if (!ship.IsWreck)
-							str2 += "Name: " + ship.Core.ShipName + "\n";
-						str2 += "Map: " + ship.Map + "\nFaction: " + ship.Faction + "\nParts: " + ship.Parts.Count + "\nBuildings: " + ship.Buildings.Count + "\nMass: " + ship.MassActual +
-							    "\nTWR:" + ship.ThrustRatio.ToString("F3") + "\nArea: " + ship.Area.Count + "\nCores: " + ship.Bridges.Count + "\nCore: " + ship.Core + "\nPath max: " + ship.LastSafePath;
+							str2 += "SoS.Combat.ShipName".Translate(ship.Core.ShipName) + "\n";
+						str2 += "SoS.Combat.ShipInfo".Translate(
+							ship.Map, ship.Faction, ship.Parts.Count, ship.Buildings.Count, ship.MassActual,
+							ship.ThrustRatio.ToString("F3"), ship.Area.Count,
+							ship.Bridges.Count, ship.Core, ship.LastSafePath);
 						TooltipHandler.TipRegion(rect2, str2);
 						DrawShips.Highlight = ship.Index;
 					}
@@ -161,7 +163,9 @@ namespace SaveOurShip2
 			{
 				ShuttleMissionData mission = missionsSorted[i];
 				baseY += 30;
-				string str = (mission.shuttle.Name != null ? mission.shuttle.Name.ToString() : mission.shuttle.def.label) + " (" + ShuttleMissionData.MissionGerund(mission.mission) + ")";
+				string str = "SoS.Combat.PlayerShuttleInfo".Translate(
+					mission.shuttle.Name != null ? mission.shuttle.Name.ToString() : mission.shuttle.def.label,
+					ShuttleMissionData.MissionGerund(mission.mission));
 				int strSize = 5 + str.Length * 6;
 				Rect rect2 = new Rect(screenHalf - 380 - strSize, baseY - 40, 295 + strSize, 25);
 				Widgets.DrawMenuSection(rect2);
@@ -173,7 +177,7 @@ namespace SaveOurShip2
 			if (shuttlesToDisplay < playerMapComp.ShuttleMissions.Count)
             {
 				baseY += 30;
-				string str = "(" + (playerMapComp.ShuttleMissions.Count - shuttlesToDisplay) + "SoSMoreShuttles".Translate()+")";
+				string str = "SoS.Combat.PlayerShuttleMore".Translate(playerMapComp.ShuttleMissions.Count - shuttlesToDisplay);
 				int strSize = 5 + str.Length * 6;
 				Rect rect2 = new Rect(screenHalf - 380 - strSize, baseY - 40, 10 + strSize, 25);
 				Widgets.DrawMenuSection(rect2);
@@ -211,7 +215,9 @@ namespace SaveOurShip2
 				if (mission.shuttle.Faction == Faction.OfPlayer)
 				{
 					baseY += 30;
-					string str = (mission.shuttle.Name != null ? mission.shuttle.Name.ToString() : mission.shuttle.def.label) + " (" + ShuttleMissionData.MissionGerund(mission.mission) + ")";
+					string str = "SoS.Combat.PlayerShuttleInfo2".Translate(
+						mission.shuttle.Name != null ? mission.shuttle.Name.ToString() : mission.shuttle.def.label,
+						ShuttleMissionData.MissionGerund(mission.mission));
 					int strSize = 5 + str.Length * 6;
 					Rect rect2 = new Rect(screenHalf - 430 - strSize, baseY - 40, 295 + strSize, 25);
 					Widgets.DrawMenuSection(rect2);
@@ -223,7 +229,9 @@ namespace SaveOurShip2
 				else
 				{
 					baseY += 30;
-					string str = (mission.shuttle.Name != null ? mission.shuttle.Name.ToString() : mission.shuttle.def.label) + " (" + ShuttleMissionData.MissionGerund(mission.mission) + ")";
+					string str = "SoS.Combat.ShuttleInfo".Translate(
+						mission.shuttle.Name != null ? mission.shuttle.Name.ToString() : mission.shuttle.def.label,
+						ShuttleMissionData.MissionGerund(mission.mission));
 					int strSize = 5 + str.Length * 6;
 					Rect rect2 = new Rect(screenHalf + 490, baseY - 40, 300 + strSize, 25);
 					Widgets.DrawMenuSection(rect2);
@@ -236,7 +244,7 @@ namespace SaveOurShip2
 			if (shuttlesToDisplay < enemyMapComp.ShuttleMissions.Count)
 			{
 				baseY += 30;
-				string str = "(" + (enemyMapComp.ShuttleMissions.Count - shuttlesToDisplay) + "SoSMoreShuttles".Translate() + ")";
+				string str = "SoS.Combat.EnemyShuttlesCount".Translate(enemyMapComp.ShuttleMissions.Count - shuttlesToDisplay);
 				int strSize = 5 + str.Length * 6;
 				Rect rect2 = new Rect(screenHalf + 785, baseY - 40, 10 + strSize, 25);
 				Widgets.DrawMenuSection(rect2);
@@ -343,7 +351,7 @@ namespace SaveOurShip2
 			}*/
 			if (Mouse.IsOver(rect))
 			{
-				string iconTooltipText = TranslatorFormattedStringExtensions.Translate("SoS.CombatTooltip");
+				string iconTooltipText = "SoS.CombatTooltip".Translate();
 				if (!iconTooltipText.NullOrEmpty())
 				{
 					TooltipHandler.TipRegion(rect, iconTooltipText);
@@ -358,9 +366,10 @@ namespace SaveOurShip2
 			rect.x = offset;
 			rect.height = Text.LineHeight;
 			if (bridge.powerCap > 0)
-				Widgets.Label(rect,  bridge.power.ToString("N0") + " / " + bridge.powerCap.ToString("N0"));
+				Widgets.Label(rect,
+					"SoS.Combat.Energy".Translate(bridge.power.ToString("N0"), bridge.powerCap.ToString("N0")));
 			else
-				Widgets.Label(rect, "<color=red>"+"SoSCombatNoEnergy".Translate()+"</color>");
+				Widgets.Label(rect, "SoS.Combat.NoEnergy".Translate());
 		}
 		private static void DrawHeat(float offset, float baseY, Building_ShipBridge bridge)
 		{
@@ -370,9 +379,9 @@ namespace SaveOurShip2
 			rect.x = offset;
 			rect.height = Text.LineHeight;
 			if (bridge.heatCap > 0)
-				Widgets.Label(rect, "SoSCombatHeat".Translate() + Mathf.Floor(bridge.heat).ToString("N0") + " / " + bridge.heatCap.ToString("N0"));
+				Widgets.Label(rect, "SoS.Combat.Heat".Translate(Mathf.Floor(bridge.heat).ToString("N0"), bridge.heatCap.ToString("N0")));
 			else
-				Widgets.Label(rect, "<color=red>" + "SoSCombatNoHeat".Translate() + "</color>");
+				Widgets.Label(rect, "SoS.Combat.NoHeat".Translate());
 		}
 		private static void DrawShuttleHealth(float offset, float baseY, VehiclePawn shuttle)
 		{
@@ -381,7 +390,7 @@ namespace SaveOurShip2
 			rect.y += 5;
 			rect.x = offset;
 			rect.height = Text.LineHeight;
-			Widgets.Label(rect, "SoSCombatHull".Translate() + Mathf.Round(shuttle.statHandler.GetStatValue(VehicleStatDefOf.BodyIntegrity) * 100f) + "%");
+			Widgets.Label(rect, "SoS.Combat.Hull".Translate(Mathf.Round(shuttle.statHandler.GetStatValue(VehicleStatDefOf.BodyIntegrity) * 100f)));
 		}
 		private static void DrawShuttleHeat(float offset, float baseY, VehiclePawn shuttle)
 		{
@@ -398,7 +407,7 @@ namespace SaveOurShip2
 			rect.y += 5;
 			rect.x = offset;
 			rect.height = Text.LineHeight;
-			Widgets.Label(rect, "SoSCombatShields".Translate() + (heatMax == 0 ? "SoSCombatNone".Translate().ToString() : (Mathf.Round((1f - heatCurrent / heatMax) * 100f) + "%")));
+			Widgets.Label(rect, "SoS.Combat.Shields".Translate(heatMax == 0 ? "SoS.NA".Translate().ToString() : ((1f - heatCurrent / heatMax) * 100f).ToString("F0")));
 		}
 		public static Rect FillableBarWithDepletion(Rect rect, float fillPercent, float fillDepletion, Texture2D fillTex, Texture2D depletionTex)
 		{

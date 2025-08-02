@@ -446,12 +446,7 @@
 	<SoS.ToggleShield>Toggle shield</SoS.ToggleShield>
 	<SoS.ToggleShieldDesc>Toggle this shield on or off</SoS.ToggleShieldDesc>
 	<SoSCantVentCloaked>Cannot vent: Cloaked</SoSCantVentCloaked>
-	<SoSMoreShuttles> more shuttles</SoSMoreShuttles>
 	<SoSCombatEnergy>Energy: </SoSCombatEnergy>
-	<SoSCombatNoEnergy>Energy: N/A</SoSCombatNoEnergy>
-	<SoSCombatHeat>Heat: </SoSCombatHeat>
-	<SoSCombatNoHeat>Heat: N/A</SoSCombatNoHeat>
-	<SoSCombatHull>Hull: </SoSCombatHull>
 	<SoSCombatShields>Shields: </SoSCombatShields>
 	<SoSCombatNone>N/A</SoSCombatNone>
 	<SoSCantSettleSpaceSites>Cannot settle space sites</SoSCantSettleSpaceSites>
