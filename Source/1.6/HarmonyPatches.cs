@@ -1612,7 +1612,10 @@ namespace SaveOurShip2
 					{
 						Find.WindowStack.Add(new Dialog_Trade(negotiator, __instance, false));
 						LessonAutoActivator.TeachOpportunity(ConceptDefOf.BuildOrbitalTradeBeacon, OpportunityType.Critical);
-						PawnRelationUtility.Notify_PawnsSeenByPlayer_Letter_Send(__instance.Goods.OfType<Pawn>(), "LetterRelatedPawnsTradeShip".Translate(Faction.OfPlayer.def.pawnsPlural), LetterDefOf.NeutralEvent, false, true);
+						PawnRelationUtility.Notify_PawnsSeenByPlayer_Letter_Send(
+							__instance.Goods.OfType<Pawn>(),
+							"LetterRelatedPawnsTradeShip".Translate(Faction.OfPlayer.def.pawnsPlural), // Rimworld Core Key
+							LetterDefOf.NeutralEvent, false, true);
 						TutorUtility.DoModalDialogIfNotKnown(ConceptDefOf.TradeGoodsMustBeNearBeacon, Array.Empty<string>());
 					};
 					diaOption3.resolveTree = true;
@@ -1662,7 +1665,7 @@ namespace SaveOurShip2
 			//normal trader
 			else
 			{
-				diaNode = new DiaNode(TranslatorFormattedStringExtensions.Translate("SoS.TradeComms") + __instance.TraderName);
+				diaNode = new DiaNode("SoS.TradeComms".Translate(__instance.TraderName));
 
 				//trade normally if no bounty or low bounty with social check
 				DiaOption diaOption = new DiaOption(TranslatorFormattedStringExtensions.Translate("SoS.TradeTradeWith"));
@@ -1670,7 +1673,10 @@ namespace SaveOurShip2
 				{
 					Find.WindowStack.Add(new Dialog_Trade(negotiator, __instance, false));
 					LessonAutoActivator.TeachOpportunity(ConceptDefOf.BuildOrbitalTradeBeacon, OpportunityType.Critical);
-					PawnRelationUtility.Notify_PawnsSeenByPlayer_Letter_Send(__instance.Goods.OfType<Pawn>(), "LetterRelatedPawnsTradeShip".Translate(Faction.OfPlayer.def.pawnsPlural), LetterDefOf.NeutralEvent, false, true);
+					PawnRelationUtility.Notify_PawnsSeenByPlayer_Letter_Send(
+						__instance.Goods.OfType<Pawn>(),
+						"LetterRelatedPawnsTradeShip".Translate(Faction.OfPlayer.def.pawnsPlural), // Rimworld Core Key
+						LetterDefOf.NeutralEvent, false, true);
 					TutorUtility.DoModalDialogIfNotKnown(ConceptDefOf.TradeGoodsMustBeNearBeacon, Array.Empty<string>());
 				};
 				diaOption.resolveTree = true;
@@ -1744,7 +1750,7 @@ namespace SaveOurShip2
 				}
 			}
 			//quit
-			DiaOption diaOption4 = new DiaOption("(" + "Disconnect".Translate() + ")");
+			DiaOption diaOption4 = new DiaOption("(" + "Disconnect".Translate() + ")"); // Rimworld Core Key
 			diaOption4.resolveTree = true;
 			diaNode.options.Add(diaOption4);
 			Find.WindowStack.Add(new Dialog_NodeTree(diaNode, true, false, null));
@@ -1820,13 +1826,13 @@ namespace SaveOurShip2
 			}
 
 			if (ship.Engines.NullOrEmpty())
-				newResult.Add(TranslatorFormattedStringExtensions.Translate("ShipReportMissingPart") + ": " + ThingDefOf.Ship_Engine.label);
+				newResult.Add("ShipReportMissingPart".Translate() + ": " + ThingDefOf.Ship_Engine.label);
 			if (ship.FuelNeeded(true) < ship.MassActual)
-				newResult.Add(TranslatorFormattedStringExtensions.Translate("SoS.NeedsMoreFuel", ship.FuelNeeded(true), ship.MassActual));
+				newResult.Add("SoS.NeedsMoreFuel".Translate(ship.FuelNeeded(true), ship.MassActual));
 			if (ship.Sensors.NullOrEmpty())
-				newResult.Add(TranslatorFormattedStringExtensions.Translate("ShipReportMissingPart") + ": " + ThingDefOf.Ship_SensorCluster.label);
+				newResult.Add("ShipReportMissingPart".Translate() + ": " + ThingDefOf.Ship_SensorCluster.label);
 			if (!ship.HasMannedBridge())
-				newResult.Add(TranslatorFormattedStringExtensions.Translate("SoS.ReportNeedPilot"));
+				newResult.Add("SoS.ReportNeedPilot".Translate());
 			if (!ship.Powered())
 				newResult.Add("SoSNoPowerSupply".Translate());
 			//do not allow kidnapping other fac pawns/animals
@@ -1834,7 +1840,7 @@ namespace SaveOurShip2
 			{
 				if (p.Faction != Faction.OfPlayer && !p.IsPrisoner && !p.InContainerEnclosed)
 				{
-					newResult.Add(TranslatorFormattedStringExtensions.Translate("SoS.LaunchFailPawns", p.Name?.ToStringShort ?? p.KindLabel ?? ""));
+					newResult.Add("SoS.LaunchFailPawns".Translate(p.Name?.ToStringShort ?? p.KindLabel ?? ""));
 				}
 			}
 
@@ -2175,7 +2181,7 @@ namespace SaveOurShip2
 		{
 			if (__state)
 			{
-				Find.LetterStack.ReceiveLetter(TranslatorFormattedStringExtensions.Translate("LetterLabelShortCircuit"), TranslatorFormattedStringExtensions.Translate("SoS.LetterLabelShortCircuitDesc"),
+				Find.LetterStack.ReceiveLetter("LetterLabelShortCircuit".Translate(), "SoS.LetterLabelShortCircuitDesc".Translate(),
 					LetterDefOf.NegativeEvent, new TargetInfo(culprit.Position, culprit.Map, false), null);
 			}
 		}
@@ -2340,7 +2346,7 @@ namespace SaveOurShip2
 		{
 			if (__result.Accepted && ShipInteriorMod2.IsHologram(selPawn))
 			{
-				__result = TranslatorFormattedStringExtensions.Translate("SoS.CantScanFormgel");
+				__result = "SoS.CantScanFormgel".Translate();
 			}
 		}
 	}
@@ -2485,7 +2491,7 @@ namespace SaveOurShip2
 	{
 		public static void Postfix(ref AcceptanceReport __result, Thing t)
 		{
-			if (!__result.Accepted && t.Map.IsSpace() && __result.Reason.Equals("MessageMustDesignateDeconstructibleMechCluster".Translate()))
+			if (!__result.Accepted && t.Map.IsSpace() && __result.Reason.Equals("MessageMustDesignateDeconstructibleMechCluster".Translate())) // Rimworld Core Key
 				__result = new AcceptanceReport("SoS.SalvageEnemiesPresent".Translate());
 		}
 	}
@@ -2731,8 +2737,8 @@ namespace SaveOurShip2
 							if (building_CryptosleepCasket == null)
 							{
 								Messages.Message(
-									TranslatorFormattedStringExtensions.Translate("CannotCarryToCryptosleepCasket") + ": " +
-									TranslatorFormattedStringExtensions.Translate("NoCryptosleepCasket"), current, MessageTypeDefOf.RejectInput);
+									"CannotCarryToCryptosleepCasket".Translate() + ": " + // Rimworld Core Key
+									"NoCryptosleepCasket".Translate(), current, MessageTypeDefOf.RejectInput); // Rimworld Core Key
 								return;
 							}
 
@@ -2820,7 +2826,7 @@ namespace SaveOurShip2
 				if (myPawn.RaceProps?.Humanlike ?? false)
 				{
 					List<FloatMenuOption> notAllowedList = new List<FloatMenuOption>();
-					notAllowedList.Add(new FloatMenuOption(TranslatorFormattedStringExtensions.Translate("SoS.CantEnterCrittersleep"), null));
+					notAllowedList.Add(new FloatMenuOption("SoS.CantEnterCrittersleep".Translate(), null));
 					__result = notAllowedList;
 					return false;
 				}
