@@ -191,12 +191,12 @@ namespace SaveOurShip2
 				}
 				if ((targ.Cell - base.Position).LengthHorizontal < AttackVerb.verbProps.EffectiveMinRange(targ, this))
 				{
-					Messages.Message("MessageTargetBelowMinimumRange".Translate(), this, MessageTypeDefOf.RejectInput, false);
+					Messages.Message("MessageTargetBelowMinimumRange".Translate(), this, MessageTypeDefOf.RejectInput, false); // Core\GameplayCommands.xml
 					return;
 				}
 				if ((targ.Cell - base.Position).LengthHorizontal > AttackVerb.verbProps.range)
 				{
-					Messages.Message("MessageTargetBeyondMaximumRange".Translate(), this, MessageTypeDefOf.RejectInput, false);
+					Messages.Message("MessageTargetBeyondMaximumRange".Translate(), this, MessageTypeDefOf.RejectInput, false); // Core\GameplayCommands.xml
 					return;
 				}
 			}
@@ -814,8 +814,8 @@ namespace SaveOurShip2
 				{
 					Command_VerbTarget command_VerbTarget = new Command_VerbTarget
 					{
-						defaultLabel = "CommandSetForceAttackTarget".Translate(),
-						defaultDesc = "CommandSetForceAttackTargetDesc".Translate(),
+						defaultLabel = "CommandSetForceAttackTarget".Translate(), // Core\GameplayCommands.xml
+						defaultDesc = "CommandSetForceAttackTargetDesc".Translate(), // Core\GameplayCommands.xml
 						icon = ContentFinder<Texture2D>.Get("UI/Commands/Attack", true),
 						verb = AttackVerb,
 						hotKey = KeyBindingDefOf.Misc4,
@@ -827,8 +827,8 @@ namespace SaveOurShip2
 				{
 					Command_TargetShipCombat command_VerbTargetShip = new Command_TargetShipCombat
 					{
-						defaultLabel = "CommandSetForceAttackTarget".Translate(),
-						defaultDesc = "CommandSetForceAttackTargetDesc".Translate(),
+						defaultLabel = "CommandSetForceAttackTarget".Translate(), // Core\GameplayCommands.xml
+						defaultDesc = "CommandSetForceAttackTargetDesc".Translate(), // Core\GameplayCommands.xml
 						icon = ContentFinder<Texture2D>.Get("UI/Commands/Attack"),
 						verb = AttackVerb,
 						turrets = Find.Selector.SelectedObjects.OfType<Building_ShipTurret>().ToList(),
@@ -842,8 +842,8 @@ namespace SaveOurShip2
 			{
 				Command_Action command_Action2 = new Command_Action
 				{
-					defaultLabel = TranslatorFormattedStringExtensions.Translate("CommandStopForceAttack"),
-					defaultDesc = TranslatorFormattedStringExtensions.Translate("CommandStopForceAttackDesc"),
+					defaultLabel = "CommandStopForceAttack".Translate(), // Core\GameplayCommands.xml
+					defaultDesc = "CommandStopForceAttackDesc".Translate(), // Core\GameplayCommands.xml
 					icon = ContentFinder<Texture2D>.Get("UI/Commands/Halt"),
 					action = delegate
 					{
@@ -862,8 +862,8 @@ namespace SaveOurShip2
 			{
 				Command_Toggle command_Toggle = new Command_Toggle
 				{
-					defaultLabel = TranslatorFormattedStringExtensions.Translate("CommandHoldFire"),
-					defaultDesc = TranslatorFormattedStringExtensions.Translate("CommandHoldFireDesc"),
+					defaultLabel = "CommandHoldFire".Translate(), // Core\GameplayCommands.xml
+					defaultDesc = "CommandHoldFireDesc".Translate(), // Core\GameplayCommands.xml
 					icon = ContentFinder<Texture2D>.Get("UI/Commands/HoldFire"),
 					hotKey = KeyBindingDefOf.Misc6,
 					toggleAction = delegate
