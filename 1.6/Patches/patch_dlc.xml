@@ -417,6 +417,7 @@
 					<xpath>Defs/GeneDef[defName="VacuumResistance_Total"]/statOffsets</xpath>
 					<value>
 						<HypoxiaResistance>1</HypoxiaResistance>
+						<DecompressionResistance>1</DecompressionResistance>
 					</value>
 				</li>
 				<!-- Vacuum Resistant Gene -->

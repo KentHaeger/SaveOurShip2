@@ -15,14 +15,16 @@ namespace SaveOurShip2.Vehicles
     {
         public bool isTorpedo;
         public int hardpoint;
+        private bool matchedToHardpoint = false;
 
         public SoS2VehicleTurret() : base()
         {
-
+            PostInitialize();
         }
 
         public SoS2VehicleTurret(VehiclePawn vehicle) : base(vehicle)
         {
+            PostInitialize();
 
         }
 
@@ -32,6 +34,18 @@ namespace SaveOurShip2.Vehicles
             {
                 isTorpedo = (reference as SoS2VehicleTurret).isTorpedo;
                 hardpoint = (reference as SoS2VehicleTurret).hardpoint;
+            }
+            PostInitialize();
+        }
+
+        private void PostInitialize()
+		{
+            // CHANGE 1.6
+            // This contains certain missing initialization steps
+            // This should be confirmed as framework iisue and reported
+            if (EventRegistry == null)
+            {
+                EventRegistry = new EventManager<VehicleTurretEventDef>();
             }
         }
 
@@ -71,5 +85,15 @@ namespace SaveOurShip2.Vehicles
             Scribe_Values.Look<int>(ref hardpoint, "hardpoint");
         }
 
-    }
+		public override bool Tick()
+		{
+            if (!matchedToHardpoint && vehicle != null && vehicle.Spawned)
+            {
+                matchedToHardpoint = true;
+                // To be inmvestigated why framework calls init on loaded turrets, but not newlu ypgraded turrets
+                MatchTurretToHardpoint.Postfix(this);
+            }
+            return base.Tick();
+		}
+	}
 }
