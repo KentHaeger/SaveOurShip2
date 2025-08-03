@@ -27,7 +27,7 @@ namespace SaveOurShip2
 		{
 			IntVec3 loc1 = center + IntVec3.North.RotatedBy(rot);
 			if (loc1.Impassable(map))
-				return (AcceptanceReport)"MustPlaceCoolerWithFreeSpaces".Translate();
+				return (AcceptanceReport)"MustPlaceCoolerWithFreeSpaces".Translate(); // Core\Misc_Gameplay.xml
 			return (AcceptanceReport)true;
 		}
 	}
