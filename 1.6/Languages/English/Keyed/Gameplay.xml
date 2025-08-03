@@ -323,7 +323,7 @@
 	<SoS.ResurrectBrain>Resurrect</SoS.ResurrectBrain>
 	<SoS.ResurrectBrainDesc>Use a resurrector mech serum to construct a new body for this consciousness</SoS.ResurrectBrainDesc>
 	<SoS.CantScanFormgel>Formgel is not suitable for scanning</SoS.CantScanFormgel>
-	<SoS.ArchoGift>Unlocks archotech gifts</SoS.ArchoGift>
+	<SoS.ArchoGift>Unlocks archotech gifts:</SoS.ArchoGift>
 	<SoS.ArchotechGoodwillPlus>Psychically increase goodwill (+10, costs {0} field strength)</SoS.ArchotechGoodwillPlus>
 	<SoS.ArchotechGoodwillMinus>Psychically decrease goodwill (-10, costs {0} field strength)</SoS.ArchotechGoodwillMinus>
 	<SoS.ArchotechFieldStrengthLow>Insufficient field strength</SoS.ArchotechFieldStrengthLow>
