@@ -37,7 +37,7 @@ namespace SaveOurShip2
 				if (overdriveComp != null)
 					fuelMult = 1+(2*overdriveComp.overdriveSetting);
 				int numTicks = (int)(Fuel / Props.fuelConsumptionRate / fuelMult * 60000f);
-				text = text + " (" + numTicks.ToStringTicksToPeriod() + ")";
+				text = text + " " + "SoS.FuelAvailableTime".Translate(numTicks.ToStringTicksToPeriod());
 			}
 			if (!HasFuel && !Props.outOfFuelMessage.NullOrEmpty())
 			{
