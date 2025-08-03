@@ -2491,7 +2491,7 @@ namespace SaveOurShip2
 	{
 		public static void Postfix(ref AcceptanceReport __result, Thing t)
 		{
-			if (!__result.Accepted && t.Map.IsSpace() && __result.Reason.Equals("MessageMustDesignateDeconstructibleMechCluster".Translate())) // Rimworld Core Key
+			if (!__result.Accepted && t.Map.IsSpace() && __result.Reason.Equals("MessageMustDesignateDeconstructibleMechCluster".Translate())) // Core\Messages.xml
 				__result = new AcceptanceReport("SoS.SalvageEnemiesPresent".Translate());
 		}
 	}
@@ -3386,7 +3386,7 @@ namespace SaveOurShip2
 					if (!first)
 					{
 						first = true;
-						Widgets.LabelCacheHeight(ref rect, TranslatorFormattedStringExtensions.Translate("SoS.ArchoGift") + ":");
+						Widgets.LabelCacheHeight(ref rect, "SoS.ArchoGift".Translate());
 						rect.yMin += 24f;
 					}
 					Widgets.HyperlinkWithIcon(hyperlink: new Dialog_InfoCard.Hyperlink(def.thing), rect: new Rect(rect.x, rect.yMin, rect.width, 24f));
@@ -3499,8 +3499,8 @@ namespace SaveOurShip2
 						}
 					}
 				}
-				DiaOption increase = new DiaOption(TranslatorFormattedStringExtensions.Translate("SoS.ArchotechGoodwillPlus", 10));
-				DiaOption decrease = new DiaOption(TranslatorFormattedStringExtensions.Translate("SoS.ArchotechGoodwillMinus", 10));
+				DiaOption increase = new DiaOption("SoS.ArchotechGoodwillPlus".Translate(10));
+				DiaOption decrease = new DiaOption("SoS.ArchotechGoodwillMinus".Translate(10));
 				increase.action = delegate
 				{
 					faction.TryAffectGoodwillWith(Faction.OfPlayer, 10, canSendMessage: false);
@@ -3510,7 +3510,7 @@ namespace SaveOurShip2
 				if (spore == null || spore.fieldStrength < 10)
 				{
 					increase.disabled = true;
-					increase.disabledReason = TranslatorFormattedStringExtensions.Translate("SoS.ArchotechFieldStrengthLow");
+					increase.disabledReason = "SoS.ArchotechFieldStrengthLow".Translate();
 				}
 				decrease.action = delegate
 				{
@@ -3521,7 +3521,7 @@ namespace SaveOurShip2
 				if (spore == null || spore.fieldStrength < 10)
 				{
 					decrease.disabled = true;
-					decrease.disabledReason = TranslatorFormattedStringExtensions.Translate("SoS.ArchotechFieldStrengthLow");
+					decrease.disabledReason = "SoS.ArchotechFieldStrengthLow".Translate();
 				}
 				if (spore != null)
 				{
@@ -4321,7 +4321,7 @@ namespace SaveOurShip2
 				{
 					if (map.IsSpace() && map.spawnedThings.Where(t => t.def == ThingDefOf.Ship_ComputerCore && t.Faction == Faction.OfPlayer).Any())
 					{
-						Find.LetterStack.ReceiveLetter(TranslatorFormattedStringExtensions.Translate("SoS.PsychicAmplifier"), TranslatorFormattedStringExtensions.Translate("SoS.PsychicAmplifierDesc"), LetterDefOf.PositiveEvent);
+						Find.LetterStack.ReceiveLetter("SoS.PsychicAmplifier".Translate(), "SoS.PsychicAmplifierDesc".Translate(), LetterDefOf.PositiveEvent);
 						AttackableShip ship = new AttackableShip();
 						ship.attackableShip = DefDatabase<ShipDef>.GetNamed("MechPsychicAmp");
 						ship.spaceNavyDef = DefDatabase<NavyDef>.GetNamed("Mechanoid_SpaceNavy");
@@ -4680,9 +4680,9 @@ namespace SaveOurShip2
 		public static void Postfix(ref string disableReason, CompVehicleLauncher __instance, ref bool __result)
         {
 			//Temporary fix clarifying the message on shuttle unable to launch because of rotated
-			if (disableReason == "VF_CannotLaunchImmobile".Translate(__instance.Vehicle.LabelShort) && __instance.Vehicle.Angle != 0)
+			if (disableReason == "VF_CannotLaunchImmobile".Translate(__instance.Vehicle.LabelShort) && __instance.Vehicle.Angle != 0) // Vehicle Framework\Labels.xml
 			{
-				disableReason = "VF_Fix_CannotLaunchRotated".Translate(__instance.Vehicle.LabelShort);
+				disableReason = "SoS.VF_Fix_CannotLaunchRotated".Translate(__instance.Vehicle.LabelShort); 
 			}
 
 			// Somwehow, was allowed to launch overloaded.
@@ -4690,12 +4690,12 @@ namespace SaveOurShip2
 			float vehicleCapacity = vehiclePawn.GetStatValue(VehicleStatDefOf.CargoCapacity);
 			if (MassUtility.InventoryMass(vehiclePawn) > vehicleCapacity)
 			{
-				disableReason = "VF_CannotLaunchOverEncumbered".Translate(vehiclePawn.LabelShort);
+				disableReason = "VF_CannotLaunchOverEncumbered".Translate(vehiclePawn.LabelShort); // Vehicle Framework\Labels.xml
 				__result = false;
 				return;
 			}
 
-			if (disableReason != Translator.Translate("CommandLaunchGroupFailUnderRoof")) return;
+			if (disableReason != "CommandLaunchGroupFailUnderRoof".Translate()) return; // Core\GameplayCommands.xml
 
             Map map = vehiclePawn.Map;
             IntVec3 cell = vehiclePawn.Position;
@@ -5193,7 +5193,7 @@ namespace SaveOurShip2
 			VehiclePawn Vehicle = __instance.Vehicle;
 			if (Vehicle.CompUpgradeTree.NodeUnlocking == __instance.SelectedNode || Vehicle.CompUpgradeTree.NodeUnlocked(__instance.SelectedNode) && Vehicle.CompUpgradeTree.LastNodeUnlocked(__instance.SelectedNode))
 				return true;
-			if (!Widgets.ButtonText(rect, Translator.Translate("VF_Upgrade"), true, true, true, null) || Vehicle.CompUpgradeTree.NodeUnlocked(__instance.SelectedNode))
+			if (!Widgets.ButtonText(rect, "VF_Upgrade".Translate(), true, true, true, null) || Vehicle.CompUpgradeTree.NodeUnlocked(__instance.SelectedNode))
 			{
 				return false;
 			}
@@ -5201,7 +5201,7 @@ namespace SaveOurShip2
 			{
 				if (__instance.SelectedNode.upgrades != null && __instance.SelectedNode.upgrades.Where(upgrade => upgrade is SoS2TurretUpgrade sosUpgrade && sosUpgrade.turretSlot >= __instance.Vehicle.GetStatValue(ResourceBank.VehicleStatDefOf.Hardpoints)).Count() > 0)
 				{
-					Messages.Message(Translator.Translate("SoS.NoHardpoints"), MessageTypeDefOf.RejectInput, false);
+					Messages.Message("SoS.NoHardpoints".Translate(), MessageTypeDefOf.RejectInput, false);
 					return false;
 				}
 				float CargoMod = 0;
@@ -5220,9 +5220,9 @@ namespace SaveOurShip2
 					}
 				}
 				if (CargoMod + __instance.Vehicle.GetStatValue(VehicleStatDefOf.CargoCapacity) < 0)
-					Messages.Message(Translator.Translate("SoS.NotEnoughCargoSpace"), MessageTypeDefOf.RejectInput, false);
+					Messages.Message("SoS.NotEnoughCargoSpace".Translate(), MessageTypeDefOf.RejectInput, false);
 				else
-					Messages.Message(Translator.Translate("VF_DisabledFromOtherNode"), MessageTypeDefOf.RejectInput, false);
+					Messages.Message("VF_DisabledFromOtherNode".Translate(), MessageTypeDefOf.RejectInput, false); // Vehicle Framework\Upgrades.xml
 			}
 			else if (Vehicle.CompUpgradeTree.PrerequisitesMet(__instance.SelectedNode))
 			{
@@ -5240,7 +5240,7 @@ namespace SaveOurShip2
 			}
 			else
 			{
-				Messages.Message(Translator.Translate("VF_MissingPrerequisiteUpgrade"), MessageTypeDefOf.RejectInput, false);
+				Messages.Message("VF_MissingPrerequisiteUpgrade".Translate(), MessageTypeDefOf.RejectInput, false);
 			}
 			return false;
 		}
