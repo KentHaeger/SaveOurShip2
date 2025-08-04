@@ -26,26 +26,26 @@ namespace SaveOurShip2
 			//manual stupidity prevention, good idea to eventually add all mod issues into it, clearly not fool proof enough yet
 			if (VersionControl.CurrentMinor < ShipInteriorMod2.SOS2ReqCurrentMinor || VersionControl.CurrentBuild < ShipInteriorMod2.SOS2ReqCurrentBuild)
 			{
-				string error = "SOS2 " + ShipInteriorMod2.SOS2version + " requires Rimworld 1."+ ShipInteriorMod2.SOS2ReqCurrentMinor + "."+ ShipInteriorMod2.SOS2ReqCurrentBuild + " or greater!";
+				string error = "SoS.Error.VersionNotMatch".Translate(ShipInteriorMod2.SOS2version, ShipInteriorMod2.SOS2ReqCurrentMinor, ShipInteriorMod2.SOS2ReqCurrentBuild);
 				Log.Error(error);
-				string errorLong = error + "\n\nUpdate your game!";
+				string errorLong = error + "\n\n" + "SoS.Error.UpdateYourGame".Translate();
 				LongEventHandler.QueueLongEvent(() => Find.WindowStack.Add(new Dialog_MessageBox(errorLong, "Quit", delegate(){ Root.Shutdown(); }, null, null, "ERROR: ".Colorize(Color.red), false, null, null, WindowLayer.Super)), null, false, null);
 
 				return;
 			}
 			if (!ModLister.HasActiveModWithName("Harmony"))
 			{
-				string error = "ERROR: SOS2 requires Harmony! Download and enable it!";
+				string error = "SoS.Error.NoHarmony".Translate();
 				Log.Error(error);
-				string errorLong = error + "\n\nIt must be loaded at the top of the list, before Core!";
+				string errorLong = error + "\n\n" + "SoS.Error.NoHarmonyDesc".Translate();
 				LongEventHandler.QueueLongEvent(() => Find.WindowStack.Add(new Dialog_MessageBox(errorLong, null, null, null, null, "ERROR: ".Colorize(Color.red), false, null, null, WindowLayer.Super)), null, false, null);
 				return;
 			}
 			if (!ModLister.HasActiveModWithName("Vehicle Framework"))
 			{
-				string error = "ERROR: SOS2 requires Vehicle Framework! Download and enable it!";
+				string error = "SoS.Error.NoVehicleFramework".Translate();
 				Log.Error(error);
-				string errorLong = error + "\n\nIt must be loaded before SOS2!";
+				string errorLong = error + "\n\n" + "SoS.Error.NoVehicleFrameworkDesc".Translate();
 				LongEventHandler.QueueLongEvent(() => Find.WindowStack.Add(new Dialog_MessageBox(errorLong, null, null, null, null, "ERROR: ".Colorize(Color.red), false, null, null, WindowLayer.Super)), null, false, null);
 				return;
 			}
@@ -228,8 +228,7 @@ namespace SaveOurShip2
 			options.GapLine();
 			options.CheckboxLabeled("SoS.Settings.ShipMapPhysics".Translate(), ref shipMapPhysics, "SoS.Settings.ShipMapPhysics.Desc".Translate());
 			options.CheckboxLabeled("SoS.Settings.EasyMode".Translate(), ref easyMode, "SoS.Settings.EasyMode.Desc".Translate());
-			options.CheckboxLabeled(TranslatorFormattedStringExtensions.Translate("SoS.Settings.NewAccuiracySystem"), ref newAccuracySystem,
-				TranslatorFormattedStringExtensions.Translate("SoS.Settings.NewAccuiracySystem.Desc"));
+			options.CheckboxLabeled("SoS.Settings.NewAccuiracySystem".Translate(), ref newAccuracySystem,"SoS.Settings.NewAccuiracySystem.Desc".Translate());
 			options.CheckboxLabeled("SoS.Settings.ArchoRemove".Translate(), ref archoRemove, "SoS.Settings.ArchoRemove.Desc".Translate());
 			options.CheckboxLabeled("SoS.Settings.ArchoKill".Translate(), ref archoKill, "SoS.Settings.ArchoKill.Desc".Translate());
 			options.CheckboxLabeled("SoS.Settings.Debug".Translate(), ref debugMode, "SoS.Settings.Debug.Desc".Translate());
@@ -281,7 +280,7 @@ namespace SaveOurShip2
 
 			foreach (ShipDef ship in DefDatabase<ShipDef>.AllDefs.Where(d => d.saveSysVer < 2 && !d.neverRandom).ToList())
 			{
-				Log.Error("SOS2: mod \"" + ship.modContentPack.Name + "\" contains SpaceShipDef: \"" + ship + "\" that can spawn as a random ship but is saved with an old version of CK!");
+				Log.Error("SoS.Error.AddOnHasOldVersionShip".Translate(ship.modContentPack.Name, ship));
 			}
 
 			wreckDictionary = new Dictionary<ThingDef, ThingDef>
@@ -3039,7 +3038,7 @@ namespace SaveOurShip2
 		public static void SpaceTravelWarning(Action action)
 		{
 			DiaNode theNode;
-			theNode = new DiaNode(TranslatorFormattedStringExtensions.Translate("SoS.AbandonColoniesWarning"));
+			theNode = new DiaNode("SoS.AbandonColoniesWarning".Translate());
 
 			DiaOption accept = new DiaOption("Accept");
 			accept.resolveTree = true;
@@ -3061,7 +3060,7 @@ namespace SaveOurShip2
 			if (mapComp.ShipsOnMap.ContainsKey(index) && mapComp.Docked.Any(airlock => mapComp.ShipsOnMap[index].Area.Contains(airlock.Position)))
 			{
 				DiaNode theNode;
-				theNode = new DiaNode(TranslatorFormattedStringExtensions.Translate("SoS.UnDockWarning"));
+				theNode = new DiaNode("SoS.UnDockWarning".Translate());
 
 				DiaOption accept = new DiaOption("Accept");
 				accept.resolveTree = true;
