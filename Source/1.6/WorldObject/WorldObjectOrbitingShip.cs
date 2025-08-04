@@ -403,6 +403,8 @@ namespace SaveOurShip2
 			if (Prefs.DevMode)
 			{
 				stringBuilder.AppendLine("SoS.Dev.OrbitingShipInfo".Translate(mapComp.ShipMapState, mapComp.Altitude, radius, theta, phi, DrawPos, originDrawPos, targetDrawPos));
+				// stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.Dev.OrbitingShipInfo", mapComp.ShipMapState, mapComp.Altitude, radius, theta, phi, DrawPos, originDrawPos, targetDrawPos));
+				// Couldn't resolve translate method ambiguity
 			}
 			return stringBuilder.ToString().TrimEndNewlines();
 		}

@@ -51,6 +51,7 @@ namespace SaveOurShip2
 				Rect rect1 = new Rect(20, debugY, 280, 35);
 				Widgets.DrawMenuSection(rect1);
 				Widgets.Label(rect1.ContractedBy(7), "SoS.Combat.MapShipInfo".Translate(ShipInteriorMod2.SOS2version, mapComp.ShipsOnMap?.Count, mapComp.MapShipCells.Keys.Count));
+				// Couldn't resolve translate method ambiguity
 
 				if (mapComp.MapShipCells.NullOrEmpty())
 					return;
