@@ -9,7 +9,6 @@ using Vehicles;
 using Verse;
 using RimWorld;
 using RimWorld.Planet;
-using Vehicles;
 using Vehicles.World;
 using SmashTools.Targeting;
 using static SaveOurShip2.ShipMapComp;

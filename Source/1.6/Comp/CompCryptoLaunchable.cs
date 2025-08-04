@@ -5,8 +5,6 @@ using UnityEngine;
 using RimWorld.Planet;
 using System.Collections.Generic;
 using System.Linq;
-using RimWorld;
-
 
 namespace SaveOurShip2
 {
