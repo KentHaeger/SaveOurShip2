@@ -508,14 +508,14 @@ namespace SaveOurShip2
 			}
 			return false;
 		}
-		public static int FindWorldTile()
+		public static PlanetTile FindWorldTile()
 		{
-			for (int i = 0; i < Find.World.grid.TilesCount; i++)
+			foreach (Tile t in (Find.World.grid.Orbit ?? Find.World.grid.Surface).Tiles)
 			{
-				if (!Find.World.worldObjects.AnyWorldObjectAt(i) && TileFinder.IsValidTileForNewSettlement(i))
+				PlanetTile tile = t.tile;
+				if (!Find.World.worldObjects.AnyWorldObjectAt(tile) && TileFinder.IsValidTileForNewSettlement(tile))
 				{
-					//Log.Message("Generating orbiting object at tile " + i);
-					return i;
+					return tile;
 				}
 			}
 			return -1;
@@ -523,19 +523,21 @@ namespace SaveOurShip2
 
 		// Can override world tile selection in dev Launch sommmand, launching ship over specified tile
 		public static int worldTileOverride = -1;
-		public static int FindWorldTilePlayer() //slower, will find tile nearest to ship object pos
+		public static PlanetTile FindWorldTilePlayer() //slower, will find tile nearest to ship object pos
 		{
 			float bestAbsLatitude = float.MaxValue;
-			int bestTile = -1;
-			for (int i = 0; i < Find.World.grid.TilesCount; i+=10)
+			PlanetTile bestTile = -1;
+			var tiles = (Find.World.grid.Orbit ?? Find.World.grid.Surface).Tiles;
+			for (int i = 0; i < tiles.Count; i+=10)
 			{
-				if (Find.World.worldObjects.AnyWorldObjectAt(i) || !TileFinder.IsValidTileForNewSettlement(i))
+				var tile = tiles[i].tile;
+				if (Find.World.worldObjects.AnyWorldObjectAt(tile) || !TileFinder.IsValidTileForNewSettlement(tile))
 					continue;
-				float absLatitude = Math.Abs(Find.WorldGrid.LongLatOf(i).y);
+				float absLatitude = Math.Abs(Find.WorldGrid.LongLatOf(tile).y);
 				if (absLatitude < bestAbsLatitude)
 				{
 					bestAbsLatitude = absLatitude;
-					bestTile = i;
+					bestTile = tile;
 				}
 			}
 			if (bestTile == -1) //fallback
