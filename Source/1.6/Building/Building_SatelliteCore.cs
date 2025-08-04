@@ -54,11 +54,13 @@ namespace SaveOurShip2
 				options.Add(op);
 			if(!repaired)
 			{
-				options.Add(new FloatMenuOption("Repair", delegate { Job hackSatellite = new Job(DefDatabase<JobDef>.GetNamed("RepairSatellite"), this); pawn.jobs.TryTakeOrderedJob(hackSatellite); }));
+				options.Add(new FloatMenuOption(TranslatorFormattedStringExtensions.Translate("SoS.SatelliteRepair"),
+					delegate { Job hackSatellite = new Job(DefDatabase<JobDef>.GetNamed("RepairSatellite"), this); pawn.jobs.TryTakeOrderedJob(hackSatellite); }));
 			}
 			else if(!hacked)
 			{
-				options.Add(new FloatMenuOption("Hack", delegate { Job hackSatellite = new Job(DefDatabase<JobDef>.GetNamed("HackSatellite"), this); pawn.jobs.TryTakeOrderedJob(hackSatellite); }));
+				options.Add(new FloatMenuOption(TranslatorFormattedStringExtensions.Translate("SoS.SatelliteHack"),
+					delegate { Job hackSatellite = new Job(DefDatabase<JobDef>.GetNamed("HackSatellite"), this); pawn.jobs.TryTakeOrderedJob(hackSatellite); }));
 			}
 			return options;
 		}
