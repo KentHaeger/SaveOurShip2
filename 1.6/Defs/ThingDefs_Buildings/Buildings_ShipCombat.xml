@@ -47,6 +47,7 @@
 			<RangedWeapon_DamageMultiplier>1.0</RangedWeapon_DamageMultiplier>
 		</statBases>
 		<building>
+			<isAirtight>true</isAirtight>
 			<!-- When not enough energy to fire, Vanilla sound logic would cause enemy turrets to beep continually and annoyingly, so disabled -->
 			<playTargetAcquiredSound>false</playTargetAcquiredSound>
 		</building>
@@ -337,6 +338,7 @@
 			</li>
 		</comps>
 		<building>
+			<isAirtight>true</isAirtight>
 			<paintable>true</paintable>
 		</building>
 		<researchPrerequisites>
@@ -387,6 +389,7 @@
 			</li>
 		</comps>
 		<building>
+			<isAirtight>true</isAirtight>
 			<paintable>true</paintable>
 		</building>
 		<researchPrerequisites>
