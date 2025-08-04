@@ -50,7 +50,8 @@ namespace SaveOurShip2
 				float debugY = 350f;
 				Rect rect1 = new Rect(20, debugY, 280, 35);
 				Widgets.DrawMenuSection(rect1);
-				Widgets.Label(rect1.ContractedBy(7), "SOS2 " + ShipInteriorMod2.SOS2version + " | Ships: " + mapComp.ShipsOnMap?.Count + " | Cells: " + mapComp.MapShipCells.Keys.Count);
+				Widgets.Label(rect1.ContractedBy(7), "SoS.Combat.MapShipInfo".Translate(ShipInteriorMod2.SOS2version, mapComp.ShipsOnMap?.Count, mapComp.MapShipCells.Keys.Count));
+				// Couldn't resolve translate method ambiguity
 
 				if (mapComp.MapShipCells.NullOrEmpty())
 					return;
@@ -71,9 +72,11 @@ namespace SaveOurShip2
 					{
 						string str2 = "";
 						if (!ship.IsWreck)
-							str2 += "Name: " + ship.Core.ShipName + "\n";
-						str2 += "Map: " + ship.Map + "\nFaction: " + ship.Faction + "\nParts: " + ship.Parts.Count + "\nBuildings: " + ship.Buildings.Count + "\nMass: " + ship.MassActual +
-							    "\nTWR:" + ship.ThrustRatio.ToString("F3") + "\nArea: " + ship.Area.Count + "\nCores: " + ship.Bridges.Count + "\nCore: " + ship.Core + "\nPath max: " + ship.LastSafePath;
+							str2 += "SoS.Combat.ShipName".Translate(ship.Core.ShipName) + "\n";
+						str2 += "SoS.Combat.ShipInfo".Translate(
+							ship.Map, ship.Faction, ship.Parts.Count, ship.Buildings.Count, ship.MassActual,
+							ship.ThrustRatio.ToString("F3"), ship.Area.Count,
+							ship.Bridges.Count, ship.Core, ship.LastSafePath);
 						TooltipHandler.TipRegion(rect2, str2);
 						DrawShips.Highlight = ship.Index;
 					}
@@ -161,7 +164,9 @@ namespace SaveOurShip2
 			{
 				ShuttleMissionData mission = missionsSorted[i];
 				baseY += 30;
-				string str = (mission.shuttle.Name != null ? mission.shuttle.Name.ToString() : mission.shuttle.def.label) + " (" + ShuttleMissionData.MissionGerund(mission.mission) + ")";
+				string str = "SoS.Combat.PlayerShuttleInfo".Translate(
+					mission.shuttle.Name != null ? mission.shuttle.Name.ToString() : mission.shuttle.def.label,
+					ShuttleMissionData.MissionGerund(mission.mission));
 				int strSize = 5 + str.Length * 6;
 				Rect rect2 = new Rect(screenHalf - 380 - strSize, baseY - 40, 295 + strSize, 25);
 				Widgets.DrawMenuSection(rect2);
@@ -173,7 +178,7 @@ namespace SaveOurShip2
 			if (shuttlesToDisplay < playerMapComp.ShuttleMissions.Count)
             {
 				baseY += 30;
-				string str = "(" + (playerMapComp.ShuttleMissions.Count - shuttlesToDisplay) + "SoSMoreShuttles".Translate()+")";
+				string str = "SoS.Combat.PlayerShuttleMore".Translate(playerMapComp.ShuttleMissions.Count - shuttlesToDisplay);
 				int strSize = 5 + str.Length * 6;
 				Rect rect2 = new Rect(screenHalf - 380 - strSize, baseY - 40, 10 + strSize, 25);
 				Widgets.DrawMenuSection(rect2);
@@ -211,7 +216,9 @@ namespace SaveOurShip2
 				if (mission.shuttle.Faction == Faction.OfPlayer)
 				{
 					baseY += 30;
-					string str = (mission.shuttle.Name != null ? mission.shuttle.Name.ToString() : mission.shuttle.def.label) + " (" + ShuttleMissionData.MissionGerund(mission.mission) + ")";
+					string str = "SoS.Combat.PlayerShuttleInfo2".Translate(
+						mission.shuttle.Name != null ? mission.shuttle.Name.ToString() : mission.shuttle.def.label,
+						ShuttleMissionData.MissionGerund(mission.mission));
 					int strSize = 5 + str.Length * 6;
 					Rect rect2 = new Rect(screenHalf - 430 - strSize, baseY - 40, 295 + strSize, 25);
 					Widgets.DrawMenuSection(rect2);
@@ -223,7 +230,9 @@ namespace SaveOurShip2
 				else
 				{
 					baseY += 30;
-					string str = (mission.shuttle.Name != null ? mission.shuttle.Name.ToString() : mission.shuttle.def.label) + " (" + ShuttleMissionData.MissionGerund(mission.mission) + ")";
+					string str = "SoS.Combat.ShuttleInfo".Translate(
+						mission.shuttle.Name != null ? mission.shuttle.Name.ToString() : mission.shuttle.def.label,
+						ShuttleMissionData.MissionGerund(mission.mission));
 					int strSize = 5 + str.Length * 6;
 					Rect rect2 = new Rect(screenHalf + 490, baseY - 40, 300 + strSize, 25);
 					Widgets.DrawMenuSection(rect2);
@@ -236,7 +245,7 @@ namespace SaveOurShip2
 			if (shuttlesToDisplay < enemyMapComp.ShuttleMissions.Count)
 			{
 				baseY += 30;
-				string str = "(" + (enemyMapComp.ShuttleMissions.Count - shuttlesToDisplay) + "SoSMoreShuttles".Translate() + ")";
+				string str = "SoS.Combat.EnemyShuttlesCount".Translate(enemyMapComp.ShuttleMissions.Count - shuttlesToDisplay);
 				int strSize = 5 + str.Length * 6;
 				Rect rect2 = new Rect(screenHalf + 785, baseY - 40, 10 + strSize, 25);
 				Widgets.DrawMenuSection(rect2);
@@ -343,7 +352,7 @@ namespace SaveOurShip2
 			}*/
 			if (Mouse.IsOver(rect))
 			{
-				string iconTooltipText = TranslatorFormattedStringExtensions.Translate("SoS.CombatTooltip");
+				string iconTooltipText = "SoS.CombatTooltip".Translate();
 				if (!iconTooltipText.NullOrEmpty())
 				{
 					TooltipHandler.TipRegion(rect, iconTooltipText);
@@ -358,9 +367,10 @@ namespace SaveOurShip2
 			rect.x = offset;
 			rect.height = Text.LineHeight;
 			if (bridge.powerCap > 0)
-				Widgets.Label(rect,  bridge.power.ToString("N0") + " / " + bridge.powerCap.ToString("N0"));
+				Widgets.Label(rect,
+					"SoS.Combat.Energy".Translate(bridge.power.ToString("N0"), bridge.powerCap.ToString("N0")));
 			else
-				Widgets.Label(rect, "<color=red>"+"SoSCombatNoEnergy".Translate()+"</color>");
+				Widgets.Label(rect, "SoS.Combat.NoEnergy".Translate());
 		}
 		private static void DrawHeat(float offset, float baseY, Building_ShipBridge bridge)
 		{
@@ -370,9 +380,9 @@ namespace SaveOurShip2
 			rect.x = offset;
 			rect.height = Text.LineHeight;
 			if (bridge.heatCap > 0)
-				Widgets.Label(rect, "SoSCombatHeat".Translate() + Mathf.Floor(bridge.heat).ToString("N0") + " / " + bridge.heatCap.ToString("N0"));
+				Widgets.Label(rect, "SoS.Combat.Heat".Translate(Mathf.Floor(bridge.heat).ToString("N0"), bridge.heatCap.ToString("N0")));
 			else
-				Widgets.Label(rect, "<color=red>" + "SoSCombatNoHeat".Translate() + "</color>");
+				Widgets.Label(rect, "SoS.Combat.NoHeat".Translate());
 		}
 		private static void DrawShuttleHealth(float offset, float baseY, VehiclePawn shuttle)
 		{
@@ -381,7 +391,7 @@ namespace SaveOurShip2
 			rect.y += 5;
 			rect.x = offset;
 			rect.height = Text.LineHeight;
-			Widgets.Label(rect, "SoSCombatHull".Translate() + Mathf.Round(shuttle.statHandler.GetStatValue(VehicleStatDefOf.BodyIntegrity) * 100f) + "%");
+			Widgets.Label(rect, "SoS.Combat.Hull".Translate(Mathf.Round(shuttle.statHandler.GetStatValue(VehicleStatDefOf.BodyIntegrity) * 100f)));
 		}
 		private static void DrawShuttleHeat(float offset, float baseY, VehiclePawn shuttle)
 		{
@@ -398,7 +408,7 @@ namespace SaveOurShip2
 			rect.y += 5;
 			rect.x = offset;
 			rect.height = Text.LineHeight;
-			Widgets.Label(rect, "SoSCombatShields".Translate() + (heatMax == 0 ? "SoSCombatNone".Translate().ToString() : (Mathf.Round((1f - heatCurrent / heatMax) * 100f) + "%")));
+			Widgets.Label(rect, "SoS.Combat.Shields".Translate(heatMax == 0 ? "SoS.NA".Translate().ToString() : ((1f - heatCurrent / heatMax) * 100f).ToString("F0")));
 		}
 		public static Rect FillableBarWithDepletion(Rect rect, float fillPercent, float fillDepletion, Texture2D fillTex, Texture2D depletionTex)
 		{
@@ -1603,7 +1613,10 @@ namespace SaveOurShip2
 					{
 						Find.WindowStack.Add(new Dialog_Trade(negotiator, __instance, false));
 						LessonAutoActivator.TeachOpportunity(ConceptDefOf.BuildOrbitalTradeBeacon, OpportunityType.Critical);
-						PawnRelationUtility.Notify_PawnsSeenByPlayer_Letter_Send(__instance.Goods.OfType<Pawn>(), "LetterRelatedPawnsTradeShip".Translate(Faction.OfPlayer.def.pawnsPlural), LetterDefOf.NeutralEvent, false, true);
+						PawnRelationUtility.Notify_PawnsSeenByPlayer_Letter_Send(
+							__instance.Goods.OfType<Pawn>(),
+							"LetterRelatedPawnsTradeShip".Translate(Faction.OfPlayer.def.pawnsPlural), // Rimworld Core Key
+							LetterDefOf.NeutralEvent, false, true);
 						TutorUtility.DoModalDialogIfNotKnown(ConceptDefOf.TradeGoodsMustBeNearBeacon, Array.Empty<string>());
 					};
 					diaOption3.resolveTree = true;
@@ -1653,7 +1666,7 @@ namespace SaveOurShip2
 			//normal trader
 			else
 			{
-				diaNode = new DiaNode(TranslatorFormattedStringExtensions.Translate("SoS.TradeComms") + __instance.TraderName);
+				diaNode = new DiaNode("SoS.TradeComms".Translate(__instance.TraderName));
 
 				//trade normally if no bounty or low bounty with social check
 				DiaOption diaOption = new DiaOption(TranslatorFormattedStringExtensions.Translate("SoS.TradeTradeWith"));
@@ -1661,7 +1674,10 @@ namespace SaveOurShip2
 				{
 					Find.WindowStack.Add(new Dialog_Trade(negotiator, __instance, false));
 					LessonAutoActivator.TeachOpportunity(ConceptDefOf.BuildOrbitalTradeBeacon, OpportunityType.Critical);
-					PawnRelationUtility.Notify_PawnsSeenByPlayer_Letter_Send(__instance.Goods.OfType<Pawn>(), "LetterRelatedPawnsTradeShip".Translate(Faction.OfPlayer.def.pawnsPlural), LetterDefOf.NeutralEvent, false, true);
+					PawnRelationUtility.Notify_PawnsSeenByPlayer_Letter_Send(
+						__instance.Goods.OfType<Pawn>(),
+						"LetterRelatedPawnsTradeShip".Translate(Faction.OfPlayer.def.pawnsPlural), // Rimworld Core Key
+						LetterDefOf.NeutralEvent, false, true);
 					TutorUtility.DoModalDialogIfNotKnown(ConceptDefOf.TradeGoodsMustBeNearBeacon, Array.Empty<string>());
 				};
 				diaOption.resolveTree = true;
@@ -1735,7 +1751,7 @@ namespace SaveOurShip2
 				}
 			}
 			//quit
-			DiaOption diaOption4 = new DiaOption("(" + "Disconnect".Translate() + ")");
+			DiaOption diaOption4 = new DiaOption("(" + "Disconnect".Translate() + ")"); // Rimworld Core Key
 			diaOption4.resolveTree = true;
 			diaNode.options.Add(diaOption4);
 			Find.WindowStack.Add(new Dialog_NodeTree(diaNode, true, false, null));
@@ -1811,13 +1827,13 @@ namespace SaveOurShip2
 			}
 
 			if (ship.Engines.NullOrEmpty())
-				newResult.Add(TranslatorFormattedStringExtensions.Translate("ShipReportMissingPart") + ": " + ThingDefOf.Ship_Engine.label);
+				newResult.Add("ShipReportMissingPart".Translate() + ": " + ThingDefOf.Ship_Engine.label);
 			if (ship.FuelNeeded(true) < ship.MassActual)
-				newResult.Add(TranslatorFormattedStringExtensions.Translate("SoS.NeedsMoreFuel", ship.FuelNeeded(true), ship.MassActual));
+				newResult.Add("SoS.NeedsMoreFuel".Translate(ship.FuelNeeded(true), ship.MassActual));
 			if (ship.Sensors.NullOrEmpty())
-				newResult.Add(TranslatorFormattedStringExtensions.Translate("ShipReportMissingPart") + ": " + ThingDefOf.Ship_SensorCluster.label);
+				newResult.Add("ShipReportMissingPart".Translate() + ": " + ThingDefOf.Ship_SensorCluster.label);
 			if (!ship.HasMannedBridge())
-				newResult.Add(TranslatorFormattedStringExtensions.Translate("SoS.ReportNeedPilot"));
+				newResult.Add("SoS.ReportNeedPilot".Translate());
 			if (!ship.Powered())
 				newResult.Add("SoSNoPowerSupply".Translate());
 			//do not allow kidnapping other fac pawns/animals
@@ -1825,7 +1841,7 @@ namespace SaveOurShip2
 			{
 				if (p.Faction != Faction.OfPlayer && !p.IsPrisoner && !p.InContainerEnclosed)
 				{
-					newResult.Add(TranslatorFormattedStringExtensions.Translate("SoS.LaunchFailPawns", p.Name?.ToStringShort ?? p.KindLabel ?? ""));
+					newResult.Add("SoS.LaunchFailPawns".Translate(p.Name?.ToStringShort ?? p.KindLabel ?? ""));
 				}
 			}
 
@@ -2166,7 +2182,7 @@ namespace SaveOurShip2
 		{
 			if (__state)
 			{
-				Find.LetterStack.ReceiveLetter(TranslatorFormattedStringExtensions.Translate("LetterLabelShortCircuit"), TranslatorFormattedStringExtensions.Translate("SoS.LetterLabelShortCircuitDesc"),
+				Find.LetterStack.ReceiveLetter("LetterLabelShortCircuit".Translate(), "SoS.LetterLabelShortCircuitDesc".Translate(),
 					LetterDefOf.NegativeEvent, new TargetInfo(culprit.Position, culprit.Map, false), null);
 			}
 		}
@@ -2331,7 +2347,7 @@ namespace SaveOurShip2
 		{
 			if (__result.Accepted && ShipInteriorMod2.IsHologram(selPawn))
 			{
-				__result = TranslatorFormattedStringExtensions.Translate("SoS.CantScanFormgel");
+				__result = "SoS.CantScanFormgel".Translate();
 			}
 		}
 	}
@@ -2476,7 +2492,7 @@ namespace SaveOurShip2
 	{
 		public static void Postfix(ref AcceptanceReport __result, Thing t)
 		{
-			if (!__result.Accepted && t.Map.IsSpace() && __result.Reason.Equals("MessageMustDesignateDeconstructibleMechCluster".Translate()))
+			if (!__result.Accepted && t.Map.IsSpace() && __result.Reason.Equals("MessageMustDesignateDeconstructibleMechCluster".Translate())) // Core\Messages.xml
 				__result = new AcceptanceReport("SoS.SalvageEnemiesPresent".Translate());
 		}
 	}
@@ -2722,8 +2738,8 @@ namespace SaveOurShip2
 							if (building_CryptosleepCasket == null)
 							{
 								Messages.Message(
-									TranslatorFormattedStringExtensions.Translate("CannotCarryToCryptosleepCasket") + ": " +
-									TranslatorFormattedStringExtensions.Translate("NoCryptosleepCasket"), current, MessageTypeDefOf.RejectInput);
+									"CannotCarryToCryptosleepCasket".Translate() + ": " + // Rimworld Core Key
+									"NoCryptosleepCasket".Translate(), current, MessageTypeDefOf.RejectInput); // Rimworld Core Key
 								return;
 							}
 
@@ -2811,7 +2827,7 @@ namespace SaveOurShip2
 				if (myPawn.RaceProps?.Humanlike ?? false)
 				{
 					List<FloatMenuOption> notAllowedList = new List<FloatMenuOption>();
-					notAllowedList.Add(new FloatMenuOption(TranslatorFormattedStringExtensions.Translate("SoS.CantEnterCrittersleep"), null));
+					notAllowedList.Add(new FloatMenuOption("SoS.CantEnterCrittersleep".Translate(), null));
 					__result = notAllowedList;
 					return false;
 				}
@@ -3371,7 +3387,7 @@ namespace SaveOurShip2
 					if (!first)
 					{
 						first = true;
-						Widgets.LabelCacheHeight(ref rect, TranslatorFormattedStringExtensions.Translate("SoS.ArchoGift") + ":");
+						Widgets.LabelCacheHeight(ref rect, "SoS.ArchoGift".Translate());
 						rect.yMin += 24f;
 					}
 					Widgets.HyperlinkWithIcon(hyperlink: new Dialog_InfoCard.Hyperlink(def.thing), rect: new Rect(rect.x, rect.yMin, rect.width, 24f));
@@ -3484,8 +3500,8 @@ namespace SaveOurShip2
 						}
 					}
 				}
-				DiaOption increase = new DiaOption(TranslatorFormattedStringExtensions.Translate("SoS.ArchotechGoodwillPlus", 10));
-				DiaOption decrease = new DiaOption(TranslatorFormattedStringExtensions.Translate("SoS.ArchotechGoodwillMinus", 10));
+				DiaOption increase = new DiaOption("SoS.ArchotechGoodwillPlus".Translate(10));
+				DiaOption decrease = new DiaOption("SoS.ArchotechGoodwillMinus".Translate(10));
 				increase.action = delegate
 				{
 					faction.TryAffectGoodwillWith(Faction.OfPlayer, 10, canSendMessage: false);
@@ -3495,7 +3511,7 @@ namespace SaveOurShip2
 				if (spore == null || spore.fieldStrength < 10)
 				{
 					increase.disabled = true;
-					increase.disabledReason = TranslatorFormattedStringExtensions.Translate("SoS.ArchotechFieldStrengthLow");
+					increase.disabledReason = "SoS.ArchotechFieldStrengthLow".Translate();
 				}
 				decrease.action = delegate
 				{
@@ -3506,7 +3522,7 @@ namespace SaveOurShip2
 				if (spore == null || spore.fieldStrength < 10)
 				{
 					decrease.disabled = true;
-					decrease.disabledReason = TranslatorFormattedStringExtensions.Translate("SoS.ArchotechFieldStrengthLow");
+					decrease.disabledReason = "SoS.ArchotechFieldStrengthLow".Translate();
 				}
 				if (spore != null)
 				{
@@ -4306,7 +4322,7 @@ namespace SaveOurShip2
 				{
 					if (map.IsSpace() && map.spawnedThings.Where(t => t.def == ThingDefOf.Ship_ComputerCore && t.Faction == Faction.OfPlayer).Any())
 					{
-						Find.LetterStack.ReceiveLetter(TranslatorFormattedStringExtensions.Translate("SoS.PsychicAmplifier"), TranslatorFormattedStringExtensions.Translate("SoS.PsychicAmplifierDesc"), LetterDefOf.PositiveEvent);
+						Find.LetterStack.ReceiveLetter("SoS.PsychicAmplifier".Translate(), "SoS.PsychicAmplifierDesc".Translate(), LetterDefOf.PositiveEvent);
 						AttackableShip ship = new AttackableShip();
 						ship.attackableShip = DefDatabase<ShipDef>.GetNamed("MechPsychicAmp");
 						ship.spaceNavyDef = DefDatabase<NavyDef>.GetNamed("Mechanoid_SpaceNavy");
@@ -4665,9 +4681,9 @@ namespace SaveOurShip2
 		public static void Postfix(ref string disableReason, CompVehicleLauncher __instance, ref bool __result)
         {
 			//Temporary fix clarifying the message on shuttle unable to launch because of rotated
-			if (disableReason == "VF_CannotLaunchImmobile".Translate(__instance.Vehicle.LabelShort) && __instance.Vehicle.Angle != 0)
+			if (disableReason == "VF_CannotLaunchImmobile".Translate(__instance.Vehicle.LabelShort) && __instance.Vehicle.Angle != 0) // Vehicle Framework\Labels.xml
 			{
-				disableReason = "VF_Fix_CannotLaunchRotated".Translate(__instance.Vehicle.LabelShort);
+				disableReason = "SoS.VF_Fix_CannotLaunchRotated".Translate(__instance.Vehicle.LabelShort); 
 			}
 
 			// Somwehow, was allowed to launch overloaded.
@@ -4675,12 +4691,12 @@ namespace SaveOurShip2
 			float vehicleCapacity = vehiclePawn.GetStatValue(VehicleStatDefOf.CargoCapacity);
 			if (MassUtility.InventoryMass(vehiclePawn) > vehicleCapacity)
 			{
-				disableReason = "VF_CannotLaunchOverEncumbered".Translate(vehiclePawn.LabelShort);
+				disableReason = "VF_CannotLaunchOverEncumbered".Translate(vehiclePawn.LabelShort); // Vehicle Framework\Labels.xml
 				__result = false;
 				return;
 			}
 
-			if (disableReason != Translator.Translate("CommandLaunchGroupFailUnderRoof")) return;
+			if (disableReason != "CommandLaunchGroupFailUnderRoof".Translate()) return; // Core\GameplayCommands.xml
 
             Map map = vehiclePawn.Map;
             IntVec3 cell = vehiclePawn.Position;
@@ -5179,7 +5195,7 @@ namespace SaveOurShip2
 			VehiclePawn Vehicle = __instance.Vehicle;
 			if (Vehicle.CompUpgradeTree.NodeUnlocking == __instance.SelectedNode || Vehicle.CompUpgradeTree.NodeUnlocked(__instance.SelectedNode) && Vehicle.CompUpgradeTree.LastNodeUnlocked(__instance.SelectedNode))
 				return true;
-			if (!Widgets.ButtonText(rect, Translator.Translate("VF_Upgrade"), true, true, true, null) || Vehicle.CompUpgradeTree.NodeUnlocked(__instance.SelectedNode))
+			if (!Widgets.ButtonText(rect, "VF_Upgrade".Translate(), true, true, true, null) || Vehicle.CompUpgradeTree.NodeUnlocked(__instance.SelectedNode))
 			{
 				return false;
 			}
@@ -5187,7 +5203,7 @@ namespace SaveOurShip2
 			{
 				if (__instance.SelectedNode.upgrades != null && __instance.SelectedNode.upgrades.Where(upgrade => upgrade is SoS2TurretUpgrade sosUpgrade && sosUpgrade.turretSlot >= __instance.Vehicle.GetStatValue(ResourceBank.VehicleStatDefOf.Hardpoints)).Count() > 0)
 				{
-					Messages.Message(Translator.Translate("SoS.NoHardpoints"), MessageTypeDefOf.RejectInput, false);
+					Messages.Message("SoS.NoHardpoints".Translate(), MessageTypeDefOf.RejectInput, false);
 					return false;
 				}
 				float CargoMod = 0;
@@ -5206,9 +5222,9 @@ namespace SaveOurShip2
 					}
 				}
 				if (CargoMod + __instance.Vehicle.GetStatValue(VehicleStatDefOf.CargoCapacity) < 0)
-					Messages.Message(Translator.Translate("SoS.NotEnoughCargoSpace"), MessageTypeDefOf.RejectInput, false);
+					Messages.Message("SoS.NotEnoughCargoSpace".Translate(), MessageTypeDefOf.RejectInput, false);
 				else
-					Messages.Message(Translator.Translate("VF_DisabledFromOtherNode"), MessageTypeDefOf.RejectInput, false);
+					Messages.Message("VF_DisabledFromOtherNode".Translate(), MessageTypeDefOf.RejectInput, false); // Vehicle Framework\Upgrades.xml
 			}
 			else if (Vehicle.CompUpgradeTree.PrerequisitesMet(__instance.SelectedNode))
 			{
@@ -5226,7 +5242,7 @@ namespace SaveOurShip2
 			}
 			else
 			{
-				Messages.Message(Translator.Translate("VF_MissingPrerequisiteUpgrade"), MessageTypeDefOf.RejectInput, false);
+				Messages.Message("VF_MissingPrerequisiteUpgrade".Translate(), MessageTypeDefOf.RejectInput, false);
 			}
 			return false;
 		}

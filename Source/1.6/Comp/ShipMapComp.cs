@@ -127,12 +127,12 @@ namespace SaveOurShip2
 
 			if (map.IsSpace())
 			{
-				breathableZone = map.areaManager.AllAreas.FirstOrDefault(area => area.Label == "SoSBreathable".Translate()) as Area_Allowed;
+				breathableZone = map.areaManager.AllAreas.FirstOrDefault(area => area.Label == "SoS.Breathable".Translate()) as Area_Allowed;
 				if (breathableZone == null)
 				{
 					Log.Message("[SoS2] Creating breathable zone");
 					map.areaManager.TryMakeNewAllowed(out breathableZone);
-					breathableZone.labelInt = "SoSBreathable".Translate();
+					breathableZone.labelInt = "SoS.Breathable".Translate();
 				}
 				else
 					breathableZone.innerGrid.Clear();
@@ -1042,9 +1042,9 @@ namespace SaveOurShip2
 							shipDef = ShipInteriorMod2.RandomValidShipFrom(DefDatabase<ShipDef>.AllDefs.ToList(), CR, false, false);
 					}
 					if (shipDef != null)
-						Find.LetterStack.ReceiveLetter(TranslatorFormattedStringExtensions.Translate("SoS.CombatStart"), TranslatorFormattedStringExtensions.Translate("SoS.CombatStartDesc", shipDef.label), LetterDefOf.ThreatBig);
+						Find.LetterStack.ReceiveLetter("SoS.CombatStart".Translate(), "SoS.CombatStartDesc".Translate(shipDef.label), LetterDefOf.ThreatBig);
 					else
-						Find.LetterStack.ReceiveLetter(TranslatorFormattedStringExtensions.Translate("SoS.CombatStart"), TranslatorFormattedStringExtensions.Translate("SoS.CombatFleetDesc"), LetterDefOf.ThreatBig);
+						Find.LetterStack.ReceiveLetter("SoS.CombatStart".Translate(), "SoS.CombatFleetDesc".Translate(), LetterDefOf.ThreatBig);
 				}
 			}
 			if (passingShip != null)
@@ -1558,9 +1558,9 @@ namespace SaveOurShip2
 												if (shuttleHit.statHandler.GetStatValue(VehicleStatDefOf.BodyIntegrity) <= 0)
 												{
 													if (shuttleHit.Faction == Faction.OfPlayer)
-														Messages.Message(TranslatorFormattedStringExtensions.Translate("SoS.CombatPodDestroyedPlayer"), null, MessageTypeDefOf.NegativeEvent);
+														Messages.Message("SoS.CombatPodDestroyedPlayer".Translate(), null, MessageTypeDefOf.NegativeEvent);
 													else
-														Messages.Message(TranslatorFormattedStringExtensions.Translate("SoS.CombatPodDestroyedEnemy"), null, MessageTypeDefOf.PositiveEvent);
+														Messages.Message("SoS.CombatPodDestroyedEnemy".Translate(), null, MessageTypeDefOf.PositiveEvent);
 													TargetMapComp.DeRegisterShuttleMission(TargetMapComp.ShuttleMissions.Where(otherMission => otherMission.shuttle == shuttleHit).First(), true);
 													foreach (Pawn pawn in shuttleHit.AllPawnsAboard.ListFullCopy())
 													{

@@ -19,13 +19,13 @@ namespace SaveOurShip2
 			{
 				if (parent != null)
 				{
-					return "MechanitesOn".Translate(parent.LabelCap, parent);
+					return "MechanitesOn".Translate(parent.LabelCap, parent); // Where this key belongs to?
 				}
 				return def.label;
 			}
 		}
 
-		public override string InspectStringAddon => "MechanitesDisassembling".Translate() + " (" + "MechaniteSizeLower".Translate((fireSize * 100f).ToString("F0")) + ")";
+		public override string InspectStringAddon => "MechanitesDisassembling".Translate() + " (" + "MechaniteSizeLower".Translate((fireSize * 100f).ToString("F0")) + ")"; // Where this key belongs to?
 
 		public void DoFireDamage(Thing targ)
 		{

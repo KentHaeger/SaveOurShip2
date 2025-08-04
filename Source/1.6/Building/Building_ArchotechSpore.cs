@@ -147,8 +147,8 @@ namespace SaveOurShip2
 				}
 
 				DiaNode node = new DiaNode(TranslatorFormattedStringExtensions.Translate("SoS.ArchotechIdeoChoice", Consciousness.Name.ToStringShort, highestPawn.Name.ToStringShort));
-				DiaOption keepIdeo = new DiaOption("Discover the truth of "+Consciousness.Ideo.name);
-				DiaOption newIdeo = new DiaOption("Found a new ideoligion");
+				DiaOption keepIdeo = new DiaOption(TranslatorFormattedStringExtensions.Translate("SoS.ArchotechIdeoKeep",Consciousness.Ideo.name));
+				DiaOption newIdeo = new DiaOption("SoS.ArchotechIdeoNew".Translate());
 				node.options.Add(keepIdeo);
 				node.options.Add(newIdeo);
 				DiaNode nodeKeepFaith;
@@ -160,7 +160,8 @@ namespace SaveOurShip2
 					nodeKeepFaith = new DiaNode(TranslatorFormattedStringExtensions.Translate("SoS.ArchotechIdeoCertaintySpirits", Consciousness.Name.ToStringShort, Consciousness.Ideo.name));
 				else
 					nodeKeepFaith = new DiaNode(TranslatorFormattedStringExtensions.Translate("SoS.ArchotechIdeoCertaintyGod", Consciousness.Name.ToStringShort, Consciousness.Ideo.KeyDeityName, Consciousness.Ideo.name));
-				nodeKeepFaith.options.Add(new DiaOption("All hail the one truth!"));
+				TaggedString keepIdeoDialog = "SoS.ArchotechIdeoKeepFaith".Translate();
+				nodeKeepFaith.options.Add(new DiaOption(keepIdeoDialog));
 				nodeKeepFaith.options[0].resolveTree = true;
 				keepIdeo.link = nodeKeepFaith;
 				newIdeo.action = delegate
@@ -171,7 +172,7 @@ namespace SaveOurShip2
 					{
 						Ideo ideo = page.ideo;
 						DiaNode newNode = new DiaNode(TranslatorFormattedStringExtensions.Translate("SoS.ArchotechIdeoHeresy", ideo));
-						newNode.options.Add(new DiaOption("All hail the one truth!"));
+						newNode.options.Add(new DiaOption(keepIdeoDialog));
 						newNode.options[0].resolveTree = true;
 						Dialog_NodeTree newTree = new Dialog_NodeTree(newNode);
 						Consciousness.ideo.SetIdeo(ideo);
@@ -184,7 +185,7 @@ namespace SaveOurShip2
 					Find.WindowStack.Add(page);
 				};
 				newIdeo.resolveTree = true;
-				Dialog_NodeTree dialog_NodeTree = new Dialog_NodeTree(node, true, false, "Crisis of Faith");
+				Dialog_NodeTree dialog_NodeTree = new Dialog_NodeTree(node, true, false, "SoS.ArchotechIdeoDialogTitle".Translate());
 				dialog_NodeTree.silenceAmbientSound = false;
 				Find.WindowStack.Add(dialog_NodeTree);
 			}
@@ -364,10 +365,11 @@ namespace SaveOurShip2
 		public override string GetInspectString()
 		{
 			string text = base.GetInspectString();
-			text += "\nMood: " + Mathf.Round(Mood * 50f) + "\nPsychic field strength: "+fieldStrength;
+			text += "\n" + "SoS.ArchotechInspectMood".Translate() + ": " + Mathf.Round(Mood * 50f)
+			        + "\n" + "SoS.ArchotechInspectPsychicFieldStrength".Translate() + ": "+ fieldStrength;
 			if (linkedPawns.Count > 0)
 			{
-				text += "\nLinked: ";
+				text += "\n" + "SoS.ArchotechInspectLinked".Translate() + ": ";
 				for(int i=0;i<linkedPawns.Count;i++)
                 {
 					text += linkedPawns[i];
@@ -377,7 +379,7 @@ namespace SaveOurShip2
 			}
 			if (soulsHeld.Count > 0)
 			{
-				text += "\nStored: ";
+				text += "\n" + "SoS.ArchotechInspectStored".Translate() + ": ";
 				for (int i = 0; i < soulsHeld.Count; i++)
 				{
 					text += soulsHeld[i];
@@ -716,24 +718,24 @@ namespace SaveOurShip2
 					action = delegate
 					{
 						DiaNode node = new DiaNode(TranslatorFormattedStringExtensions.Translate("SoS.AllPillarsDesc", Consciousness.Name.ToStringFull));
-						DiaOption end = new DiaOption("Remake the world");
-						DiaOption cancel = new DiaOption("Remain mortal a while longer");
+						DiaOption end = new DiaOption("SoS.AllPillarsEnd".Translate());
+						DiaOption cancel = new DiaOption("SoS.AllPillarsCancel".Translate());
 						cancel.resolveTree = true;
 						node.options.Add(end);
 						node.options.Add(cancel);
 
-						DiaNode friendlyNode = new DiaNode(TranslatorFormattedStringExtensions.Translate("SoS.WinGameAllies"));
-						DiaOption friendlyAlly = new DiaOption("Give them a choice - join or don't");
-						DiaOption friendlyTakeover = new DiaOption("Annex them by force");
+						DiaNode friendlyNode = new DiaNode("SoS.WinGameAllies".Translate());
+						DiaOption friendlyAlly = new DiaOption("SoS.WinGameAlliesAlly".Translate());
+						DiaOption friendlyTakeover = new DiaOption("SoS.WinGameAlliesTakeover".Translate());
 						friendlyAlly.action = delegate { endgameFriendly = 0; };
 						friendlyTakeover.action = delegate { endgameFriendly = 1; };
 						friendlyNode.options.Add(friendlyAlly);
 						friendlyNode.options.Add(friendlyTakeover);
 
-						DiaNode neutralNode = new DiaNode(TranslatorFormattedStringExtensions.Translate("SoS.WinGameNeutral"));
-						DiaOption neutralAlly = new DiaOption("Give them a choice - join or don't");
-						DiaOption neutralTakeover = new DiaOption("Annex them by force");
-						DiaOption neutralKill = new DiaOption("Destroy them");
+						DiaNode neutralNode = new DiaNode("SoS.WinGameNeutral".Translate());
+						DiaOption neutralAlly = new DiaOption("SoS.WinGameNeutralAlly".Translate());
+						DiaOption neutralTakeover = new DiaOption("SoS.WinGameNeutralTakeover".Translate());
+						DiaOption neutralKill = new DiaOption("SoS.WinGameNeutralKill".Translate());
 						neutralAlly.action = delegate { endgameNeutral = 0; };
 						neutralTakeover.action = delegate { endgameNeutral = 1; };
 						neutralKill.action = delegate { endgameNeutral = 2; };
@@ -741,9 +743,9 @@ namespace SaveOurShip2
 						neutralNode.options.Add(neutralTakeover);
 						neutralNode.options.Add(neutralKill);
 
-						DiaNode enemyNode = new DiaNode(TranslatorFormattedStringExtensions.Translate("SoS.WinGameEnemies"));
-						DiaOption enemyTakeover = new DiaOption("Annex them by force");
-						DiaOption enemyKill = new DiaOption("Destroy them");
+						DiaNode enemyNode = new DiaNode("SoS.WinGameEnemies".Translate());
+						DiaOption enemyTakeover = new DiaOption("SoS.WinGameEnemiesTakeover".Translate());
+						DiaOption enemyKill = new DiaOption("SoS.WinGameEnemiesKill".Translate());
 						enemyTakeover.action = delegate { endgameEnemy = 1; };
 						enemyKill.action = delegate { endgameEnemy = 2; };
 						enemyNode.options.Add(enemyTakeover);
@@ -812,7 +814,7 @@ namespace SaveOurShip2
 			else //quest
 			{
 				Slate slate = new Slate();
-				slate.Set<string>("quest_name", "A Gift From " + Consciousness.Name.ToStringFull);
+				slate.Set<string>("quest_name", TranslatorFormattedStringExtensions.Translate("SoS.ArchotechGiftQuestDesc",Consciousness.Name.ToStringFull));
 				slate.Set<string>("archotech_name", Consciousness.Name.ToStringShort);
 				slate.Set<Map>("map", Map);
 				slate.Set<int>("value", numUnlock * 1000);

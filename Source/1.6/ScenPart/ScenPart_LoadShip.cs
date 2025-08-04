@@ -20,6 +20,7 @@ namespace SaveOurShip2
 		string filename = "Select ship to load";
 		bool discardLog = true;
 		bool discardTales = true;
+		bool triedLoadLatest = false;
 		string playerFactionName;
 		FactionDef playerFactionDef;
 		List<GameComponent> components;
@@ -69,37 +70,41 @@ namespace SaveOurShip2
 				//set true here since somehow it gets set to false
 				discardLog = true;
 				discardTales = true;
-				LoadLatest();
+				if (!triedLoadLatest)
+				{
+					triedLoadLatest = true;
+					LoadLatest();
+				}
 			}
 
 			if (Widgets.ButtonText(rect1, filename))
 			{
 				FloatMenuUtility.MakeMenu(Directory.GetFiles(Path.Combine(GenFilePaths.SaveDataFolderPath, "SoS2")), (string path) => Path.GetFileNameWithoutExtension(path), (string path) => () => { filename = Path.GetFileNameWithoutExtension(path); });
 			}
-			if (Widgets.ButtonText(rect2, "Discard log: " + discardLog.ToString()))
+			if (Widgets.ButtonText(rect2, "SoS.LoadShip.DiscardLog".Translate(discardLog.ToString())))
 			{
 				List<FloatMenuOption> toggleLog = new List<FloatMenuOption>
 				{
-					new FloatMenuOption("Discard log: True", delegate ()
+					new FloatMenuOption("SoS.LoadShip.DiscardLogTrue".Translate(), delegate ()
 					{
 						discardLog = true;
 					}, MenuOptionPriority.Default, null, null, 0f, null, null, true, 0),
-					new FloatMenuOption("Discard log: False", delegate ()
+					new FloatMenuOption("SoS.LoadShip.DiscardLogFalse".Translate(), delegate ()
 					{
 						discardLog = false;
 					}, MenuOptionPriority.Default, null, null, 0f, null, null, true, 0)
 				};
 				Find.WindowStack.Add(new FloatMenu(toggleLog));
 			}
-			if (Widgets.ButtonText(rect3, "Discard tales: " + discardTales.ToString()))
+			if (Widgets.ButtonText(rect3, "SoS.LoadShip.DiscardTales".Translate(discardTales.ToString())))
 			{
 				List<FloatMenuOption> toggleTales = new List<FloatMenuOption>
 				{
-					new FloatMenuOption("Discard tales: True", delegate ()
+					new FloatMenuOption("SoS.LoadShip.DiscardTalesTrue".Translate(), delegate ()
 					{
 						discardTales = true;
 					}, MenuOptionPriority.Default, null, null, 0f, null, null, true, 0),
-					new FloatMenuOption("Discard tales: False", delegate ()
+					new FloatMenuOption("SoS.LoadShip.DiscardTalesFalse".Translate(), delegate ()
 					{
 						discardTales = false;
 					}, MenuOptionPriority.Default, null, null, 0f, null, null, true, 0)
@@ -110,7 +115,7 @@ namespace SaveOurShip2
 		public override string Summary(Scenario scen)
 		{
 			if (HasValidFilename())
-				return "Load ship " + filename + "\nThis will disable many other types of scenario part, such as starting pawns.";
+				return "SoS.LoadShip.ScenPartDesc".Translate(filename);
 			return "";
 		}
 
@@ -144,7 +149,7 @@ namespace SaveOurShip2
 				filename = Path.GetFileNameWithoutExtension(mostRecentFile.FullName);
 			if (!HasValidFilename())
 			{
-				Dialog_MessageBox window = new Dialog_MessageBox(TranslatorFormattedStringExtensions.Translate("SoS.NoShipsToLoad"));
+				Dialog_MessageBox window = new Dialog_MessageBox("SoS.NoShipsToLoad".Translate());
 				Find.WindowStack.Add(window);
 			}
 		}

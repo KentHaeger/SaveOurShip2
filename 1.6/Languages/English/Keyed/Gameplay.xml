@@ -114,7 +114,7 @@
 	<SoS.PlaceOnShipHull>Must place on owned ship hull.</SoS.PlaceOnShipHull>
 	<SoS.EnginePlaceRotation>Engines must face the same way!</SoS.EnginePlaceRotation>
 	<!-- comms/trade -->
-	<SoS.TradeComms>Communicating with </SoS.TradeComms>
+	<SoS.TradeComms>Communicating with {0}</SoS.TradeComms>
 	<SoS.TradeTradeWith>Ask to trade with them.</SoS.TradeTradeWith>
 	<SoS.TradeTradeDecline>{0} does not want to trade with you due to your notoriety.</SoS.TradeTradeDecline>
 	<SoS.PirateTradeDemand>Demand they hand over their cargo (This is an act of piracy!)</SoS.PirateTradeDemand>
@@ -242,7 +242,6 @@
 	<SoS.CloakBroken>Cloak disengaged due to heat depletion</SoS.CloakBroken>
 	<SoS.HeatCritical>DANGER! Heat level critical!</SoS.HeatCritical>
 	<SoS.HeatNotConnected>Not connected to a thermal network</SoS.HeatNotConnected>
-	<SoS.HeatTurretEnergy>Energy to fire:</SoS.HeatTurretEnergy>
 	<!-- turret -->
 	<SoS.TurretNotInShipCombat>Warning: Turret will not fire because you are not in ship combat.</SoS.TurretNotInShipCombat>
 	<SoS.TurretInPointDefense>Warning: Turret will not target the enemy ship because it is set to Point Defense mode</SoS.TurretInPointDefense>
@@ -250,7 +249,7 @@
 	<SoS.TurretExtractTorpedoDesc>Unloads the current torpedoes so they can be replaced with different ammunition.</SoS.TurretExtractTorpedoDesc>
 	<SoS.TurretExtractOneTorpedo>Extract one torpedo</SoS.TurretExtractOneTorpedo>
 	<SoS.TurretExtractOneTorpedoDesc>Unloads just one torpedo so it can be replaced with different ammunition.</SoS.TurretExtractOneTorpedoDesc>
-	<SoS.TurretExtract>Extract</SoS.TurretExtract>
+	<SoS.TurretExtract>Extract {0}</SoS.TurretExtract>
 	<SoS.TurretOptimalRange>Use optimal range</SoS.TurretOptimalRange>
 	<SoS.TurretOptimalRangeDesc>Enable to only fire on targets within optimal range</SoS.TurretOptimalRangeDesc>
 	<SoS.TurretPointDefense>Point Defense mode</SoS.TurretPointDefense>
@@ -269,8 +268,8 @@
 	<SoS.ShieldRadius>Radius current/set: {0}/{1}</SoS.ShieldRadius>
 	<SoS.ResetShieldRadius>Reset shield radius</SoS.ResetShieldRadius>
 	<SoS.ResetShieldRadiusDesc>Reset shield radius to 40.</SoS.ResetShieldRadiusDesc>
-	<SoS.DecShieldRadius>Decrease shield radius</SoS.DecShieldRadius>
-	<SoS.IncShieldRadius>Increase shield radius</SoS.IncShieldRadius>
+	<SoS.DecreaseShieldRadiusDesc>Decrease shield radius</SoS.DecreaseShieldRadiusDesc>
+	<SoS.IncreaseShieldRadiusDesc>Increase shield radius</SoS.IncreaseShieldRadiusDesc>
 	<SoS.FoamFill>Fill destroyed</SoS.FoamFill>
 	<SoS.FoamFillDesc>Fill destroyed areas of your ship with hullfoam from its distributors.</SoS.FoamFillDesc>
 	<SoS.FoamFillDisabled>Nothing to fill or no fuel in distributors.</SoS.FoamFillDisabled>
@@ -324,7 +323,7 @@
 	<SoS.ResurrectBrain>Resurrect</SoS.ResurrectBrain>
 	<SoS.ResurrectBrainDesc>Use a resurrector mech serum to construct a new body for this consciousness</SoS.ResurrectBrainDesc>
 	<SoS.CantScanFormgel>Formgel is not suitable for scanning</SoS.CantScanFormgel>
-	<SoS.ArchoGift>Unlocks archotech gifts</SoS.ArchoGift>
+	<SoS.ArchoGift>Unlocks archotech gifts:</SoS.ArchoGift>
 	<SoS.ArchotechGoodwillPlus>Psychically increase goodwill (+10, costs {0} field strength)</SoS.ArchotechGoodwillPlus>
 	<SoS.ArchotechGoodwillMinus>Psychically decrease goodwill (-10, costs {0} field strength)</SoS.ArchotechGoodwillMinus>
 	<SoS.ArchotechFieldStrengthLow>Insufficient field strength</SoS.ArchotechFieldStrengthLow>
@@ -416,7 +415,7 @@
 	<!-- Temporary fix for VehFW to show fule cost. This key wa missing, also resulting strin is crooped, so got to have the number at the start so it is not lost -->
 	<VF_VehicleFuelCost>{0} Fuel cost</VF_VehicleFuelCost>
 	<!-- Temporary fix for Vehicke Framework message-->
-	<VF_Fix_CannotLaunchRotated>{0} cannot launch because it is rotated.</VF_Fix_CannotLaunchRotated>
+	<SoS.VF_Fix_CannotLaunchRotated>{0} cannot launch because it is rotated.</SoS.VF_Fix_CannotLaunchRotated>
 	<SoSRestoreHull>Restore hull</SoSRestoreHull>
 	<SoSRestoreHullDesc>Construct new hull in place of wreckage</SoSRestoreHullDesc>
 	<SoSAlreadyRestoring>Already restoring this area!</SoSAlreadyRestoring>
@@ -444,24 +443,17 @@
 	<SoSHackBridge>Hack bridge</SoSHackBridge>
 	<SoSCantPlaceCocoon>Unable to place cryptosleep cocoon!</SoSCantPlaceCocoon>
 	<SoSAlreadyMalnourished>User is already malnourished</SoSAlreadyMalnourished>
-	<SoSToggleShield>Toggle shield</SoSToggleShield>
-	<SoSToggleShieldDesc>Toggle this shield on or off</SoSToggleShieldDesc>
+	<SoS.ToggleShield>Toggle shield</SoS.ToggleShield>
+	<SoS.ToggleShieldDesc>Toggle this shield on or off</SoS.ToggleShieldDesc>
 	<SoSCantVentCloaked>Cannot vent: Cloaked</SoSCantVentCloaked>
-	<SoSMoreShuttles> more shuttles</SoSMoreShuttles>
 	<SoSCombatEnergy>Energy: </SoSCombatEnergy>
-	<SoSCombatNoEnergy>Energy: N/A</SoSCombatNoEnergy>
-	<SoSCombatHeat>Heat: </SoSCombatHeat>
-	<SoSCombatNoHeat>Heat: N/A</SoSCombatNoHeat>
-	<SoSCombatHull>Hull: </SoSCombatHull>
-	<SoSCombatShields>Shields: </SoSCombatShields>
-	<SoSCombatNone>N/A</SoSCombatNone>
 	<SoSCantSettleSpaceSites>Cannot settle space sites</SoSCantSettleSpaceSites>
 	<SoSNoPowerSupply>Ship has no internal power supply</SoSNoPowerSupply>
 	<SoSCarryToCryptonest>Carry to cryptonest</SoSCarryToCryptonest>
 	<SoSConsciousness>Consciousness: {0}</SoSConsciousness>
 	<SoSAIName>AI name: {0}</SoSAIName>
 	<SoSNoMapObserve>This type of map cannot be observed from orbit. Its owners have likely deployed sensor scrambling technology.</SoSNoMapObserve>
-	<SoSBreathable>Breathable</SoSBreathable>
+	<SoS.Breathable>Breathable</SoS.Breathable>
 	<!-- Projectiles missing map-->
 	<SoS.ActorPlayer>Player</SoS.ActorPlayer>
 	<SoS.ActorEnemy>Enemy</SoS.ActorEnemy>

@@ -30,22 +30,22 @@ namespace SaveOurShip2
 
 		public override string CompInspectStringExtra()
 		{
-			string text = Props.FuelLabel + ": " + Fuel.ToStringDecimalIfSmall() + " / " + Props.fuelCapacity.ToStringDecimalIfSmall();
+			string text = "SoS.FuelInfo".Translate(Props.FuelLabel,Fuel.ToStringDecimalIfSmall(),Props.fuelCapacity.ToStringDecimalIfSmall());
 			if (!Props.consumeFuelOnlyWhenUsed && HasFuel)
 			{
 				int fuelMult = 1;
 				if (overdriveComp != null)
 					fuelMult = 1+(2*overdriveComp.overdriveSetting);
 				int numTicks = (int)(Fuel / Props.fuelConsumptionRate / fuelMult * 60000f);
-				text = text + " (" + numTicks.ToStringTicksToPeriod() + ")";
+				text = text + " " + "SoS.FuelAvailableTime".Translate(numTicks.ToStringTicksToPeriod());
 			}
 			if (!HasFuel && !Props.outOfFuelMessage.NullOrEmpty())
 			{
-				text += $"\n{Props.outOfFuelMessage} ({GetFuelCountToFullyRefuel()}x {Props.fuelFilter.AnyAllowedDef.label})";
+				text += "\n" + "SoS.FuelEmptyInfo".Translate(Props.outOfFuelMessage,GetFuelCountToFullyRefuel(),Props.fuelFilter.AnyAllowedDef.label);
 			}
 			if (Props.targetFuelLevelConfigurable)
 			{
-				text += "\n" + "ConfiguredTargetFuelLevel".Translate(TargetFuelLevel.ToStringDecimalIfSmall());
+				text += "\n" + "SoS.ConfiguredTargetFuelLevel".Translate(TargetFuelLevel.ToStringDecimalIfSmall());
 			}
 			return text;
 		}

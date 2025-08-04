@@ -21,7 +21,7 @@ namespace SaveOurShip2
 
 		protected override AcceptanceReport CanCommunicateWith(Pawn negotiator)
 		{
-			return "This ship refuses your hails";
+			return "SoS.CommunicationRefused".Translate();
 		}
 
 		public override void ExposeData()
