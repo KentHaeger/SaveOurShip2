@@ -97,23 +97,24 @@ namespace SaveOurShip2
 			return result;
 		}
 
-		public bool DevChooseLaunchTarget(GlobalTargetInfo target)
+		public bool DevCheckLaunchTarget(PlanetTile tile)
 		{
-			if (Find.World.Impassable(target.Tile))
+			if (Find.World.Impassable(tile))
 			{
 				return false;
 			}
-			if (Find.WorldObjects.AnyWorldObjectAt(target.Tile))
+			if (Find.WorldObjects.AnyWorldObjectAt(tile))
 			{
 				return false;
 			}
-			if (CanLaunchNow)
-			{
-				ShipInteriorMod2.worldTileOverride = target.Tile;
-				ShipCountdown.InitiateCountdown(this);
-				QuestUtility.SendQuestTargetSignals(base.Map.Parent.questTags, "LaunchedShip");
-			}
-			return true;
+			return CanLaunchNow;
+		}
+
+		public void DevChooseLaunchTarget(PlanetTile tile)
+		{
+			ShipInteriorMod2.worldTileOverride = tile;
+			ShipCountdown.InitiateCountdown(this);
+			QuestUtility.SendQuestTargetSignals(base.Map.Parent.questTags, "LaunchedShip");
 		}
 
 		public Command_Action GetTargetShuttlesCommand()
@@ -1109,7 +1110,7 @@ namespace SaveOurShip2
 								Ship.CreateShipSketchIfFuelPct(1f, playerShipMap, 0, true);
 							else
 							{
-								ShipInteriorMod2.worldTileOverride = -1;
+								ShipInteriorMod2.worldTileOverride = PlanetTile.Invalid;
 								ShipCountdown.InitiateCountdown(this);
 							}
 							QuestUtility.SendQuestTargetSignals(base.Map.Parent.questTags, "LaunchedShip");
@@ -1137,8 +1138,14 @@ namespace SaveOurShip2
 						action = delegate
 						{
 							CameraJumper.TryJump(CameraJumper.GetWorldTarget(this));
-							Find.WorldSelector.ClearSelection();
-							Find.WorldTargeter.BeginTargeting(DevChooseLaunchTarget, canTargetTiles: true, closeWorldTabWhenFinished: true);
+							Find.TilePicker.StartTargeting(
+								DevCheckLaunchTarget,
+								DevChooseLaunchTarget,
+								title: "Select a tile to launch your ship",
+								showRandomButton: false,
+								canCancel: true,
+								hideFormCaravanGizmo: true
+							);
 						},
 						hotKey = KeyBindingDefOf.Misc1,
 						defaultLabel = "Dev: Launch to specific tile",

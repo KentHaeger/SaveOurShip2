@@ -213,7 +213,7 @@
     <Compile Include="Comp\CompRefuelableOverdrivable.cs" />
     <Compile Include="Comp\CompResearchUnlock.cs" />
     <Compile Include="Comp\CompShipBaySalvage.cs" />
-    <Compile Include="Comp\CompShipBlueprint.cs" />
+    <Compile Include="Comp\CompShipBluePrint.cs" />
     <Compile Include="Comp\CompShipCachePart.cs" />
     <Compile Include="Comp\CompShipHeatShield.cs" />
     <Compile Include="Comp\CompShipHeat.cs" />
@@ -481,6 +481,8 @@
     <Compile Include="Verb\Verb_LaunchProjectileShip.cs" />
     <Compile Include="Verb\Verb_SpaceBubblePop.cs" />
     <Compile Include="Events\WeatherEvent_VacuumDamage.cs" />
+    <Compile Include="WorldDrawLayer\WorldDrawLayer_DevGrid.cs" />
+    <Compile Include="WorldDrawLayer\WorldDrawLayer_DevSelectedTile.cs" />
     <Compile Include="WorldObject\WorldObjectMath.cs" />
     <Compile Include="WorldObject\WorldObjectOrbitingShip.cs" />
   </ItemGroup>
