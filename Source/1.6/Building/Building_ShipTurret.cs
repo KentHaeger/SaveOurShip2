@@ -737,11 +737,11 @@ namespace SaveOurShip2
 							torp++;
 					}
 					if (torp > 0)
-						stringBuilder.AppendLine(torp + " " + TranslatorFormattedStringExtensions.Translate("SoS.LoadedTorpedoHE"));
+						stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.LoadedTorpedoHE", torp));
 					if (torpEMP > 0)
-						stringBuilder.AppendLine(torpEMP + " " + TranslatorFormattedStringExtensions.Translate("SoS.LoadedTorpedoEMP"));
+						stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.LoadedTorpedoEMP", torpEMP));
 					if (torpAM > 0)
-						stringBuilder.AppendLine(torpAM + " " + TranslatorFormattedStringExtensions.Translate("SoS.LoadedTorpedoAM"));
+						stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.LoadedTorpedoAM", torpAM));
 				}
 				else
 				{

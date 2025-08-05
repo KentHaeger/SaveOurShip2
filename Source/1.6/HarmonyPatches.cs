@@ -366,10 +366,9 @@ namespace SaveOurShip2
 			rect.x = offset;
 			rect.height = Text.LineHeight;
 			if (bridge.powerCap > 0)
-				Widgets.Label(rect,
-					"SoS.Combat.Energy".Translate(bridge.power.ToString("N0"), bridge.powerCap.ToString("N0")));
+				Widgets.Label(rect, TranslatorFormattedStringExtensions.Translate("SoS.Combat.Energy", bridge.power.ToString("N0"), bridge.powerCap.ToString("N0")));
 			else
-				Widgets.Label(rect, "SoS.Combat.NoEnergy".Translate());
+				Widgets.Label(rect, TranslatorFormattedStringExtensions.Translate("SoS.Combat.NoEnergy"));
 		}
 		private static void DrawHeat(float offset, float baseY, Building_ShipBridge bridge)
 		{
@@ -379,9 +378,9 @@ namespace SaveOurShip2
 			rect.x = offset;
 			rect.height = Text.LineHeight;
 			if (bridge.heatCap > 0)
-				Widgets.Label(rect, "SoS.Combat.Heat".Translate(Mathf.Floor(bridge.heat).ToString("N0"), bridge.heatCap.ToString("N0")));
+				Widgets.Label(rect, TranslatorFormattedStringExtensions.Translate("SoS.Combat.Heat", Mathf.Floor(bridge.heat).ToString("N0"), bridge.heatCap.ToString("N0")));
 			else
-				Widgets.Label(rect, "SoS.Combat.NoHeat".Translate());
+				Widgets.Label(rect, TranslatorFormattedStringExtensions.Translate("SoS.Combat.NoHeat"));
 		}
 		private static void DrawShuttleHealth(float offset, float baseY, VehiclePawn shuttle)
 		{

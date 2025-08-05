@@ -40,9 +40,9 @@
   <SoS.ShipCloakingInactive><![CDATA[<color=red>In vacuum and not connected to heat net</color>]]></SoS.ShipCloakingInactive>
   <SoS.ShipSensorObserving>Observing {0}</SoS.ShipSensorObserving>
 
-  <SoS.LoadedTorpedoHE>HE torpedoes</SoS.LoadedTorpedoHE>
-  <SoS.LoadedTorpedoEMP>EMP torpedoes</SoS.LoadedTorpedoEMP>
-  <SoS.LoadedTorpedoAM>AM torpedoes</SoS.LoadedTorpedoAM>
+  <SoS.LoadedTorpedoHE>{0} HE torpedoes</SoS.LoadedTorpedoHE>
+  <SoS.LoadedTorpedoEMP>{0} EMP torpedoes</SoS.LoadedTorpedoEMP>
+  <SoS.LoadedTorpedoAM>{0} AM torpedoes</SoS.LoadedTorpedoAM>
 
   <SoS.AIPersuade>Persuade to live</SoS.AIPersuade>
   <SoS.BlackBoxHack>Hack</SoS.BlackBoxHack>
