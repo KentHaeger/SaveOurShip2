@@ -191,12 +191,12 @@ namespace SaveOurShip2
 				}
 				if ((targ.Cell - base.Position).LengthHorizontal < AttackVerb.verbProps.EffectiveMinRange(targ, this))
 				{
-					Messages.Message("MessageTargetBelowMinimumRange".Translate(), this, MessageTypeDefOf.RejectInput, false); // Core\GameplayCommands.xml
+					Messages.Message(TranslatorFormattedStringExtensions.Translate("MessageTargetBelowMinimumRange"), this, MessageTypeDefOf.RejectInput, false);
 					return;
 				}
 				if ((targ.Cell - base.Position).LengthHorizontal > AttackVerb.verbProps.range)
 				{
-					Messages.Message("MessageTargetBeyondMaximumRange".Translate(), this, MessageTypeDefOf.RejectInput, false); // Core\GameplayCommands.xml
+					Messages.Message(TranslatorFormattedStringExtensions.Translate("MessageTargetBeyondMaximumRange"), this, MessageTypeDefOf.RejectInput, false);
 					return;
 				}
 			}
@@ -699,7 +699,7 @@ namespace SaveOurShip2
 			}
 			if (!ConnectedToBridge)
 			{
-				stringBuilder.AppendLine("SoS.TurretNotConnected".Translate());
+				stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.TurretNotConnected"));
 			}
 			if (AttackVerb.verbProps.minRange > 0f && GroundDefenseMode)
 			{
@@ -715,9 +715,9 @@ namespace SaveOurShip2
 				if (!(Position + GenAdj.CardinalDirectionsAround[Rotation.rotInt] * 2).Fogged(Map))
 				{
 					if (AmplifierCount != -1)
-						stringBuilder.AppendLine("SoS.AmplifierCount".Translate(AmplifierCount));
+						stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.AmplifierCount", AmplifierCount));
 					else
-						stringBuilder.AppendLine("SoS.SpinalCapNotFound".Translate());
+						stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.SpinalCapNotFound"));
 				}
 			}
 			if (torpComp != null)
@@ -737,15 +737,15 @@ namespace SaveOurShip2
 							torp++;
 					}
 					if (torp > 0)
-						stringBuilder.AppendLine(torp + " " + "SoS.LoadedTorpedoHE".Translate());
+						stringBuilder.AppendLine(torp + " " + TranslatorFormattedStringExtensions.Translate("SoS.LoadedTorpedoHE"));
 					if (torpEMP > 0)
-						stringBuilder.AppendLine(torpEMP + " " + "SoS.LoadedTorpedoEMP".Translate());
+						stringBuilder.AppendLine(torpEMP + " " + TranslatorFormattedStringExtensions.Translate("SoS.LoadedTorpedoEMP"));
 					if (torpAM > 0)
-						stringBuilder.AppendLine(torpAM + " " + "SoS.LoadedTorpedoAM".Translate());
+						stringBuilder.AppendLine(torpAM + " " + TranslatorFormattedStringExtensions.Translate("SoS.LoadedTorpedoAM"));
 				}
 				else
 				{
-					stringBuilder.AppendLine("SoS.TorpedoNotLoaded".Translate());
+					stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.TorpedoNotLoaded"));
 				}
 			}
 			return stringBuilder.ToString().TrimEndNewlines();
@@ -814,8 +814,8 @@ namespace SaveOurShip2
 				{
 					Command_VerbTarget command_VerbTarget = new Command_VerbTarget
 					{
-						defaultLabel = "CommandSetForceAttackTarget".Translate(), // Core\GameplayCommands.xml
-						defaultDesc = "CommandSetForceAttackTargetDesc".Translate(), // Core\GameplayCommands.xml
+						defaultLabel = TranslatorFormattedStringExtensions.Translate("CommandSetForceAttackTarget"),
+						defaultDesc = TranslatorFormattedStringExtensions.Translate("CommandSetForceAttackTargetDesc"),
 						icon = ContentFinder<Texture2D>.Get("UI/Commands/Attack", true),
 						verb = AttackVerb,
 						hotKey = KeyBindingDefOf.Misc4,
@@ -827,8 +827,8 @@ namespace SaveOurShip2
 				{
 					Command_TargetShipCombat command_VerbTargetShip = new Command_TargetShipCombat
 					{
-						defaultLabel = "CommandSetForceAttackTarget".Translate(), // Core\GameplayCommands.xml
-						defaultDesc = "CommandSetForceAttackTargetDesc".Translate(), // Core\GameplayCommands.xml
+						defaultLabel = TranslatorFormattedStringExtensions.Translate("CommandSetForceAttackTarget"),
+						defaultDesc = TranslatorFormattedStringExtensions.Translate("CommandSetForceAttackTargetDesc"),
 						icon = ContentFinder<Texture2D>.Get("UI/Commands/Attack"),
 						verb = AttackVerb,
 						turrets = Find.Selector.SelectedObjects.OfType<Building_ShipTurret>().ToList(),
@@ -842,8 +842,8 @@ namespace SaveOurShip2
 			{
 				Command_Action command_Action2 = new Command_Action
 				{
-					defaultLabel = "CommandStopForceAttack".Translate(), // Core\GameplayCommands.xml
-					defaultDesc = "CommandStopForceAttackDesc".Translate(), // Core\GameplayCommands.xml
+					defaultLabel = TranslatorFormattedStringExtensions.Translate("CommandStopForceAttack"),
+					defaultDesc = TranslatorFormattedStringExtensions.Translate("CommandStopForceAttackDesc"),
 					icon = ContentFinder<Texture2D>.Get("UI/Commands/Halt"),
 					action = delegate
 					{
@@ -862,8 +862,8 @@ namespace SaveOurShip2
 			{
 				Command_Toggle command_Toggle = new Command_Toggle
 				{
-					defaultLabel = "CommandHoldFire".Translate(), // Core\GameplayCommands.xml
-					defaultDesc = "CommandHoldFireDesc".Translate(), // Core\GameplayCommands.xml
+					defaultLabel = TranslatorFormattedStringExtensions.Translate("CommandHoldFire"),
+					defaultDesc = TranslatorFormattedStringExtensions.Translate("CommandHoldFireDesc"),
 					icon = ContentFinder<Texture2D>.Get("UI/Commands/HoldFire"),
 					hotKey = KeyBindingDefOf.Misc6,
 					toggleAction = delegate
