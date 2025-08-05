@@ -110,7 +110,7 @@
 					</handlingTypes>
 				</li>
 			</roles>
-			<customTerrainCosts>
+			<customTerrainCosts AssignDefaults="1">
 				<li>
 					<key>EmptySpace</key>
 					<value>0</value>
@@ -711,7 +711,7 @@
 					<slots>0</slots>
 				</li>
 			</roles>
-			<customTerrainCosts>
+			<customTerrainCosts AssignDefaults="1">
 				<li>
 					<key>EmptySpace</key>
 					<value>0</value>
@@ -1394,7 +1394,7 @@
 					<slots>0</slots>
 				</li>
 			</roles>
-			<customTerrainCosts>
+			<customTerrainCosts AssignDefaults="1">
 				<li>
 					<key>EmptySpace</key>
 					<value>0</value>
@@ -2223,7 +2223,7 @@
 					<slots>0</slots>
 				</li>
 			</roles>
-			<customTerrainCosts>
+			<customTerrainCosts AssignDefaults="1">
 				<li>
 					<key>EmptySpace</key>
 					<value>0</value>
