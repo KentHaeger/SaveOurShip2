@@ -2680,20 +2680,24 @@ namespace SaveOurShip2
 			//heat
 			targetMap.GetComponent<ShipMapComp>().heatGridDirty = true;
 
-			//regen affected map layers
-			List<Section> sourceSec = new List<Section>();
-			foreach (IntVec3 pos in sourceArea)
+			// The source map might be destroyed before
+			if (!sourceMap.Disposed)
 			{
-				Section sec = sourceMap.mapDrawer.SectionAt(pos);
-				if (!sourceSec.Contains(sec))
-					sourceSec.Add(sec);
-			}
-			foreach (Section sec in sourceSec)
-			{
-				// In transit map is not expected to have all layers set up, neither needs them
-				if (sourceMapComp.ShipMapState != ShipMapState.inTransit)
+				//regen affected map layers
+				List<Section> sourceSec = new List<Section>();
+				foreach (IntVec3 pos in sourceArea)
 				{
-					sec.RegenerateAllLayers(); //RegenerateDirtyLayers - some layers are not set dirty properly (zones), slower
+					Section sec = sourceMap.mapDrawer.SectionAt(pos);
+					if (!sourceSec.Contains(sec))
+						sourceSec.Add(sec);
+				}
+				foreach (Section sec in sourceSec)
+				{
+					// In transit map is not expected to have all layers set up, neither needs them
+					if (sourceMapComp.ShipMapState != ShipMapState.inTransit)
+					{
+						sec.RegenerateAllLayers(); //RegenerateDirtyLayers - some layers are not set dirty properly (zones), slower
+					}
 				}
 			}
 			List<Section> targetSec = new List<Section>();
