@@ -253,8 +253,8 @@ namespace SaveOurShip2
 							{
 								SpawnHologram();
 							},
-							defaultLabel = "SoS.SpawnHologram".Translate(),
-							defaultDesc = "SoS.SpawnHologramDesc".Translate(),
+							defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.SpawnHologram"),
+							defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.SpawnHologramDesc"),
 							icon = ContentFinder<Texture2D>.Get("UI/SpawnHologram", true)
 						};
 						if (Find.TickManager.TicksGame < this.HologramRespawnTick)
@@ -269,8 +269,8 @@ namespace SaveOurShip2
 									{
 										SpawnHologram();
 									},
-									defaultLabel = "SoS.SpawnHologramLabel".Translate(),
-									defaultDesc = "SoS.SpawnHologramDesc".Translate()
+									defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.SpawnHologramLabel"),
+									defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.SpawnHologramDesc")
 								};
 								gizmos.Add(spawn2);
 							}

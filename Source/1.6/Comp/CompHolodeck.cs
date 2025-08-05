@@ -179,8 +179,8 @@ namespace SaveOurShip2
 		public override string CompInspectStringExtra()
 		{
 			if(CurSkill!=null)
-				return "SoS.HolodeckOnline".Translate(programs[CurSkill].programName);
-			return "SoS.HolodeckOffline".Translate();
+				return TranslatorFormattedStringExtensions.Translate("SoS.HolodeckOnline", programs[CurSkill].programName);
+			return TranslatorFormattedStringExtensions.Translate("SoS.HolodeckOffline");
 		}
 
 		public override void PostDraw()
