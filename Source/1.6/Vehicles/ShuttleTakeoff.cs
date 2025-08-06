@@ -78,7 +78,7 @@ namespace SaveOurShip2.Vehicles
             
         }
 
-        public IEnumerable<ArrivalOption> FloatMenuMissions(int tile, ShipMapComp mapComp)
+        public IEnumerable<ArrivalOption> FloatMenuMissions(PlanetTile tile, ShipMapComp mapComp)
 		{
 			yield return ArrivalOption_Board(tile, mapComp);
 			//samey in CompShuttleLauncher.CompGetGizmosExtra
@@ -94,7 +94,7 @@ namespace SaveOurShip2.Vehicles
 			}
         }
 
-        ArrivalOption ArrivalOption_Board(int tile, ShipMapComp mapComp)
+        ArrivalOption ArrivalOption_Board(PlanetTile tile, ShipMapComp mapComp)
         {
             string text = "SoS.ShuttleMissionFloatBoardWarn".Translate();
             if (ShipInteriorMod2.ShuttleShouldBoard(mapComp, vehicle))
@@ -102,22 +102,22 @@ namespace SaveOurShip2.Vehicles
             return new ArrivalOption(text, delegate { LaunchShuttleToCombatManager(vehicle, ShuttleMission.BOARD); });
         }
 
-        ArrivalOption ArrivalOption_Intercept(int tile)
+        ArrivalOption ArrivalOption_Intercept(PlanetTile tile)
         {
             return new ArrivalOption("SoS.ShuttleMissionFloatIntercept".Translate(), delegate { LaunchShuttleToCombatManager(vehicle, ShuttleMission.INTERCEPT); });
         }
 
-        ArrivalOption ArrivalOption_Strafe(int tile)
+        ArrivalOption ArrivalOption_Strafe(PlanetTile tile)
         {
             return new ArrivalOption("SoS.ShuttleMissionFloatStrafe".Translate(), delegate { LaunchShuttleToCombatManager(vehicle, ShuttleMission.STRAFE); });
         }
 
-        ArrivalOption ArrivalOption_Bomb(int tile)
+        ArrivalOption ArrivalOption_Bomb(PlanetTile tile)
         {
             return new ArrivalOption("SoS.ShuttleMissionFloatTorpedo".Translate(), delegate { LaunchShuttleToCombatManager(vehicle, ShuttleMission.BOMB); });
         }
 
-        ArrivalOption ArrivalOption_ReturnFromEnemy(int tile)
+        ArrivalOption ArrivalOption_ReturnFromEnemy(PlanetTile tile)
         {
             return new ArrivalOption("SoS.ShuttleMissionFloatReturn".Translate(), delegate { LaunchShuttleToCombatManager(vehicle, ShuttleMission.BOARD); });
         }

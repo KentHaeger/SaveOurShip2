@@ -37,7 +37,7 @@ namespace SaveOurShip2
 			return false;
 		}
 
-		public static void TryLinkMapToWorldObject(Map map, int tile)
+		public static void TryLinkMapToWorldObject(Map map, PlanetTile tile)
 		{
 			// For now, issue was found with Escape Ship map due to that map not being linked to world object
 			// So, fixing onlyy that case for now

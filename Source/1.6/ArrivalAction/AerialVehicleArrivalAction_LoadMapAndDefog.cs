@@ -18,7 +18,7 @@ namespace SaveOurShip2.Vehicles
 
         }
 
-        public AerialVehicleArrivalAction_LoadMapAndDefog(VehiclePawn vehicle, LaunchProtocol launchProtocol, int tile, AerialVehicleArrivalModeDef arrivalModeDef)
+        public AerialVehicleArrivalAction_LoadMapAndDefog(VehiclePawn vehicle, LaunchProtocol launchProtocol, PlanetTile tile, AerialVehicleArrivalModeDef arrivalModeDef)
         : base(vehicle, arrivalModeDef)
         {
 
@@ -26,7 +26,7 @@ namespace SaveOurShip2.Vehicles
 
         public override void Arrived(GlobalTargetInfo target)
         {
-            int tile = target.Tile;
+            PlanetTile tile = target.Tile;
             LongEventHandler.QueueLongEvent((Action)delegate
             {
                 Map map = GetOrGenerateMapUtility.GetOrGenerateMap(tile, null);

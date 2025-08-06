@@ -1854,17 +1854,17 @@ namespace SaveOurShip2
 			return def == ResourceBank.TerrainDefOf.FakeFloorInsideShip || def == ResourceBank.TerrainDefOf.FakeFloorInsideShipMech || def == ResourceBank.TerrainDefOf.FakeFloorInsideShipArchotech;
 		}
 
-		public static List<int> PossibleShipLandingTiles(int root, float min, float max)
+		public static List<PlanetTile> PossibleShipLandingTiles(int root, float min, float max)
 		{
-			List<int> tiles = new List<int>();
+			List<PlanetTile> tiles = new List<PlanetTile>();
 			PlanetTile planetTile = new PlanetTile(root);
-			planetTile.Layer.Filler.FloodFill(root, (PlanetTile tile) => CanLandShip(tile.tileId, root, min, max), delegate (PlanetTile tile, int dist)
+			planetTile.Layer.Filler.FloodFill(root, (PlanetTile tile) => CanLandShip(tile, root, min, max), delegate (PlanetTile tile, int dist)
 			{
-				tiles.Add(tile.tileId);
+				tiles.Add(tile);
 			}, 20, null);
 			return tiles;
 		}
-		public static bool CanLandShip(int tile, int root, float min, float max)
+		public static bool CanLandShip(PlanetTile tile, int root, float min, float max)
 		{
 			Tile t = Find.WorldGrid[tile];
 			if (TileFinder.IsValidTileForNewSettlement(tile) && t.hilliness == Hilliness.Mountainous)// || t.hilliness == Hilliness.LargeHills || !t.biome.canBuildBase || t.hilliness == Hilliness.Impassable || Find.WorldObjects.SettlementBaseAt(tile) != null || Find.WorldObjects.AnySettlementBaseAtOrAdjacent(tile))
