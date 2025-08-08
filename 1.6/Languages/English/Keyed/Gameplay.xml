@@ -574,6 +574,14 @@
 	<SoS.SpaceStart.DamageShipTrue>Damage ship: True</SoS.SpaceStart.DamageShipTrue>
 	<SoS.SpaceStart.DamageShipFalse>Damage ship: False</SoS.SpaceStart.DamageShipFalse>
 
+	<SoS.True>True</SoS.True>
+	<SoS.False>False</SoS.False>
+
+	<SoS.ShipStartFlags.None>None</SoS.ShipStartFlags.None>
+	<SoS.ShipStartFlags.Ship>Ship</SoS.ShipStartFlags.Ship>
+	<SoS.ShipStartFlags.Station>Station</SoS.ShipStartFlags.Station>
+	<SoS.ShipStartFlags.LoadShip>LoadShip</SoS.ShipStartFlags.LoadShip>
+
 	<SoS.Error.VersionNotMatch>SOS2 {0} requires Rimworld 1.{1}.{2} or greater!</SoS.Error.VersionNotMatch>
 	<SoS.Error.UpdateYourGame>Update your game!</SoS.Error.UpdateYourGame>
 	<SoS.Error.NoHarmony>ERROR: SOS2 requires Harmony! Download and enable it!</SoS.Error.NoHarmony>
