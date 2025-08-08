@@ -3799,7 +3799,6 @@
 		<seeThroughFog>true</seeThroughFog>
 		<uiIconPath>Things/Building/Ship/HullPlate</uiIconPath>
 		<building>
-			<isAirtight>true</isAirtight>
 			<ai_chillDestination>false</ai_chillDestination>
 			<isInert>true</isInert>
 			<isEdifice>false</isEdifice>
