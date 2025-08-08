@@ -126,7 +126,7 @@ namespace SaveOurShip2
 		{
 			base.GetSettings<ModSettings_SoS>();
 		}
-		public const string SOS2version = "GithubV2.7.56";
+		public const string SOS2version = "GithubV2.7.57";
 		public const int SOS2ReqCurrentMinor = 5;
 		// 1.5.4063 public build (4062 constant) was not enough as there is no AnomalyUtility.TryDuplicatePawn_NewTemp method to harmony patch it.
 		// Historical builds are not available, so for sure can be increased just to next build, 4066
@@ -3441,22 +3441,6 @@ namespace SaveOurShip2
 				}
 			}
 			return sb.ToString();
-		}
-	}
-
-	public class MapHelper
-	{
-		public static void TryLinkMapToWorldObject(Map map, int tile)
-		{
-			// For now, issue was found with Escape Ship map due to that map not being linked to world object
-			// So, fixing onlyy that case for now
-			WorldObject worldObject = Find.WorldObjects.ObjectsAt(tile).FirstOrDefault(t => t is EscapeShip);
-			if (worldObject != null && worldObject.Faction != Faction.OfPlayer)
-			{
-				// Link map to Escap ship object sho that it gets "Home" icon and when selected on world map, there is Abadon option 
-				map.info.parent = (MapParent)worldObject;
-				worldObject.SetFaction(Faction.OfPlayer);
-			}
 		}
 	}
 
