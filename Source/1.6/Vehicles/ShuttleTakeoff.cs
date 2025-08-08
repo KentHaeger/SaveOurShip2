@@ -61,38 +61,11 @@ namespace SaveOurShip2.Vehicles
 				}
 			}
             List<ArrivalOption> baseOptions = new List<ArrivalOption>(base.GetArrivalOptions(target));
-            // In this case, framework only allows to form caravan at the tile with map parent, which is nether site, nor settlement
-            bool vehicleCaravanCondition = WorldVehiclePathGrid.Instance.Passable(target.Tile, vehicle.VehicleDef) &&
-                !Find.WorldObjects.AnySettlementBaseAt(target.Tile) && !Find.WorldObjects.AnySiteAt(target.Tile);
-            // But when there is SOS 2 map parent, add option to land at that map
-            if (mp != null && vehicleCaravanCondition)
-            {
-                yield return new ArrivalOption("LandInExistingMap".Translate(vehicle.Label),
-                    continueWith: delegate (TargetData<GlobalTargetInfo> targetData)
-                    {
-                        Current.Game.CurrentMap = mp.Map;
-                        CameraJumper.TryHideWorld();
-                        LandingTargeter.Instance.BeginTargeting(vehicle,
-                                action: delegate (LocalTargetInfo landingCell, Rot4 rot)
-                        {
-                            if (vehicle.Spawned)
-                            {
-                                vehicle.CompVehicleLauncher.Launch(targetData,
-                                        new ArrivalAction_LandToCell(vehicle, mp, landingCell.Cell, rot));
-                            }
-                            else
-                            {
-                                AerialVehicleInFlight aerialVehicle = vehicle.GetOrMakeAerialVehicle();
-                                List<FlightNode> nodes = targetData.targets.Select(tgt => new FlightNode(tgt)).ToList();
-                                aerialVehicle.OrderFlyToTiles(nodes,
-                                        new ArrivalAction_LandToCell(vehicle, mp, landingCell.Cell, rot));
-                                vehicle.CompVehicleLauncher.inFlight = true;
-                                CameraJumper.TryShowWorld();
-                            }
-                        }, allowRotating: vehicle.VehicleDef.rotatable,
-                                targetValidator: targetInfo =>
-                                    !Ext_Vehicles.IsRoofRestricted(vehicle.VehicleDef, targetInfo.Cell, mp.Map));
-                    });
+            if (mp != null && !mp.HasMap)
+			{
+                // TODO: check for list of sites: landed ship, pillars.
+                yield return new ArrivalOption("VF_LandVehicleTargetedLanding".Translate(mp.Label),
+                    new ArrivalAction_LoadMap(vehicle, AerialVehicleArrivalModeDefOf.TargetedLanding));
             }
             if (baseOptions.Count==0)
             {

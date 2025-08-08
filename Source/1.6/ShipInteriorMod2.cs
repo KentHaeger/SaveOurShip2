@@ -3440,22 +3440,6 @@ namespace SaveOurShip2
 		}
 	}
 
-	public class MapHelper
-	{
-		public static void TryLinkMapToWorldObject(Map map, int tile)
-		{
-			// For now, issue was found with Escape Ship map due to that map not being linked to world object
-			// So, fixing onlyy that case for now
-			WorldObject worldObject = Find.WorldObjects.ObjectsAt(tile).FirstOrDefault(t => t is EscapeShip);
-			if (worldObject != null && worldObject.Faction != Faction.OfPlayer)
-			{
-				// Link map to Escap ship object sho that it gets "Home" icon and when selected on world map, there is Abadon option 
-				map.info.parent = (MapParent)worldObject;
-				worldObject.SetFaction(Faction.OfPlayer);
-			}
-		}
-	}
-
 	public static class TimeDeltas
 	{
 		public const int ComfortDelta = 15;
