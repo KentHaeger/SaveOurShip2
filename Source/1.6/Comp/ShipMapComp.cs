@@ -1601,7 +1601,7 @@ namespace SaveOurShip2
 							}
 						}
                     }
-					mission.shuttle.compFuel.ConsumeFuel(mission.shuttle.compFuel.FuelEfficiency / 6000f);
+					mission.shuttle.CompFueledTravel.ConsumeFuel(mission.shuttle.CompFueledTravel.FuelEfficiency / 6000f);
 					if(mission.mission != ShuttleMission.RETURN && mission.shuttle.compFuel.Fuel < 10)
                     {
 						if (mission.shuttle.Faction == Faction.OfPlayer)
@@ -2076,12 +2076,12 @@ namespace SaveOurShip2
 							{
 								if (shuttle.AllPawnsAboard.Count > 0)
 								{
+									Map fromMap = shuttle.Map;
 									shuttle.CompVehicleLauncher.inFlight = true;
 									shuttle.CompVehicleLauncher.launchProtocol.OrderProtocol(LaunchProtocol.LaunchType.Takeoff);
 									VehicleSkyfaller_Leaving vehicleSkyfaller_Leaving = (VehicleSkyfaller_Leaving)VehicleSkyfallerMaker.MakeSkyfaller(shuttle.CompVehicleLauncher.Props.skyfallerLeaving, shuttle);
 									vehicleSkyfaller_Leaving.vehicle = shuttle;
 									vehicleSkyfaller_Leaving.createWorldObject = false;
-									GenSpawn.Spawn(vehicleSkyfaller_Leaving, shuttle.Position, shuttle.Map, shuttle.CompVehicleLauncher.launchProtocol.CurAnimationProperties.forcedRotation ?? shuttle.Rotation);
 									var shuttleMapComp = shuttle.Map.GetComponent<ShipMapComp>(); //td wouldnt it always be this.?
 									if (ShipInteriorMod2.ShuttleHasLaser(shuttle))
 									{
@@ -2097,6 +2097,7 @@ namespace SaveOurShip2
 									CameraJumper.TryHideWorld();
 									shuttle.EventRegistry[VehicleEventDefOf.AerialVehicleLaunch].ExecuteEvents();
 									shuttlesYetToLaunch.Remove(shuttle);
+									GenSpawn.Spawn(vehicleSkyfaller_Leaving, shuttle.Position, fromMap, shuttle.CompVehicleLauncher.launchProtocol.CurAnimationProperties.forcedRotation ?? shuttle.Rotation);
 								}
 							}
 							if (shuttlesYetToLaunch.Count == 0)
@@ -2137,15 +2138,16 @@ namespace SaveOurShip2
 								{
 									if (shuttle.AllPawnsAboard.Count > 0)
 									{
+										Map fromMap = shuttle.Map;
 										shuttle.CompVehicleLauncher.inFlight = true;
 										shuttle.CompVehicleLauncher.launchProtocol.OrderProtocol(LaunchProtocol.LaunchType.Takeoff);
 										VehicleSkyfaller_Leaving vehicleSkyfaller_Leaving = (VehicleSkyfaller_Leaving)VehicleSkyfallerMaker.MakeSkyfaller(shuttle.CompVehicleLauncher.Props.skyfallerLeaving, shuttle);
 										vehicleSkyfaller_Leaving.vehicle = shuttle;
 										vehicleSkyfaller_Leaving.createWorldObject = false;
-										GenSpawn.Spawn(vehicleSkyfaller_Leaving, shuttle.Position, shuttle.Map, shuttle.CompVehicleLauncher.launchProtocol.CurAnimationProperties.forcedRotation ?? shuttle.Rotation);
 										((ShuttleTakeoff)shuttle.CompVehicleLauncher.launchProtocol).TempMissionRef = shuttle.Map.GetComponent<ShipMapComp>().RegisterShuttleMission(shuttle, ShuttleMission.BOARD);
 										CameraJumper.TryHideWorld();
 										shuttle.EventRegistry[VehicleEventDefOf.AerialVehicleLaunch].ExecuteEvents();
+										GenSpawn.Spawn(vehicleSkyfaller_Leaving, shuttle.Position, fromMap, shuttle.CompVehicleLauncher.launchProtocol.CurAnimationProperties.forcedRotation ?? shuttle.Rotation);
 									}
 								}
 								launchedBoarders = true;
