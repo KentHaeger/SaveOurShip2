@@ -20,6 +20,9 @@
 		<placeWorkers>
 			<li>SaveOurShip2.PlaceWorker_ShipHull</li>
 		</placeWorkers>
+		<building>
+			<isAirtight>true</isAirtight>
+		</building>
 	</ThingDef>
 	<!-- hull -->
 	<DesignatorDropdownGroupDef>
@@ -558,6 +561,7 @@
 		<blockLight>true</blockLight>
 		<drawerType>RealtimeOnly</drawerType>
 		<building>
+			<isAirtight>true</isAirtight>
 			<shipPart>true</shipPart>
 			<isInert>true</isInert>
 			<canPlaceOverWall>true</canPlaceOverWall>
@@ -971,6 +975,7 @@
 			<li>SaveOurShip2.PlaceWorker_ShipEngine</li>
 		</placeWorkers>
 		<building>
+			<isAirtight>true</isAirtight>
 			<shipPart>true</shipPart>
 		</building>
 		<costList>
@@ -1048,6 +1053,7 @@
 			<li>SaveOurShip2.PlaceWorker_ShipEngine</li>
 		</placeWorkers>
 		<building>
+			<isAirtight>true</isAirtight>
 			<shipPart>true</shipPart>
 		</building>
 		<costList>
@@ -1126,6 +1132,7 @@
 			<li>SaveOurShip2.PlaceWorker_ShipEngine</li>
 		</placeWorkers>
 		<building>
+			<isAirtight>true</isAirtight>
 			<shipPart>true</shipPart>
 		</building>
 		<costList>
@@ -1173,6 +1180,7 @@
 			</li>
 		</comps>
 		<building>
+			<isAirtight>true</isAirtight>
 			<shipPart>true</shipPart>
 			<paintable>true</paintable>
 		</building>
@@ -1235,6 +1243,7 @@
 			<li>SaveOurShip2.PlaceWorker_ShipEngine</li>
 		</placeWorkers>
 		<building>
+			<isAirtight>true</isAirtight>
 			<shipPart>true</shipPart>
 		</building>
 		<costList>
@@ -1296,6 +1305,7 @@
 			<li>SaveOurShip2.PlaceWorker_ShipEngine</li>
 		</placeWorkers>
 		<building>
+			<isAirtight>true</isAirtight>
 			<shipPart>true</shipPart>
 		</building>
 		<costList>
@@ -1564,6 +1574,9 @@
 		</costList>
 		<designationHotKey>Misc3</designationHotKey>
 		<constructionSkillPrerequisite>8</constructionSkillPrerequisite>
+		<building>
+			<isAirtight>true</isAirtight>
+		</building>
 	</ThingDef>
 
 	<ThingDef ParentName="BuildingShipBase">
@@ -1622,6 +1635,9 @@
 		<thingCategories>
 			<li>Buildings</li>
 		</thingCategories>
+		<building>
+			<isAirtight>true</isAirtight>
+		</building>
 	</ThingDef>
 	<!-- sensors -->
 	<DesignatorDropdownGroupDef>
@@ -1671,6 +1687,9 @@
 		</placeWorkers>
 		<designationHotKey>Misc5</designationHotKey>
 		<constructionSkillPrerequisite>8</constructionSkillPrerequisite>
+		<building>
+			<isAirtight>true</isAirtight>
+		</building>
 	</ThingDef>
 	<ThingDef ParentName="BuildingShipBase">
 		<defName>Ship_SensorClusterAdv</defName>
@@ -1715,6 +1734,9 @@
 		</placeWorkers>
 		<designationHotKey>Misc5</designationHotKey>
 		<constructionSkillPrerequisite>12</constructionSkillPrerequisite>
+		<building>
+			<isAirtight>true</isAirtight>
+		</building>
 	</ThingDef>
 	<!-- ls -->
 	<DesignatorDropdownGroupDef>
@@ -2963,6 +2985,7 @@
 		<canOverlapZones>false</canOverlapZones>
 		<fertility>0</fertility>
 		<building>
+			<isAirtight>true</isAirtight>
 			<isInert>true</isInert>
 			<ai_chillDestination>false</ai_chillDestination>
 			<blueprintGraphicData>
@@ -3074,6 +3097,7 @@
 		<canOverlapZones>false</canOverlapZones>
 		<fertility>0</fertility>
 		<building>
+			<isAirtight>true</isAirtight>
 			<isInert>true</isInert>
 			<ai_chillDestination>false</ai_chillDestination>
 			<blueprintGraphicData>
@@ -3130,6 +3154,7 @@
 		<canOverlapZones>false</canOverlapZones>
 		<fertility>0</fertility>
 		<building>
+			<isAirtight>true</isAirtight>
 			<isInert>true</isInert>
 			<ai_chillDestination>false</ai_chillDestination>
 			<blueprintGraphicData>
@@ -3682,6 +3707,9 @@
 			<Steel>1</Steel>
 		</costList>
 		<constructionSkillPrerequisite>0</constructionSkillPrerequisite>
+		<building>
+			<isAirtight>true</isAirtight>
+		</building>
 	</ThingDef>
 
 	<ThingDef ParentName="BuildingShipBase">
@@ -3750,6 +3778,7 @@
 			<li Class="Rimefeller.CompProperties_Pipe" MayRequire="Dubwise.Rimefeller"/>
 		</comps>
 		<building>
+			<isAirtight>true</isAirtight>
 			<shipPart>true</shipPart>
 		</building>
 		<costList>
@@ -3770,6 +3799,7 @@
 		<seeThroughFog>true</seeThroughFog>
 		<uiIconPath>Things/Building/Ship/HullPlate</uiIconPath>
 		<building>
+			<isAirtight>true</isAirtight>
 			<ai_chillDestination>false</ai_chillDestination>
 			<isInert>true</isInert>
 			<isEdifice>false</isEdifice>

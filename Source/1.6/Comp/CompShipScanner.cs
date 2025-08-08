@@ -181,7 +181,7 @@ namespace SaveOurShip2
 						ship.derelictShip = navy.spaceShipDefs.Where(def => def.spaceSite && !def.neverRandom && def.rarityLevel <= Rand.RangeInclusive(1, 2)).RandomElement();
 						ship.shipFaction = Find.FactionManager.AllFactions.Where(f => navy.factionDefs.Contains(f.def)).RandomElement();
 						ship.spaceNavyDef = navy;
-						if (ship.derelictShip.neverWreck)
+						if (ship.derelictShip?.neverWreck ?? false)
 							ship.wreckLevel = 0;
 						else
 							ship.wreckLevel = Rand.RangeInclusive(0, 3);

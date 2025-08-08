@@ -49,7 +49,7 @@ namespace SaveOurShip2
 						}
 					}
 				}
-				if (flag2 && !flag && !flag3)
+				if (flag2 && !flag && !flag3 && !SOS2MapUtility.AnyVehiclePreventsMapRemoval(mapParent.Map))
 				{
 					Find.WorldObjects.Remove(this.parent);
 					if (!ShipInteriorMod2.WorldComp.Unlocks.Contains("ArchotechPillarB"))

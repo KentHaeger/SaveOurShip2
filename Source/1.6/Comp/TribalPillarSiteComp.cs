@@ -5,6 +5,8 @@ using System.Diagnostics;
 using Verse;
 using System.Linq;
 using RimWorld.Planet;
+using Vehicles;
+using SmashTools;
 
 namespace SaveOurShip2
 {
@@ -48,7 +50,27 @@ namespace SaveOurShip2
 						}
 					}
 				}
-				if (flag2 && !flag && !flag3)
+				bool vehiclePreventsMapRemoval = MapHelper.AnyVehicleSkyfallersBlockingMap(mapParent.Map) ||
+					MapHelper.AnyAerialVehiclesInRecon(mapParent.Map);
+				foreach (VehiclePawn vehicle in mapParent.Map.GetDetachedMapComponent<VehiclePositionManager>().AllClaimants)
+				{
+					if (vehicle.MovementPermissions.HasFlag(VehiclePermissions.Autonomous))
+					{
+						vehiclePreventsMapRemoval = true;
+						break;
+					}
+
+					foreach (Pawn passenger in vehicle.AllPawnsAboard)
+					{
+						if (MapPawns.IsValidColonyPawn(passenger))
+						{
+							vehiclePreventsMapRemoval = true;
+							break;
+						}
+					}
+				}
+
+				if (flag2 && !flag && !flag3 && !SOS2MapUtility.AnyVehiclePreventsMapRemoval(mapParent.Map))
 				{
 					Find.WorldObjects.Remove(this.parent);
 					if (!ShipInteriorMod2.WorldComp.Unlocks.Contains("ArchotechPillarC"))

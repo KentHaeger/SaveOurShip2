@@ -30,7 +30,7 @@ namespace SaveOurShip2.Vehicles
             LongEventHandler.QueueLongEvent((Action)delegate
             {
                 Map map = GetOrGenerateMapUtility.GetOrGenerateMap(tile, null);
-                MapHelper.TryLinkMapToWorldObject(map, tile);
+                SOS2MapUtility.TryLinkMapToWorldObject(map, tile);
                 // CHANGE 1.6 - new hasMap parameter
                 MapLoaded(map, true);
                 FloodFillerFog.FloodUnfog(CellFinderLoose.TryFindCentralCell(map, 7, 10, (IntVec3 x) => !x.Roofed(map)), map);

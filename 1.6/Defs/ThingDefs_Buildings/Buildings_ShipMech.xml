@@ -487,6 +487,7 @@
 		<blockLight>true</blockLight>
 		<drawerType>RealtimeOnly</drawerType>
 		<building>
+			<isAirtight>true</isAirtight>
 			<shipPart>true</shipPart>
 			<isInert>true</isInert>
 			<canPlaceOverWall>true</canPlaceOverWall>
