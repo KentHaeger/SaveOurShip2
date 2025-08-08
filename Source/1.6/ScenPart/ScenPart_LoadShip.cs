@@ -81,30 +81,30 @@ namespace SaveOurShip2
 			{
 				FloatMenuUtility.MakeMenu(Directory.GetFiles(Path.Combine(GenFilePaths.SaveDataFolderPath, "SoS2")), (string path) => Path.GetFileNameWithoutExtension(path), (string path) => () => { filename = Path.GetFileNameWithoutExtension(path); });
 			}
-			if (Widgets.ButtonText(rect2, TranslatorFormattedStringExtensions.Translate("SoS.LoadShip.DiscardLog", discardLog.ToString())))
+			if (Widgets.ButtonText(rect2, TranslatorFormattedStringExtensions.Translate("SoS.LoadShip.DiscardLog", discardLog.ToStringTranslated())))
 			{
 				List<FloatMenuOption> toggleLog = new List<FloatMenuOption>
 				{
-					new FloatMenuOption(TranslatorFormattedStringExtensions.Translate("SoS.LoadShip.DiscardLog", true.ToString()), delegate ()
+					new FloatMenuOption(TranslatorFormattedStringExtensions.Translate("SoS.LoadShip.DiscardLog", true.ToStringTranslated()), delegate ()
 					{
 						discardLog = true;
 					}, MenuOptionPriority.Default, null, null, 0f, null, null, true, 0),
-					new FloatMenuOption(TranslatorFormattedStringExtensions.Translate("SoS.LoadShip.DiscardLog", false.ToString()), delegate ()
+					new FloatMenuOption(TranslatorFormattedStringExtensions.Translate("SoS.LoadShip.DiscardLog", false.ToStringTranslated()), delegate ()
 					{
 						discardLog = false;
 					}, MenuOptionPriority.Default, null, null, 0f, null, null, true, 0)
 				};
 				Find.WindowStack.Add(new FloatMenu(toggleLog));
 			}
-			if (Widgets.ButtonText(rect3, TranslatorFormattedStringExtensions.Translate("SoS.LoadShip.DiscardTales", discardTales.ToString())))
+			if (Widgets.ButtonText(rect3, TranslatorFormattedStringExtensions.Translate("SoS.LoadShip.DiscardTales", discardTales.ToStringTranslated())))
 			{
 				List<FloatMenuOption> toggleTales = new List<FloatMenuOption>
 				{
-					new FloatMenuOption(TranslatorFormattedStringExtensions.Translate("SoS.LoadShip.DiscardTales", true.ToString()), delegate ()
+					new FloatMenuOption(TranslatorFormattedStringExtensions.Translate("SoS.LoadShip.DiscardTales", true.ToStringTranslated()), delegate ()
 					{
 						discardTales = true;
 					}, MenuOptionPriority.Default, null, null, 0f, null, null, true, 0),
-					new FloatMenuOption(TranslatorFormattedStringExtensions.Translate("SoS.LoadShip.DiscardTales", false.ToString()), delegate ()
+					new FloatMenuOption(TranslatorFormattedStringExtensions.Translate("SoS.LoadShip.DiscardTales", false.ToStringTranslated()), delegate ()
 					{
 						discardTales = false;
 					}, MenuOptionPriority.Default, null, null, 0f, null, null, true, 0)
