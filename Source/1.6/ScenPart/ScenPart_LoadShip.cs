@@ -81,30 +81,30 @@ namespace SaveOurShip2
 			{
 				FloatMenuUtility.MakeMenu(Directory.GetFiles(Path.Combine(GenFilePaths.SaveDataFolderPath, "SoS2")), (string path) => Path.GetFileNameWithoutExtension(path), (string path) => () => { filename = Path.GetFileNameWithoutExtension(path); });
 			}
-			if (Widgets.ButtonText(rect2, "SoS.LoadShip.DiscardLog".Translate(discardLog.ToString())))
+			if (Widgets.ButtonText(rect2, TranslatorFormattedStringExtensions.Translate("SoS.LoadShip.DiscardLog", discardLog.ToString())))
 			{
 				List<FloatMenuOption> toggleLog = new List<FloatMenuOption>
 				{
-					new FloatMenuOption("SoS.LoadShip.DiscardLogTrue".Translate(), delegate ()
+					new FloatMenuOption(TranslatorFormattedStringExtensions.Translate("SoS.LoadShip.DiscardLog", true.ToString()), delegate ()
 					{
 						discardLog = true;
 					}, MenuOptionPriority.Default, null, null, 0f, null, null, true, 0),
-					new FloatMenuOption("SoS.LoadShip.DiscardLogFalse".Translate(), delegate ()
+					new FloatMenuOption(TranslatorFormattedStringExtensions.Translate("SoS.LoadShip.DiscardLog", false.ToString()), delegate ()
 					{
 						discardLog = false;
 					}, MenuOptionPriority.Default, null, null, 0f, null, null, true, 0)
 				};
 				Find.WindowStack.Add(new FloatMenu(toggleLog));
 			}
-			if (Widgets.ButtonText(rect3, "SoS.LoadShip.DiscardTales".Translate(discardTales.ToString())))
+			if (Widgets.ButtonText(rect3, TranslatorFormattedStringExtensions.Translate("SoS.LoadShip.DiscardTales", discardTales.ToString())))
 			{
 				List<FloatMenuOption> toggleTales = new List<FloatMenuOption>
 				{
-					new FloatMenuOption("SoS.LoadShip.DiscardTalesTrue".Translate(), delegate ()
+					new FloatMenuOption(TranslatorFormattedStringExtensions.Translate("SoS.LoadShip.DiscardTales", true.ToString()), delegate ()
 					{
 						discardTales = true;
 					}, MenuOptionPriority.Default, null, null, 0f, null, null, true, 0),
-					new FloatMenuOption("SoS.LoadShip.DiscardTalesFalse".Translate(), delegate ()
+					new FloatMenuOption(TranslatorFormattedStringExtensions.Translate("SoS.LoadShip.DiscardTales", false.ToString()), delegate ()
 					{
 						discardTales = false;
 					}, MenuOptionPriority.Default, null, null, 0f, null, null, true, 0)
@@ -115,7 +115,7 @@ namespace SaveOurShip2
 		public override string Summary(Scenario scen)
 		{
 			if (HasValidFilename())
-				return "SoS.LoadShip.ScenPartDesc".Translate(filename);
+				return TranslatorFormattedStringExtensions.Translate("SoS.LoadShip.ScenPartDesc", filename);
 			return "";
 		}
 
@@ -149,7 +149,7 @@ namespace SaveOurShip2
 				filename = Path.GetFileNameWithoutExtension(mostRecentFile.FullName);
 			if (!HasValidFilename())
 			{
-				Dialog_MessageBox window = new Dialog_MessageBox("SoS.NoShipsToLoad".Translate());
+				Dialog_MessageBox window = new Dialog_MessageBox(TranslatorFormattedStringExtensions.Translate("SoS.NoShipsToLoad"));
 				Find.WindowStack.Add(window);
 			}
 		}

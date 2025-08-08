@@ -128,4 +128,6 @@
   <SoS.Dev.RemoveShip>Dev: Remove ship</SoS.Dev.RemoveShip>
   <SoS.Dev.RemoveShipDesc>Delete a glitched ship and its map.</SoS.Dev.RemoveShipDesc>
   <SoS.Dev.OrbitingShipInfo>State: {0} Altitude: {1}\nRadius: {2} Theta: {3} Phi: {4}\nDrawPos: {5}\noriginDrawPos: {6}\ntargetDrawPos: {7}</SoS.Dev.OrbitingShipInfo>
+  
+  <!-- Mechanite fire -->
 </LanguageData>

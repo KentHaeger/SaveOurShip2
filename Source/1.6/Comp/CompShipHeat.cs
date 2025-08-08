@@ -54,7 +54,7 @@ namespace SaveOurShip2
 					output += "\n" + TranslatorFormattedStringExtensions.Translate("SoS.HeatCritical").Colorize(Color.red);
 				if (Prefs.DevMode)
 				{
-					output += "\n" + "SoS.Dev.HeatDetailed".Translate(
+					output += "\n" + TranslatorFormattedStringExtensions.Translate("SoS.Dev.HeatDetailed",
 						myNet.GridID,
 						myNet.RatioInNetworkRaw.ToString("F2"),
 						myNet.DepletionRatio.ToString("F2"),
@@ -76,9 +76,9 @@ namespace SaveOurShip2
 					energyNeed = this.Props.energyToFire;
 
 				if (energyNeed < 0)
-					output += "\n" + "SoS.HeatTurretEnergyNull".Translate();
+					output += "\n" + TranslatorFormattedStringExtensions.Translate("SoS.HeatTurretEnergyNull");
 				else
-					output += "\n" + "SoS.HeatTurretEnergy".Translate(energyNeed.ToStringDecimalIfSmall());
+					output += "\n" + TranslatorFormattedStringExtensions.Translate("SoS.HeatTurretEnergy", energyNeed.ToStringDecimalIfSmall());
 			}
 			return output;
 		}

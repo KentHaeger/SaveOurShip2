@@ -107,8 +107,8 @@ namespace SaveOurShip2
 			}
 			if (!list2.Any<string>())
 			{
-				list.Add(new Rule_String("allSitePartsDescriptions", "HiddenOrNoSitePartDescription".Translate()));
-				list.Add(new Rule_String("allSitePartsDescriptionsExceptFirst", "HiddenOrNoSitePartDescription".Translate()));
+				list.Add(new Rule_String("allSitePartsDescriptions", TranslatorFormattedStringExtensions.Translate("HiddenOrNoSitePartDescription")));
+				list.Add(new Rule_String("allSitePartsDescriptionsExceptFirst", TranslatorFormattedStringExtensions.Translate("HiddenOrNoSitePartDescription")));
 			}
 			else
 			{
@@ -119,7 +119,7 @@ namespace SaveOurShip2
 				}
 				else
 				{
-					list.Add(new Rule_String("allSitePartsDescriptionsExceptFirst", "HiddenOrNoSitePartDescription".Translate()));
+					list.Add(new Rule_String("allSitePartsDescriptionsExceptFirst", TranslatorFormattedStringExtensions.Translate("HiddenOrNoSitePartDescription")));
 				}
 			}
 			if (this.storeAs.GetValue(slate) != null)

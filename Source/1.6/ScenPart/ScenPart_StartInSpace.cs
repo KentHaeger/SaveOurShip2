@@ -69,16 +69,16 @@ namespace SaveOurShip2
 			Rect rect2 = new Rect(scenPartRect.x, scenPartRect.y + scenPartRect.height / 3f, scenPartRect.width, scenPartRect.height / 3f);
 			Rect rect3 = new Rect(scenPartRect.x, scenPartRect.y + 2 * scenPartRect.height / 3f, scenPartRect.width, scenPartRect.height / 3f);
 			//selection 1
-			if (Widgets.ButtonText(rect1, "SoS.SpaceStart.StartOn".Translate(startType.ToString()), true, true, true))
+			if (Widgets.ButtonText(rect1, TranslatorFormattedStringExtensions.Translate("SoS.SpaceStart.StartOn", startType.ToString()), true, true, true))
 			{
 				List<FloatMenuOption> toggleType = new List<FloatMenuOption>
 				{
-					new FloatMenuOption("SoS.SpaceStart.StartOnShip".Translate(), delegate ()
+					new FloatMenuOption(TranslatorFormattedStringExtensions.Translate("SoS.SpaceStart.StartOn", ShipStartFlags.Ship.ToString()), delegate ()
 					{
 						startType = ShipStartFlags.Ship;
 						spaceShipDef = DefDatabase<ShipDef>.GetNamed("0");
 					}, MenuOptionPriority.Default, null, null, 0f, null, null, true, 0),
-					new FloatMenuOption("SoS.SpaceStart.StartOnStation".Translate(), delegate ()
+					new FloatMenuOption(TranslatorFormattedStringExtensions.Translate("SoS.SpaceStart.StartOn", ShipStartFlags.Station.ToString()), delegate ()
 					{
 						startType = ShipStartFlags.Station;
 						spaceShipDef = DefDatabase<ShipDef>.GetNamed("0");
@@ -109,14 +109,15 @@ namespace SaveOurShip2
 				Find.WindowStack.Add(new FloatMenu(list));
 			}
 			//selection 3
-			if (startType == ShipStartFlags.Ship && Widgets.ButtonText(rect3, "SoS.SpaceStart.DamageShip".Translate(damageStart.ToString()), true, true, true))
+			if (startType == ShipStartFlags.Ship && Widgets.ButtonText(rect3, TranslatorFormattedStringExtensions.Translate(
+				"SoS.SpaceStart.DamageShip", damageStart.ToString()), true, true, true))
 			{
 				List<FloatMenuOption> toggleDamage = new List<FloatMenuOption>();
-				toggleDamage.Add(new FloatMenuOption("SoS.SpaceStart.DamageShipTrue".Translate(), delegate ()
+				toggleDamage.Add(new FloatMenuOption(TranslatorFormattedStringExtensions.Translate("SoS.SpaceStart.DamageShip", true.ToString()), delegate ()
 				{
 					damageStart = true;
 				}, MenuOptionPriority.Default, null, null, 0f, null, null, true, 0));
-				toggleDamage.Add(new FloatMenuOption("SoS.SpaceStart.DamageShipFalse".Translate(), delegate ()
+				toggleDamage.Add(new FloatMenuOption(TranslatorFormattedStringExtensions.Translate("SoS.SpaceStart.DamageShip", false.ToString()), delegate ()
 				{
 					damageStart = false;
 				}, MenuOptionPriority.Default, null, null, 0f, null, null, true, 0));
