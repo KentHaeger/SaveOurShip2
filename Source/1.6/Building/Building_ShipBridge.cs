@@ -163,7 +163,7 @@ namespace SaveOurShip2
 					};
 					yield return hackMe;
 				}
-				if (!ckActive) //allows other gizmos in CK mode
+				if (!Prefs.DevMode && !ckActive) //allows other gizmos in CK mode
 					yield break;
 			}
 			foreach (Gizmo c in base.GetGizmos())
