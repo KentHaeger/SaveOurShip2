@@ -393,6 +393,397 @@
 						<DecompressionResistance>1</DecompressionResistance>
 					</value>
 				</li>
+				<!-- Disallow incidents in space -->
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="UnnaturalDarkness"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="UnnaturalDarkness"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="UnnaturalDarkness"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="WarpedObelisk_Mutator"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="WarpedObelisk_Mutator"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="WarpedObelisk_Mutator"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="WarpedObelisk_Duplicator"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="WarpedObelisk_Duplicator"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="WarpedObelisk_Duplicator"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="WarpedObelisk_Abductor"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="WarpedObelisk_Abductor"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="WarpedObelisk_Abductor"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="PitGate"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="PitGate"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="PitGate"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="FleshmassHeart"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="FleshmassHeart"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="FleshmassHeart"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="CreepJoinerJoin"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="CreepJoinerJoin"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="CreepJoinerJoin"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="CreepJoinerJoin_Metalhorror"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="CreepJoinerJoin_Metalhorror"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="CreepJoinerJoin_Metalhorror"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="HarbingerTreeProvoked"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="HarbingerTreeProvoked"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="HarbingerTreeProvoked"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="HarbingerTreeSpawn"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="HarbingerTreeSpawn"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="HarbingerTreeSpawn"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="MonolithMigration"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="MonolithMigration"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="MonolithMigration"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="ShamblerSwarm"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="ShamblerSwarm"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="ShamblerSwarm"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="ShamblerSwarmAnimals"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="ShamblerSwarmAnimals"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="ShamblerSwarmAnimals"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="SmallShamblerSwarm"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="SmallShamblerSwarm"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="SmallShamblerSwarm"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="SightstealerSwarm"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="SightstealerSwarm"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="SightstealerSwarm"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="ShamblerAssault"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="ShamblerAssault"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="ShamblerAssault"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="GhoulAttack"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="GhoulAttack"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="GhoulAttack"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="Revenant"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="Revenant"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="Revenant"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="SightstealerArrival"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="SightstealerArrival"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="SightstealerArrival"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="PsychicRitualSiege"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="PsychicRitualSiege"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="PsychicRitualSiege"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="HateChanters"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="HateChanters"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="HateChanters"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="FleshbeastAttack"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="FleshbeastAttack"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="FleshbeastAttack"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="GorehulkAssault"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="GorehulkAssault"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="GorehulkAssault"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="DevourerAssault"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="DevourerAssault"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="DevourerAssault"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="DevourerWaterAssault"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="DevourerWaterAssault"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="DevourerWaterAssault"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="ChimeraAssault"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="ChimeraAssault"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="ChimeraAssault"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
 			</operations>
 		</match>
 	</Operation>
