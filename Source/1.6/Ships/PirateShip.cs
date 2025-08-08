@@ -51,7 +51,8 @@ namespace SaveOurShip2
 			{
 				if ((!parleyed && roll < 5) || (parleyed && roll < 2)) //betrayal
 				{
-					Find.LetterStack.ReceiveLetter("SoS.PirateAttacksBetray".Translate(), "SoS.PirateAttacksBetrayDesc".Translate(), LetterDefOf.ThreatBig);
+					Find.LetterStack.ReceiveLetter(TranslatorFormattedStringExtensions.Translate("SoS.PirateAttacksBetray"),
+						TranslatorFormattedStringExtensions.Translate("SoS.PirateAttacksBetrayDesc"), LetterDefOf.ThreatBig);
 					mapComp.StartShipEncounter(this);
 					return;
 				}
@@ -62,7 +63,8 @@ namespace SaveOurShip2
 				{
 					if (roll < 3) //pirates want more
 					{
-						Find.LetterStack.ReceiveLetter("SoS.PirateAttacksPay".Translate(), "SoS.PirateAttacksPayDesc".Translate(), LetterDefOf.ThreatBig);
+						Find.LetterStack.ReceiveLetter(TranslatorFormattedStringExtensions.Translate("SoS.PirateAttacksPay"),
+							TranslatorFormattedStringExtensions.Translate("SoS.PirateAttacksPayDesc"), LetterDefOf.ThreatBig);
 						mapComp.StartShipEncounter(this);
 						return;
 					}
@@ -71,7 +73,8 @@ namespace SaveOurShip2
 				{
 					if (roll < 10)
 					{
-						Find.LetterStack.ReceiveLetter("SoS.PirateAttacksWait".Translate(), "SoS.PirateAttacksWaitDesc".Translate(), LetterDefOf.ThreatBig);
+						Find.LetterStack.ReceiveLetter(TranslatorFormattedStringExtensions.Translate("SoS.PirateAttacksWait"),
+							TranslatorFormattedStringExtensions.Translate("SoS.PirateAttacksWaitDesc"), LetterDefOf.ThreatBig);
 						mapComp.StartShipEncounter(this);
 						return;
 					}

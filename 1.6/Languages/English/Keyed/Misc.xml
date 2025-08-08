@@ -1,133 +1,142 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <LanguageData>
-  <SoS.ArchotechIdeoKeep>Discover the truth of {0}</SoS.ArchotechIdeoKeep>
-  <SoS.ArchotechIdeoNew>Found a new ideoligion</SoS.ArchotechIdeoNew>
-  <SoS.ArchotechIdeoKeepFaith>All hail the one truth!</SoS.ArchotechIdeoKeepFaith>
-  <SoS.ArchotechIdeoDialogTitle>Crisis of Faith</SoS.ArchotechIdeoDialogTitle>
-
-  <SoS.ArchotechInspectMood>Mood</SoS.ArchotechInspectMood>
-  <SoS.ArchotechInspectPsychicFieldStrength>Psychic field strength</SoS.ArchotechInspectPsychicFieldStrength>
-  <SoS.ArchotechInspectLinked>Linked</SoS.ArchotechInspectLinked>
-  <SoS.ArchotechInspectStored>Stored</SoS.ArchotechInspectStored>
-
-  <SoS.AllPillarsEnd>Remake the world</SoS.AllPillarsEnd>
-  <SoS.AllPillarsCancel>Remain mortal a while longer</SoS.AllPillarsCancel>
-  <SoS.WinGameAlliesAlly>Give them a choice - join or don't</SoS.WinGameAlliesAlly>
-  <SoS.WinGameAlliesTakeover>Annex them by force</SoS.WinGameAlliesTakeover>
-  <SoS.WinGameNeutralAlly>Give them a choice - join or don't</SoS.WinGameNeutralAlly>
-  <SoS.WinGameNeutralTakeover>Annex them by force</SoS.WinGameNeutralTakeover>
-  <SoS.WinGameNeutralKill>Destroy them</SoS.WinGameNeutralKill>
-  <SoS.WinGameEnemiesTakeover>Annex them by force</SoS.WinGameEnemiesTakeover>
-  <SoS.WinGameEnemiesKill>Destroy them</SoS.WinGameEnemiesKill>
-  <SoS.ArchotechGiftQuestDesc>A Gift From {0}</SoS.ArchotechGiftQuestDesc>
-
-  <SoS.Dev.LaunchToSpecificTileLabel>Dev: Launch to specific tile</SoS.Dev.LaunchToSpecificTileLabel>
-  <SoS.Dev.LaunchToSpecificTileDesc>Pick a surface tile that will be associated with the ship. Based on selected tile latitude, solar panels will work great or bad. Quests and Ideology work sites will be genarated near picked surface tile.</SoS.Dev.LaunchToSpecificTileDesc>
-  <SoS.Dev.ShipBridgeHackLabel>Dev: Hack bridge</SoS.Dev.ShipBridgeHackLabel>
-  <SoS.Dev.ShipBridgeHackDesc>Instantly take control of this ship</SoS.Dev.ShipBridgeHackDesc>
-
-  <SoS.ToggleCloakLabel>Toggle slow time</SoS.ToggleCloakLabel>
-  <SoS.ShipMapMission.Intercept>Intercept</SoS.ShipMapMission.Intercept>
-  <SoS.ShipMapMission.Strafe>Strafe</SoS.ShipMapMission.Strafe>
-  <SoS.ShipMapMission.Bomb>Bomb</SoS.ShipMapMission.Bomb>
-  <SoS.ShipMapMission.Board>Board</SoS.ShipMapMission.Board>
-  <SoS.ShipMapMission.Return>Return</SoS.ShipMapMission.Return>
-  <SoS.Dev.StartEnemyBoardingLabel>Dev: Start enemy boarding</SoS.Dev.StartEnemyBoardingLabel>
-  <SoS.Dev.StartShipBattle>Dev: Start ship battle</SoS.Dev.StartShipBattle>
-  <SoS.Dev.StartRandomFleetBattle>Dev: Start random fleet battle</SoS.Dev.StartRandomFleetBattle>
-  <SoS.Dev.LoadShipFromDatabase>Dev: load ship from database</SoS.Dev.LoadShipFromDatabase>
-  <SoS.Dev.LoadWreckFromDatabase>Dev: load wreck from database</SoS.Dev.LoadWreckFromDatabase>
-  <SoS.ShipCloakingInactive><![CDATA[<color=red>In vacuum and not connected to heat net</color>]]></SoS.ShipCloakingInactive>
-  <SoS.ShipSensorObserving>Observing {0}</SoS.ShipSensorObserving>
-
-  <SoS.LoadedTorpedoHE>{0} HE torpedoes</SoS.LoadedTorpedoHE>
-  <SoS.LoadedTorpedoEMP>{0} EMP torpedoes</SoS.LoadedTorpedoEMP>
-  <SoS.LoadedTorpedoAM>{0} AM torpedoes</SoS.LoadedTorpedoAM>
-
-  <SoS.AIPersuade>Persuade to live</SoS.AIPersuade>
-  <SoS.BlackBoxHack>Hack</SoS.BlackBoxHack>
-  <SoS.ReactorDisableSuccess>Reactors successfully disabled!</SoS.ReactorDisableSuccess>
-  <SoS.DoorOpenSuccess>Doors successfully opened!</SoS.DoorOpenSuccess>
-  <SoS.BlackBoxHackFailed>Hack failed</SoS.BlackBoxHackFailed>
-  <SoS.BlackBoxHackFailedCritical>Critical failure - the reactors have gone prompt supercritical!</SoS.BlackBoxHackFailedCritical>
-
-  <SoS.SpawnHologramLabel>Dev: Spawn formgel immediately</SoS.SpawnHologramLabel>
-
-  <SoS.HolodeckOnline>Current program: {0}</SoS.HolodeckOnline>
-  <SoS.HolodeckOffline>Offline</SoS.HolodeckOffline>
-
-  <SoS.FuelInfo>{0}: {1} / {2}</SoS.FuelInfo>
-  <SoS.FuelAvailableTime>{0}</SoS.FuelAvailableTime>
-  <SoS.FuelEmptyInfo>{0} ({1}x {2})</SoS.FuelEmptyInfo>
-  <SoS.ConfiguredTargetFuelLevel>Target: {0}</SoS.ConfiguredTargetFuelLevel>
-  <SoS.Dev.ShipIndexAndPath>shipIndex: {0} / corePath: {1}</SoS.Dev.ShipIndexAndPath>
-  <SoS.Dev.ShipIndex>shipIndex: {0}</SoS.Dev.ShipIndex>
-
-  <SoS.Dev.HeatDetailed>Grid: {0} / Ratio: {1} Depletion Ratio: {2} / Temp: {3}</SoS.Dev.HeatDetailed>
-  <SoS.HeatTurretEnergyNull>Energy to fire: Not Available</SoS.HeatTurretEnergyNull>
-  <SoS.HeatTurretEnergy>Energy to fire: {0} Wd</SoS.HeatTurretEnergy>
-  <SoS.DecreaseShieldRadius10Label>- 10</SoS.DecreaseShieldRadius10Label>
-  <SoS.DecreaseShieldRadius1Label>- 1</SoS.DecreaseShieldRadius1Label>
-  <SoS.IncreaseShieldRadius1Label>+ 1</SoS.IncreaseShieldRadius1Label>
-  <SoS.IncreaseShieldRadius10Label>+ 10</SoS.IncreaseShieldRadius10Label>
-
-  <SoS.EnergyShieldStatusLabel>Shield</SoS.EnergyShieldStatusLabel>
-  <SoS.EnergyShieldStatusDesc>{0} / {1}</SoS.EnergyShieldStatusDesc>
-
-  <SoS.Combat.MapShipInfo>SOS2 {0} | Ships: {1} | Cells: {2}</SoS.Combat.MapShipInfo>
-
-  <SoS.Combat.ShipName>Name: {0}</SoS.Combat.ShipName>
-  <SoS.Combat.ShipInfo>Map: {0}\nParts: {1}\nBuildings: {2}\nMass: {3}\nTWR: {4}\nArea: {5}\nCores: {6}\nCore: {7}\nPath max:{8}</SoS.Combat.ShipInfo>
-  <SoS.Combat.PlayerShuttleInfo>{0} ({1})</SoS.Combat.PlayerShuttleInfo>
-  <SoS.Combat.PlayerShuttleMore>({0} more shuttles)</SoS.Combat.PlayerShuttleMore>
-  <SoS.Combat.PlayerShuttleInfo2>{0} ({1})</SoS.Combat.PlayerShuttleInfo2>
-  <SoS.Combat.ShuttleInfo>{0} ({1})</SoS.Combat.ShuttleInfo>
-  <SoS.Combat.EnemyShuttlesCount>({0} more shuttles)</SoS.Combat.EnemyShuttlesCount>
-  <SoS.Combat.Energy>Energy: {0} / {1}</SoS.Combat.Energy>
-  <SoS.Combat.NoEnergy>Energy: N/A</SoS.Combat.NoEnergy>
-  <SoS.Combat.Heat>Heat: {0} / {1}</SoS.Combat.Heat>
-  <SoS.Combat.NoHeat>Heat: N/A</SoS.Combat.NoHeat>
-  <SoS.Combat.Hull>Hull: {0}</SoS.Combat.Hull>
-  <SoS.Combat.Shields>Shields: {0}</SoS.Combat.Shields>
-  <SoS.NA>N/A</SoS.NA>
-
-  <SoS.LoadShip.DiscardLog>Discard log: {0}</SoS.LoadShip.DiscardLog>
-  <SoS.LoadShip.DiscardLogTrue>Discard log: True</SoS.LoadShip.DiscardLogTrue>
-  <SoS.LoadShip.DiscardLogFalse>Discard log: False</SoS.LoadShip.DiscardLogFalse>
-  <SoS.LoadShip.DiscardTales>Discard tales: {0}</SoS.LoadShip.DiscardTales>
-  <SoS.LoadShip.DiscardTalesTrue>Discard tales: True</SoS.LoadShip.DiscardTalesTrue>
-  <SoS.LoadShip.DiscardTalesFalse>Discard tales: False</SoS.LoadShip.DiscardTalesFalse>
-  <SoS.LoadShip.ScenPartDesc>Load ship {0}\nThis will disable many other types of scenario part, such as starting pawns.</SoS.LoadShip.ScenPartDesc>
-
-  <SoS.SpaceStart.StartOn>Start on: {0}</SoS.SpaceStart.StartOn>
-  <SoS.SpaceStart.StartOnShip>Start on: ship</SoS.SpaceStart.StartOnShip>
-  <SoS.SpaceStart.StartOnStation>Start on: station</SoS.SpaceStart.StartOnStation>
-
-  <SoS.SpaceStart.DamageShip>Damage ship: {0}</SoS.SpaceStart.DamageShip>
-  <SoS.SpaceStart.DamageShipTrue>Damage ship: True</SoS.SpaceStart.DamageShipTrue>
-  <SoS.SpaceStart.DamageShipFalse>Damage ship: False</SoS.SpaceStart.DamageShipFalse>
-
-  <SoS.Error.VersionNotMatch>SOS2 {0} requires Rimworld 1.{1}.{2} or greater!</SoS.Error.VersionNotMatch>
-  <SoS.Error.UpdateYourGame>Update your game!</SoS.Error.UpdateYourGame>
-  <SoS.Error.NoHarmony>ERROR: SOS2 requires Harmony! Download and enable it!</SoS.Error.NoHarmony>
-  <SoS.Error.NoHarmonyDesc>It must be loaded at the top of the list, before Core!</SoS.Error.NoHarmonyDesc>
-  <SoS.Error.NoVehicleFramework>ERROR: SOS2 requires Vehicle Framework! Download and enable it!</SoS.Error.NoVehicleFramework>
-  <SoS.Error.NoVehicleFrameworkDesc>It must be loaded before SOS2!</SoS.Error.NoVehicleFrameworkDesc>
-  <SoS.Error.AddOnHasOldVersionShip>SOS2: mod “{0}” contains SpaceShipDef: “{1}" that can spawn as a random ship but is saved with an old version of CK!</SoS.Error.AddOnHasOldVersionShip>
-
-  <SoS.CommunicationRefused>This ship refuses your hails</SoS.CommunicationRefused>
-
-  <SoS.CommunicationNoResponse>There is no response</SoS.CommunicationNoResponse>
-
-  <SoS.VehicleHeatStored>Heat stored: {0} / {1}</SoS.VehicleHeatStored>
-  <SoS.VehicleHeatCompsCount>; components: {0}</SoS.VehicleHeatCompsCount>
-  <SoS.VehicleHeatComps>Component: {0}</SoS.VehicleHeatComps>
-
-  <SoS.Dev.ShipPositionReset>Dev: Reset position</SoS.Dev.ShipPositionReset>
-  <SoS.Dev.ShipPositionResetDesc>Reset ship location to default.</SoS.Dev.ShipPositionResetDesc>
-  <SoS.Dev.RemoveShip>Dev: Remove ship</SoS.Dev.RemoveShip>
-  <SoS.Dev.RemoveShipDesc>Delete a glitched ship and its map.</SoS.Dev.RemoveShipDesc>
-  <SoS.Dev.OrbitingShipInfo>State: {0} Altitude: {1}\nRadius: {2} Theta: {3} Phi: {4}\nDrawPos: {5}\noriginDrawPos: {6}\ntargetDrawPos: {7}</SoS.Dev.OrbitingShipInfo>
   
-  <!-- Mechanite fire -->
+	<! -- Archotech and endgame stuff -->
+	<SoS.ArchotechIdeoKeep>Discover the truth of {0}</SoS.ArchotechIdeoKeep>
+	<SoS.ArchotechIdeoNew>Found a new ideoligion</SoS.ArchotechIdeoNew>
+	<SoS.ArchotechIdeoKeepFaith>All hail the one truth!</SoS.ArchotechIdeoKeepFaith>
+	<SoS.ArchotechIdeoDialogTitle>Crisis of Faith</SoS.ArchotechIdeoDialogTitle>
+
+	<SoS.ArchotechInspectMood>Mood</SoS.ArchotechInspectMood>
+	<SoS.ArchotechInspectPsychicFieldStrength>Psychic field strength</SoS.ArchotechInspectPsychicFieldStrength>
+	<SoS.ArchotechInspectLinked>Linked</SoS.ArchotechInspectLinked>
+	<SoS.ArchotechInspectStored>Stored</SoS.ArchotechInspectStored>
+
+	<SoS.AllPillarsEnd>Remake the world</SoS.AllPillarsEnd>
+	<SoS.AllPillarsCancel>Remain mortal a while longer</SoS.AllPillarsCancel>
+	<SoS.WinGameAlliesAlly>Give them a choice - join or don't</SoS.WinGameAlliesAlly>
+	<SoS.WinGameAlliesTakeover>Annex them by force</SoS.WinGameAlliesTakeover>
+	<SoS.WinGameNeutralAlly>Give them a choice - join or don't</SoS.WinGameNeutralAlly>
+	<SoS.WinGameNeutralTakeover>Annex them by force</SoS.WinGameNeutralTakeover>
+	<SoS.WinGameNeutralKill>Destroy them</SoS.WinGameNeutralKill>
+	<SoS.WinGameEnemiesTakeover>Annex them by force</SoS.WinGameEnemiesTakeover>
+	<SoS.WinGameEnemiesKill>Destroy them</SoS.WinGameEnemiesKill>
+	<SoS.ArchotechGiftQuestDesc>A Gift From {0}</SoS.ArchotechGiftQuestDesc>
+
+	<!-- Dev commands -->
+	<SoS.Dev.LaunchToSpecificTileLabel>Dev: Launch to specific tile</SoS.Dev.LaunchToSpecificTileLabel>
+	<SoS.Dev.LaunchToSpecificTileDesc>Pick a surface tile that will be associated with the ship. Based on selected tile latitude, solar panels will work great or bad. Quests and Ideology work sites will be genarated near picked surface tile.</SoS.Dev.LaunchToSpecificTileDesc>
+	<SoS.Dev.ShipBridgeHackLabel>Dev: Hack bridge</SoS.Dev.ShipBridgeHackLabel>
+	<SoS.Dev.ShipBridgeHackDesc>Instantly take control of this ship</SoS.Dev.ShipBridgeHackDesc>
+
+	<SoS.Dev.StartEnemyBoardingLabel>Dev: Start enemy boarding</SoS.Dev.StartEnemyBoardingLabel>
+	<SoS.Dev.StartShipBattle>Dev: Start ship battle</SoS.Dev.StartShipBattle>
+	<SoS.Dev.StartRandomFleetBattle>Dev: Start random fleet battle</SoS.Dev.StartRandomFleetBattle>
+	<SoS.Dev.LoadShipFromDatabase>Dev: load ship from database</SoS.Dev.LoadShipFromDatabase>
+	<SoS.Dev.LoadWreckFromDatabase>Dev: load wreck from database</SoS.Dev.LoadWreckFromDatabase>
+	<SoS.SpawnHologramLabel>Dev: Spawn formgel immediately</SoS.SpawnHologramLabel>
+	<SoS.Dev.ShipPositionReset>Dev: Reset position</SoS.Dev.ShipPositionReset>
+	<SoS.Dev.ShipPositionResetDesc>Reset ship location to default.</SoS.Dev.ShipPositionResetDesc>
+	<SoS.Dev.RemoveShip>Dev: Remove ship</SoS.Dev.RemoveShip>
+	<SoS.Dev.RemoveShipDesc>Delete a glitched ship and its map.</SoS.Dev.RemoveShipDesc>
+
+	<SoS.ToggleCloakLabel>Toggle slow time</SoS.ToggleCloakLabel>
+	
+	<!-- Shuttles -->
+	<SoS.ShipMapMission.Intercept>Intercept</SoS.ShipMapMission.Intercept>
+	<SoS.ShipMapMission.Strafe>Strafe</SoS.ShipMapMission.Strafe>
+	<SoS.ShipMapMission.Bomb>Bomb</SoS.ShipMapMission.Bomb>
+	<SoS.ShipMapMission.Board>Board</SoS.ShipMapMission.Board>
+	<SoS.ShipMapMission.Return>Return</SoS.ShipMapMission.Return>
+	<SoS.ShipCloakingInactive><![CDATA[<color=red>In vacuum and not connected to heat net</color>]]></SoS.ShipCloakingInactive>
+	<SoS.ShipSensorObserving>Observing {0}</SoS.ShipSensorObserving>
+
+	<SoS.LoadedTorpedoHE>{0} HE torpedoes</SoS.LoadedTorpedoHE>
+	<SoS.LoadedTorpedoEMP>{0} EMP torpedoes</SoS.LoadedTorpedoEMP>
+	<SoS.LoadedTorpedoAM>{0} AM torpedoes</SoS.LoadedTorpedoAM>
+	
+	<!-- Starship bow quest -->
+	<SoS.AIPersuade>Persuade to live</SoS.AIPersuade>
+	<SoS.BlackBoxHack>Hack</SoS.BlackBoxHack>
+	<SoS.ReactorDisableSuccess>Reactors successfully disabled!</SoS.ReactorDisableSuccess>
+	<SoS.DoorOpenSuccess>Doors successfully opened!</SoS.DoorOpenSuccess>
+	<SoS.BlackBoxHackFailed>Hack failed</SoS.BlackBoxHackFailed>
+	<SoS.BlackBoxHackFailedCritical>Critical failure - the reactors have gone prompt supercritical!</SoS.BlackBoxHackFailedCritical>
+
+	<!-- Ship buildings and hardware -->
+	<SoS.HolodeckOnline>Current program: {0}</SoS.HolodeckOnline>
+	<SoS.HolodeckOffline>Offline</SoS.HolodeckOffline>
+
+	<SoS.FuelInfo>{0}: {1} / {2}</SoS.FuelInfo>
+	<SoS.FuelAvailableTime>{0}</SoS.FuelAvailableTime>
+	<SoS.FuelEmptyInfo>{0} ({1}x {2})</SoS.FuelEmptyInfo>
+	<SoS.ConfiguredTargetFuelLevel>Target: {0}</SoS.ConfiguredTargetFuelLevel>
+	<SoS.Dev.ShipIndexAndPath>shipIndex: {0} / corePath: {1}</SoS.Dev.ShipIndexAndPath>
+	<SoS.Dev.ShipIndex>shipIndex: {0}</SoS.Dev.ShipIndex>
+
+	<SoS.Dev.HeatDetailed>Grid: {0} / Ratio: {1} Depletion Ratio: {2} / Temp: {3}</SoS.Dev.HeatDetailed>
+	<SoS.HeatTurretEnergyNull>Energy to fire: Not Available</SoS.HeatTurretEnergyNull>
+	<SoS.HeatTurretEnergy>Energy to fire: {0} Wd</SoS.HeatTurretEnergy>
+	<SoS.DecreaseShieldRadius10Label>- 10</SoS.DecreaseShieldRadius10Label>
+	<SoS.DecreaseShieldRadius1Label>- 1</SoS.DecreaseShieldRadius1Label>
+	<SoS.IncreaseShieldRadius1Label>+ 1</SoS.IncreaseShieldRadius1Label>
+	<SoS.IncreaseShieldRadius10Label>+ 10</SoS.IncreaseShieldRadius10Label>
+
+	<SoS.EnergyShieldStatusLabel>Shield</SoS.EnergyShieldStatusLabel>
+	<SoS.EnergyShieldStatusDesc>{0} / {1}</SoS.EnergyShieldStatusDesc>
+
+	<!-- Ship combat stuff -->
+	<SoS.Combat.MapShipInfo>SOS2 {0} | Ships: {1} | Cells: {2}</SoS.Combat.MapShipInfo>
+
+	<SoS.Combat.ShipName>Name: {0}</SoS.Combat.ShipName>
+	<SoS.Combat.ShipInfo>Map: {0}\nParts: {1}\nBuildings: {2}\nMass: {3}\nTWR: {4}\nArea: {5}\nCores: {6}\nCore: {7}\nPath max:{8}</SoS.Combat.ShipInfo>
+	<SoS.Combat.PlayerShuttleInfo>{0} ({1})</SoS.Combat.PlayerShuttleInfo>
+	<SoS.Combat.PlayerShuttleMore>({0} more shuttles)</SoS.Combat.PlayerShuttleMore>
+	<SoS.Combat.PlayerShuttleInfo2>{0} ({1})</SoS.Combat.PlayerShuttleInfo2>
+	<SoS.Combat.ShuttleInfo>{0} ({1})</SoS.Combat.ShuttleInfo>
+	<SoS.Combat.EnemyShuttlesCount>({0} more shuttles)</SoS.Combat.EnemyShuttlesCount>
+	<SoS.Combat.Energy>Energy: {0} / {1}</SoS.Combat.Energy>
+	<SoS.Combat.NoEnergy>Energy: N/A</SoS.Combat.NoEnergy>
+	<SoS.Combat.Heat>Heat: {0} / {1}</SoS.Combat.Heat>
+	<SoS.Combat.NoHeat>Heat: N/A</SoS.Combat.NoHeat>
+	<SoS.Combat.Hull>Hull: {0}</SoS.Combat.Hull>
+	<SoS.Combat.Shields>Shields: {0}</SoS.Combat.Shields>
+	<SoS.NA>N/A</SoS.NA>
+
+	<!-- Scenarios -->
+	<SoS.LoadShip.DiscardLog>Discard log: {0}</SoS.LoadShip.DiscardLog>
+	<SoS.LoadShip.DiscardTales>Discard tales: {0}</SoS.LoadShip.DiscardTales>
+	<SoS.LoadShip.ScenPartDesc>Load ship {0}\nThis will disable many other types of scenario part, such as starting pawns.</SoS.LoadShip.ScenPartDesc>
+
+	<SoS.SpaceStart.StartOn>Start on: {0}</SoS.SpaceStart.StartOn>
+	<SoS.SpaceStart.StartOnShip>Start on: ship</SoS.SpaceStart.StartOnShip>
+	<SoS.SpaceStart.StartOnStation>Start on: station</SoS.SpaceStart.StartOnStation>
+
+	<SoS.SpaceStart.DamageShip>Damage ship: {0}</SoS.SpaceStart.DamageShip>
+	<SoS.SpaceStart.DamageShipTrue>Damage ship: True</SoS.SpaceStart.DamageShipTrue>
+	<SoS.SpaceStart.DamageShipFalse>Damage ship: False</SoS.SpaceStart.DamageShipFalse>
+
+	<SoS.Error.VersionNotMatch>SOS2 {0} requires Rimworld 1.{1}.{2} or greater!</SoS.Error.VersionNotMatch>
+	<SoS.Error.UpdateYourGame>Update your game!</SoS.Error.UpdateYourGame>
+	<SoS.Error.NoHarmony>ERROR: SOS2 requires Harmony! Download and enable it!</SoS.Error.NoHarmony>
+	<SoS.Error.NoHarmonyDesc>It must be loaded at the top of the list, before Core!</SoS.Error.NoHarmonyDesc>
+	<SoS.Error.NoVehicleFramework>ERROR: SOS2 requires Vehicle Framework! Download and enable it!</SoS.Error.NoVehicleFramework>
+	<SoS.Error.NoVehicleFrameworkDesc>It must be loaded before SOS2!</SoS.Error.NoVehicleFrameworkDesc>
+	<SoS.Error.AddOnHasOldVersionShip>SOS2: mod “{0}” contains SpaceShipDef: “{1}" that can spawn as a random ship but is saved with an old version of CK!</SoS.Error.AddOnHasOldVersionShip>
+
+	<SoS.CommunicationRefused>This ship refuses your hails</SoS.CommunicationRefused>
+
+	<SoS.CommunicationNoResponse>There is no response</SoS.CommunicationNoResponse>
+
+	<SoS.VehicleHeatStored>Heat stored: {0} / {1}</SoS.VehicleHeatStored>
+	<SoS.VehicleHeatCompsCount>; components: {0}</SoS.VehicleHeatCompsCount>
+	<SoS.VehicleHeatComps>Component: {0}</SoS.VehicleHeatComps>
+
+	<SoS.Dev.OrbitingShipInfo>State: {0} Altitude: {1}\nRadius: {2} Theta: {3} Phi: {4}\nDrawPos: {5}\noriginDrawPos: {6}\ntargetDrawPos: {7}</SoS.Dev.OrbitingShipInfo>
+
+	<!-- Mechanite fire -->
+	<SoS.MechanitesOn>Mechanites on: {0}</SoS.MechanitesOn>
+	<SoS.MechanitesDisassembling>Mechanites disassembling</SoS.MechanitesDisassembling>
+	<SoS.MechaniteSizeLower>Mechanite size: {0}</SoS.MechaniteSizeLower>
+  
 </LanguageData>

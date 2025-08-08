@@ -26,26 +26,26 @@ namespace SaveOurShip2
 			//manual stupidity prevention, good idea to eventually add all mod issues into it, clearly not fool proof enough yet
 			if (VersionControl.CurrentMinor < ShipInteriorMod2.SOS2ReqCurrentMinor || VersionControl.CurrentBuild < ShipInteriorMod2.SOS2ReqCurrentBuild)
 			{
-				string error = "SoS.Error.VersionNotMatch".Translate(ShipInteriorMod2.SOS2version, ShipInteriorMod2.SOS2ReqCurrentMinor, ShipInteriorMod2.SOS2ReqCurrentBuild);
+				string error = TranslatorFormattedStringExtensions.Translate("SoS.Error.VersionNotMatch", ShipInteriorMod2.SOS2version, ShipInteriorMod2.SOS2ReqCurrentMinor, ShipInteriorMod2.SOS2ReqCurrentBuild);
 				Log.Error(error);
-				string errorLong = error + "\n\n" + "SoS.Error.UpdateYourGame".Translate();
+				string errorLong = error + "\n\n" + TranslatorFormattedStringExtensions.Translate("SoS.Error.UpdateYourGame");
 				LongEventHandler.QueueLongEvent(() => Find.WindowStack.Add(new Dialog_MessageBox(errorLong, "Quit", delegate(){ Root.Shutdown(); }, null, null, "ERROR: ".Colorize(Color.red), false, null, null, WindowLayer.Super)), null, false, null);
 
 				return;
 			}
 			if (!ModLister.HasActiveModWithName("Harmony"))
 			{
-				string error = "SoS.Error.NoHarmony".Translate();
+				string error = TranslatorFormattedStringExtensions.Translate("SoS.Error.NoHarmony");
 				Log.Error(error);
-				string errorLong = error + "\n\n" + "SoS.Error.NoHarmonyDesc".Translate();
+				string errorLong = error + "\n\n" + TranslatorFormattedStringExtensions.Translate("SoS.Error.NoHarmonyDesc");
 				LongEventHandler.QueueLongEvent(() => Find.WindowStack.Add(new Dialog_MessageBox(errorLong, null, null, null, null, "ERROR: ".Colorize(Color.red), false, null, null, WindowLayer.Super)), null, false, null);
 				return;
 			}
 			if (!ModLister.HasActiveModWithName("Vehicle Framework"))
 			{
-				string error = "SoS.Error.NoVehicleFramework".Translate();
+				string error = TranslatorFormattedStringExtensions.Translate("SoS.Error.NoVehicleFramework");
 				Log.Error(error);
-				string errorLong = error + "\n\n" + "SoS.Error.NoVehicleFrameworkDesc".Translate();
+				string errorLong = error + "\n\n" + TranslatorFormattedStringExtensions.Translate("SoS.Error.NoVehicleFrameworkDesc");
 				LongEventHandler.QueueLongEvent(() => Find.WindowStack.Add(new Dialog_MessageBox(errorLong, null, null, null, null, "ERROR: ".Colorize(Color.red), false, null, null, WindowLayer.Super)), null, false, null);
 				return;
 			}
@@ -126,7 +126,7 @@ namespace SaveOurShip2
 		{
 			base.GetSettings<ModSettings_SoS>();
 		}
-		public const string SOS2version = "GithubV2.7.57";
+		public const string SOS2version = "GithubV2.7.56";
 		public const int SOS2ReqCurrentMinor = 5;
 		// 1.5.4063 public build (4062 constant) was not enough as there is no AnomalyUtility.TryDuplicatePawn_NewTemp method to harmony patch it.
 		// Historical builds are not available, so for sure can be increased just to next build, 4066
@@ -280,7 +280,7 @@ namespace SaveOurShip2
 
 			foreach (ShipDef ship in DefDatabase<ShipDef>.AllDefs.Where(d => d.saveSysVer < 2 && !d.neverRandom).ToList())
 			{
-				Log.Error("SoS.Error.AddOnHasOldVersionShip".Translate(ship.modContentPack.Name, ship));
+				Log.Error(TranslatorFormattedStringExtensions.Translate("SoS.Error.AddOnHasOldVersionShip", ship.modContentPack.Name, ship));
 			}
 
 			wreckDictionary = new Dictionary<ThingDef, ThingDef>
@@ -3038,7 +3038,7 @@ namespace SaveOurShip2
 		public static void SpaceTravelWarning(Action action)
 		{
 			DiaNode theNode;
-			theNode = new DiaNode("SoS.AbandonColoniesWarning".Translate());
+			theNode = new DiaNode(TranslatorFormattedStringExtensions.Translate("SoS.AbandonColoniesWarning"));
 
 			DiaOption accept = new DiaOption("Accept");
 			accept.resolveTree = true;
@@ -3060,7 +3060,7 @@ namespace SaveOurShip2
 			if (mapComp.ShipsOnMap.ContainsKey(index) && mapComp.Docked.Any(airlock => mapComp.ShipsOnMap[index].Area.Contains(airlock.Position)))
 			{
 				DiaNode theNode;
-				theNode = new DiaNode("SoS.UnDockWarning".Translate());
+				theNode = new DiaNode(TranslatorFormattedStringExtensions.Translate("SoS.UnDockWarning"));
 
 				DiaOption accept = new DiaOption("Accept");
 				accept.resolveTree = true;

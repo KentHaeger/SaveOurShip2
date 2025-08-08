@@ -21,7 +21,7 @@ namespace SaveOurShip2
 
 		protected override AcceptanceReport CanCommunicateWith(Pawn negotiator)
 		{
-			return "SoS.CommunicationRefused".Translate();
+			return TranslatorFormattedStringExtensions.Translate("SoS.CommunicationRefused");
 		}
 
 		public override void ExposeData()

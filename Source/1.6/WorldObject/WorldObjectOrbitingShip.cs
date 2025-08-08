@@ -165,8 +165,8 @@ namespace SaveOurShip2
 			{
 				yield return new Command_Action
 				{
-					defaultLabel = "CommandShowMap".Translate(), // Core\GameplayCommands.xml
-					defaultDesc = "CommandShowMapDesc".Translate(), // Core\GameplayCommands.xml
+					defaultLabel = TranslatorFormattedStringExtensions.Translate("CommandShowMap"), // Core\GameplayCommands.xml
+					defaultDesc = TranslatorFormattedStringExtensions.Translate("CommandShowMapDesc"), // Core\GameplayCommands.xml
 					icon = ShowMapCommand,
 					hotKey = KeyBindingDefOf.Misc1,
 					action = delegate
@@ -182,8 +182,8 @@ namespace SaveOurShip2
 				{
 					yield return new Command_Action
 					{
-						defaultLabel = "SoS.AbandonHome".Translate(),
-						defaultDesc = "SoS.AbandonHomeDesc".Translate(),
+						defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.AbandonHome"),
+						defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.AbandonHomeDesc"),
 						icon = ContentFinder<Texture2D>.Get("UI/ShipAbandon_Icon", true),
 						action = delegate
 						{
@@ -200,7 +200,7 @@ namespace SaveOurShip2
 								int initialTile = (int)Traverse.Create(obj).Field("initialTile").GetValue();
 								if (initialTile == this.Tile || obj.destinationTile == this.Tile)
 								{
-									Messages.Message("SoS.ScuttleShipPods".Translate(), this, MessageTypeDefOf.NeutralEvent);
+									Messages.Message(TranslatorFormattedStringExtensions.Translate("SoS.ScuttleShipPods"), this, MessageTypeDefOf.NeutralEvent);
 									return;
 								}
 							}
@@ -217,11 +217,11 @@ namespace SaveOurShip2
 									}
 									stringBuilder2.Append("	" + item.LabelCap);
 								}
-								stringBuilder.Append("ConfirmAbandonHomeWithColonyPawns".Translate(stringBuilder2)); // Core\Dialogs_Various.xml
+								stringBuilder.Append(TranslatorFormattedStringExtensions.Translate("ConfirmAbandonHomeWithColonyPawns", stringBuilder2)); // Core\Dialogs_Various.xml
 							}
 							PawnDiedOrDownedThoughtsUtility.BuildMoodThoughtsListString(
 								source, PawnDiedOrDownedThoughtsKind.Died, stringBuilder, null,
-								"\n\n" + "ConfirmAbandonHomeNegativeThoughts_Everyone".Translate(), // Core\Dialogs_Various.xml
+								"\n\n" + TranslatorFormattedStringExtensions.Translate("ConfirmAbandonHomeNegativeThoughts_Everyone"), // Core\Dialogs_Various.xml
 								"ConfirmAbandonHomeNegativeThoughts");
 							if (stringBuilder.Length == 0)
 							{
@@ -342,8 +342,8 @@ namespace SaveOurShip2
 								Theta = -1f;
 								Phi = 0f;
 							},
-							defaultLabel = "SoS.Dev.ShipPositionReset".Translate(),
-							defaultDesc = "SoS.Dev.ShipPositionResetDesc".Translate(),
+							defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.Dev.ShipPositionReset"),
+							defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.Dev.ShipPositionResetDesc"),
 						};
 					}
 				}
@@ -382,8 +382,8 @@ namespace SaveOurShip2
 				{
 					yield return new Command_Action
 					{
-						defaultLabel = "SoS.Dev.RemoveShip".Translate(),
-						defaultDesc = "SoS.Dev.RemoveShipDesc".Translate(),
+						defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.Dev.RemoveShip"),
+						defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.Dev.RemoveShipDesc"),
 						action = delegate
 						{
 							mapComp.ShipMapState = ShipMapState.burnUpSet;
@@ -402,7 +402,6 @@ namespace SaveOurShip2
 			}
 			if (Prefs.DevMode)
 			{
-				stringBuilder.AppendLine("SoS.Dev.OrbitingShipInfo".Translate(mapComp.ShipMapState, mapComp.Altitude, radius, theta, phi, DrawPos, originDrawPos, targetDrawPos));
 				stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.Dev.OrbitingShipInfo", mapComp.ShipMapState.ToString(), mapComp.Altitude, radius, theta, phi, DrawPos.ToString(), originDrawPos.ToString(), targetDrawPos.ToString()));
 			}
 			return stringBuilder.ToString().TrimEndNewlines();
@@ -486,10 +485,10 @@ namespace SaveOurShip2
 				}
 				if (toKill.Any(p => p.Faction == Faction.OfPlayer))
 				{
-					string letterString = "SoS.PawnsLostReEntry".Translate() + "\n\n";
+					string letterString = TranslatorFormattedStringExtensions.Translate("SoS.PawnsLostReEntry") + "\n\n";
 					foreach (Pawn deadPawn in toKill.Where(p => p.Faction == Faction.OfPlayer))
 						letterString += deadPawn.LabelShort + "\n";
-					Find.LetterStack.ReceiveLetter("SoS.PawnsLostReEntryDesc".Translate(), letterString,
+					Find.LetterStack.ReceiveLetter(TranslatorFormattedStringExtensions.Translate("SoS.PawnsLostReEntryDesc"), letterString,
 						LetterDefOf.NegativeEvent);
 				}
 
