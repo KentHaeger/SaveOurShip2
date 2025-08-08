@@ -161,11 +161,11 @@ namespace SaveOurShip2
 		}
 		public override void SpawnSetup(Map map, bool respawningAfterLoad)
 		{
-			base.SpawnSetup(map, respawningAfterLoad);
 			// Ship move can change innerdoor to outerdoor by moving said door away from docking clamp
 			outerdoorCheckTick = 0;
-			mapComp = this.Map.GetComponent<ShipMapComp>();
+			mapComp = map.GetComponent<ShipMapComp>();
 			unfoldComp = this.TryGetComp<CompUnfold>();
+			base.SpawnSetup(map, respawningAfterLoad);
 		}
 
 		//docking - doors dont have proper rot
