@@ -455,6 +455,15 @@
 						<VacuumSpeedMultiplier>4</VacuumSpeedMultiplier>
 					</value>
 				</li>
+				<!-- To make orbit empty tile selectable in dev mode -->
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/PlanetLayerDef[@Name="OrbitLayer"]/worldDrawLayers</xpath>
+					<value>
+						<li>SaveOurShip2.WorldDrawLayer_DevGrid</li>
+						<li>SaveOurShip2.WorldDrawLayer_DevSelectedTile</li>
+						<li>WorldDrawLayer_MouseTile</li>
+					</value>
+				</li>
 			</operations>
 		</match>
 	</Operation>
