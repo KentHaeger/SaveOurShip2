@@ -45,6 +45,7 @@
 		</comps>
 		<rotatable>false</rotatable>
 		<building>
+			<isAirtight>false</isAirtight>
 			<shipPart>true</shipPart>
 			<blueprintGraphicData>
 				<texPath>Things/Building/Linked/Wall_Blueprint_Atlas</texPath>

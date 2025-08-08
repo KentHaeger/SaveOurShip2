@@ -15,6 +15,8 @@ namespace SaveOurShip2
 {
 	public class Building_ShipAirlock : Building_Door
 	{
+		public override bool ExchangeVacuum => false;
+
 		List<Building> extenders = new List<Building>();
 
 		public ShipMapComp mapComp;
