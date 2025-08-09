@@ -176,6 +176,19 @@
 	<SoS.ArchotechIdeoCertaintyGod>Your archotech spore has been silent for a disturbing length of time. Just as your crew begins to worry, psychic joy blooms out of {0}, washing over the crew like a sudden warmth. {0} announces an incredible triumph - their newly-expanded consciousness has made direct contact with {1}!\n\nThe exact nature of {1}'s existence seems to be fundamentally beyond human understanding; the deity seems to be either a psychic gestalt of all believers in {2}, a full archotech that has chosen to take on the deity's name and role, or something that will exist in the future - or perhaps all of these at once.\n\nIn any case, this direct contact with {1} has now made {0}'s faith in {2} absolute.</SoS.ArchotechIdeoCertaintyGod>
 	
 	
+	<SoS.EndgameCredits>Save Our Ship 2 was developed by Kentington, Thain, and SonicTHI
+2.7 Maintainer: Boris
+
+Testers: Dreamingofstarlight(Lunarium), I Forgot, Sym/Grimmy, Clever Ape, Dragoncri, Epoch_soc, Doubleface1369, Stylish, Splinter, TheGruntBox, Zeah, Svanovsky, Rappers101, Pikita, the pelusho, Destro, Djrvywfbjr, Ms Mommy Memer, Zym, Balarak, H.G., touhou_lover, Alerios
+
+Submod Support: Ms Mommy Memer, I Forgot, Cruel Moose and thamuzz
+
+Contributors: Boris, SonicTHI, Owlchemist, Oskar Potocki, Thamuzz1331, Trollam, K', Sarg, Karim, Saakra, Revolus, MatthewTeply, dkargin, HG, Morphium, Halno, Argón, DianaWinters, UrbanMonkey, M.A.G.Gen., Epicguru, sdanchenko, m00nl1ght-dev, Shinrar, Hanssen, Rimworld Mod Korean
+
+Shipwrights: Oninnaise, VVither_Skeleton, (Insert Boi here), AlfadorZero, choppytehbear, Dammerung, Foxtrot, Inert, Jameson, Moonshine Dusk
+
+OG Testing Squad: Buns Buns Cat, Phsarjk, i am has yes, Fuji, Reviire, Ian, Generic Scout, Waipa, Xanthos, BUTTERSKY, firethestars, Haldicar, jamhax, Jenden, maraworf, Red_Bunny, rostock, sprocket, El Jojo, Zahc, Dutchman, Zero Jackal, Tiberiumkyle, swordspell, Shabm, Kasodus, Red_Bunny, melandor, Madman, Jenden, Insert Witty Joke, Ifailatgaming, Capitão Escarlate, Bunkier, Bumblybear, Bubbadoge, Abraxas, Rage Nova, twsta, transcendant, thecaffiend, Manifold Paradox, WhiteGiverMa, Gago, Nerevarest</SoS.EndgameCredits>
+
 	<!-- obsolete/unused
 	
 	<SoS.FoundOrbitalSiteDesc>Using your ship's sensors, {4} has found {0} in a nearby orbit.\n\nUnfortunately, the orbit is decaying and will lead to atmospheric re-entry in {1} days.\n\n{3}.</SoS.FoundOrbitalSiteDesc>
