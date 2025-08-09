@@ -1136,11 +1136,11 @@ namespace SaveOurShip2
 			//post ship spawn - map name
 			if (fleet)
 			{
-				mp.Name = "Ship fleet " + newMap.uniqueID;
+				mp.Name = TranslatorFormattedStringExtensions.Translate("SoS.Location.ShipFleet", newMap.uniqueID);
 			}
 			else
 			{
-				mp.Name = shipDef.label + " " + newMap.uniqueID;
+				mp.Name = TranslatorFormattedStringExtensions.Translate("SoS.Location.ShipNameAndMapID", shipDef.label, newMap.uniqueID);
 			}
 			if (passingShip is DerelictShip && !fakeWreck)
 			{
@@ -2701,7 +2701,7 @@ namespace SaveOurShip2
 			}
 			mp.Theta = theta + thetaOffset * thetaOffsetScale;
 			mp.Phi = phi - 0.01f + 0.001f * Rand.Range(0, 20) + phiExtraOffset;
-			mp.Name += "Wreckage nr." + ShipGraveyard.uniqueID;
+			mp.Name += TranslatorFormattedStringExtensions.Translate("SoS.Location.WreckageNumbered", ShipGraveyard.uniqueID);
 			var graveMapComp = ShipGraveyard.GetComponent<ShipMapComp>();
 			graveMapComp.ShipMapState = ShipMapState.isGraveyard;
 			graveMapComp.GraveOrigin = map;
@@ -3102,15 +3102,15 @@ namespace SaveOurShip2
 				switch (mission)
 				{
 					case ShuttleMission.BOARD:
-						return "Boarding";
+						return TranslatorFormattedStringExtensions.Translate("SoS.ShipMapMission.Boarding");
 					case ShuttleMission.INTERCEPT:
-						return "Intercepting";
+						return TranslatorFormattedStringExtensions.Translate("SoS.ShipMapMission.Intercepting");
 					case ShuttleMission.STRAFE:
-						return "Strafing";
+						return TranslatorFormattedStringExtensions.Translate("SoS.ShipMapMission.Strafing"); ;
 					case ShuttleMission.BOMB:
-						return "Bombing";
+						return TranslatorFormattedStringExtensions.Translate("SoS.ShipMapMission.Bombing");
 					default:
-						return "Retreating";
+						return TranslatorFormattedStringExtensions.Translate("SoS.ShipMapMission.Retreating");
 				}
             }
 

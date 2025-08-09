@@ -59,9 +59,9 @@ namespace SaveOurShip2
 				foreach (int i in mapComp.ShipsOnMap.Keys)
 				{
 					var ship = mapComp.ShipsOnMap[i];
-					string str = "wreck " + ship.Index;
+					string str = TranslatorFormattedStringExtensions.Translate("SoS.DebugMode.Wreck", ship.Index);
 					if (!ship.IsWreck)
-						str = "ship " + ship.Index;
+						str = TranslatorFormattedStringExtensions.Translate("SoS.DebugMode.Ship", ship.Index);
 
 					debugY += 45;
 					Rect rect2 = new Rect(20, debugY, 100, 35);

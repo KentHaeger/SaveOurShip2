@@ -568,7 +568,7 @@ namespace SaveOurShip2
 							{
 								ShipInteriorMod2.SlowTimeFlag = !ShipInteriorMod2.SlowTimeFlag;
 							},
-							defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.ToggleCloakLabel"),
+							defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.ToggleSlowLabel"),
 							defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.ToggleCloakDesc"),
 							isActive = () => ShipInteriorMod2.SlowTimeFlag
 						};

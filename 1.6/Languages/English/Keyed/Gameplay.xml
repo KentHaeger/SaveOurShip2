@@ -497,8 +497,10 @@
 	<SoS.Dev.ShipPositionResetDesc>Reset ship location to default.</SoS.Dev.ShipPositionResetDesc>
 	<SoS.Dev.RemoveShip>Dev: Remove ship</SoS.Dev.RemoveShip>
 	<SoS.Dev.RemoveShipDesc>Delete a glitched ship and its map.</SoS.Dev.RemoveShipDesc>
+	<SoS.DebugMode.Ship>Ship {0}</SoS.DebugMode.Ship>
+	<SoS.DebugMode.Wreck>Wreck {0}</SoS.DebugMode.Wreck>
 
-	<SoS.ToggleCloakLabel>Toggle slow time</SoS.ToggleCloakLabel>
+	<SoS.ToggleSlowLabel>Toggle slow time</SoS.ToggleSlowLabel>
 
 	<!-- Shuttles -->
 	<SoS.ShipMapMission.Intercept>Intercept</SoS.ShipMapMission.Intercept>
@@ -506,6 +508,13 @@
 	<SoS.ShipMapMission.Bomb>Bomb</SoS.ShipMapMission.Bomb>
 	<SoS.ShipMapMission.Board>Board</SoS.ShipMapMission.Board>
 	<SoS.ShipMapMission.Return>Return</SoS.ShipMapMission.Return>
+	<!-- This is used when telling what shuttle is doing now. Like Shuttle 1 (Bombing) -->
+	<SoS.ShipMapMission.Intercepting>Intercepting</SoS.ShipMapMission.Intercepting>
+	<SoS.ShipMapMission.Strafing>Strafing</SoS.ShipMapMission.Strafing>
+	<SoS.ShipMapMission.Bombing>Bombing</SoS.ShipMapMission.Bombing>
+	<SoS.ShipMapMission.Boarding>Boarding</SoS.ShipMapMission.Boarding>
+	<SoS.ShipMapMission.Retreating>Retreating</SoS.ShipMapMission.Retreating>
+
 	<SoS.ShipCloakingInactive><![CDATA[<color=red>In vacuum and not connected to heat net</color>]]></SoS.ShipCloakingInactive>
 	<SoS.ShipSensorObserving>Observing {0}</SoS.ShipSensorObserving>
 
@@ -604,6 +613,14 @@
 	<SoS.MechanitesOn>Mechanites on: {0}</SoS.MechanitesOn>
 	<SoS.MechanitesDisassembling>Mechanites disassembling</SoS.MechanitesDisassembling>
 	<SoS.MechaniteSizeLower>Mechanite size: {0}</SoS.MechaniteSizeLower>
+
+	<!-- TranslatorFormattedStringExtensions.Translate -->
+	<!-- Locations/world objects -->
+	<SoS.Location.ObservedArea>Observed area {0}</SoS.Location.ObservedArea>
+	<SoS.Location.ShipFleet>Ship fleet {0}</SoS.Location.ShipFleet>
+	<!-- 0 is ship name, 1 is map ID -->
+	<SoS.Location.ShipNameAndMapID>{0} {1}</SoS.Location.ShipNameAndMapID>
+	<SoS.Location.WreckageNumbered>Wreckage nr. {0}</SoS.Location.WreckageNumbered>
 
 	<!-- Projectiles missing map-->
 	<SoS.ActorPlayer>Player</SoS.ActorPlayer>
