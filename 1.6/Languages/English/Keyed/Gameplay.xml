@@ -556,7 +556,7 @@
 	<SoS.Combat.MapShipInfo>SOS2 {0} | Ships: {1} | Cells: {2}</SoS.Combat.MapShipInfo>
 
 	<SoS.Combat.ShipName>Name: {0}</SoS.Combat.ShipName>
-	<SoS.Combat.ShipInfo>Map: {0}\nParts: {1}\nBuildings: {2}\nMass: {3}\nTWR: {4}\nArea: {5}\nCores: {6}\nCore: {7}\nPath max:{8}</SoS.Combat.ShipInfo>
+	<SoS.Combat.ShipInfo>Map: {0}\nParts: {1}\nFaction: {2}\nBuildings: {3}\nMass: {4}\nTWR: {5}\nArea: {6}\nCores: {7}\nCore: {8}\nPath max:{9}</SoS.Combat.ShipInfo>
 	<SoS.Combat.PlayerShuttleInfo>{0} ({1})</SoS.Combat.PlayerShuttleInfo>
 	<SoS.Combat.PlayerShuttleMore>({0} more shuttles)</SoS.Combat.PlayerShuttleMore>
 	<SoS.Combat.PlayerShuttleInfo2>{0} ({1})</SoS.Combat.PlayerShuttleInfo2>
