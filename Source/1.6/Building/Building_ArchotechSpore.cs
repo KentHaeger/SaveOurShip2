@@ -725,7 +725,7 @@ namespace SaveOurShip2
 				giz.Add(demandGift);*/
 			}
 
-			if (NumConnectedPillars>=4)
+			if (NumConnectedPillars>=4 && Consciousness != null)
 			{
 				Command_Action winGame = new Command_Action
 				{

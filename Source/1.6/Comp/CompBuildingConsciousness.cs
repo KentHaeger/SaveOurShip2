@@ -196,7 +196,7 @@ namespace SaveOurShip2
 					if (hediff.def.spawnThingOnRemoved != null && hediff.def != HediffDefOf.MechlinkImplant)
 					{
 						Consciousness.health.RemoveHediff(hediff);
-						if (Consciousness.Spawned)
+						if (Consciousness.Spawned && parent.Map != null)
 							GenPlace.TryPlaceThing(ThingMaker.MakeThing(hediff.def.spawnThingOnRemoved), Consciousness.Position, parent.Map, ThingPlaceMode.Near);
 						else if (Consciousness.ParentHolder != null)
 						{
