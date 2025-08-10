@@ -97,7 +97,10 @@ namespace SaveOurShip2
 				{
 					stringBuilder.Append(TranslatorFormattedStringExtensions.Translate("SoS.Dev.ShipIndex", index));
 					if (parent is Building_ShipBridge && parent == mapComp.ShipsOnMap[index].Core)
+					{
+						stringBuilder.Append(" ");
 						stringBuilder.Append(TranslatorFormattedStringExtensions.Translate("SoS.Dev.IsPrimaryCore"));
+					}
 				}
 			}
 			return stringBuilder.ToString();
