@@ -15,7 +15,7 @@ namespace SaveOurShip2
 
 		public SlateRef<Faction> faction;
 
-		public SlateRef<int> tile;
+		public SlateRef<PlanetTile> tile;
 
 		[NoTranslate]
 		public SlateRef<string> storeAs;
