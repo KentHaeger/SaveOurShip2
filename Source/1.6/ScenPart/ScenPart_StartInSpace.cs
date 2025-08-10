@@ -69,16 +69,16 @@ namespace SaveOurShip2
 			Rect rect2 = new Rect(scenPartRect.x, scenPartRect.y + scenPartRect.height / 3f, scenPartRect.width, scenPartRect.height / 3f);
 			Rect rect3 = new Rect(scenPartRect.x, scenPartRect.y + 2 * scenPartRect.height / 3f, scenPartRect.width, scenPartRect.height / 3f);
 			//selection 1
-			if (Widgets.ButtonText(rect1, "Start on: " + startType.ToString(), true, true, true))
+			if (Widgets.ButtonText(rect1, TranslatorFormattedStringExtensions.Translate("SoS.SpaceStart.StartOn", startType.EnumToStringTranslated()), true, true, true))
 			{
 				List<FloatMenuOption> toggleType = new List<FloatMenuOption>
 				{
-					new FloatMenuOption("Start on: ship", delegate ()
+					new FloatMenuOption(TranslatorFormattedStringExtensions.Translate("SoS.SpaceStart.StartOn", ShipStartFlags.Ship.EnumToStringTranslated()), delegate ()
 					{
 						startType = ShipStartFlags.Ship;
 						spaceShipDef = DefDatabase<ShipDef>.GetNamed("0");
 					}, MenuOptionPriority.Default, null, null, 0f, null, null, true, 0),
-					new FloatMenuOption("Start on: station", delegate ()
+					new FloatMenuOption(TranslatorFormattedStringExtensions.Translate("SoS.SpaceStart.StartOn", ShipStartFlags.Station.EnumToStringTranslated()), delegate ()
 					{
 						startType = ShipStartFlags.Station;
 						spaceShipDef = DefDatabase<ShipDef>.GetNamed("0");
@@ -109,14 +109,15 @@ namespace SaveOurShip2
 				Find.WindowStack.Add(new FloatMenu(list));
 			}
 			//selection 3
-			if (startType == ShipStartFlags.Ship && Widgets.ButtonText(rect3, "Damage ship: " + damageStart.ToString(), true, true, true))
+			if (startType == ShipStartFlags.Ship && Widgets.ButtonText(rect3, TranslatorFormattedStringExtensions.Translate(
+				"SoS.SpaceStart.DamageShip", damageStart.ToStringTranslated()), true, true, true))
 			{
 				List<FloatMenuOption> toggleDamage = new List<FloatMenuOption>();
-				toggleDamage.Add(new FloatMenuOption("Damage ship: True", delegate ()
+				toggleDamage.Add(new FloatMenuOption(TranslatorFormattedStringExtensions.Translate("SoS.SpaceStart.DamageShip", true.ToStringTranslated()), delegate ()
 				{
 					damageStart = true;
 				}, MenuOptionPriority.Default, null, null, 0f, null, null, true, 0));
-				toggleDamage.Add(new FloatMenuOption("Damage ship: False", delegate ()
+				toggleDamage.Add(new FloatMenuOption(TranslatorFormattedStringExtensions.Translate("SoS.SpaceStart.DamageShip", false.ToStringTranslated()), delegate ()
 				{
 					damageStart = false;
 				}, MenuOptionPriority.Default, null, null, 0f, null, null, true, 0));
@@ -126,7 +127,7 @@ namespace SaveOurShip2
 		}
 		public override string Summary(Scenario scen)
 		{
-			return "ScenPart_PlayerFaction".Translate(spaceShipDef.label);
+			return "ScenPart_PlayerFaction".Translate(spaceShipDef.label); // Core\ScenParts.xml
 		}
 
 		public override void Randomize()

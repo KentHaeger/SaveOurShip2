@@ -35,14 +35,14 @@ namespace SaveOurShip2
 			Rect rect3 = rect2;
 			rect3.height = rect.height / 2f;
 			Text.Font = GameFont.Tiny;
-			Widgets.Label(rect3, "Shield");
+			Widgets.Label(rect3, TranslatorFormattedStringExtensions.Translate("SoS.EnergyShieldStatusLabel"));
 			Rect rect4 = rect2;
 			rect4.yMin = rect2.y + rect2.height / 2f;
 			float fillPercent = shield.Energy / ((CompProps_Archolife)shield.props).shield;
 			Widgets.FillableBar(rect4, fillPercent, FullShieldBarTex, EmptyShieldBarTex, doBorder: false);
 			Text.Font = GameFont.Small;
 			Text.Anchor = TextAnchor.MiddleCenter;
-			Widgets.Label(rect4, (shield.Energy * 100f).ToString("F0") + " / " + (((CompProps_Archolife)shield.props).shield * 100f).ToString("F0"));
+			Widgets.Label(rect4, TranslatorFormattedStringExtensions.Translate("SoS.EnergyShieldStatusDesc", (shield.Energy * 100f).ToString("F0"), (((CompProps_Archolife)shield.props).shield * 100f).ToString("F0")));
 			Text.Anchor = TextAnchor.UpperLeft;
 			return new GizmoResult(GizmoState.Clear);
 		}

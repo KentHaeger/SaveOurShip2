@@ -165,8 +165,8 @@ namespace SaveOurShip2
 			{
 				yield return new Command_Action
 				{
-					defaultLabel = TranslatorFormattedStringExtensions.Translate("CommandShowMap"),
-					defaultDesc = TranslatorFormattedStringExtensions.Translate("CommandShowMapDesc"),
+					defaultLabel = TranslatorFormattedStringExtensions.Translate("CommandShowMap"), // Core\GameplayCommands.xml
+					defaultDesc = TranslatorFormattedStringExtensions.Translate("CommandShowMapDesc"), // Core\GameplayCommands.xml
 					icon = ShowMapCommand,
 					hotKey = KeyBindingDefOf.Misc1,
 					action = delegate
@@ -217,9 +217,12 @@ namespace SaveOurShip2
 									}
 									stringBuilder2.Append("	" + item.LabelCap);
 								}
-								stringBuilder.Append("ConfirmAbandonHomeWithColonyPawns".Translate(stringBuilder2));
+								stringBuilder.Append(TranslatorFormattedStringExtensions.Translate("ConfirmAbandonHomeWithColonyPawns", stringBuilder2)); // Core\Dialogs_Various.xml
 							}
-							PawnDiedOrDownedThoughtsUtility.BuildMoodThoughtsListString(source, PawnDiedOrDownedThoughtsKind.Died, stringBuilder, null, "\n\n" + "ConfirmAbandonHomeNegativeThoughts_Everyone".Translate(), "ConfirmAbandonHomeNegativeThoughts");
+							PawnDiedOrDownedThoughtsUtility.BuildMoodThoughtsListString(
+								source, PawnDiedOrDownedThoughtsKind.Died, stringBuilder, null,
+								"\n\n" + TranslatorFormattedStringExtensions.Translate("ConfirmAbandonHomeNegativeThoughts_Everyone"), // Core\Dialogs_Various.xml
+								"ConfirmAbandonHomeNegativeThoughts");
 							if (stringBuilder.Length == 0)
 							{
 								Destroy();
@@ -339,8 +342,8 @@ namespace SaveOurShip2
 								Theta = -1f;
 								Phi = 0f;
 							},
-							defaultLabel = "Dev: Reset position",
-							defaultDesc = "Reset ship location to default.",
+							defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.Dev.ShipPositionReset"),
+							defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.Dev.ShipPositionResetDesc"),
 						};
 					}
 				}
@@ -379,8 +382,8 @@ namespace SaveOurShip2
 				{
 					yield return new Command_Action
 					{
-						defaultLabel = "Dev: Remove ship",
-						defaultDesc = "Delete a glitched ship and its map.",
+						defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.Dev.RemoveShip"),
+						defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.Dev.RemoveShipDesc"),
 						action = delegate
 						{
 							mapComp.ShipMapState = ShipMapState.burnUpSet;
@@ -399,11 +402,7 @@ namespace SaveOurShip2
 			}
 			if (Prefs.DevMode)
 			{
-				stringBuilder.AppendLine("State: " + mapComp.ShipMapState + "  Altitude: " + mapComp.Altitude);
-				stringBuilder.AppendLine("Radius: " + radius + "  Theta: " + theta + "  Phi: " + phi);
-				stringBuilder.AppendLine("DrawPos: " + DrawPos);
-				stringBuilder.AppendLine("originDrawPos: " + originDrawPos);
-				stringBuilder.AppendLine("targetDrawPos: " + targetDrawPos);
+				stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.Dev.OrbitingShipInfo", mapComp.ShipMapState.ToString(), mapComp.Altitude, radius, theta, phi, DrawPos.ToString(), originDrawPos.ToString(), targetDrawPos.ToString()));
 			}
 			return stringBuilder.ToString().TrimEndNewlines();
 		}

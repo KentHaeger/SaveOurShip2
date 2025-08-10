@@ -147,8 +147,8 @@ namespace SaveOurShip2
 				}
 
 				DiaNode node = new DiaNode(TranslatorFormattedStringExtensions.Translate("SoS.ArchotechIdeoChoice", Consciousness.Name.ToStringShort, highestPawn.Name.ToStringShort));
-				DiaOption keepIdeo = new DiaOption("Discover the truth of "+Consciousness.Ideo.name);
-				DiaOption newIdeo = new DiaOption("Found a new ideoligion");
+				DiaOption keepIdeo = new DiaOption(TranslatorFormattedStringExtensions.Translate("SoS.ArchotechIdeoKeep",Consciousness.Ideo.name));
+				DiaOption newIdeo = new DiaOption(TranslatorFormattedStringExtensions.Translate("SoS.ArchotechIdeoNew"));
 				node.options.Add(keepIdeo);
 				node.options.Add(newIdeo);
 				DiaNode nodeKeepFaith;
@@ -160,7 +160,8 @@ namespace SaveOurShip2
 					nodeKeepFaith = new DiaNode(TranslatorFormattedStringExtensions.Translate("SoS.ArchotechIdeoCertaintySpirits", Consciousness.Name.ToStringShort, Consciousness.Ideo.name));
 				else
 					nodeKeepFaith = new DiaNode(TranslatorFormattedStringExtensions.Translate("SoS.ArchotechIdeoCertaintyGod", Consciousness.Name.ToStringShort, Consciousness.Ideo.KeyDeityName, Consciousness.Ideo.name));
-				nodeKeepFaith.options.Add(new DiaOption("All hail the one truth!"));
+				TaggedString keepIdeoDialog = TranslatorFormattedStringExtensions.Translate("SoS.ArchotechIdeoKeepFaith");
+				nodeKeepFaith.options.Add(new DiaOption(keepIdeoDialog));
 				nodeKeepFaith.options[0].resolveTree = true;
 				keepIdeo.link = nodeKeepFaith;
 				newIdeo.action = delegate
@@ -171,7 +172,7 @@ namespace SaveOurShip2
 					{
 						Ideo ideo = page.ideo;
 						DiaNode newNode = new DiaNode(TranslatorFormattedStringExtensions.Translate("SoS.ArchotechIdeoHeresy", ideo));
-						newNode.options.Add(new DiaOption("All hail the one truth!"));
+						newNode.options.Add(new DiaOption(keepIdeoDialog));
 						newNode.options[0].resolveTree = true;
 						Dialog_NodeTree newTree = new Dialog_NodeTree(newNode);
 						Consciousness.ideo.SetIdeo(ideo);
@@ -184,7 +185,8 @@ namespace SaveOurShip2
 					Find.WindowStack.Add(page);
 				};
 				newIdeo.resolveTree = true;
-				Dialog_NodeTree dialog_NodeTree = new Dialog_NodeTree(node, true, false, "Crisis of Faith");
+				Dialog_NodeTree dialog_NodeTree = new Dialog_NodeTree(node, true, false,
+					TranslatorFormattedStringExtensions.Translate("SoS.ArchotechIdeoDialogTitle"));
 				dialog_NodeTree.silenceAmbientSound = false;
 				Find.WindowStack.Add(dialog_NodeTree);
 			}
@@ -230,7 +232,9 @@ namespace SaveOurShip2
 			int prank = Rand.RangeInclusive(0, 6);
 			if (prank == 0) //cancer
 			{
-				Find.LetterStack.ReceiveLetter("SoS.ArchotechPrank".Translate(), "SoS.ArchotechPrankCancer".Translate(), LetterDefOf.NegativeEvent);
+				Find.LetterStack.ReceiveLetter(
+					TranslatorFormattedStringExtensions.Translate("SoS.ArchotechPrank"),
+					TranslatorFormattedStringExtensions.Translate("SoS.ArchotechPrankCancer"), LetterDefOf.NegativeEvent);
 				int numCancers = Rand.RangeInclusive(2, 5);
 				for (int i = 0; i < numCancers; i++)
 				{
@@ -240,7 +244,8 @@ namespace SaveOurShip2
 			}
 			else if (prank == 1) //breakdown
 			{
-				Find.LetterStack.ReceiveLetter("SoS.ArchotechPrank".Translate(), "SoS.ArchotechPrankDamage".Translate(), LetterDefOf.NegativeEvent);
+				Find.LetterStack.ReceiveLetter(TranslatorFormattedStringExtensions.Translate("SoS.ArchotechPrank"),
+					TranslatorFormattedStringExtensions.Translate("SoS.ArchotechPrankDamage"), LetterDefOf.NegativeEvent);
 				int numBrokenDevices = Rand.RangeInclusive(5, 12);
 				for (int i = 0; i < numBrokenDevices; i++)
 				{
@@ -274,7 +279,9 @@ namespace SaveOurShip2
 				}
 				if (worstA != null && worstB != null)
 				{
-					Find.LetterStack.ReceiveLetter("SoS.ArchotechPrank".Translate(), "SoS.ArchotechPrankLovers".Translate(worstA.Label, worstB.Label), LetterDefOf.NegativeEvent);
+					Find.LetterStack.ReceiveLetter(
+						TranslatorFormattedStringExtensions.Translate("SoS.ArchotechPrank"),
+						TranslatorFormattedStringExtensions.Translate("SoS.ArchotechPrankLovers", worstA.Label, worstB.Label), LetterDefOf.NegativeEvent);
 					InteractionWorker_RomanceAttempt worker = new InteractionWorker_RomanceAttempt();
 					object[] parms = new object[] { worstA, null };
 					typeof(InteractionWorker_RomanceAttempt).GetMethod("BreakLoverAndFianceRelations", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).Invoke(worker, parms);
@@ -314,7 +321,9 @@ namespace SaveOurShip2
 			}
 			else if(prank==3) //manhunter
 			{
-				Find.LetterStack.ReceiveLetter("SoS.ArchotechPrank".Translate(), "SoS.ArchotechPrankSquirrels".Translate(), LetterDefOf.NegativeEvent);
+				Find.LetterStack.ReceiveLetter(
+					TranslatorFormattedStringExtensions.Translate("SoS.ArchotechPrank"),
+					TranslatorFormattedStringExtensions.Translate("SoS.ArchotechPrankSquirrels"), LetterDefOf.NegativeEvent);
 				int numSquirrels = this.Map.mapPawns.ColonistsSpawnedCount;
 				for(int i=0;i<numSquirrels;i++)
 				{
@@ -329,12 +338,16 @@ namespace SaveOurShip2
 			{
 				Faction fac = Find.FactionManager.AllFactions.Where(f => f.def.CanEverBeNonHostile && !f.def.isPlayer).RandomElement();
 				fac.TryAffectGoodwillWith(Faction.OfPlayer, -10);
-				Find.LetterStack.ReceiveLetter("SoS.ArchotechPrank".Translate(), "SoS.ArchotechPrankReputation".Translate(fac.Name), LetterDefOf.NegativeEvent);
+				Find.LetterStack.ReceiveLetter(
+					TranslatorFormattedStringExtensions.Translate("SoS.ArchotechPrank"),
+					TranslatorFormattedStringExtensions.Translate("SoS.ArchotechPrankReputation", fac.Name), LetterDefOf.NegativeEvent);
 			}
 			else if(prank==5) //secret
 			{
 				Pawn victim = this.Map.mapPawns.FreeColonists.RandomElement();
-				Find.LetterStack.ReceiveLetter("SoS.ArchotechPrank".Translate(), "SoS.ArchotechPrankSecret".Translate(victim), LetterDefOf.NegativeEvent);
+				Find.LetterStack.ReceiveLetter(
+					TranslatorFormattedStringExtensions.Translate("SoS.ArchotechPrank"),
+					TranslatorFormattedStringExtensions.Translate("SoS.ArchotechPrankSecret", victim), LetterDefOf.NegativeEvent);
 				foreach(Pawn p in this.Map.mapPawns.FreeColonistsAndPrisoners)
 				{
 					if (p == victim)
@@ -344,7 +357,9 @@ namespace SaveOurShip2
 			}
             else
             {
-				Find.LetterStack.ReceiveLetter("SoS.ArchotechPrank".Translate(), "SoS.ArchotechPrankMechanites".Translate(), LetterDefOf.NegativeEvent);
+				Find.LetterStack.ReceiveLetter(
+					TranslatorFormattedStringExtensions.Translate("SoS.ArchotechPrank"),
+					TranslatorFormattedStringExtensions.Translate("SoS.ArchotechPrankMechanites"), LetterDefOf.NegativeEvent);
 				GenPlace.TryPlaceThing(ThingMaker.MakeThing(ResourceBank.ThingDefOf.Weapon_GrenadeMechanite), InteractionCell, Map, ThingPlaceMode.Near);
             }
 			Consciousness.needs.mood.thoughts.memories.TryGainMemory(ThoughtDefOf.Catharsis);
@@ -364,10 +379,11 @@ namespace SaveOurShip2
 		public override string GetInspectString()
 		{
 			string text = base.GetInspectString();
-			text += "\nMood: " + Mathf.Round(Mood * 50f) + "\nPsychic field strength: "+fieldStrength;
+			text += "\n" + TranslatorFormattedStringExtensions.Translate("SoS.ArchotechInspectMood") + ": " + Mathf.Round(Mood * 50f)
+			        + "\n" + TranslatorFormattedStringExtensions.Translate("SoS.ArchotechInspectPsychicFieldStrength") + ": "+ fieldStrength;
 			if (linkedPawns.Count > 0)
 			{
-				text += "\nLinked: ";
+				text += "\n" + TranslatorFormattedStringExtensions.Translate("SoS.ArchotechInspectLinked") + ": ";
 				for(int i=0;i<linkedPawns.Count;i++)
                 {
 					text += linkedPawns[i];
@@ -377,7 +393,7 @@ namespace SaveOurShip2
 			}
 			if (soulsHeld.Count > 0)
 			{
-				text += "\nStored: ";
+				text += "\n" + TranslatorFormattedStringExtensions.Translate("SoS.ArchotechInspectStored") + ": ";
 				for (int i = 0; i < soulsHeld.Count; i++)
 				{
 					text += soulsHeld[i];
@@ -607,14 +623,14 @@ namespace SaveOurShip2
 							Find.WindowStack.Add(menu);
 						}
 					},
-					defaultLabel = "SoS.ArchotechSoulLink".Translate(),
-					defaultDesc = "SoS.ArchotechSoulLinkDesc".Translate(fieldCostSoulLink),
+					defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.ArchotechSoulLink"),
+					defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.ArchotechSoulLinkDesc", fieldCostSoulLink),
 					icon = ContentFinder<Texture2D>.Get("UI/ArchoTechUpload")
 				};
 				if (fieldStrength < fieldCostSoulLink)
                 {
 					linkSoul.disabled = true;
-					linkSoul.disabledReason = "SoS.ArchotechFieldStrengthLow".Translate();
+					linkSoul.disabledReason = TranslatorFormattedStringExtensions.Translate("SoS.ArchotechFieldStrengthLow");
 				}
 				giz.Add(linkSoul);
 
@@ -655,8 +671,8 @@ namespace SaveOurShip2
 								Find.WindowStack.Add(menu);
 							}
 						},
-						defaultLabel = "SoS.ArchotechSoulDownload".Translate(soul),
-						defaultDesc = "SoS.ArchotechSoulDownloadDesc".Translate(soul),
+						defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.ArchotechSoulDownload", soul),
+						defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.ArchotechSoulDownloadDesc", soul),
 						pawn = soul,
 						groupable = false
                     };
@@ -716,24 +732,24 @@ namespace SaveOurShip2
 					action = delegate
 					{
 						DiaNode node = new DiaNode(TranslatorFormattedStringExtensions.Translate("SoS.AllPillarsDesc", Consciousness.Name.ToStringFull));
-						DiaOption end = new DiaOption("Remake the world");
-						DiaOption cancel = new DiaOption("Remain mortal a while longer");
+						DiaOption end = new DiaOption(TranslatorFormattedStringExtensions.Translate("SoS.AllPillarsEnd"));
+						DiaOption cancel = new DiaOption(TranslatorFormattedStringExtensions.Translate("SoS.AllPillarsCancel"));
 						cancel.resolveTree = true;
 						node.options.Add(end);
 						node.options.Add(cancel);
 
 						DiaNode friendlyNode = new DiaNode(TranslatorFormattedStringExtensions.Translate("SoS.WinGameAllies"));
-						DiaOption friendlyAlly = new DiaOption("Give them a choice - join or don't");
-						DiaOption friendlyTakeover = new DiaOption("Annex them by force");
+						DiaOption friendlyAlly = new DiaOption(TranslatorFormattedStringExtensions.Translate("SoS.WinGameAlliesAlly"));
+						DiaOption friendlyTakeover = new DiaOption(TranslatorFormattedStringExtensions.Translate("SoS.WinGameAlliesTakeover"));
 						friendlyAlly.action = delegate { endgameFriendly = 0; };
 						friendlyTakeover.action = delegate { endgameFriendly = 1; };
 						friendlyNode.options.Add(friendlyAlly);
 						friendlyNode.options.Add(friendlyTakeover);
 
 						DiaNode neutralNode = new DiaNode(TranslatorFormattedStringExtensions.Translate("SoS.WinGameNeutral"));
-						DiaOption neutralAlly = new DiaOption("Give them a choice - join or don't");
-						DiaOption neutralTakeover = new DiaOption("Annex them by force");
-						DiaOption neutralKill = new DiaOption("Destroy them");
+						DiaOption neutralAlly = new DiaOption(TranslatorFormattedStringExtensions.Translate("SoS.WinGameNeutralAlly"));
+						DiaOption neutralTakeover = new DiaOption(TranslatorFormattedStringExtensions.Translate("SoS.WinGameNeutralTakeover"));
+						DiaOption neutralKill = new DiaOption(TranslatorFormattedStringExtensions.Translate("SoS.WinGameNeutralKill"));
 						neutralAlly.action = delegate { endgameNeutral = 0; };
 						neutralTakeover.action = delegate { endgameNeutral = 1; };
 						neutralKill.action = delegate { endgameNeutral = 2; };
@@ -742,8 +758,8 @@ namespace SaveOurShip2
 						neutralNode.options.Add(neutralKill);
 
 						DiaNode enemyNode = new DiaNode(TranslatorFormattedStringExtensions.Translate("SoS.WinGameEnemies"));
-						DiaOption enemyTakeover = new DiaOption("Annex them by force");
-						DiaOption enemyKill = new DiaOption("Destroy them");
+						DiaOption enemyTakeover = new DiaOption(TranslatorFormattedStringExtensions.Translate("SoS.WinGameEnemiesTakeover"));
+						DiaOption enemyKill = new DiaOption(TranslatorFormattedStringExtensions.Translate("SoS.WinGameEnemiesKill"));
 						enemyTakeover.action = delegate { endgameEnemy = 1; };
 						enemyKill.action = delegate { endgameEnemy = 2; };
 						enemyNode.options.Add(enemyTakeover);
@@ -812,7 +828,7 @@ namespace SaveOurShip2
 			else //quest
 			{
 				Slate slate = new Slate();
-				slate.Set<string>("quest_name", "A Gift From " + Consciousness.Name.ToStringFull);
+				slate.Set<string>("quest_name", TranslatorFormattedStringExtensions.Translate("SoS.ArchotechGiftQuestDesc",Consciousness.Name.ToStringFull));
 				slate.Set<string>("archotech_name", Consciousness.Name.ToStringShort);
 				slate.Set<Map>("map", Map);
 				slate.Set<int>("value", numUnlock * 1000);
@@ -1160,19 +1176,7 @@ namespace SaveOurShip2
 			}
 			builder.AppendLine();
 			builder.AppendLine(GameVictoryUtility.InMemoryOfSection());
-			builder.AppendLine("Save Our Ship 2 was developed by Kentington, Thain, and SonicTHI");
-			builder.AppendLine();
-			builder.AppendLine("2.7 Maintainer: Boris");
-			builder.AppendLine();
-			builder.AppendLine("Testers: Dreamingofstarlight(Lunarium), I Forgot, Sym/Grimmy, Clever Ape, Dragoncri, Epoch_soc, Doubleface1369, Stylish, Splinter, TheGruntBox, Zeah, Svanovsky, Rappers101, Pikita, the pelusho, Destro, Djrvywfbjr, Ms Mommy Memer, Zym, Balarak, H.G.");
-			builder.AppendLine();
-			builder.AppendLine("Submod Support: Ms Mommy Memer, I Forgot, Cruel Moose and thamuzz");
-			builder.AppendLine();
-			builder.AppendLine("Contributors: Boris, SonicTHI, Owlchemist, Oskar Potocki, Thamuzz1331, Trollam, K', Sarg, Karim, Saakra, Revolus, MatthewTeply, dkargin, HG, Morphium, Halno, Argón, DianaWinters, UrbanMonkey, M.A.G.Gen., Epicguru, sdanchenko, m00nl1ght-dev, Shinrar");
-			builder.AppendLine();
-			builder.AppendLine("Shipwrights: Oninnaise, VVither_Skeleton, (Insert Boi here), AlfadorZero, choppytehbear, Dammerung, Foxtrot, Inert, Jameson, Moonshine Dusk");
-			builder.AppendLine();
-			builder.AppendLine("OG Testing Squad: Buns Buns Cat, Phsarjk, i am has yes, Fuji, Reviire, Ian, Generic Scout, Waipa, Xanthos, BUTTERSKY, firethestars, Haldicar, jamhax, Jenden, maraworf, Red_Bunny, rostock, sprocket, El Jojo, Zahc, Dutchman, Zero Jackal, Tiberiumkyle, swordspell, Shabm, Kasodus, Red_Bunny, melandor, Madman, Jenden, Insert Witty Joke, Ifailatgaming, Capitão Escarlate, Bunkier, Bumblybear, Bubbadoge, Abraxas, Rage Nova, twsta, transcendant, thecaffiend, Manifold Paradox, WhiteGiverMa, Gago, Nerevarest");
+			builder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.EndgameCredits"));
 			ShipInteriorMod2.WorldComp.SoSWin = true;
 			GameVictoryUtility.ShowCredits(builder.ToString(), null, exitToMainMenu: true);
 		}

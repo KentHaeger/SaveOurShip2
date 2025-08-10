@@ -157,8 +157,8 @@ namespace SaveOurShip2
 						{
 							Success(null);
 						},
-						defaultLabel = "Dev: Hack bridge",
-						defaultDesc = "Instantly take control of this ship"
+						defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.Dev.ShipBridgeHackLabel"),
+						defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.Dev.ShipBridgeHackDesc")
 					};
 					yield return hackMe;
 				}
@@ -568,7 +568,7 @@ namespace SaveOurShip2
 							{
 								ShipInteriorMod2.SlowTimeFlag = !ShipInteriorMod2.SlowTimeFlag;
 							},
-							defaultLabel = "Toggle slow time",
+							defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.ToggleSlowLabel"),
 							defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.ToggleCloakDesc"),
 							isActive = () => ShipInteriorMod2.SlowTimeFlag
 						};
@@ -592,15 +592,20 @@ namespace SaveOurShip2
 								bool hasTorpedo = u.Contains("TurretTorpedoA") || u.Contains("TurretTorpedoB") || u.Contains("TurretTorpedoC")
 									&& mission.shuttle.carryTracker.GetDirectlyHeldThings().Any(t => t.HasThingCategory(ResourceBank.ThingCategoryDefOf.SpaceTorpedoes));
 								if (hasLaser && mission.mission != ShipMapComp.ShuttleMission.INTERCEPT)
-									options.Add(new FloatMenuOption("Intercept", delegate { mission.mission = ShipMapComp.ShuttleMission.INTERCEPT; }));
+									options.Add(new FloatMenuOption(
+										TranslatorFormattedStringExtensions.Translate("SoS.ShipMapMission.Intercept"), delegate { mission.mission = ShipMapComp.ShuttleMission.INTERCEPT; }));
 								if ((hasLaser || hasPlasma) && mission.mission != ShipMapComp.ShuttleMission.STRAFE)
-									options.Add(new FloatMenuOption("Strafe", delegate { mission.mission = ShipMapComp.ShuttleMission.STRAFE; }));
+									options.Add(new FloatMenuOption(
+										TranslatorFormattedStringExtensions.Translate("SoS.ShipMapMission.Strafe"), delegate { mission.mission = ShipMapComp.ShuttleMission.STRAFE; }));
 								if (hasTorpedo && mission.mission != ShipMapComp.ShuttleMission.BOMB)
-									options.Add(new FloatMenuOption("Bomb", delegate { mission.mission = ShipMapComp.ShuttleMission.BOMB; }));
+									options.Add(new FloatMenuOption(
+										TranslatorFormattedStringExtensions.Translate("SoS.ShipMapMission.Bomb"), delegate { mission.mission = ShipMapComp.ShuttleMission.BOMB; }));
 								if (mission.mission != ShipMapComp.ShuttleMission.BOARD)
-									options.Add(new FloatMenuOption("Board", delegate { mission.mission = ShipMapComp.ShuttleMission.BOARD; }));
+									options.Add(new FloatMenuOption(
+										TranslatorFormattedStringExtensions.Translate("SoS.ShipMapMission.Board"), delegate { mission.mission = ShipMapComp.ShuttleMission.BOARD; }));
 								if (mission.mission != ShipMapComp.ShuttleMission.RETURN)
-									options.Add(new FloatMenuOption("Return", delegate { mission.mission = ShipMapComp.ShuttleMission.RETURN; }));
+									options.Add(new FloatMenuOption(
+										TranslatorFormattedStringExtensions.Translate("SoS.ShipMapMission.Return"), delegate { mission.mission = ShipMapComp.ShuttleMission.RETURN; }));
 								Find.WindowStack.Add(new FloatMenu(options));
 
 							},
@@ -628,7 +633,7 @@ namespace SaveOurShip2
 							{
 								mapComp.TargetMapComp.hasAnyPartDetached = true;
 							},
-							defaultLabel = "Dev: Start enemy boarding",
+							defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.Dev.StartEnemyBoardingLabel"),
 						};
 						yield return forceBoard;
 					}
@@ -914,7 +919,7 @@ namespace SaveOurShip2
 										Find.TickManager.TogglePaused();
 									mapComp.StartShipEncounter();
 								},
-								defaultLabel = "Dev: Start ship battle",
+								defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.Dev.StartShipBattle"),
 							};
 							startBattle.hotKey = KeyBindingDefOf.Misc9;
 							yield return startBattle;
@@ -927,7 +932,7 @@ namespace SaveOurShip2
 										Find.TickManager.TogglePaused();
 									mapComp.StartShipEncounter(fleet: true);
 								},
-								defaultLabel = "Dev: Start random fleet battle",
+								defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.Dev.StartRandomFleetBattle"),
 							};
 							startFleetBattle.hotKey = KeyBindingDefOf.Misc10;
 							yield return startFleetBattle;
@@ -938,7 +943,7 @@ namespace SaveOurShip2
 								{
 									Find.WindowStack.Add(new Dialog_LoadShipDef("shipdeftoload", this.Map));
 								},
-								defaultLabel = "Dev: load ship from database",
+								defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.Dev.LoadShipFromDatabase"),
 							};
 							loadshipdef.hotKey = KeyBindingDefOf.Misc11;
 							yield return loadshipdef;
@@ -949,7 +954,7 @@ namespace SaveOurShip2
 								{
 									Find.WindowStack.Add(new Dialog_LoadShipDef("shipdeftoload", this.Map, isWreck : true));
 								},
-								defaultLabel = "Dev: load wreck from database",
+								defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.Dev.LoadWreckFromDatabase"),
 							};
 							yield return loadWreckDef;
 						}
@@ -1141,9 +1146,8 @@ namespace SaveOurShip2
 							Find.WorldTargeter.BeginTargeting(DevChooseLaunchTarget, canTargetTiles: true, closeWorldTabWhenFinished: true);
 						},
 						hotKey = KeyBindingDefOf.Misc1,
-						defaultLabel = "Dev: Launch to specific tile",
-						defaultDesc = "Pick a surface tile that will be associated with the ship. Based on selected tile latitude, solar panels will work great or bad. " +
-							"Quests and Ideology work sites will be genarated near picked surface tile."
+						defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.Dev.LaunchToSpecificTileLabel"),
+						defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.Dev.LaunchToSpecificTileDesc")
 					};
 					if (!CanLaunchNow)
 					{
@@ -1341,18 +1345,19 @@ namespace SaveOurShip2
 		private void Failure(Pawn pawn)
 		{
 			if (pawn.Faction == Faction.OfPlayer)
-				Messages.Message("SoSHackFailed".Translate(), null, MessageTypeDefOf.CautionInput);
+				Messages.Message(TranslatorFormattedStringExtensions.Translate("SoSHackFailed"), null, MessageTypeDefOf.CautionInput);
 		}
 		private void CriticalFailure(Pawn pawn)
 		{
 			if (pawn.Faction == Faction.OfPlayer)
-				Messages.Message("SoSHackFailed".Translate(), null, MessageTypeDefOf.CautionInput);
+				Messages.Message(TranslatorFormattedStringExtensions.Translate("SoSHackFailed"), null, MessageTypeDefOf.CautionInput);
 		}
 		public override IEnumerable<FloatMenuOption> GetFloatMenuOptions(Pawn selPawn)
 		{
 			List<FloatMenuOption> options = new List<FloatMenuOption>();
 			if (Faction != Faction.OfPlayer)
-				options.Add(new FloatMenuOption("SoSHackBridge".Translate(), delegate { Job capture = new Job(ResourceBank.JobDefOf.HackEnemyShip, this); selPawn.jobs.TryTakeOrderedJob(capture); }));
+				options.Add(new FloatMenuOption(
+					TranslatorFormattedStringExtensions.Translate("SoSHackBridge"), delegate { Job capture = new Job(ResourceBank.JobDefOf.HackEnemyShip, this); selPawn.jobs.TryTakeOrderedJob(capture); }));
 			else if (AllComps != null)
 			{
 				for (int i = 0; i < AllComps.Count; i++)
@@ -1368,12 +1373,12 @@ namespace SaveOurShip2
 		public void PawnsAbandonWarning()
 		{
 			DiaNode theNode = new DiaNode(TranslatorFormattedStringExtensions.Translate("SoS.CombatAbandonPawns"));
-			DiaOption accept = new DiaOption("Accept");
+			DiaOption accept = new DiaOption(TranslatorFormattedStringExtensions.Translate("SoS.CombatAbandonPawnsAccept"));
 			accept.resolveTree = true;
 			accept.action = delegate { mapComp.EndBattle(Map, true); };
 			theNode.options.Add(accept);
 
-			DiaOption cancel = new DiaOption("Cancel");
+			DiaOption cancel = new DiaOption(TranslatorFormattedStringExtensions.Translate("SoS.CombatAbandonPawnsCancel"));
 			cancel.resolveTree = true;
 			theNode.options.Add(cancel);
 

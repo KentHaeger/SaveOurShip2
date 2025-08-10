@@ -191,12 +191,12 @@ namespace SaveOurShip2
 				}
 				if ((targ.Cell - base.Position).LengthHorizontal < AttackVerb.verbProps.EffectiveMinRange(targ, this))
 				{
-					Messages.Message("MessageTargetBelowMinimumRange".Translate(), this, MessageTypeDefOf.RejectInput, false);
+					Messages.Message(TranslatorFormattedStringExtensions.Translate("MessageTargetBelowMinimumRange"), this, MessageTypeDefOf.RejectInput, false);
 					return;
 				}
 				if ((targ.Cell - base.Position).LengthHorizontal > AttackVerb.verbProps.range)
 				{
-					Messages.Message("MessageTargetBeyondMaximumRange".Translate(), this, MessageTypeDefOf.RejectInput, false);
+					Messages.Message(TranslatorFormattedStringExtensions.Translate("MessageTargetBeyondMaximumRange"), this, MessageTypeDefOf.RejectInput, false);
 					return;
 				}
 			}
@@ -699,7 +699,7 @@ namespace SaveOurShip2
 			}
 			if (!ConnectedToBridge)
 			{
-				stringBuilder.AppendLine("SoS.TurretNotConnected".Translate());
+				stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.TurretNotConnected"));
 			}
 			if (AttackVerb.verbProps.minRange > 0f && GroundDefenseMode)
 			{
@@ -715,9 +715,9 @@ namespace SaveOurShip2
 				if (!(Position + GenAdj.CardinalDirectionsAround[Rotation.rotInt] * 2).Fogged(Map))
 				{
 					if (AmplifierCount != -1)
-						stringBuilder.AppendLine("SoS.AmplifierCount".Translate(AmplifierCount));
+						stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.AmplifierCount", AmplifierCount));
 					else
-						stringBuilder.AppendLine("SoS.SpinalCapNotFound".Translate());
+						stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.SpinalCapNotFound"));
 				}
 			}
 			if (torpComp != null)
@@ -737,11 +737,11 @@ namespace SaveOurShip2
 							torp++;
 					}
 					if (torp > 0)
-						stringBuilder.AppendLine(torp + " HE torpedoes");
+						stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.LoadedTorpedoHE", torp));
 					if (torpEMP > 0)
-						stringBuilder.AppendLine(torpEMP + " EMP torpedoes");
+						stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.LoadedTorpedoEMP", torpEMP));
 					if (torpAM > 0)
-						stringBuilder.AppendLine(torpAM + " AM torpedoes");
+						stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.LoadedTorpedoAM", torpAM));
 				}
 				else
 				{
@@ -814,8 +814,8 @@ namespace SaveOurShip2
 				{
 					Command_VerbTarget command_VerbTarget = new Command_VerbTarget
 					{
-						defaultLabel = "CommandSetForceAttackTarget".Translate(),
-						defaultDesc = "CommandSetForceAttackTargetDesc".Translate(),
+						defaultLabel = TranslatorFormattedStringExtensions.Translate("CommandSetForceAttackTarget"),
+						defaultDesc = TranslatorFormattedStringExtensions.Translate("CommandSetForceAttackTargetDesc"),
 						icon = ContentFinder<Texture2D>.Get("UI/Commands/Attack", true),
 						verb = AttackVerb,
 						hotKey = KeyBindingDefOf.Misc4,
@@ -998,8 +998,7 @@ namespace SaveOurShip2
 			List<FloatMenuOption> unloadOptions = new List<FloatMenuOption>();
 			foreach (ThingDef loadedType in loadedTypes)
 			{
-				String commandText = TranslatorFormattedStringExtensions.Translate("SoS.TurretExtract") + " " +
-					loadedType.label;
+				String commandText = TranslatorFormattedStringExtensions.Translate("SoS.TurretExtract", loadedType.label);
 				unloadOptions.Add(new FloatMenuOption(commandText, delegate
 				{
 					Thing torp = torpComp.RemoveOneShellOfType(loadedType);

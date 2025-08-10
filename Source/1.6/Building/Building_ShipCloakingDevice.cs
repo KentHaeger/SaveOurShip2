@@ -92,7 +92,7 @@ namespace SaveOurShip2
 			{
 				stringBuilder.AppendLine("Inactive");
 				if ((this.GetRoom() == null || this.GetRoom().OpenRoofCount > 0) && heatComp.myNet == null)
-					stringBuilder.AppendLine("<color=red>In vacuum and not connected to heat net</color>");
+					stringBuilder.AppendLine("SoS.ShipCloakingInactive".Translate());
 			}
 			return stringBuilder.ToString().TrimEndNewlines();
 		}

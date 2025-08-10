@@ -269,7 +269,7 @@ namespace SaveOurShip2
 									{
 										SpawnHologram();
 									},
-									defaultLabel = "Dev: Spawn formgel immediately",
+									defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.SpawnHologramLabel"),
 									defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.SpawnHologramDesc")
 								};
 								gizmos.Add(spawn2);

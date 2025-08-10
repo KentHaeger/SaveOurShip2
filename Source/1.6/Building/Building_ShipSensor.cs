@@ -95,7 +95,7 @@ namespace SaveOurShip2
 					SettleUtility.AddNewHome(target.Tile, Faction.OfPlayer);
 					observedMap = GetOrGenerateMapUtility.GetOrGenerateMap(target.Tile, Find.World.info.initialMapSize, null).Parent;
 					GenStep_Fog.UnfogMapFromEdge(observedMap.Map);
-					((Settlement)observedMap).Name = "Observed Area "+ this.thingIDNumber;
+					((Settlement)observedMap).Name = TranslatorFormattedStringExtensions.Translate("SoS.Location.ObservedArea", this.thingIDNumber);
 				}, "GeneratingMap", false, delegate { });
 				return true;
 			}
@@ -113,7 +113,9 @@ namespace SaveOurShip2
 			string inspectString = base.GetInspectString();
 			if(observedMap!=null)
 			{
-				inspectString += "\nObserving " + observedMap.Label;
+				inspectString += "\n" +
+				                 TranslatorFormattedStringExtensions.Translate("SoS.ShipSensorObserving",
+					                 observedMap.Label);
 			}
 			return inspectString;
 		}

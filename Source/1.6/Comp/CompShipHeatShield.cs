@@ -243,8 +243,8 @@ namespace SaveOurShip2
 				{
 					ChangeShieldSize(-10f);
 				},
-				defaultLabel = "- 10",
-				defaultDesc = "SoS.DecShieldRadius".Translate(),
+				defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.DecreaseShieldRadius10Label"),
+				defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.DecreaseShieldRadiusDesc"),
 				hotKey = KeyBindingDefOf.Misc5,
 				icon = ContentFinder<Texture2D>.Get("UI/Commands/TempLower", true)
 			};
@@ -254,8 +254,8 @@ namespace SaveOurShip2
 				{
 					ChangeShieldSize(-1f);
 				},
-				defaultLabel = "- 1",
-				defaultDesc = "SoS.DecShieldRadius".Translate(),
+				defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.DecreaseShieldRadius1Label"),
+				defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.DecreaseShieldRadiusDesc"),
 				hotKey = KeyBindingDefOf.Misc4,
 				icon = ContentFinder<Texture2D>.Get("UI/Commands/TempLower", true)
 			};
@@ -268,8 +268,8 @@ namespace SaveOurShip2
 						powerComp.PowerOutput = -powerComp.Props.basePowerConsumption;
 					SoundDefOf.Tick_Tiny.PlayOneShotOnCamera(null);
 				},
-				defaultLabel = "SoS.ResetShieldRadius".Translate(),
-				defaultDesc = "SoS.ResetShieldRadiusDesc".Translate(),
+				defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.ResetShieldRadius"),
+				defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.ResetShieldRadiusDesc"),
 				hotKey = KeyBindingDefOf.Misc1,
 				icon = ContentFinder<Texture2D>.Get("UI/Commands/TempReset", true)
 			};
@@ -279,8 +279,8 @@ namespace SaveOurShip2
 				{
 					ChangeShieldSize(1f);
 				},
-				defaultLabel = "+ 1",
-				defaultDesc = "SoS.IncShieldRadius".Translate(),
+				defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.IncreaseShieldRadius1Label"),
+				defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.IncreaseShieldRadiusDesc"),
 				hotKey = KeyBindingDefOf.Misc2,
 				icon = ContentFinder<Texture2D>.Get("UI/Commands/TempRaise", true)
 			};
@@ -290,8 +290,8 @@ namespace SaveOurShip2
 				{
 					ChangeShieldSize(10f);
 				},
-				defaultLabel = "+ 10",
-				defaultDesc = "SoS.IncShieldRadius".Translate(),
+				defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.IncreaseShieldRadius10Label"),
+				defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.IncreaseShieldRadiusDesc"),
 				hotKey = KeyBindingDefOf.Misc3,
 				icon = ContentFinder<Texture2D>.Get("UI/Commands/TempRaise", true)
 			};
@@ -304,8 +304,8 @@ namespace SaveOurShip2
 						vehicleWantsShutDown = !vehicleWantsShutDown;
 					},
 					isActive = delegate () { return !vehicleWantsShutDown; },
-					defaultLabel = "SoSToggleShield".Translate(),
-					defaultDesc = "SoSToggleShieldDesc".Translate(),
+					defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.ToggleShield"),
+					defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.ToggleShieldDesc"),
 					icon = ContentFinder<Texture2D>.Get("UI/Shield_On")
 				};
             }

@@ -54,7 +54,11 @@ namespace SaveOurShip2
 					output += "\n" + TranslatorFormattedStringExtensions.Translate("SoS.HeatCritical").Colorize(Color.red);
 				if (Prefs.DevMode)
 				{
-					output += "\nGrid:" + myNet.GridID + " Ratio:" + myNet.RatioInNetworkRaw.ToString("F2") + " Depl ratio:" + myNet.DepletionRatio.ToString("F2") + "Temp: " + Mathf.Lerp(0, 200, myNet.RatioInNetworkRaw).ToString("F0");
+					output += "\n" + TranslatorFormattedStringExtensions.Translate("SoS.Dev.HeatDetailed",
+						myNet.GridID,
+						myNet.RatioInNetworkRaw.ToString("F2"),
+						myNet.DepletionRatio.ToString("F2"),
+						Mathf.Lerp(0, 200, myNet.RatioInNetworkRaw).ToString("F0"));
 				}
 			}
 			else
@@ -62,16 +66,19 @@ namespace SaveOurShip2
 
 			if (this.Props.energyToFire > 0)
 			{
-				output += "\n"+ "SoS.HeatTurretEnergy".Translate();
+				float energyNeed = -1;
 				if (this.parent is Building_ShipTurret t && t.spinalComp != null)
 				{
 					if (t.AmplifierCount != -1)
-						output += this.Props.energyToFire * (1 + t.AmplifierDamageBonus) + " Wd";
-					else
-						output += "N/A";
+						energyNeed = this.Props.energyToFire * (1 + t.AmplifierDamageBonus);
 				}
 				else
-					output += this.Props.energyToFire + " Wd";
+					energyNeed = this.Props.energyToFire;
+
+				if (energyNeed < 0)
+					output += "\n" + TranslatorFormattedStringExtensions.Translate("SoS.HeatTurretEnergyNull");
+				else
+					output += "\n" + TranslatorFormattedStringExtensions.Translate("SoS.HeatTurretEnergy", energyNeed.ToStringDecimalIfSmall());
 			}
 			return output;
 		}

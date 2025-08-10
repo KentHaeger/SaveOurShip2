@@ -21,7 +21,7 @@ namespace SaveOurShip2
 			foreach (FloatMenuOption op in base.CompFloatMenuOptions(selPawn))
 				options.Add(op);
 			if(!hacked)
-				options.Add(new FloatMenuOption("Hack", delegate { Job persuadeAI = new Job(DefDatabase<JobDef>.GetNamed("HackBlackBoxConsole"), this.parent); selPawn.jobs.TryTakeOrderedJob(persuadeAI); }));
+				options.Add(new FloatMenuOption(TranslatorFormattedStringExtensions.Translate("SoS.BlackBoxHack"), delegate { Job persuadeAI = new Job(DefDatabase<JobDef>.GetNamed("HackBlackBoxConsole"), this.parent); selPawn.jobs.TryTakeOrderedJob(persuadeAI); }));
 			return options;
 		}
 
@@ -53,7 +53,7 @@ namespace SaveOurShip2
 			pawn.skills.GetSkill(SkillDefOf.Intellectual).Learn(2000);
 			if (this.parent.def.defName.Equals("Ship_LabConsole"))
 			{
-				Messages.Message("Reactors successfully disabled!", null, MessageTypeDefOf.PositiveEvent);
+				Messages.Message(TranslatorFormattedStringExtensions.Translate("SoS.ReactorDisableSuccess"), null, MessageTypeDefOf.PositiveEvent);
 				foreach(Thing thing in this.parent.Map.spawnedThings)
 				{
 					if (thing.TryGetComp<CompDamagedReactor>() != null)
@@ -62,7 +62,7 @@ namespace SaveOurShip2
 			}
 			else
 			{
-				Messages.Message("Doors successfully opened!", null, MessageTypeDefOf.PositiveEvent);
+				Messages.Message(TranslatorFormattedStringExtensions.Translate("SoS.DoorOpenSuccess"), null, MessageTypeDefOf.PositiveEvent);
 				foreach (Thing t in this.parent.Map.spawnedThings)
 				{
 					if (t is Building_Door d)
@@ -77,7 +77,7 @@ namespace SaveOurShip2
 
 		private void Failure(Pawn pawn)
 		{
-			Messages.Message("Hack failed", null, MessageTypeDefOf.CautionInput);
+			Messages.Message(TranslatorFormattedStringExtensions.Translate("SoS.BlackBoxHackFailed"), null, MessageTypeDefOf.CautionInput);
 		}
 
 		private void CriticalFailure(Pawn pawn)
@@ -85,7 +85,7 @@ namespace SaveOurShip2
 			if (this.parent.def.defName.Equals("Ship_LabConsole"))
 			{
 				hacked = true;
-				Messages.Message("Critical failure - the reactors have gone prompt supercritical!", null, MessageTypeDefOf.NegativeEvent);
+				Messages.Message(TranslatorFormattedStringExtensions.Translate("SoS.BlackBoxHackFailedCritical"), null, MessageTypeDefOf.NegativeEvent);
 				foreach (Thing thing in this.parent.Map.spawnedThings)
 				{
 					if (thing.TryGetComp<CompDamagedReactor>() != null)
@@ -93,7 +93,7 @@ namespace SaveOurShip2
 				}
 			}
 			else
-				Messages.Message("Hack failed", null, MessageTypeDefOf.CautionInput);
+				Messages.Message(TranslatorFormattedStringExtensions.Translate("SoS.BlackBoxHackFailed"), null, MessageTypeDefOf.CautionInput);
 		}
 	}
 }

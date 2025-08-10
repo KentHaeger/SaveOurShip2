@@ -127,12 +127,13 @@ namespace SaveOurShip2
 
 			if (map.IsSpace())
 			{
-				breathableZone = map.areaManager.AllAreas.FirstOrDefault(area => area.Label == "SoSBreathable".Translate()) as Area_Allowed;
+				breathableZone = map.areaManager.AllAreas.FirstOrDefault(area => area.Label ==
+					TranslatorFormattedStringExtensions.Translate("SoS.Breathable")) as Area_Allowed;
 				if (breathableZone == null)
 				{
 					Log.Message("[SoS2] Creating breathable zone");
 					map.areaManager.TryMakeNewAllowed(out breathableZone);
-					breathableZone.labelInt = "SoSBreathable".Translate();
+					breathableZone.labelInt = TranslatorFormattedStringExtensions.Translate("SoS.Breathable");
 				}
 				else
 					breathableZone.innerGrid.Clear();
@@ -1042,9 +1043,11 @@ namespace SaveOurShip2
 							shipDef = ShipInteriorMod2.RandomValidShipFrom(DefDatabase<ShipDef>.AllDefs.ToList(), CR, false, false);
 					}
 					if (shipDef != null)
-						Find.LetterStack.ReceiveLetter(TranslatorFormattedStringExtensions.Translate("SoS.CombatStart"), TranslatorFormattedStringExtensions.Translate("SoS.CombatStartDesc", shipDef.label), LetterDefOf.ThreatBig);
+						Find.LetterStack.ReceiveLetter(TranslatorFormattedStringExtensions.Translate("SoS.CombatStart"),
+							TranslatorFormattedStringExtensions.Translate("SoS.CombatStartDesc", shipDef.label), LetterDefOf.ThreatBig);
 					else
-						Find.LetterStack.ReceiveLetter(TranslatorFormattedStringExtensions.Translate("SoS.CombatStart"), TranslatorFormattedStringExtensions.Translate("SoS.CombatFleetDesc"), LetterDefOf.ThreatBig);
+						Find.LetterStack.ReceiveLetter(TranslatorFormattedStringExtensions.Translate("SoS.CombatStart"),
+							TranslatorFormattedStringExtensions.Translate("SoS.CombatFleetDesc"), LetterDefOf.ThreatBig);
 				}
 			}
 			if (passingShip != null)
@@ -1133,11 +1136,11 @@ namespace SaveOurShip2
 			//post ship spawn - map name
 			if (fleet)
 			{
-				mp.Name = "Ship fleet " + newMap.uniqueID;
+				mp.Name = TranslatorFormattedStringExtensions.Translate("SoS.Location.ShipFleet", newMap.uniqueID);
 			}
 			else
 			{
-				mp.Name = shipDef.label + " " + newMap.uniqueID;
+				mp.Name = TranslatorFormattedStringExtensions.Translate("SoS.Location.ShipNameAndMapID", shipDef.label, newMap.uniqueID);
 			}
 			if (passingShip is DerelictShip && !fakeWreck)
 			{
@@ -2700,7 +2703,7 @@ namespace SaveOurShip2
 			}
 			mp.Theta = theta + thetaOffset * thetaOffsetScale;
 			mp.Phi = phi - 0.01f + 0.001f * Rand.Range(0, 20) + phiExtraOffset;
-			mp.Name += "Wreckage nr." + ShipGraveyard.uniqueID;
+			mp.Name += TranslatorFormattedStringExtensions.Translate("SoS.Location.WreckageNumbered", ShipGraveyard.uniqueID);
 			var graveMapComp = ShipGraveyard.GetComponent<ShipMapComp>();
 			graveMapComp.ShipMapState = ShipMapState.isGraveyard;
 			graveMapComp.GraveOrigin = map;
@@ -3101,15 +3104,15 @@ namespace SaveOurShip2
 				switch (mission)
 				{
 					case ShuttleMission.BOARD:
-						return "Boarding";
+						return TranslatorFormattedStringExtensions.Translate("SoS.ShipMapMission.Boarding");
 					case ShuttleMission.INTERCEPT:
-						return "Intercepting";
+						return TranslatorFormattedStringExtensions.Translate("SoS.ShipMapMission.Intercepting");
 					case ShuttleMission.STRAFE:
-						return "Strafing";
+						return TranslatorFormattedStringExtensions.Translate("SoS.ShipMapMission.Strafing"); ;
 					case ShuttleMission.BOMB:
-						return "Bombing";
+						return TranslatorFormattedStringExtensions.Translate("SoS.ShipMapMission.Bombing");
 					default:
-						return "Retreating";
+						return TranslatorFormattedStringExtensions.Translate("SoS.ShipMapMission.Retreating");
 				}
             }
 

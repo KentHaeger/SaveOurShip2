@@ -19,13 +19,14 @@ namespace SaveOurShip2
 			{
 				if (parent != null)
 				{
-					return "MechanitesOn".Translate(parent.LabelCap, parent);
+					return TranslatorFormattedStringExtensions.Translate("SoS.MechanitesOn", parent.LabelCap, parent);
 				}
 				return def.label;
 			}
 		}
 
-		public override string InspectStringAddon => "MechanitesDisassembling".Translate() + " (" + "MechaniteSizeLower".Translate((fireSize * 100f).ToString("F0")) + ")";
+		public override string InspectStringAddon => TranslatorFormattedStringExtensions.Translate("SoS.MechanitesDisassembling") + " (" +
+			TranslatorFormattedStringExtensions.Translate("SoS.MechaniteSizeLower", (fireSize * 100f).ToString("F0")) + ")";
 
 		public void DoFireDamage(Thing targ)
 		{

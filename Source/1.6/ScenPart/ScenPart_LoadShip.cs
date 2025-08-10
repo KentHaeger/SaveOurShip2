@@ -81,30 +81,30 @@ namespace SaveOurShip2
 			{
 				FloatMenuUtility.MakeMenu(Directory.GetFiles(Path.Combine(GenFilePaths.SaveDataFolderPath, "SoS2")), (string path) => Path.GetFileNameWithoutExtension(path), (string path) => () => { filename = Path.GetFileNameWithoutExtension(path); });
 			}
-			if (Widgets.ButtonText(rect2, "Discard log: " + discardLog.ToString()))
+			if (Widgets.ButtonText(rect2, TranslatorFormattedStringExtensions.Translate("SoS.LoadShip.DiscardLog", discardLog.ToStringTranslated())))
 			{
 				List<FloatMenuOption> toggleLog = new List<FloatMenuOption>
 				{
-					new FloatMenuOption("Discard log: True", delegate ()
+					new FloatMenuOption(TranslatorFormattedStringExtensions.Translate("SoS.LoadShip.DiscardLog", true.ToStringTranslated()), delegate ()
 					{
 						discardLog = true;
 					}, MenuOptionPriority.Default, null, null, 0f, null, null, true, 0),
-					new FloatMenuOption("Discard log: False", delegate ()
+					new FloatMenuOption(TranslatorFormattedStringExtensions.Translate("SoS.LoadShip.DiscardLog", false.ToStringTranslated()), delegate ()
 					{
 						discardLog = false;
 					}, MenuOptionPriority.Default, null, null, 0f, null, null, true, 0)
 				};
 				Find.WindowStack.Add(new FloatMenu(toggleLog));
 			}
-			if (Widgets.ButtonText(rect3, "Discard tales: " + discardTales.ToString()))
+			if (Widgets.ButtonText(rect3, TranslatorFormattedStringExtensions.Translate("SoS.LoadShip.DiscardTales", discardTales.ToStringTranslated())))
 			{
 				List<FloatMenuOption> toggleTales = new List<FloatMenuOption>
 				{
-					new FloatMenuOption("Discard tales: True", delegate ()
+					new FloatMenuOption(TranslatorFormattedStringExtensions.Translate("SoS.LoadShip.DiscardTales", true.ToStringTranslated()), delegate ()
 					{
 						discardTales = true;
 					}, MenuOptionPriority.Default, null, null, 0f, null, null, true, 0),
-					new FloatMenuOption("Discard tales: False", delegate ()
+					new FloatMenuOption(TranslatorFormattedStringExtensions.Translate("SoS.LoadShip.DiscardTales", false.ToStringTranslated()), delegate ()
 					{
 						discardTales = false;
 					}, MenuOptionPriority.Default, null, null, 0f, null, null, true, 0)
@@ -115,7 +115,7 @@ namespace SaveOurShip2
 		public override string Summary(Scenario scen)
 		{
 			if (HasValidFilename())
-				return "Load ship " + filename + "\nThis will disable many other types of scenario part, such as starting pawns.";
+				return TranslatorFormattedStringExtensions.Translate("SoS.LoadShip.ScenPartDesc", filename);
 			return "";
 		}
 
