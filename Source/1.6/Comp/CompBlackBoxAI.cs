@@ -16,6 +16,18 @@ namespace SaveOurShip2
 		bool GreetedColonists = false;
 		bool AlreadyFailedPersuasion = false;
 
+		public override void PostSpawnSetup(bool respawningAfterLoad)
+		{
+			base.PostSpawnSetup(respawningAfterLoad);
+			// Decreasing time to expire on spawing, so that once entered, Starship bow burns up in a few days.
+			// Doing that in a failsafe way in case comp is reused in unexpected way.
+			TimedForcedExitShip timerComp = parent?.Map?.Parent?.GetComponent<TimedForcedExitShip>() ?? null;
+			if (timerComp != null && timerComp.ticksLeftToForceExitAndRemoveMap > GenDate.TicksPerYear)
+			{
+				// Giving player decent amount of time to complete the quest
+				timerComp.ticksLeftToForceExitAndRemoveMap = GenDate.TicksPerDay * 3;
+			}
+		}
 		public override void CompTick()
 		{
 			base.CompTick();

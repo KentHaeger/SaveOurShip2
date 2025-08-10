@@ -137,7 +137,8 @@ namespace SaveOurShip2
 					ship.wreckLevel = 5;
 					ship.derelictShip = DefDatabase<ShipDef>.GetNamed("StarshipBowDungeon");
 					ship.shipFaction = Faction.OfAncientsHostile;
-					ship.ticksUntilDeparture = Rand.RangeInclusive(140000, 180000);
+					// Stays available for visit basically forever, but will despawn in a few days after entering
+					ship.ticksUntilDeparture = GenDate.TicksPerYear * 100;
 
 					parent.Map.passingShipManager.AddShip(ship);
 
