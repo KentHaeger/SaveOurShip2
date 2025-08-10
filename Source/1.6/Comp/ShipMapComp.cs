@@ -2228,8 +2228,8 @@ namespace SaveOurShip2
 					else //moveto map was closed or no room
 					{
 						targetTile = MoveToTile;
-						PlanetTile tile = -1;
-						List<PlanetTile> tiles = ShipInteriorMod2.PossibleShipLandingTiles(targetTile, 2, 5);
+						int tile = -1;
+						List<int> tiles = ShipInteriorMod2.PossibleShipLandingTiles(targetTile, 2, 5);
 						if (!tiles.NullOrEmpty())
 							tile = tiles.RandomElement();
 						else

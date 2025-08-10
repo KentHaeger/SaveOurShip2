@@ -63,7 +63,7 @@ namespace SaveOurShip2
 		{
 			CameraJumper.TryJump(CameraJumper.GetWorldTarget(this.parent));
 			Find.WorldSelector.ClearSelection();
-			PlanetTile tile = this.parent.Map.Tile;
+			int tile = this.parent.Map.Tile;
 			Find.WorldTargeter.BeginTargeting(new Func<GlobalTargetInfo, bool>(this.ChoseGroupWorldTarget), true, TargeterMouseAttachment, true, delegate
 			{
 			}, delegate (GlobalTargetInfo target)

@@ -509,39 +509,37 @@ namespace SaveOurShip2
 			}
 			return false;
 		}
-		public static PlanetTile FindWorldTile()
+		public static int FindWorldTile()
 		{
-			foreach (Tile t in (ModsConfig.OdysseyActive ? Find.World.grid.Orbit : Find.World.grid.Surface).Tiles)
+			for (int i = 0; i < Find.World.grid.TilesCount; i++)
 			{
-				PlanetTile tile = t.tile;
-				if (!Find.World.worldObjects.AnyWorldObjectAt(tile) && TileFinder.IsValidTileForNewSettlement(tile))
+				if (!Find.World.worldObjects.AnyWorldObjectAt(i) && TileFinder.IsValidTileForNewSettlement(i))
 				{
-					return tile;
+					//Log.Message("Generating orbiting object at tile " + i);
+					return i;
 				}
 			}
 			return -1;
 		}
 
 		// Can override world tile selection in dev Launch sommmand, launching ship over specified tile
-		public static PlanetTile worldTileOverride = PlanetTile.Invalid;
-		public static PlanetTile FindWorldTilePlayer() //slower, will find tile nearest to ship object pos
+		public static int worldTileOverride = -1;
+		public static int FindWorldTilePlayer() //slower, will find tile nearest to ship object pos
 		{
 			float bestAbsLatitude = float.MaxValue;
-			PlanetTile bestTile = PlanetTile.Invalid;
-			var tiles = (ModsConfig.OdysseyActive ? Find.World.grid.Orbit : Find.World.grid.Surface).Tiles;
-			for (int i = 0; i < tiles.Count; i+=10)
+			int bestTile = -1;
+			for (int i = 0; i < Find.World.grid.TilesCount; i+=10)
 			{
-				var tile = tiles[i].tile;
-				if (Find.World.worldObjects.AnyWorldObjectAt(tile) || !TileFinder.IsValidTileForNewSettlement(tile))
+				if (Find.World.worldObjects.AnyWorldObjectAt(i) || !TileFinder.IsValidTileForNewSettlement(i))
 					continue;
-				float absLatitude = Math.Abs(Find.WorldGrid.LongLatOf(tile).y);
+				float absLatitude = Math.Abs(Find.WorldGrid.LongLatOf(i).y);
 				if (absLatitude < bestAbsLatitude)
 				{
 					bestAbsLatitude = absLatitude;
-					bestTile = tile;
+					bestTile = i;
 				}
 			}
-			if (bestTile == PlanetTile.Invalid) //fallback
+			if (bestTile == -1) //fallback
 			{
 				bestTile = FindWorldTile();
 			}
@@ -558,7 +556,7 @@ namespace SaveOurShip2
 			WorldObjectOrbitingShip orbiter = (WorldObjectOrbitingShip)WorldObjectMaker.MakeWorldObject(ResourceBank.WorldObjectDefOf.ShipOrbiting);
 			orbiter.SetNominalPos();
 			orbiter.SetFaction(Faction.OfPlayer);
-			if (worldTileOverride == PlanetTile.Invalid)
+			if (worldTileOverride == -1)
 			{
 				orbiter.Tile = FindWorldTilePlayer();
 			}
@@ -1855,17 +1853,17 @@ namespace SaveOurShip2
 			return def == ResourceBank.TerrainDefOf.FakeFloorInsideShip || def == ResourceBank.TerrainDefOf.FakeFloorInsideShipMech || def == ResourceBank.TerrainDefOf.FakeFloorInsideShipArchotech;
 		}
 
-		public static List<PlanetTile> PossibleShipLandingTiles(int root, float min, float max)
+		public static List<int> PossibleShipLandingTiles(int root, float min, float max)
 		{
-			List<PlanetTile> tiles = new List<PlanetTile>();
+			List<int> tiles = new List<int>();
 			PlanetTile planetTile = new PlanetTile(root);
-			planetTile.Layer.Filler.FloodFill(root, (PlanetTile tile) => CanLandShip(tile, root, min, max), delegate (PlanetTile tile, int dist)
+			planetTile.Layer.Filler.FloodFill(root, (PlanetTile tile) => CanLandShip(tile.tileId, root, min, max), delegate (PlanetTile tile, int dist)
 			{
-				tiles.Add(tile);
+				tiles.Add(tile.tileId);
 			}, 20, null);
 			return tiles;
 		}
-		public static bool CanLandShip(PlanetTile tile, int root, float min, float max)
+		public static bool CanLandShip(int tile, int root, float min, float max)
 		{
 			Tile t = Find.WorldGrid[tile];
 			if (TileFinder.IsValidTileForNewSettlement(tile) && t.hilliness == Hilliness.Mountainous)// || t.hilliness == Hilliness.LargeHills || !t.biome.canBuildBase || t.hilliness == Hilliness.Impassable || Find.WorldObjects.SettlementBaseAt(tile) != null || Find.WorldObjects.AnySettlementBaseAtOrAdjacent(tile))
