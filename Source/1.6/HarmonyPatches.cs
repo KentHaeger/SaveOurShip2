@@ -75,7 +75,7 @@ namespace SaveOurShip2
 						str2 += "SoS.Combat.ShipInfo".Translate(
 							ship.Map, ship.Faction, ship.Parts.Count, ship.Buildings.Count, ship.MassActual,
 							ship.ThrustRatio.ToString("F3"), ship.Area.Count,
-							ship.Bridges.Count, ship.Core, ship.LastSafePath);
+							ship.Bridges.Count, ship.Core.ThingID, ship.LastSafePath);
 						TooltipHandler.TipRegion(rect2, str2);
 						DrawShips.Highlight = ship.Index;
 					}

@@ -540,6 +540,8 @@
 	<SoS.ConfiguredTargetFuelLevel>Target: {0}</SoS.ConfiguredTargetFuelLevel>
 	<SoS.Dev.ShipIndexAndPath>shipIndex: {0} / corePath: {1}</SoS.Dev.ShipIndexAndPath>
 	<SoS.Dev.ShipIndex>shipIndex: {0}</SoS.Dev.ShipIndex>
+	<!-- States that selected bridge is primary. Caps for better visibility is ok on debug, not user text -->
+	<SoS.Dev.IsPrimaryCore>PRIMARY CORE</SoS.Dev.IsPrimaryCore>
 
 	<SoS.Dev.HeatDetailed>Grid: {0} / Ratio: {1} Depletion Ratio: {2} / Temp: {3}</SoS.Dev.HeatDetailed>
 	<SoS.HeatTurretEnergyNull>Energy to fire: Not Available</SoS.HeatTurretEnergyNull>
