@@ -4678,12 +4678,6 @@ namespace SaveOurShip2
     {
 		public static void Postfix(ref string disableReason, CompVehicleLauncher __instance, ref bool __result)
         {
-			//Temporary fix clarifying the message on shuttle unable to launch because of rotated
-			if (disableReason == "VF_CannotLaunchImmobile".Translate(__instance.Vehicle.LabelShort) && __instance.Vehicle.Angle != 0) // Vehicle Framework\Labels.xml
-			{
-				disableReason = "SoS.VF_Fix_CannotLaunchRotated".Translate(__instance.Vehicle.LabelShort); 
-			}
-
 			// Somwehow, was allowed to launch overloaded.
 			VehiclePawn vehiclePawn = (VehiclePawn)__instance.parent;
 			float vehicleCapacity = vehiclePawn.GetStatValue(VehicleStatDefOf.CargoCapacity);
