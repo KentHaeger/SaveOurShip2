@@ -31,7 +31,7 @@ namespace SaveOurShip2
 			ShaderDatabase.Cutout, new Vector2(1, 1), Color.white, Color.white);
 			shuttleEnemy = GraphicDatabase.Get(typeof(Graphic_Single), "UI/Shuttle_Icon_Enemy",
 			ShaderDatabase.Cutout, new Vector2(1, 1), Color.red, Color.red);
-			ruler = GraphicDatabase.Get(typeof(Graphic_Single), "UI/ShipRangeRuler",
+			ruler = GraphicDatabase.Get(typeof(Graphic_Single), "UI/ShipRangeRuler1_6",
 			ShaderDatabase.Cutout, new Vector2(1, 1), Color.white, Color.white);
 			projectile = GraphicDatabase.Get(typeof(Graphic_Single), "UI/ShipProjectile",
 			ShaderDatabase.Cutout, new Vector2(1, 1), Color.white, Color.white);
