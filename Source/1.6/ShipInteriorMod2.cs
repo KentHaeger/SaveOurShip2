@@ -2055,6 +2055,7 @@ namespace SaveOurShip2
 				// Uninstall connected buildings which can't be "just moved"
 				foreach (Thing t in pos.GetThingList(sourceMap))
 				{
+					t.beingTransportedOnGravship = true;
 					if (t is Building b)
 					{
 						if (b.def.defName == "CashRegister_CashRegister")
@@ -2429,14 +2430,17 @@ namespace SaveOurShip2
 				foreach (Thing spawnThing in toMoveShipParts.Where(t => !t.Destroyed && !t.Spawned))
 				{
 					spawnThing.SpawnSetup(sourceMap, true);
+					spawnThing.beingTransportedOnGravship = false;
 				}
 				foreach (Thing spawnThing in toMoveBuildings.Where(t => !t.Destroyed && !t.Spawned))
 				{
 					spawnThing.SpawnSetup(sourceMap, true);
+					spawnThing.beingTransportedOnGravship = false;
 				}
 				foreach (Thing spawnThing in toMoveThings.Where(t => !t.Destroyed && !t.Spawned))
 				{
 					spawnThing.SpawnSetup(sourceMap, true);
+					spawnThing.beingTransportedOnGravship = false;
 				}
 				Find.LetterStack.ReceiveLetter("SoS.MoveFail".Translate(), "SoS.MoveFailDesc".Translate(reason), LetterDefOf.NegativeEvent);
 				MoveShipFlag = false;
@@ -2445,12 +2449,14 @@ namespace SaveOurShip2
 			foreach (Thing spawnThing in toMoveShipParts)
 			{
 				ReSpawnThingOnMap(spawnThing, targetMap, adjustment, rotb, fac);
+				spawnThing.beingTransportedOnGravship = false;
 			}
 			foreach (Thing spawnThing in toMoveBuildings)
 			{
 				try
 				{
 					ReSpawnThingOnMap(spawnThing, targetMap, adjustment, rotb, fac);
+					spawnThing.beingTransportedOnGravship = false;
 				}
 				catch (Exception e)
 				{
@@ -2463,8 +2469,11 @@ namespace SaveOurShip2
 			}
 			foreach (Thing spawnThing in toMoveThings)
 			{
-				if(!(spawnThing is Plant))
+				if (!(spawnThing is Plant))
+				{
 					ReSpawnThingOnMap(spawnThing, targetMap, adjustment, rotb, fac);
+					spawnThing.beingTransportedOnGravship = false;
+				}
 			}
 			foreach (MinifiedThing minified in toInstallAfterMove)
 			{
@@ -2472,6 +2481,7 @@ namespace SaveOurShip2
 				GenSpawn.Spawn(toInstall, minified.Position, targetMap, toInstall.Rotation);
 				minified.InnerThing = null;
 				minified.Destroy();
+				toInstall.beingTransportedOnGravship = false;
 			}
 			if (devMode)
 				watch.Record("moveThings");
