@@ -1340,6 +1340,24 @@ namespace SaveOurShip2
 		}
 	}
 
+	// When not in space, ship roof now shouldn't collapse too but setting canCollapse = false doesn't work in some cases,
+	// this patch fix is needed
+	[HarmonyPatch(typeof(RoofCollapseBufferResolver), "CollapseRoofsMarkedToCollapse")]
+	public static class NoShipHullCollapse
+	{
+		public static void Prefix(RoofCollapseBufferResolver __instance)
+		{
+			RoofCollapseBuffer buffer = __instance.map.roofCollapseBuffer;
+			for (int i = buffer.CellsMarkedToCollapse.Count - 1; i >=0; i--)
+			{
+				if (!__instance.map.roofGrid.RoofAt(buffer.CellsMarkedToCollapse[i]).canCollapse)
+				{
+					buffer.CellsMarkedToCollapse.RemoveAt(i);
+				}
+			}
+		}
+	}
+
 	[HarmonyPatch(typeof(FogGrid), "Notify_PawnEnteringDoor")]
 	public static class UnFogOnDoorEnterSpaceVersion
 	{
