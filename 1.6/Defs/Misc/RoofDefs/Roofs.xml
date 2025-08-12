@@ -5,6 +5,7 @@
     <defName>RoofShip</defName>
     <label>ship roof</label>
     <isThickRoof>false</isThickRoof>
+	<canCollapse>false</canCollapse>
     <filthLeaving>Filth_RubbleBuilding</filthLeaving>
     <soundPunchThrough>PunchThroughRoofMetal</soundPunchThrough>
   </RoofDef>
