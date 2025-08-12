@@ -4,6 +4,7 @@
     <defName>ArchotechGiftQuest</defName>
     <defaultChallengeRating>1</defaultChallengeRating>
     <isRootSpecial>true</isRootSpecial>
+	<everAcceptableInSpace>true</everAcceptableInSpace>
     <questNameRules>
       <rulesStrings>
         <li>questName->[quest_name]</li>
