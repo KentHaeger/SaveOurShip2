@@ -192,6 +192,7 @@ namespace SaveOurShip2
 		public static TerrainDef[] rockTerrains; // Contains terrain types that are considered a "rock".
 		public static string[] allowedQuests;
 		public static string[] allowedToObserve;
+		public static string[] surfaceSites;
 		public static List<ThingDef> randomPlants;
 		public static Dictionary<ThingDef, ThingDef> wreckDictionary;
 		public static Dictionary<ThingDef, ThingDef> archoConversions;
@@ -388,6 +389,12 @@ namespace SaveOurShip2
 				"ShipEngineImpactSite",
 				"EscapeShip"
 			};
+			surfaceSites = new string[]
+			{
+				"InsectPillarSite",
+				"TribalPillarSite",
+				"ShipEngineImpactSite"
+			};
 			//shuttle, archolife cosmetics
 			if (!loadedGraphics)
 			{
@@ -508,9 +515,9 @@ namespace SaveOurShip2
 			}
 			return false;
 		}
-		public static PlanetTile FindWorldTile()
+		public static PlanetTile FindWorldTile(bool allowSpace = true)
 		{
-			foreach (Tile t in (Find.World.grid.Orbit ?? Find.World.grid.Surface).Tiles)
+			foreach (Tile t in (allowSpace ? Find.World.grid.Orbit ?? Find.World.grid.Surface : Find.World.grid.Surface).Tiles)
 			{
 				PlanetTile tile = t.tile;
 				if (!Find.World.worldObjects.AnyWorldObjectAt(tile) && TileFinder.IsValidTileForNewSettlement(tile))
@@ -523,11 +530,11 @@ namespace SaveOurShip2
 
 		// Can override world tile selection in dev Launch sommmand, launching ship over specified tile
 		public static PlanetTile worldTileOverride = PlanetTile.Invalid;
-		public static PlanetTile FindWorldTilePlayer() //slower, will find tile nearest to ship object pos
+		public static PlanetTile FindWorldTilePlayer(bool allowSpace = true) //slower, will find tile nearest to ship object pos
 		{
 			float bestAbsLatitude = float.MaxValue;
 			PlanetTile bestTile = PlanetTile.Invalid;
-			var tiles = (Find.World.grid.Orbit ?? Find.World.grid.Surface).Tiles;
+			var tiles = (allowSpace ? Find.World.grid.Orbit ?? Find.World.grid.Surface : Find.World.grid.Surface).Tiles;
 			for (int i = 0; i < tiles.Count; i+=10)
 			{
 				var tile = tiles[i].tile;
@@ -586,7 +593,7 @@ namespace SaveOurShip2
 		public static WorldObject GenerateSite(string defName)
 		{
 			WorldObject site = WorldObjectMaker.MakeWorldObject(DefDatabase<WorldObjectDef>.GetNamed(defName));
-			site.Tile = FindWorldTile();
+			site.Tile = FindWorldTile(allowSpace: !surfaceSites.Contains(defName));
 			Find.WorldObjects.Add(site);
 			return site;
 		}
