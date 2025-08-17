@@ -5069,7 +5069,7 @@ namespace SaveOurShip2
 	{
 		public static void Postfix(VehiclePawn __instance, Pawn pawn, ref bool __result)
 		{
-			if (pawn.Faction == Faction.OfPlayer && __instance.Faction != Faction.OfPlayer && __result)
+			if (pawn.Faction == Faction.OfPlayer && SoS2VehicleUtility.IsShuttle(__instance) && __instance.Faction != Faction.OfPlayer && __result)
 			{
 				__instance.SetFaction(Faction.OfPlayer);
 			}
