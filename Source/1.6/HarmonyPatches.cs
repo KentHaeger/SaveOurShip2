@@ -5638,6 +5638,16 @@ namespace SaveOurShip2
 		}
 	}
 
+	// Odyssey
+	[HarmonyPatch(typeof(GravshipUtility), "AbandonMap")]
+	public class NoSpaceMapDestruction
+	{
+		public static bool Prefix(Map map)
+		{
+			return !map.IsSpace();
+		}
+	}
+
 	/*[HarmonyPatch(typeof(ActiveDropPod),"PodOpen")]
 	public static class ActivePodFix{
 		public static bool Prefix (ref ActiveDropPod __instance)
