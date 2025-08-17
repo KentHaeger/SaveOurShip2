@@ -5004,15 +5004,6 @@ namespace SaveOurShip2
 		}
 	}
 
-	[HarmonyPatch(typeof(VehiclePawn), "AddTimedExplosion", typeof(TimedExplosion))]
-	public static class NoExplosionsOffMap
-	{
-		public static bool Prefix(VehiclePawn __instance)
-		{
-			return __instance.Map != null;
-		}
-	}
-
 	[HarmonyPatch(typeof(VehicleAI), "AITick")]
 	public static class NoAITick
 	{
@@ -5050,19 +5041,7 @@ namespace SaveOurShip2
 			return false;
 		}
 	}
-  
-	[HarmonyPatch(typeof(CompUpgradeTree), "ValidateListers")]
-	public static class DisableValidateListersOffMap
-	{
-		public static bool Prefix(CompUpgradeTree __instance)
-		{
-			if( __instance.Vehicle.Map == null)
-			{
-				return false;
-			}
-			return true;
-    }
-  }
+
 	// Temporary patch preventing losing control of player pawn that eneters enemy shuttle
 	[HarmonyPatch(typeof(VehiclePawn), "BoardPawn")]
 	public static class VehicleBoarded
