@@ -10,14 +10,20 @@ namespace SaveOurShip2
 		protected override bool CanFireNowSub(IncidentParms parms)
 		{
 			Map map = (Map)parms.target;
-			var mapComp = map.GetComponent<ShipMapComp>();
+			ShipMapComp mapComp = map.GetComponent<ShipMapComp>();
 			if (mapComp.ShipMapState != ShipMapState.nominal || mapComp.Cloaks.Any(c => c.active) || mapComp.NextTargetMap != null || ModSettings_SoS.frequencySoS == 0 || Find.TickManager.TicksGame < mapComp.LastAttackTick + 300000 / ModSettings_SoS.frequencySoS)
+			{
 				return false;
-
+			}
 			foreach (Building_ShipCloakingDevice cloak in mapComp.Cloaks)
 			{
 				if (cloak.active)
 					return false;
+			}
+			// There should be actual ship on map to attack
+			if( !mapComp.ShipsOnMap.Values.Any((SpaceShipCache ship) => !ship.IsWreck))
+			{
+				return false;
 			}
 			return true;
 		}
@@ -25,6 +31,13 @@ namespace SaveOurShip2
 		protected override bool TryExecuteWorker(IncidentParms parms)
 		{
 			Map map = (Map)parms.target;
+			ShipMapComp mapComp = map.GetComponent<ShipMapComp>();
+
+			// There should be actual ship on map to attack
+			if (!mapComp.ShipsOnMap.Values.Any((SpaceShipCache playerShip) => !playerShip.IsWreck))
+			{
+				return false;
+			}
 			//add ship, non specific - determined on attack
 			PirateShip ship = new PirateShip(DefDatabase<TraderKindDef>.GetNamed("Orbital_PirateMerchant"), Faction.OfPirates);
 
@@ -68,7 +81,6 @@ namespace SaveOurShip2
 				parms.customLetterText = "";
 				SendStandardLetter(def.letterLabel, TranslatorFormattedStringExtensions.Translate("SoS.PirateImmediateAttack"), def.letterDef, parms, TargetInfo.Invalid, Array.Empty<NamedArgument>());
 
-				var mapComp = map.GetComponent<ShipMapComp>();
 				mapComp.StartShipEncounter(ship);
 			}
 			return true;
