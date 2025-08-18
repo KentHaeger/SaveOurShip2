@@ -7,7 +7,8 @@
     <description>Carriers of this gene can survive direct vacuum exposure. Their bodies regulate blood gases to prevent decompression injuries, and can switch to anaerobic respiration when oxygen is not available. Metabolic waste gases are ejected through the skin to provide EVA thrust. However, on its own this gene does not protect against extreme temperatures.</description>
     <iconPath>Things/Pawn/Humanlike/Apparel/EVA/EVA_Helmet</iconPath>
     <displayOrderInCategory>0</displayOrderInCategory>
-    <statOffsets>
+    <immuneToVacuumBurns MayRequire="Ludeon.RimWorld.Odyssey">true</immuneToVacuumBurns>
+	<statOffsets>
       <DecompressionResistance>1</DecompressionResistance>
 	  <HypoxiaResistance>1</HypoxiaResistance>
 	  <VacuumSpeedMultiplier>4</VacuumSpeedMultiplier>
