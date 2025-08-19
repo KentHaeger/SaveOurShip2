@@ -77,6 +77,21 @@
 		</match>
 	</Operation>
 
+	<!-- Starjack Vacuum Resistance Gene -->
+	
+	<Operation Class="PatchOperationFindMod">
+		<mods>
+			<li>Vanilla Races Expanded - Starjack</li>
+		</mods>
+		<match Class="PatchOperationAdd">
+			<xpath>Defs/GeneDef[defName="VREStarjack_VacuumResistance_Total"]/statOffsets</xpath>
+					<value>
+						<HypoxiaResistance>1</HypoxiaResistance>
+						<DecompressionResistance>1</DecompressionResistance>
+					</value>
+		</match>
+	</Operation>
+	
 	<Operation Class="PatchOperationFindMod">
 		<mods>
 			<li>LWM's Deep Storage</li>
