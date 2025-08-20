@@ -1176,7 +1176,15 @@ namespace SaveOurShip2
 			}
 			builder.AppendLine();
 			builder.AppendLine(GameVictoryUtility.InMemoryOfSection());
-			builder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.EndgameCredits"));
+			builder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.EndgameCredits",
+				TranslatorFormattedStringExtensions.Translate("SoS.EndgameCredits.Authors"),
+				TranslatorFormattedStringExtensions.Translate("SoS.EndgameCredits.Maintainer"),
+				TranslatorFormattedStringExtensions.Translate("SoS.EndgameCredits.Testers"),
+				TranslatorFormattedStringExtensions.Translate("SoS.EndgameCredits.Submodders"),
+				TranslatorFormattedStringExtensions.Translate("SoS.EndgameCredits.Contributors"),
+				TranslatorFormattedStringExtensions.Translate("SoS.EndgameCredits.Shipwrights"),
+				TranslatorFormattedStringExtensions.Translate("SoS.EndgameCredits.OGTestingSquad")
+				));
 			ShipInteriorMod2.WorldComp.SoSWin = true;
 			GameVictoryUtility.ShowCredits(builder.ToString(), null, exitToMainMenu: true);
 		}
