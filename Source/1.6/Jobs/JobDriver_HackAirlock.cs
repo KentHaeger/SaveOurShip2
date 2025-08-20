@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 using Verse;
 using Verse.AI;
 using Verse.Sound;
@@ -12,7 +13,7 @@ namespace SaveOurShip2
 	class JobDriver_HackAirlock : JobDriver
 	{
 		float workDone;
-		public static int hackWorkAmmount = 200;
+		static readonly int workAmount = 260;
 		public override bool TryMakePreToilReservations(bool errorOnFailed)
 		{
 			return pawn.Reserve(TargetA, job);
@@ -23,7 +24,8 @@ namespace SaveOurShip2
 			if (TargetA != LocalTargetInfo.Invalid)
 				this.FailOnDespawnedOrNull(TargetIndex.A);
 			yield return Toils_Goto.Goto(TargetIndex.A, PathEndMode.ClosestTouch);
-			Toil hackIt = Toils_General.Wait(hackWorkAmmount, TargetA != LocalTargetInfo.Invalid ? TargetIndex.A : TargetIndex.None);
+			int EstimateWorkTime = Mathf.CeilToInt(workAmount / JobUtility.GetHackSpeedClamped(pawn));
+			Toil hackIt = Toils_General.Wait(EstimateWorkTime, TargetA != LocalTargetInfo.Invalid ? TargetIndex.A : TargetIndex.None);
 			hackIt.defaultCompleteMode = ToilCompleteMode.Delay;
 			hackIt.initAction = delegate
 			{
@@ -31,16 +33,13 @@ namespace SaveOurShip2
 			};
 			hackIt.tickAction = delegate
 			{
-				/*if (ModsConfig.IdeologyActive)
-					workDone += pawn.GetStatValue(StatDefOf.HackingSpeed);
-				else*/
-					workDone++;
+				workDone += JobUtility.GetHackSpeed(pawn);
 			};
 			hackIt.endConditions = new List<Func<JobCondition>>();
-			hackIt.WithProgressBar(TargetIndex.A, () => workDone / hackWorkAmmount);
+			hackIt.WithProgressBar(TargetIndex.A, () => workDone / workAmount);
 			hackIt.WithEffect(EffecterDefOf.DisabledByEMP, TargetIndex.A);
 			hackIt.AddFinishAction(delegate {
-				if (workDone >= hackWorkAmmount-10 && pawn.health.State == PawnHealthState.Mobile && TargetA.HasThing && !TargetA.Thing.DestroyedOrNull() && TargetA.Thing is Building_ShipAirlock)
+				if (workDone >= workAmount - JobUtility.WorkFinishThreshold && pawn.health.State == PawnHealthState.Mobile && TargetA.HasThing && !TargetA.Thing.DestroyedOrNull() && TargetA.Thing is Building_ShipAirlock)
 				{
 					((Building_ShipAirlock)TargetA.Thing).HackMe(pawn);
 				}
