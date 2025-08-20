@@ -891,6 +891,8 @@ namespace SaveOurShip2
 			Log.Message("SOS2: ".Colorize(Color.cyan) + map + " Starting combat vs map: ".Colorize(Color.green) + ShipCombatTargetMap);
 			TargetMapComp.ShipCombatTargetMap = ShipCombatOriginMap;
 			TargetMapComp.ShipCombatOriginMap = ShipCombatOriginMap;
+			Log.Warning("++++This map: " + this.map.Parent?.Label ?? "NoParent");
+			Log.Warning("++++Target map: " + TargetMapComp.map.Parent?.Label ?? "NoParent");
 			accuracyCalculator = new AccuracyCalculator(this, TargetMapComp);
 			TargetMapComp.accuracyCalculator = new AccuracyCalculator(TargetMapComp, this);
 			//start caches
@@ -1272,10 +1274,11 @@ namespace SaveOurShip2
 				{
 					if (proj.range >= OriginMapComp.Range)
 					{
+						ShipMapComp targetMapComp = ShipCombatTargetMap.GetComponent<ShipMapComp>();
 						bool useNewAccuracySystem = ModSettings_SoS.newAccuracySystem && (accuracyCalculator?.IsValid ?? false);
 						if (useNewAccuracySystem)
 						{
-							if (accuracyCalculator.PerformDodgeCheck(proj))
+							if (targetMapComp.accuracyCalculator.PerformDodgeCheck(proj))
 							{
 								toRemove.Add(proj);
 								continue;
@@ -1297,7 +1300,7 @@ namespace SaveOurShip2
 						// Not allowed to dodge torpedoes as they are guided
 						if (newProjectile is Projectile_ExplosiveShip && !(newProjectile is Projectile_ExplosiveShipTorpedo))
 						{
-							ShipCombatTargetMap.GetComponent<ShipMapComp>().incomingProjectiles.Add(newProjectile);
+							targetMapComp.incomingProjectiles.Add(newProjectile);
 						}
 
 						//get angle
@@ -1307,7 +1310,7 @@ namespace SaveOurShip2
 						float missAngle = 0;
 						if (useNewAccuracySystem && !(newProjectile is Projectile_ExplosiveShipTorpedo))
 						{
-							missAngle = accuracyCalculator.GetMissAngle(proj);
+							missAngle = targetMapComp.accuracyCalculator.GetMissAngle(proj);
 						}
 						else
 						{
