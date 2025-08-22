@@ -2844,7 +2844,7 @@ namespace SaveOurShip2
 					{
 						veh.DisembarkAll();
 						veh.ignition.Drafted = false;
-						// TODO: Can't set vehicle faction to null here, as it's not supported by Framework. 
+						// TODO: Can't set vehicle faction to null here, as it's not supported by Framework.
 					}
 				}
 			}
