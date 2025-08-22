@@ -1,0 +1,861 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+	<Operation Class="PatchOperationFindMod">
+		<mods>
+			<li>Royalty</li>
+		</mods>
+		<match Class="PatchOperationSequence">
+			<success>Normal</success>
+			<operations>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs</xpath>
+					<value>
+						<!-- pawns -->
+						<PawnKindDef>
+							<defName>Empire_Space_Laborer</defName>
+							<label>imperial laborer</label>
+							<race>Human</race>
+							<defaultFactionType>Empire</defaultFactionType>
+							<maxGenerationAge>50</maxGenerationAge>
+							<combatPower>30</combatPower>
+							<backstoryFiltersOverride>
+								<li>
+									<categories>
+										<li>ImperialCommon</li>
+									</categories>
+								</li>
+							</backstoryFiltersOverride>
+							<styleItemTags>
+								<li>
+									<tag>Soldier</tag>
+									<baseWeight>1</baseWeight>
+									<weightFactor>1</weightFactor>
+								</li>
+							</styleItemTags>
+							<backstoryCryptosleepCommonality>0.08</backstoryCryptosleepCommonality>
+							<forceNormalGearQuality>true</forceNormalGearQuality>
+							<isFighter>false</isFighter>
+							<requiredWorkTags>
+								<!-- Must be capable of labor, as this pawn kind is used in laborer quests. -->
+								<li>ManualDumb</li>
+								<li>ManualSkilled</li>
+								<li>Cleaning</li>
+								<li>Hauling</li>
+								<li>Mining</li>
+								<li>Firefighting</li>
+							</requiredWorkTags>
+							<apparelTags>
+								<li>IndustrialBasic</li>
+							</apparelTags>
+							<apparelMoney>750~1500</apparelMoney>
+							<gearHealthRange>1~1</gearHealthRange>
+							<apparelRequired>
+								<li>Apparel_SpaceSuitHelmet</li>
+								<li>Apparel_SpaceSuitBody</li>
+							</apparelRequired>
+							<techHediffsMoney>50~800</techHediffsMoney>
+							<techHediffsTags>
+								<li>Poor</li>
+								<li>Simple</li>
+							</techHediffsTags>
+							<techHediffsChance>0.08</techHediffsChance>
+							<apparelDisallowTags>
+								<li>Western</li>
+							</apparelDisallowTags>
+							<disallowedTraits>
+								<li>Nudist</li>
+							</disallowedTraits>
+							<initialWillRange>1~3</initialWillRange>
+							<initialResistanceRange>6~10</initialResistanceRange>
+						</PawnKindDef>
+						<PawnKindDef ParentName="ImperialFighterBase">
+							<defName>Empire_Fighter_Marine_Space</defName>
+							<label>space marine</label>
+							<combatPower>100</combatPower>
+							<weaponMoney>1550~2700</weaponMoney>
+							<weaponTags>
+								<li>IndustrialGunAdvanced</li>
+								<li>SpacerGun</li>
+								<li>SniperRifle</li>
+							</weaponTags>
+							<apparelMoney>6000~9000</apparelMoney>
+							<apparelColor>(75,75,75)</apparelColor>
+							<apparelRequired>
+								<li>Apparel_PowerArmorHelmet</li>
+								<li>Apparel_PowerArmor</li>
+							</apparelRequired>
+							<techHediffsTags>
+								<li>ImplantEmpireCommon</li>
+							</techHediffsTags>
+							<skills>
+								<li>
+									<skill>Shooting</skill>
+									<range>6~10</range>
+								</li>
+							</skills>
+							<disallowedTraits>
+								<li>Brawler</li>
+							</disallowedTraits>
+							<initialWillRange>2~4</initialWillRange>
+							<initialResistanceRange>15~24</initialResistanceRange>
+						</PawnKindDef>
+						<PawnKindDef ParentName="CataphractBase">
+							<defName>Empire_Fighter_Cataphract_Space</defName>
+							<label>space cataphract</label>
+							<royalTitleChance>0.1</royalTitleChance>
+							<titleSelectOne>
+								<li>Freeholder</li>
+								<li>Yeoman</li>
+							</titleSelectOne>
+							<combatPower>150</combatPower>
+							<weaponTags>
+								<li>GunHeavy</li>
+								<li>SpacerGun</li>
+							</weaponTags>
+							<apparelColor>(250,250,250)</apparelColor>
+							<apparelRequired>
+								<li>Apparel_ArmorHelmetCataphract</li>
+								<li>Apparel_ArmorCataphract</li>
+							</apparelRequired>
+							<specificApparelRequirements Inherit="False">
+								<li>
+									<bodyPartGroup>Torso</bodyPartGroup>
+									<apparelLayer>OnSkin</apparelLayer>
+									<stuff>Synthread</stuff>
+								</li>
+								<li>
+									<bodyPartGroup>Legs</bodyPartGroup>
+									<apparelLayer>OnSkin</apparelLayer>
+									<stuff>Synthread</stuff>
+								</li>
+							</specificApparelRequirements>
+							<techHediffsTags>
+								<li>Advanced</li>
+								<li>ImplantEmpireCommon</li>
+							</techHediffsTags>
+							<techHediffsRequired>
+								<li>ArmorskinGland</li>
+							</techHediffsRequired>
+							<skills>
+								<li>
+									<skill>Shooting</skill>
+									<range>8~12</range>
+								</li>
+							</skills>
+							<disallowedTraits>
+								<li>Brawler</li>
+							</disallowedTraits>
+							<initialWillRange>4~6</initialWillRange>
+							<initialResistanceRange>17~26</initialResistanceRange>
+						</PawnKindDef>
+						<!-- navy -->
+						<SaveOurShip2.NavyDef ParentName="SpaceNavy">
+							<defName>Empire_SpaceNavy</defName>
+							<label>Royal Space Navy</label>
+							<factionDefs>
+								<li>Empire</li>
+							</factionDefs>
+							<bountyHunts>true</bountyHunts>
+							<colorPrimary>Structure_Red</colorPrimary>
+							<colorSecondary>Structure_GrayLight</colorSecondary>
+							<marineDef>Empire_Fighter_Marine_Space</marineDef>
+							<marineHeavyDef>Empire_Fighter_Cataphract_Space</marineHeavyDef>
+							<spaceShipDefs>
+								<li>EmpireBattleship</li>
+								<li>EmpireBomber</li>
+								<li>EmpireCorvette</li>
+								<li>EmpireCruiser</li>
+								<li>EmpireDestroyer</li>
+								<li>EmpireFighter</li>
+							</spaceShipDefs>
+						</SaveOurShip2.NavyDef>
+					</value>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/SaveOurShip2.ShipDef[defName="EmpireBattleship" or defName="EmpireBomber" or defName="EmpireCorvette" or defName="EmpireCruiser" or defName="EmpireDestroyer" or defName="EmpireFighter" or defName="EmpireFleetCruisers" or defName="EmpireFleetDestroyerEscort" or defName="EmpireFleetStrikeWing"]</xpath>
+					<value>
+						<navyExclusive>true</navyExclusive>
+					</value>
+				</li>
+
+				<!-- apparels -->
+				<!-- EVA description -->
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/ThingDef[@ParentName="ApparelArmorCataphractBase" or @ParentName="ApparelArmorHelmetCataphractBase"][not(comps)]</xpath>
+					<match Class="PatchOperationAdd">
+						<xpath>Defs/ThingDef[@ParentName="ApparelArmorCataphractBase" or @ParentName="ApparelArmorHelmetCataphractBase"][not(comps)]</xpath>
+						<value>
+							<comps />
+						</value>
+					</match>
+				</li>
+
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/ThingDef[@ParentName="ApparelArmorCataphractBase" or @ParentName="ApparelArmorHelmetCataphractBase"]/comps[not(li/compClass="SaveOurShip2.CompEVA")]</xpath>
+					<match Class="PatchOperationAdd">
+						<xpath>Defs/ThingDef[@ParentName="ApparelArmorCataphractBase" or @ParentName="ApparelArmorHelmetCataphractBase"]/comps[not(li/compClass="SaveOurShip2.CompEVA")]</xpath>
+						<value>
+							<li>
+								<compClass>SaveOurShip2.CompEVA</compClass>
+							</li>
+						</value>
+					</match>
+				</li>
+
+				<!-- EVA stats -->
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/ThingDef[@ParentName="ApparelArmorCataphractBase" or @ParentName="ApparelArmorHelmetCataphractBase" or defName="Apparel_ArmorLocust" or defName="Apparel_PackJump"][not(equippedStatOffsets)]</xpath>
+					<match Class="PatchOperationAdd">
+						<xpath>Defs/ThingDef[@ParentName="ApparelArmorCataphractBase" or @ParentName="ApparelArmorHelmetCataphractBase" or defName="Apparel_ArmorLocust" or defName="Apparel_PackJump"][not(equippedStatOffsets)]</xpath>
+						<value>
+							<equippedStatOffsets />
+						</value>
+					</match>
+				</li>
+
+				<!-- Armor DecompressionResistance -->
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/ThingDef[@ParentName="ApparelArmorCataphractBase"]/equippedStatOffsets[not(DecompressionResistance)]</xpath>
+					<match Class="PatchOperationAdd">
+						<xpath>Defs/ThingDef[@ParentName="ApparelArmorCataphractBase"]/equippedStatOffsets[not(DecompressionResistance)]</xpath>
+						<value>
+							<DecompressionResistance>0.75</DecompressionResistance>
+						</value>
+					</match>
+				</li>
+
+				<!-- Helmets DecompressionResistance -->
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/ThingDef[@ParentName="ApparelArmorHelmetCataphractBase"]/equippedStatOffsets[not(DecompressionResistance)]</xpath>
+					<match Class="PatchOperationAdd">
+						<xpath>Defs/ThingDef[@ParentName="ApparelArmorHelmetCataphractBase"]/equippedStatOffsets[not(DecompressionResistance)]</xpath>
+						<value>
+							<DecompressionResistance>0.25</DecompressionResistance>
+						</value>
+					</match>
+				</li>
+
+				<!-- Helmets HypoxiaResistance -->
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/ThingDef[@ParentName="ApparelArmorHelmetCataphractBase"]/equippedStatOffsets[not(HypoxiaResistance)]</xpath>
+					<match Class="PatchOperationAdd">
+						<xpath>Defs/ThingDef[@ParentName="ApparelArmorHelmetCataphractBase"]/equippedStatOffsets[not(HypoxiaResistance)]</xpath>
+						<value>
+							<HypoxiaResistance>1</HypoxiaResistance>
+						</value>
+					</match>
+				</li>
+
+				<!-- Locust Armor VacuumSpeedMultiplier -->
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/ThingDef[defName="Apparel_ArmorLocust" or defName="Apparel_PackJump"]/equippedStatOffsets[not(VacuumSpeedMultiplier)]</xpath>
+					<match Class="PatchOperationAdd">
+						<xpath>Defs/ThingDef[defName="Apparel_ArmorLocust" or defName="Apparel_PackJump"]/equippedStatOffsets[not(VacuumSpeedMultiplier)]</xpath>
+						<value>
+							<VacuumSpeedMultiplier>4</VacuumSpeedMultiplier>
+						</value>
+					</match>
+				</li>
+
+				<li Class="PatchOperationReplace">
+					<xpath>Defs/ThingDef[@Name="ApparelArmorCataphractBase"]/statBases/Insulation_Cold</xpath>
+					<value>
+						<Insulation_Cold>100</Insulation_Cold>
+					</value>
+				</li>
+
+				<!-- traders -->
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/TraderKindDef[defName="Orbital_Empire" or defName="Empire_Caravan_TraderGeneral"]/stockGenerators</xpath>
+					<value>
+						<li Class="StockGenerator_SingleDef">
+							<thingDef>ShipTorpedo_HighExplosive</thingDef>
+							<countRange>5~10</countRange>
+						</li>
+					</value>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/TraderKindDef[defName="Orbital_Empire" or defName="Empire_Caravan_TraderGeneral"]/stockGenerators</xpath>
+					<value>
+						<li Class="StockGenerator_SingleDef">
+							<thingDef>ShipTorpedo_EMP</thingDef>
+							<countRange>3~6</countRange>
+						</li>
+					</value>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/TraderKindDef[defName="Orbital_Empire" or defName="Empire_Caravan_TraderGeneral"]/stockGenerators</xpath>
+					<value>
+						<li Class="StockGenerator_SingleDef">
+							<thingDef>ShipTorpedo_Antimatter</thingDef>
+							<countRange>1~2</countRange>
+						</li>
+					</value>
+				</li>
+			</operations>
+		</match>
+	</Operation>
+	<Operation Class="PatchOperationFindMod">
+		<mods>
+			<li>Biotech</li>
+		</mods>
+		<match Class="PatchOperationSequence">
+			<success>Normal</success>
+			<operations>
+				<!-- mech buildable -->
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/ThingDef[@Name="ShipCornerMech" or defName = "Ship_BeamMech_Unpowered" or defName = "Ship_BeamMech" or defName="ShipAirlockMech" or defName="ShipHullTileMech" or defName="ShipInside_SolarGeneratorMech" or defName="ShipInside_PassiveVentMechanoid"]</xpath>
+					<value>
+						<designationCategory>Ship</designationCategory>
+					</value>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/ThingDef[@Name="ShipCornerMech" or defName="Ship_BeamMech_Unpowered" or defName="Ship_BeamMech" or defName="ShipAirlockMech" or defName="ShipHullTileMech"]</xpath>
+					<value>
+						<researchPrerequisites>
+							<li>ShipBasics</li>
+							<li>UltraMechtech</li>
+						</researchPrerequisites>
+					</value>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/ThingDef[defName="ShipInside_SolarGeneratorMech" or defName="ShipInside_PassiveVentMechanoid"]/researchPrerequisites</xpath>
+					<value>
+						<li>ShipBasics</li>
+						<li>UltraMechtech</li>
+					</value>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/SaveOurShip2.NavyDef[defName="Pirate_SpaceNavy"]/factionDefs</xpath>
+					<value>
+						<li>PirateYttakin</li>
+						<li>PirateWaster</li>
+					</value>
+				</li>
+			</operations>
+		</match>
+	</Operation>
+	<Operation Class="PatchOperationFindMod">
+		<mods>
+			<li>Anomaly</li>
+		</mods>		
+		<match Class="PatchOperationSequence">
+			<success>Normal</success>
+			<operations>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs</xpath>
+					<value>
+						<SaveOurShip2.NavyDef ParentName="SpaceNavy">
+							<defName>Shamblers_SpaceNavy</defName>
+							<label>Shamblers Space Navy</label>
+							<factionDefs>
+								<li>Entities</li>
+							</factionDefs>
+							<crewDef>ShamblerGorehulk</crewDef>
+							<marineDef>ShamblerSwarmer</marineDef>
+							<marineHeavyDef>ShamblerSoldier</marineHeavyDef>
+						</SaveOurShip2.NavyDef>
+					</value>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs</xpath>
+					<value>
+						<SaveOurShip2.NavyDef ParentName="SpaceNavy">
+							<defName>Fleshbeasts_SpaceNavy</defName>
+							<label>Fleshbeast Space Navy</label>
+							<factionDefs>
+								<li>Entities</li>
+							</factionDefs>
+							<crewDef>Trispike</crewDef>
+							<marineDef>Fingerspike</marineDef>
+							<marineHeavyDef>Toughspike</marineHeavyDef>
+						</SaveOurShip2.NavyDef>
+					</value>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/ThingDef[@Name="BaseFleshbeast" or @Name="MysteriousSphereEntityBase" or @Name="Revenant" or defName="Metalhorror" or defName="Noctol"]/statBases</xpath>
+					<value>
+						<HypoxiaResistance>1</HypoxiaResistance>
+						<DecompressionResistance>1</DecompressionResistance>
+					</value>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/HediffDef[defName="Shambler"]/stages/li/statOffsets</xpath>
+					<value>
+						<HypoxiaResistance>1</HypoxiaResistance>
+						<DecompressionResistance>1</DecompressionResistance>
+					</value>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/HediffDef[defName="Ghoul"]/stages/li/statOffsets</xpath>
+					<value>
+						<HypoxiaResistance>1</HypoxiaResistance>
+						<DecompressionResistance>1</DecompressionResistance>
+					</value>
+				</li>
+				<!-- Disallow incidents in space -->
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="UnnaturalDarkness"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="UnnaturalDarkness"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="UnnaturalDarkness"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="WarpedObelisk_Mutator"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="WarpedObelisk_Mutator"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="WarpedObelisk_Mutator"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="WarpedObelisk_Duplicator"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="WarpedObelisk_Duplicator"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="WarpedObelisk_Duplicator"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="WarpedObelisk_Abductor"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="WarpedObelisk_Abductor"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="WarpedObelisk_Abductor"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="PitGate"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="PitGate"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="PitGate"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="FleshmassHeart"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="FleshmassHeart"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="FleshmassHeart"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="CreepJoinerJoin"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="CreepJoinerJoin"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="CreepJoinerJoin"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="CreepJoinerJoin_Metalhorror"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="CreepJoinerJoin_Metalhorror"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="CreepJoinerJoin_Metalhorror"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="HarbingerTreeProvoked"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="HarbingerTreeProvoked"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="HarbingerTreeProvoked"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="HarbingerTreeSpawn"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="HarbingerTreeSpawn"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="HarbingerTreeSpawn"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="MonolithMigration"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="MonolithMigration"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="MonolithMigration"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="ShamblerSwarm"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="ShamblerSwarm"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="ShamblerSwarm"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="ShamblerSwarmAnimals"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="ShamblerSwarmAnimals"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="ShamblerSwarmAnimals"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="SmallShamblerSwarm"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="SmallShamblerSwarm"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="SmallShamblerSwarm"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="SightstealerSwarm"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="SightstealerSwarm"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="SightstealerSwarm"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="ShamblerAssault"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="ShamblerAssault"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="ShamblerAssault"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="GhoulAttack"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="GhoulAttack"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="GhoulAttack"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="Revenant"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="Revenant"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="Revenant"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="SightstealerArrival"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="SightstealerArrival"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="SightstealerArrival"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="PsychicRitualSiege"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="PsychicRitualSiege"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="PsychicRitualSiege"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="HateChanters"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="HateChanters"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="HateChanters"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="FleshbeastAttack"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="FleshbeastAttack"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="FleshbeastAttack"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="GorehulkAssault"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="GorehulkAssault"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="GorehulkAssault"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="DevourerAssault"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="DevourerAssault"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="DevourerAssault"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="DevourerWaterAssault"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="DevourerWaterAssault"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="DevourerWaterAssault"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/IncidentDef[defName="ChimeraAssault"]/disallowedBiomes</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/IncidentDef[defName="ChimeraAssault"]</xpath>
+						<value>
+							<disallowedBiomes />
+						</value>
+					</nomatch>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/IncidentDef[defName="ChimeraAssault"]/disallowedBiomes</xpath>
+					<value>
+						<li>OuterSpaceBiome</li>
+					</value>
+				</li>
+			</operations>
+		</match>
+	</Operation>
+	<Operation Class="PatchOperationFindMod">
+		<mods>
+			<li>Odyssey</li>
+		</mods>		
+		<match Class="PatchOperationSequence">
+			<success>Normal</success>
+			<operations>
+				<!-- Drones -->
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/ThingDef[@Name="BaseDrone"]/statBases</xpath>
+					<value>
+						<HypoxiaResistance>1</HypoxiaResistance>
+						<DecompressionResistance>1</DecompressionResistance>
+						<VacuumSpeedMultiplier>4</VacuumSpeedMultiplier>
+					</value>
+				</li>
+				<!-- Breathless Gene -->
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/GeneDef[defName="VacuumResistance_Total"]/statOffsets</xpath>
+					<value>
+						<HypoxiaResistance>1</HypoxiaResistance>
+						<DecompressionResistance>1</DecompressionResistance>
+					</value>
+				</li>
+				<!-- Vacuum Resistant Gene -->
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/GeneDef[defName="VacuumResistance_Partial"]/statOffsets</xpath>
+					<value>
+						<DecompressionResistance>0.75</DecompressionResistance>
+					</value>
+				</li>
+				<!-- Odyssey Space Headgear -->
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/ThingDef[defName="Apparel_VacsuitHelmet"]/equippedStatOffsets[not(DecompressionResistance)]</xpath>
+					<value>
+						<DecompressionResistance>0.25</DecompressionResistance>
+					</value>
+				</li>
+				<!-- Odyssey Space Headgear -->
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/ThingDef[defName="Apparel_VacsuitHelmet"]/equippedStatOffsets[not(HypoxiaResistance)]</xpath>
+					<value>
+						<HypoxiaResistance>1</HypoxiaResistance>
+					</value>
+				</li>
+				<!-- Odyssey Space Suits -->
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/ThingDef[defName="Apparel_Vacsuit" or defName="Apparel_VacsuitChildren"]/equippedStatOffsets[not(DecompressionResistance)]</xpath>
+					<value>
+						<DecompressionResistance>0.75</DecompressionResistance>
+					</value>
+				</li>
+				<!-- Odyssey Space Suits -->
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/ThingDef[defName="Apparel_Vacsuit" or defName="Apparel_VacsuitChildren"]/equippedStatOffsets[not(VacuumSpeedMultiplier)]</xpath>
+					<value>
+						<VacuumSpeedMultiplier>4</VacuumSpeedMultiplier>
+					</value>
+				</li>
+				<!-- To make orbit empty tile selectable in dev mode -->
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/PlanetLayerDef[@Name="OrbitLayer"]/worldDrawLayers</xpath>
+					<value>
+						<li>SaveOurShip2.WorldDrawLayer_DevGrid</li>
+						<li>SaveOurShip2.WorldDrawLayer_DevSelectedTile</li>
+						<li>WorldDrawLayer_MouseTile</li>
+					</value>
+				</li>
+			</operations>
+		</match>
+	</Operation>
+</Patch>

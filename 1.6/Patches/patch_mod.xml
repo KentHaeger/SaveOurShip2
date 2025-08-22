@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+	<Operation Class="PatchOperationFindMod">
+		<mods>
+			<li>Vanilla Factions Expanded - Pirates</li>
+		</mods>
+
+		<match Class="PatchOperationSequence">
+			<operations>
+				<!-- EVA description -->
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/VFEPirates.WarcasketDef[@Name="VFEP_WarcasketArmorBase" or @Name="VFEP_WarcasketHelmetBase"][not(comps)]</xpath>
+					<match Class="PatchOperationAdd">
+						<xpath>Defs/VFEPirates.WarcasketDef[@Name="VFEP_WarcasketArmorBase" or @Name="VFEP_WarcasketHelmetBase"][not(comps)]</xpath>
+						<value>
+							<comps />
+						</value>
+					</match>
+				</li>
+
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/VFEPirates.WarcasketDef[@Name="VFEP_WarcasketArmorBase" or @Name="VFEP_WarcasketHelmetBase"]/comps[not(li/compClass="SaveOurShip2.CompEVA")]</xpath>
+					<match Class="PatchOperationAdd">
+						<xpath>Defs/VFEPirates.WarcasketDef[@Name="VFEP_WarcasketArmorBase" or @Name="VFEP_WarcasketHelmetBase"]/comps[not(li/compClass="SaveOurShip2.CompEVA")]</xpath>
+						<value>
+							<li>
+								<compClass>SaveOurShip2.CompEVA</compClass>
+							</li>
+						</value>
+					</match>
+				</li>
+
+				<!-- EVA stats -->
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/VFEPirates.WarcasketDef[@Name="VFEP_WarcasketArmorBase" or @Name="VFEP_WarcasketHelmetBase"][not(equippedStatOffsets)]</xpath>
+					<match Class="PatchOperationAdd">
+						<xpath>Defs/VFEPirates.WarcasketDef[@Name="VFEP_WarcasketArmorBase" or @Name="VFEP_WarcasketHelmetBase"][not(equippedStatOffsets)]</xpath>
+						<value>
+							<equippedStatOffsets />
+						</value>
+					</match>
+				</li>
+
+				<!-- Warcasket DecompressionResistance -->
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/VFEPirates.WarcasketDef[@Name="VFEP_WarcasketArmorBase"]/equippedStatOffsets[not(DecompressionResistance)]</xpath>
+					<match Class="PatchOperationAdd">
+						<xpath>Defs/VFEPirates.WarcasketDef[@Name="VFEP_WarcasketArmorBase"]/equippedStatOffsets[not(DecompressionResistance)]</xpath>
+						<value>
+							<DecompressionResistance>0.75</DecompressionResistance>
+						</value>
+					</match>
+				</li>
+
+				<!-- Warcasket Helmet DecompressionResistance -->
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/VFEPirates.WarcasketDef[@Name="VFEP_WarcasketHelmetBase"]/equippedStatOffsets[not(DecompressionResistance)]</xpath>
+					<match Class="PatchOperationAdd">
+						<xpath>Defs/VFEPirates.WarcasketDef[@Name="VFEP_WarcasketHelmetBase"]/equippedStatOffsets[not(DecompressionResistance)]</xpath>
+						<value>
+							<DecompressionResistance>0.25</DecompressionResistance>
+						</value>
+					</match>
+				</li>
+
+				<!-- Warcasket Helmet HypoxiaResistance -->
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/VFEPirates.WarcasketDef[@Name="VFEP_WarcasketHelmetBase"]/equippedStatOffsets[not(HypoxiaResistance)]</xpath>
+					<match Class="PatchOperationAdd">
+						<xpath>Defs/VFEPirates.WarcasketDef[@Name="VFEP_WarcasketHelmetBase"]/equippedStatOffsets[not(HypoxiaResistance)]</xpath>
+						<value>
+							<HypoxiaResistance>1</HypoxiaResistance>
+						</value>
+					</match>
+				</li>
+			</operations>
+		</match>
+	</Operation>
+
+	<!-- Starjack Vacuum Resistance Gene -->
+	
+	<Operation Class="PatchOperationFindMod">
+		<mods>
+			<li>Vanilla Races Expanded - Starjack</li>
+		</mods>
+		<match Class="PatchOperationAdd">
+			<xpath>Defs/GeneDef[defName="VREStarjack_VacuumResistance_Total"]/statOffsets</xpath>
+					<value>
+						<HypoxiaResistance>1</HypoxiaResistance>
+						<DecompressionResistance>1</DecompressionResistance>
+					</value>
+		</match>
+	</Operation>
+	
+	<Operation Class="PatchOperationFindMod">
+		<mods>
+			<li>LWM's Deep Storage</li>
+		</mods>
+		<match Class="PatchOperationAdd">
+			<xpath>Defs/ThingDef[defName="LWM_Pallet_Covered"]/building/fixedStorageSettings/filter/categories</xpath>
+			<value>
+				<li>SpaceTorpedoes</li>
+			</value>
+		</match>
+	</Operation>
+
+	<Operation Class="PatchOperationFindMod">
+		<mods>
+			<li>Combat Extended</li>
+		</mods>
+		<nomatch Class="PatchOperationAdd">
+			<xpath>Defs/HediffDef[defName="SoSArchotechLung"]/stages/li/statOffsets</xpath>
+			<value>
+				<ToxicEnvironmentResistance MayRequire="Ludeon.RimWorld.Biotech">0.5</ToxicEnvironmentResistance>
+			</value>
+		</nomatch>
+	</Operation>
+
+	<Operation Class="PatchOperationFindMod">
+		<mods>
+			<li>Combat Extended</li>
+		</mods>
+		<nomatch Class="PatchOperationAdd">
+			<xpath>Defs/ThingDef[defName="Apparel_SpaceSuitHelmet"]/apparel</xpath>
+			<value>
+				<immuneToToxGasExposure>true</immuneToToxGasExposure>
+			</value>
+		</nomatch>
+	</Operation>
+	
+	<Operation Class="PatchOperationFindMod">
+		<mods>
+			<li>Combat Extended</li>
+		</mods>
+		<nomatch Class="PatchOperationAdd">
+			<xpath>Defs/ThingDef[defName="Apparel_SpaceSuitHelmetChild"]/apparel</xpath>
+			<value>
+				<immuneToToxGasExposure>true</immuneToToxGasExposure>
+			</value>
+		</nomatch>
+	</Operation>
+	
+	<Operation Class="PatchOperationFindMod">
+		<mods>
+			<li>Combat Extended</li>
+		</mods>
+		<nomatch Class="PatchOperationAdd">
+			<xpath>Defs/ThingDef[defName="Apparel_SpaceSuitHelmetHeavy"]/apparel</xpath>
+			<value>
+				<immuneToToxGasExposure>true</immuneToToxGasExposure>
+			</value>
+		</nomatch>
+	</Operation>
+
+	<Operation Class="PatchOperationFindMod">
+		<mods>
+			<li>Save Our Ship 2</li>
+		</mods>
+		<match Class="PatchOperationSequence">
+			<operations>
+				<!-- So that goes as far as having need to "package" setting texture for cocoon into li. And MayRequire just workd normmaly with li-->
+				<li Class="PatchOperationReplace" MayRequire="Ludeon.Rimworld.Biotech">
+					<xpath>Defs/ThingDef[defName="SoS2CryptosleepCocoon"]/graphicData/texPath</xpath>
+					<value>
+						<texPath>Things/Building/Natural/CocoonSpelopede</texPath>
+					</value>
+				</li>
+			</operations>
+		</match>
+	</Operation>
+</Patch>

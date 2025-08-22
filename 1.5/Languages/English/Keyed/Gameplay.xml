@@ -68,6 +68,8 @@
 	<SoS.HoldFireDesc>Stop all connected ship-to-ship weapons from firing on enemy ship</SoS.HoldFireDesc>
 	<SoS.TogglePointDefense>Stop all connected ship-to-ship weapons from firing on enemy ship</SoS.TogglePointDefense>
 	<SoS.TogglePointDefenseDesc>Stop all connected ship-to-ship weapons from firing on enemy ship</SoS.TogglePointDefenseDesc>
+	<SoS.ToggleAutoFire>Toggle automatically firing all ship weapons</SoS.ToggleAutoFire>
+	<SoS.ToggleAutoFirDesc>All ship weapons, including torpedoes, will automatically target enemy ship bridge and fire. Hold fire option on individual weapons overrides that. Turning off this option doesn't order weapons to cease fire, that needs to be done separately if desired.</SoS.ToggleAutoFirDesc>
 	<SoS.NotAtMaxRange>Not at maximum range</SoS.NotAtMaxRange>
 	<SoS.OnUnstableMap>Ship is in unstable orbit.</SoS.OnUnstableMap>
 	<SoS.EnemyShipRetreating>Enemy ship is attempting to retreat!</SoS.EnemyShipRetreating>
@@ -253,6 +255,7 @@
 	<SoS.TurretOptimalRangeDesc>Enable to only fire on targets within optimal range</SoS.TurretOptimalRangeDesc>
 	<SoS.TurretPointDefense>Point Defense mode</SoS.TurretPointDefense>
 	<SoS.TurretPointDefenseDesc>Use this turret to intercept incoming torpedoes and shuttles</SoS.TurretPointDefenseDesc>
+	<SoS.TurretNotConnected>Not connected to the ship bridge via heat network, can't fire!</SoS.TurretNotConnected>
 	<SoS.TorpedoAllowedDesc>Toggle to prevent or allow firing of this type of torpedo.</SoS.TorpedoAllowedDesc>
 	<SoS.TorpedoNotLoaded>Not loaded</SoS.TorpedoNotLoaded>
 	<SoS.TorpedoFullyLoaded>Fully loaded</SoS.TorpedoFullyLoaded>
@@ -458,6 +461,26 @@
 	<SoSAIName>AI name: {0}</SoSAIName>
 	<SoSNoMapObserve>This type of map cannot be observed from orbit. Its owners have likely deployed sensor scrambling technology.</SoSNoMapObserve>
 	<SoSBreathable>Breathable</SoSBreathable>
+	<!-- Projectiles missing map-->
+	<SoS.ActorPlayer>Player</SoS.ActorPlayer>
+	<SoS.ActorEnemy>Enemy</SoS.ActorEnemy>
+	<SoS.DodgeChanceAlert>{0} dodge chance: {1}</SoS.DodgeChanceAlert>
+	<SoS.DodgeChanceExplanation>Long-range weapons dodge chance: {0}
+Medium-range weapons dodge chance: {1}
+Short-range weapons dodge chance: {2}
+
+Long-range weapons are railguns, plasma has medum range, lasers and cannons have short range.
+Dodge chance is based on target ship Thrust To Weight ratio, so only fast ships dodge very well. Pilot Intellectual skill increases dodge chance. Tactician with high shooting skill on attacking ship decreases enemy dodge chance.
+For Thrust to weight ratio, slowest ship on the map is taken into account.
+Successful dodge means miss by a lot, projectile doesn't even enter target map.</SoS.DodgeChanceExplanation>
+	<!-- Dodge mechanics -->
+	<SoS.DodgeNoEnginePower>Can't dodge because of no working engines or wrecks present. Remove wrecks to dodge.</SoS.DodgeNoEnginePower>
+	<SoS.DodgeNoRCSOnShip>Ship {0} needs RCS thrusters to perform dodge.</SoS.DodgeNoRCSOnShip>
+	<SoS.DodgeOnCooldown>RCS thrusters are cooling down. Next dodge maneur will be doable in {0} seconds.</SoS.DodgeOnCooldown>
+	<SoS.DodgeLeft>Dodge left</SoS.DodgeLeft>
+	<SoS.DodgeLeftDesc>Dodge incoming shots, engaging right side RCS thrusters and moving ship to the left.</SoS.DodgeLeftDesc>
+	<SoS.DodgeRight>Dodge right</SoS.DodgeRight>
+	<SoS.DodgeRightDesc>Dodge incoming shots, engaging left side RCS thrusters and moving ship to the right.</SoS.DodgeRightDesc>
 	
 	<!-- obsolete/unused
 	<SoS.PirateTradeEmpire>Our act of piracy against the Empire has not gone unnoticed!</SoS.PirateTradeEmpire>

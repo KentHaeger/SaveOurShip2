@@ -36,6 +36,16 @@ namespace SaveOurShip2
 		public List<ShipHeatNet> cachedNets = new List<ShipHeatNet>();
 		public List<CompShipHeat> cachedPipes = new List<CompShipHeat>();
 
+		public HashSet<Projectile> incomingProjectiles = new HashSet<Projectile>();
+		MapDodgeAbility dodgeAbility = new MapDodgeAbility();
+		public MapDodgeAbility DodgeAbility
+		{
+			get
+			{
+				return dodgeAbility;
+			}
+		}
+
 		public int[] grid;
 		public bool heatGridDirty;
 		public bool breathableZoneDirty;
@@ -51,16 +61,33 @@ namespace SaveOurShip2
 		// Need to cache game setting in order to update when it's cchanged
 		public bool ShowRoofOverlayCached;
 
+		AccuracyCalculator accuracyCalculator;
+		public AccuracyCalculator AccuracyCalc
+		{
+			get
+			{
+				return accuracyCalculator;
+			}
+		}
+
 		public ShipMapComp(Map map) : base(map)
 		{
 			grid = new int[map.cellIndices.NumGridCells];
 			heatGridDirty = true;
+			dodgeAbility.map = map;
 			AccessExtensions.Utility.shipHeatMapCompCache.Add(this);
 		}
 		public override void MapRemoved()
 		{
 			AccessExtensions.Utility.shipHeatMapCompCache.Remove(this);
 			base.MapRemoved();
+		}
+		public bool IsValid
+		{
+			get
+			{
+				return AccessExtensions.Utility.shipHeatMapCompCache.Contains(this);
+			}
 		}
 		public override void MapComponentUpdate()
 		{
@@ -227,6 +254,12 @@ namespace SaveOurShip2
 			Scribe_References.Look<Map>(ref PrevMap, "PrevMap");
 			Scribe_Values.Look<int>(ref PrevTile, "PrevTile");
 			Scribe_Values.Look<bool>(ref Takeoff, "Takeoff");
+			Scribe_Deep.Look<MapDodgeAbility>(ref dodgeAbility, "dodgeAbility");
+			if (dodgeAbility == null && Scribe.mode == LoadSaveMode.PostLoadInit)
+			{
+				dodgeAbility = new MapDodgeAbility();
+				dodgeAbility.map = map;
+			}
 
 			Scribe_Values.Look<ShipMapState>(ref ShipMapState, "ShipMapState", 0);
 			Scribe_Values.Look<bool>(ref EnginesOn, "ToggleEngines", false);
@@ -248,6 +281,7 @@ namespace SaveOurShip2
 				Scribe_Collections.Look<ShipCombatProjectile>(ref TorpsInRange, "ShipTorpsInRange");
 				Scribe_References.Look<Map>(ref ShipCombatOriginMap, "ShipCombatOriginMap");
 				Scribe_References.Look<Map>(ref ShipCombatTargetMap, "ShipCombatTargetMap");
+				Scribe_Deep.Look<AccuracyCalculator>(ref accuracyCalculator, "AccuracyCalculator");
 
 				//SC only - origin only
 				originMapComp = null;
@@ -272,6 +306,8 @@ namespace SaveOurShip2
 				Scribe_Collections.Look<Building_ShipBridge>(ref MapRootListAll, "MapRootListAll", LookMode.Reference); //td rem?
 				Scribe_Deep.Look(ref ShuttlesOnMissions, "ShuttlesOnMissions", this);
 				Scribe_Collections.Look<ShuttleMissionData>(ref ShuttleMissions, "ShuttleMissions", LookMode.Deep);
+
+				Scribe_Collections.Look<Projectile>(ref incomingProjectiles, "incomingProjectiles", LookMode.Reference);
 			}
 			if (Scribe.mode == LoadSaveMode.LoadingVars)
 			{
@@ -848,6 +884,8 @@ namespace SaveOurShip2
 			Log.Message("SOS2: ".Colorize(Color.cyan) + map + " Starting combat vs map: ".Colorize(Color.green) + ShipCombatTargetMap);
 			TargetMapComp.ShipCombatTargetMap = ShipCombatOriginMap;
 			TargetMapComp.ShipCombatOriginMap = ShipCombatOriginMap;
+			accuracyCalculator = new AccuracyCalculator(this, TargetMapComp);
+			TargetMapComp.accuracyCalculator = new AccuracyCalculator(TargetMapComp, this);
 			//start caches
 			RepathMap();
 			ResetCombatVars();
@@ -1183,6 +1221,7 @@ namespace SaveOurShip2
 		public override void MapComponentTick()
 		{
 			base.MapComponentTick();
+			dodgeAbility.CompTick();
 			List<SpaceShipCache> shipToRemove = new List<SpaceShipCache>();
 			foreach (SpaceShipCache ship in ShipsOnMap.Values)
 			{
@@ -1212,7 +1251,9 @@ namespace SaveOurShip2
 				if (Heading == 1)
 					OriginMapComp.Range -= MapEnginePower; //reduce distance
 				else if (Heading == -1)
+				{
 					OriginMapComp.Range += MapEnginePower; //inrease distance
+				}
 
 				OriginMapComp.Range = Mathf.Clamp(OriginMapComp.Range, 0f, 400f);
 
@@ -1222,37 +1263,64 @@ namespace SaveOurShip2
 				{
 					if (proj.range >= OriginMapComp.Range)
 					{
+						ShipMapComp targetMapComp = ShipCombatTargetMap.GetComponent<ShipMapComp>();
+						bool useNewAccuracySystem = ModSettings_SoS.newAccuracySystem && (accuracyCalculator?.IsValid ?? false);
+						if (useNewAccuracySystem)
+						{
+							if (targetMapComp.accuracyCalculator.PerformDodgeCheck(proj))
+							{
+								toRemove.Add(proj);
+								continue;
+							}
+						}
 						//td determine miss, remove proj
 						//factors for miss: range+,pilot console+,mass-,thrusters+
 						//factors when fired/registered:weapacc-,tac console-
-						Projectile projectile;
+						Projectile newProjectile;
 						IntVec3 spawnCell;
 						if (proj.burstLoc == IntVec3.Invalid)
-							spawnCell = FindClosestEdgeCell(ShipCombatTargetMap, proj.target.Cell);
+							spawnCell = FindClosestEdgeCellLowSpread(ShipCombatTargetMap, proj.target.Cell);
 						else
 							spawnCell = proj.burstLoc;
 						//Log.Message("Spawning " + proj.turret + " projectile on player ship at " + proj.target);
-						projectile = (Projectile)GenSpawn.Spawn(proj.spawnProjectile, spawnCell, ShipCombatTargetMap);
+						newProjectile = (Projectile)GenSpawn.Spawn(proj.spawnProjectile, spawnCell, ShipCombatTargetMap);
+
+
+						// Not allowed to dodge torpedoes as they are guided
+						if (newProjectile is Projectile_ExplosiveShip && !(newProjectile is Projectile_ExplosiveShipTorpedo))
+						{
+							targetMapComp.incomingProjectiles.Add(newProjectile);
+						}
 
 						//get angle
 						IntVec3 a = proj.target.Cell - spawnCell;
 						float angle = a.AngleFlat;
-						//get miss
-						float missAngle = Rand.Range(-proj.missRadius, proj.missRadius); //base miss from xml
-						float rng = proj.range - proj.turret.heatComp.Props.optRange;
-						if (rng > 0)
+
+						float missAngle = 0;
+						if (useNewAccuracySystem && !(newProjectile is Projectile_ExplosiveShipTorpedo))
 						{
-							//add miss to angle
-							missAngle *= (float)Math.Sqrt(rng); //-20 - 20
-							//Log.Message("angle: " + angle + ", missangle: " + missAngle);
+							missAngle = targetMapComp.accuracyCalculator.GetMissAngle(proj);
 						}
-						//shooter adj 0-50%
-						missAngle *= (100 - proj.accBoost * 2.5f) / 100;
+						else
+						{
+							// Base miss from xml
+							missAngle = Rand.Range(-proj.missRadius, proj.missRadius);
+							// Inaccuracy at above optimal range
+							float rng = proj.range - proj.turret.heatComp.Props.optRange;
+							if (rng > 0)
+							{
+								//add miss to angle
+								missAngle *= (float)Math.Sqrt(rng); //-20 - 20
+																	//Log.Message("angle: " + angle + ", missangle: " + missAngle);
+							}
+							//shooter adj 0-50%
+							missAngle *= (100 - proj.accBoost * 2.5f) / 100;
+						}
 						angle += missAngle;
 						//new vec from origin + angle
 						IntVec3 c = spawnCell + new Vector3(1000 * Mathf.Sin(Mathf.Deg2Rad * angle), 0, 1000 * Mathf.Cos(Mathf.Deg2Rad * angle)).ToIntVec3();
 						//Log.Message("Target cell was " + proj.target.Cell + ", adjusted to " + c);
-						projectile.Launch(proj.turret, spawnCell.ToVector3Shifted(), c, proj.target.Cell, ProjectileHitFlags.All, equipment: proj.turret);
+						newProjectile.Launch(proj.turret, spawnCell.ToVector3Shifted(), c, proj.target.Cell, ProjectileHitFlags.All, equipment: proj.turret);
 						toRemove.Add(proj);
 					}
 					else if ((proj.spawnProjectile.thingClass == typeof(Projectile_ExplosiveShipTorpedo) || proj.spawnProjectile.thingClass == typeof(Projectile_ExplosiveShipAntigrain)) && !TorpsInRange.Contains(proj) && OriginMapComp.Range - proj.range < 65)
@@ -2245,6 +2313,21 @@ namespace SaveOurShip2
 					}
 				}
 			}
+			// Active RCS, add flecks decently often to show "progressive heating/burning"
+			if (tick % 40 == 0)
+			{
+				if (dodgeAbility.IsActive() && dodgeAbility.NeedThrowFlecks())
+				{
+					foreach (SpaceShipCache ship in ShipsOnMap.Values)
+					{
+						foreach (CompRCSThruster rcs in ship.RCSs)
+						{
+							if (rcs.parent.Rotation == dodgeAbility.DodgeDirection) //td need better fx, not affected by wind
+								FleckMaker.ThrowHeatGlow(rcs.ventTo, rcs.parent.Map, 1.6f);
+						}
+					}
+				}
+			}
 			if (tick % 300 == 0)
 			{
 				if (tick % 6000 == 0) //decomp
@@ -2462,6 +2545,7 @@ namespace SaveOurShip2
 				ship.MoveAtThrustToWeight(MapEnginePower);
 			}
 		}
+		//find worst t/w ship. Internal value, not final, different from what is shown in the UI.
 		public float SlowestThrustToWeight() //find worst t/w ship
 		{
 			if (ShipsOnMap.NullOrEmpty())
@@ -2470,7 +2554,7 @@ namespace SaveOurShip2
 			float enginePower = float.MaxValue;
 			foreach (SpaceShipCache ship in ShipsOnMap.Values)
 			{
-				if (ship.BuildingCount < 5)
+				if (ship.BuildingCount < 5 && ship.ThrustToWeight() == 0)
 					continue;
 				if (!ship.CanMove())
 					return 0;
@@ -2481,6 +2565,27 @@ namespace SaveOurShip2
 					enginePower = currPower;
 			}
 			return enginePower * 14;
+		}
+		//find worst t/w ship, getting final value, same as T/W shown in UI. 
+		public float SlowestThrustRatio() 
+		{
+			if (ShipsOnMap.NullOrEmpty())
+				return 0f;
+
+			float minThrustRatio = float.MaxValue;
+			foreach (SpaceShipCache ship in ShipsOnMap.Values)
+			{
+				if (ship.BuildingCount < 5 && ship.ThrustRatio == 0)
+					continue;
+				if (!ship.CanMove())
+					return 0;
+				float currenThrustRatio = ship.ThrustRatio;
+				if (currenThrustRatio == 0)
+					return 0;
+				if (currenThrustRatio < minThrustRatio)
+					minThrustRatio = currenThrustRatio;
+			}
+			return minThrustRatio;
 		}
 		public void MapFullStop()
 		{
@@ -2618,6 +2723,8 @@ namespace SaveOurShip2
 			if (loser.GetComponent<ShipMapComp>().ShipMapState != ShipMapState.inCombat)
 				return;
 			Log.Message("SOS2: ".Colorize(Color.cyan) + loser + " Lost ship battle!".Colorize(Color.red));
+			// In case slow time was enabled, it is now no longer needed
+			ShipInteriorMod2.SlowTimeFlag = false;
 			//tgtMap is opponent of origin
 			Map tgtMap = OriginMapComp.ShipCombatTargetMap;
 			var tgtMapComp = OriginMapComp.TargetMapComp;
@@ -2739,7 +2846,7 @@ namespace SaveOurShip2
 		}
 		
 		//proj
-		public IntVec3 FindClosestEdgeCell(Map map, IntVec3 targetCell)
+		private Rot4 FindProjectileSpawnDirection(Map map, IntVec3 targetCell)
 		{
 			Rot4 dir;
 			var mapComp = map.GetComponent<ShipMapComp>();
@@ -2762,7 +2869,47 @@ namespace SaveOurShip2
 				else
 					dir = Rot4.South;
 			}
+			return dir;
+		}
+		// Original function finds some cell on closest map edge to spawn incoming projectile
+		// spread is whole map edge
+		public IntVec3 FindClosestEdgeCell(Map map, IntVec3 targetCell)
+		{
+			Rot4 dir = FindProjectileSpawnDirection(map, targetCell);
 			return CellFinder.RandomEdgeCell(dir, map);
+		}
+
+		// Smarter choice of spawn cell for incoming projectile
+		// limits coordinates, so that not the whol map edge is used, lesser variety of incoming deirections.
+		public IntVec3 FindClosestEdgeCellLowSpread(Map map, IntVec3 targetCell)
+		{
+			Rot4 dir = FindProjectileSpawnDirection(map, targetCell);
+			if (dir == Rot4.North || dir == Rot4.South)
+			{
+				int x = targetCell.x + Rand.Range(-map.Size.x / 4, map.Size.x / 4);
+				x = Mathf.Clamp(x, 0, map.Size.x - 1);
+				// This is for South
+				int z = 0;
+				if (dir == Rot4.North)
+				{
+					z = map.Size.z - 1;
+				}
+				return new IntVec3(x, 0, z);
+			}
+			if (dir == Rot4.West || dir == Rot4.East)
+			{
+				int z = targetCell.z + Rand.Range(-map.Size.z / 4, map.Size.z / 4);
+				z = Mathf.Clamp(z, 0, map.Size.z - 1);
+				// This is for West
+				int x = 0;
+				if (dir == Rot4.East)
+				{
+					x = map.Size.x - 1;
+				}
+				return new IntVec3(x, 0, z);
+			}
+			// Fixed location for projectiles with error in rot
+			return new IntVec3(0, 0, 0);
 		}
 
 		//shuttles

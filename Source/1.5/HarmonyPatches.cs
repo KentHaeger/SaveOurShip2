@@ -69,7 +69,8 @@ namespace SaveOurShip2
 						string str2 = "";
 						if (!ship.IsWreck)
 							str2 += "Name: " + ship.Core.ShipName + "\n";
-						str2 += "Map: " + ship.Map + "\nFaction: " + ship.Faction + "\nParts: " + ship.Parts.Count + "\nBuildings: " + ship.Buildings.Count + "\nMass: " + ship.MassActual + "\nArea: " + ship.Area.Count + "\nCores: " + ship.Bridges.Count + "\nCore: " + ship.Core + "\nPath max: " + ship.LastSafePath;
+						str2 += "Map: " + ship.Map + "\nFaction: " + ship.Faction + "\nParts: " + ship.Parts.Count + "\nBuildings: " + ship.Buildings.Count + "\nMass: " + ship.MassActual +
+							    "\nTWR:" + ship.ThrustRatio.ToString("F3") + "\nArea: " + ship.Area.Count + "\nCores: " + ship.Bridges.Count + "\nCore: " + ship.Core + "\nPath max: " + ship.LastSafePath;
 						TooltipHandler.TipRegion(rect2, str2);
 						DrawShips.Highlight = ship.Index;
 					}
@@ -354,7 +355,7 @@ namespace SaveOurShip2
 			rect.x = offset;
 			rect.height = Text.LineHeight;
 			if (bridge.powerCap > 0)
-				Widgets.Label(rect,  + bridge.power + " / " + bridge.powerCap);
+				Widgets.Label(rect,  bridge.power.ToString("N0") + " / " + bridge.powerCap.ToString("N0"));
 			else
 				Widgets.Label(rect, "<color=red>"+"SoSCombatNoEnergy".Translate()+"</color>");
 		}
@@ -366,7 +367,7 @@ namespace SaveOurShip2
 			rect.x = offset;
 			rect.height = Text.LineHeight;
 			if (bridge.heatCap > 0)
-				Widgets.Label(rect, "SoSCombatHeat".Translate() + Mathf.Floor(bridge.heat) + " / " + bridge.heatCap);
+				Widgets.Label(rect, "SoSCombatHeat".Translate() + Mathf.Floor(bridge.heat).ToString("N0") + " / " + bridge.heatCap.ToString("N0"));
 			else
 				Widgets.Label(rect, "<color=red>" + "SoSCombatNoHeat".Translate() + "</color>");
 		}
@@ -852,6 +853,32 @@ namespace SaveOurShip2
 				Room room = __instance.Position.GetRoom(__instance.Map);
 				if (ShipInteriorMod2.ExposedToOutside(room))
 					__instance.TakeDamage(new DamageInfo(DamageDefOf.Extinguish, 100, category: DamageInfo.SourceCategory.ThingOrUnknown));
+			}
+		}
+	}
+
+	//Time
+	[HarmonyPatch(typeof(TickManager), "get_TickRateMultiplier")]
+	public static class SlowTimeForDodge
+	{
+		public static void Postfix(ref float __result)
+		{
+			if (ShipInteriorMod2.SlowTimeFlag)
+			{
+				__result = 0.33f;
+			}
+		}
+	}
+
+	//Disable slow time when leaving devmode
+	[HarmonyPatch(typeof(Prefs), "set_DevMode")]
+	public static class AutoDisableSlowTime
+	{
+		public static void Postfix(bool value)
+		{
+			if (!value)
+			{
+				ShipInteriorMod2.SlowTimeFlag = false;
 			}
 		}
 	}
@@ -3277,15 +3304,22 @@ namespace SaveOurShip2
 	{
 		public static void Postfix(MainTabWindow_Research __instance, IEnumerable ___tabs)
 		{
-			if (!ShipInteriorMod2.WorldComp.Unlocks.Contains("ArchotechUplink"))
+			List<TabRecord> hiddenTabs = new List<TabRecord>();
+			foreach (TabRecord tab in ___tabs)
 			{
-				TabRecord archoTab = null;
-				foreach (TabRecord tab in ___tabs)
+				// Hide Archotech tab
+				if (tab.label.Equals("Archotech") && (!ShipInteriorMod2.WorldComp.Unlocks.Contains("ArchotechUplink")))
 				{
-					if (tab.label.Equals("Archotech"))
-						archoTab = tab;
+					hiddenTabs.Add(tab);
 				}
-				___tabs.GetType().GetMethod("Remove").Invoke(___tabs, new object[] { archoTab });
+				else if (tab.label.Equals("SOS2_Debug"))
+				{
+					hiddenTabs.Add(tab);
+				}
+			}
+			foreach (TabRecord tab in hiddenTabs)
+			{
+				___tabs.GetType().GetMethod("Remove").Invoke(___tabs, new object[] { tab });
 			}
 		}
 	}

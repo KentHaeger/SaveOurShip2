@@ -94,6 +94,7 @@ namespace SaveOurShip2
 			Scribe_Values.Look(ref persistShipUI, "persistShipUI", false);
 			Scribe_Values.Look(ref archoRemove, "archoRemove", false);
 			Scribe_Values.Look(ref archoKill, "archoKill", false);
+			Scribe_Values.Look(ref newAccuracySystem, "newAccuracySystem", true);
 			Scribe_Values.Look(ref debugMode, "debugMode", false);
 
 			Scribe_Values.Look(ref minTravelTime, "minTravelTime", 5);
@@ -113,6 +114,7 @@ namespace SaveOurShip2
 		public static bool
 			easyMode = false,
 			shipMapPhysics = false,
+			newAccuracySystem = true,
 			//useVacuumPathfinding = true,
 			renderPlanet = true,
 			useSplashScreen = true,
@@ -134,7 +136,7 @@ namespace SaveOurShip2
 		{
 			base.GetSettings<ModSettings_SoS>();
 		}
-		public const string SOS2version = "GithubV2.7.21";
+		public const string SOS2version = "GithubV2.7.31";
 		public const int SOS2ReqCurrentMinor = 5;
 		// 1.5.4063 public build (4062 constant) was not enough as there is no AnomalyUtility.TryDuplicatePawn_NewTemp method to harmony patch it.
 		// Historical builds are not available, so for sure can be increased just to next build, 4066
@@ -166,6 +168,18 @@ namespace SaveOurShip2
 			set
 			{
 				WorldComp.MoveShipFlag = value;
+			}
+		}
+
+		public static bool SlowTimeFlag
+		{
+			get
+			{
+				return WorldComp.SlowTimeFlag;
+			}
+			set
+			{
+				WorldComp.SlowTimeFlag = value;
 			}
 		}
 
@@ -224,6 +238,8 @@ namespace SaveOurShip2
 			options.GapLine();
 			options.CheckboxLabeled("SoS.Settings.ShipMapPhysics".Translate(), ref shipMapPhysics, "SoS.Settings.ShipMapPhysics.Desc".Translate());
 			options.CheckboxLabeled("SoS.Settings.EasyMode".Translate(), ref easyMode, "SoS.Settings.EasyMode.Desc".Translate());
+			options.CheckboxLabeled(TranslatorFormattedStringExtensions.Translate("SoS.Settings.NewAccuiracySystem"), ref newAccuracySystem,
+				TranslatorFormattedStringExtensions.Translate("SoS.Settings.NewAccuiracySystem.Desc"));
 			options.CheckboxLabeled("SoS.Settings.ArchoRemove".Translate(), ref archoRemove, "SoS.Settings.ArchoRemove.Desc".Translate());
 			options.CheckboxLabeled("SoS.Settings.ArchoKill".Translate(), ref archoKill, "SoS.Settings.ArchoKill.Desc".Translate());
 			options.CheckboxLabeled("SoS.Settings.Debug".Translate(), ref debugMode, "SoS.Settings.Debug.Desc".Translate());
@@ -3267,8 +3283,8 @@ namespace SaveOurShip2
 		public static bool ShuttleHasTorp(VehiclePawn vehicle)
 		{
 			var u = vehicle.CompUpgradeTree.upgrades;
-			return u.Contains("TurretTorpedoA") || u.Contains("TurretTorpedoB") || u.Contains("TurretTorpedoC")
-					&& vehicle.carryTracker.GetDirectlyHeldThings().Any(t => t.HasThingCategory(ResourceBank.ThingCategoryDefOf.SpaceTorpedoes));
+			return (u.Contains("TurretTorpedoA") || u.Contains("TurretTorpedoB") || u.Contains("TurretTorpedoC"))
+					&& vehicle.inventory.innerContainer.Any(t => t.HasThingCategory(ResourceBank.ThingCategoryDefOf.SpaceTorpedoes));
 		}
 		public static bool ShuttleIsArmed(VehiclePawn vehicle)
 		{

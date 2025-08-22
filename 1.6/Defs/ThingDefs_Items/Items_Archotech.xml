@@ -1,0 +1,179 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <ThingDef ParentName="ResourceBase">
+    <defName>ArcholifePod</defName>
+    <label>archolife pod</label>
+    <description>A slurry of synthetic cells wrapped in a single-use incubator. Can be programmed (select a pawn and right-click) to "hatch" a radically redesigned version of an ordinary creature. Spawning an archothrumbo requires a stack of 10.</description>
+    <thingClass>SaveOurShip2.Thing_ArcholifePod</thingClass>
+    <graphicData>
+      <texPath>Things/Item/Special/ArcholifePod</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+    </graphicData>
+    <resourceReadoutPriority>Middle</resourceReadoutPriority>
+    <soundInteract>Metal_Drop</soundInteract>
+    <soundDrop>Metal_Drop</soundDrop>
+    <stackLimit>10</stackLimit>
+    <useHitPoints>true</useHitPoints>
+    <statBases>
+      <MarketValue>1000</MarketValue>
+      <MaxHitPoints>100</MaxHitPoints>
+      <Mass>2</Mass>
+      <Flammability>0.2</Flammability>
+    </statBases>
+    <thingCategories>
+      <li>Items</li>
+    </thingCategories>
+    <tradeability>Sellable</tradeability>
+    <techLevel>Archotech</techLevel>
+  </ThingDef>
+
+  <ThingDef ParentName="DrugPillBase">
+    <defName>ArchotechRepairGel</defName>
+    <label>archite repair gel</label>
+    <description>A one-use super-dose of archites tuned to repair damaged items. It can either be used to fully restore an item's hit points, or applied to all worn gear. In the latter case the repair effect will be split between all damaged equipment.</description>
+    <graphicData>
+      <texPath>Things/Item/Special/RestorationGel</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+    </graphicData>
+    <stackLimit>10</stackLimit>
+    <statBases>
+      <MarketValue>500</MarketValue>
+      <Mass>1</Mass>
+    </statBases>
+    <thingCategories>
+      <li>Items</li>
+    </thingCategories>
+    <tradeability>Sellable</tradeability>
+    <thingSetMakerTags>
+      <li>RewardStandardMidFreq</li>
+    </thingSetMakerTags>
+    <ingestible>
+        <drugCategory>Medical</drugCategory>
+        <outcomeDoers>
+            <li Class="IngestionOutcomeDoer_GiveHediff">
+              <hediffDef>SoSRepairGear</hediffDef>
+              <severity>1.0</severity>
+            </li>
+        </outcomeDoers>
+		<ingestCommandString>Apply to gear</ingestCommandString>
+    </ingestible>
+    <comps>
+      <li Class="CompProperties_Usable">
+        <useJob>UseItem</useJob>
+        <useLabel>Repair single item</useLabel>
+        <useDuration>0</useDuration>
+      </li>
+      <li Class="CompProperties_Targetable">
+        <compClass>SaveOurShip2.CompTargetable_DamagedItem</compClass>
+      </li>
+      <li>
+        <compClass>SaveOurShip2.CompTargetEffect_RepairItem</compClass>
+      </li>
+	  <li Class="CompProperties_Drug">
+		<listOrder>9999</listOrder>
+	  </li>
+    </comps>
+  </ThingDef>
+  
+  <HediffDef>
+    <defName>SoSRepairGear</defName>
+    <label>repair archites</label>
+    <labelNoun>repairing gear</labelNoun>
+    <description>This pawn's gear is being repaired by archites.</description>
+    <hediffClass>HediffWithComps</hediffClass>
+    <isBad>false</isBad>
+    <comps>
+      <li Class="HediffCompProperties_Disappears">
+        <disappearsAfterTicks>6000~8000</disappearsAfterTicks>
+      </li>
+      <li Class="SaveOurShip2.HediffCompProperties_GearRepair">
+        <ticksPerRepair>12</ticksPerRepair>
+      </li>
+    </comps>
+    <stages>
+      <li>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <ThingDef ParentName="ResourceBase">
+    <defName>ArchotechMechaniteCore</defName>
+    <label>mechanite disassembler core</label>
+    <description>A self-contained mechanite factory designed to produce disassembler mechanites.</description>
+    <graphicData>
+      <texPath>Things/Item/Special/MechaniteDisassemblerCore</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+    </graphicData>
+    <resourceReadoutPriority>Middle</resourceReadoutPriority>
+    <soundInteract>Metal_Drop</soundInteract>
+    <soundDrop>Metal_Drop</soundDrop>
+    <stackLimit>1</stackLimit>
+    <useHitPoints>true</useHitPoints>
+    <statBases>
+      <MarketValue>4000</MarketValue>
+      <MaxHitPoints>100</MaxHitPoints>
+      <Mass>2</Mass>
+      <Flammability>0.2</Flammability>
+    </statBases>
+    <thingCategories>
+      <li>Items</li>
+    </thingCategories>
+    <drawGUIOverlay>false</drawGUIOverlay>
+    <tradeability>Sellable</tradeability>
+    <techLevel>Archotech</techLevel>
+  </ThingDef>
+  
+  <ThingDef ParentName="ResourceBase">
+    <defName>ArchotechPsychicCore</defName>
+    <label>psychic flayer core</label>
+    <description>A large psychic effector capable of disrupting the minds of distant foes. Can be used to construct a spinal weapon.</description>
+    <graphicData>
+      <texPath>Things/Item/Special/PsychicFlayerCore</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+    </graphicData>
+    <resourceReadoutPriority>Middle</resourceReadoutPriority>
+    <soundInteract>Metal_Drop</soundInteract>
+    <soundDrop>Metal_Drop</soundDrop>
+    <stackLimit>1</stackLimit>
+    <useHitPoints>true</useHitPoints>
+    <statBases>
+      <MarketValue>4000</MarketValue>
+      <MaxHitPoints>100</MaxHitPoints>
+      <Mass>2</Mass>
+      <Flammability>0.2</Flammability>
+    </statBases>
+    <thingCategories>
+      <li>Items</li>
+    </thingCategories>
+    <drawGUIOverlay>false</drawGUIOverlay>
+    <tradeability>Sellable</tradeability>
+    <techLevel>Archotech</techLevel>
+  </ThingDef>
+  
+  <ThingDef ParentName="ResourceBase">
+    <defName>ArchotechExoticParticles</defName>
+    <label>exotic particles</label>
+    <description>Particles whose behavior defies conventionally-understood physics, safely contained. Can be used to construct a wide range of devices.</description>
+    <graphicData>
+      <texPath>Things/Item/Resource/ExoticParticles</texPath>
+      <graphicClass>Graphic_StackCount</graphicClass>
+    </graphicData>
+    <resourceReadoutPriority>Middle</resourceReadoutPriority>
+    <soundInteract>Metal_Drop</soundInteract>
+    <soundDrop>Metal_Drop</soundDrop>
+    <stackLimit>75</stackLimit>
+    <useHitPoints>true</useHitPoints>
+    <statBases>
+      <MarketValue>100</MarketValue>
+      <MaxHitPoints>100</MaxHitPoints>
+      <Mass>2</Mass>
+      <Flammability>0.2</Flammability>
+    </statBases>
+    <thingCategories>
+      <li>Manufactured</li>
+    </thingCategories>
+    <tradeability>Sellable</tradeability>
+    <techLevel>Archotech</techLevel>
+  </ThingDef>
+</Defs>

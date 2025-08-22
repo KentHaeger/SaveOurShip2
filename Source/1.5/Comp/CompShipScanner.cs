@@ -33,7 +33,7 @@ namespace SaveOurShip2
 		{
 			get
 			{
-				if (!parent.Spawned || powerComp == null || !powerComp.PowerOn || parent.Faction != Faction.OfPlayer || !parent.Map.IsSpace())
+				if (!parent.Spawned || !(powerComp?.PowerOn ?? true) || parent.Faction != Faction.OfPlayer || !parent.Map.IsSpace())
 					return false;
 				return scanShips || scanSites || mapComp.ShipMapState == ShipMapState.inCombat;
 			}

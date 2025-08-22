@@ -209,9 +209,15 @@ June 18 2025
 - Sending shuttle to strafe or bomb mission now auto-activates target selection for shuttles.
 - Added unfogging on shuttle arrival, to fix the issue with landing to enemy shuttle bays.
 
-In testing:
+June 23 2025
+- New accuracy system added, initial release.
+- Fixed shuttle mission gizmos not showing when they had AI pilots set up in submod.
+- Added support for slightly different implementation of Junebox to fix existing errors.
+
+Changes added before 1.6 work in june June 2025
 - Fixed the issue with TWR for ships with less than 5 parts.
 - Added TWR view for all ships in debug mode tooltip.
 - Added Auto-target command for player ship tactical console.
 - Added debug-mode-only ship parts for automatic testing of new accuracy.
 - Added code for automatic accuracy testing.
+

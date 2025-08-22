@@ -41,13 +41,20 @@ namespace SaveOurShip2
 		public override LocalTargetInfo CurrentTarget => currentTargetInt;
 		public override Verb AttackVerb => GunCompEq.PrimaryVerb;
 		public override bool IsEverThreat => Faction == Faction.OfPlayer && !Map.IsSpace(); //prevent player pawns auto attacking
+		public bool ConnectedToBridge
+		{
+			get
+			{
+				return heatComp != null && heatComp.myNet != null && (heatComp.myNet.PilCons.Any() || heatComp.myNet.AICores.Any() || heatComp.myNet.TacCons.Any());
+			}
+		}
 		public bool Active //needs power, heat and bridge on net
 		{
 			get
 			{
 				//if (SpinalHasNoAmps) //td req recheck system when parts placed by player, AI skip
 				//	return false;
-				if (Spawned && heatComp != null && heatComp.myNet != null && !heatComp.myNet.venting && (powerComp == null || powerComp.PowerOn) && (heatComp.myNet.PilCons.Any() || heatComp.myNet.AICores.Any() || heatComp.myNet.TacCons.Any()))
+				if (Spawned && heatComp != null && heatComp.myNet != null && !heatComp.myNet.venting && (powerComp == null || powerComp.PowerOn) && ConnectedToBridge)
 				{
 					return true;
 				}
@@ -373,7 +380,12 @@ namespace SaveOurShip2
 					ResetCurrentTarget();
 					return;
 				}
-				if (!PlayerControlled && mapComp.HasShipMapAI) //AI targeting
+				bool autoFireForPlayer = false;
+				if (PlayerControlled && (heatComp?.myNet?.TacCons.Any() ?? false))
+				{
+					autoFireForPlayer = heatComp.myNet.TacCons.First().GetComp<CompShipHeatTacCon>().AutoFire;
+				}
+				if (!PlayerControlled && mapComp.HasShipMapAI || (autoFireForPlayer && !holdFire && (shipTarget == LocalTargetInfo.Invalid))) //AI targeting
 				{
 					//Target pawns with the Psychic Flayer
 					if (spinalComp != null && !spinalComp.Props.destroysHull && mapComp.ShipCombatTargetMap.mapPawns.FreeColonistsAndPrisoners.Any())
@@ -382,10 +394,11 @@ namespace SaveOurShip2
 					}
 					else //try bridges, else random
 					{
+						ShipMapComp compToTarget = autoFireForPlayer ? mapComp.ShipCombatTargetMap.GetComponent<ShipMapComp>() : mapComp.OriginMapComp;
 						if (mapComp.OriginMapComp.MapRootListAll.Any(b => !b.Destroyed))
-							shipTarget = mapComp.OriginMapComp.MapRootListAll.RandomElement();
+							shipTarget = compToTarget.MapRootListAll.RandomElement();
 						else
-							shipTarget = mapComp.ShipCombatTargetMap.listerBuildings.allBuildingsColonist.RandomElement();
+							shipTarget = compToTarget.map.listerBuildings.allBuildingsColonist.RandomElement();
 					}
 				}
 				if (shipTarget.IsValid)
@@ -551,7 +564,7 @@ namespace SaveOurShip2
 				//sync
 				((Verb_LaunchProjectileShip)AttackVerb).shipTarget = shipTarget;
 				if (AttackVerb.verbProps.burstShotCount > 0 && mapComp.ShipCombatTargetMap != null)
-					SynchronizedBurstLocation = mapComp.FindClosestEdgeCell(mapComp.ShipCombatTargetMap, shipTarget.Cell);
+					SynchronizedBurstLocation = mapComp.FindClosestEdgeCellLowSpread(mapComp.ShipCombatTargetMap, shipTarget.Cell);
 				else
 					SynchronizedBurstLocation = IntVec3.Invalid;
 				//spinal weapons fire straight and destroy things in the way
@@ -683,6 +696,10 @@ namespace SaveOurShip2
 			if (!inspectString.NullOrEmpty())
 			{
 				stringBuilder.AppendLine(inspectString);
+			}
+			if (!ConnectedToBridge)
+			{
+				stringBuilder.AppendLine("SoS.TurretNotConnected".Translate());
 			}
 			if (AttackVerb.verbProps.minRange > 0f && GroundDefenseMode)
 			{

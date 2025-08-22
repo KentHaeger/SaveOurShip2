@@ -136,4 +136,21 @@
 			</value>
 		</nomatch>
 	</Operation>
+
+	<Operation Class="PatchOperationFindMod">
+		<mods>
+			<li>Save Our Ship 2</li>
+		</mods>
+		<match Class="PatchOperationSequence">
+			<operations>
+				<!-- So that goes as far as having need to "package" setting texture for cocoon into li. And MayRequire just workd normmaly with li-->
+				<li Class="PatchOperationReplace" MayRequire="Ludeon.Rimworld.Biotech">
+					<xpath>Defs/ThingDef[defName="SoS2CryptosleepCocoon"]/graphicData/texPath</xpath>
+					<value>
+						<texPath>Things/Building/Natural/CocoonSpelopede</texPath>
+					</value>
+				</li>
+			</operations>
+		</match>
+	</Operation>
 </Patch>
