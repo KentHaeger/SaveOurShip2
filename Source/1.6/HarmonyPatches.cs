@@ -5282,10 +5282,17 @@ namespace SaveOurShip2
 	{
 		public static void Postfix(IThingHolder holder, Thing forThing, ref float temperature, ref bool __result)
 		{
-			if (holder is VehiclePawn vehicle && forThing is Pawn && SoS2VehicleUtility.IsShuttle(vehicle))
+			if (holder is VehiclePawn vehicle && SoS2VehicleUtility.IsShuttle(vehicle))
 			{
-				temperature = 21f;
-				__result = true;
+				if (forThing is Pawn)
+				{
+					temperature = 21f;
+					__result = true;
+				} else if (vehicle.CompUpgradeTree?.upgrades?.Contains("CMShuttleFreezer") ?? false)
+				{
+					temperature = -10f;
+					__result = true;
+				}
 			}
 		}
 	}
