@@ -5288,7 +5288,9 @@ namespace SaveOurShip2
 				{
 					temperature = 21f;
 					__result = true;
-				} else if (vehicle.CompUpgradeTree?.upgrades?.Contains("CMShuttleFreezer") ?? false)
+				}
+				// Cruel Moose's shuttle freezer upgrade backend here: keeps frrezing temp for non-pawn shuttle contents
+				else if (vehicle.CompUpgradeTree?.upgrades?.Contains("CMShuttleFreezer") ?? false)
 				{
 					temperature = -10f;
 					__result = true;
