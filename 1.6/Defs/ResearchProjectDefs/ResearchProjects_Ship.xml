@@ -10,7 +10,7 @@
 			<li>AdvancedFabrication</li>
 		</prerequisites>
 		<researchViewX>18.00</researchViewX>
-		<researchViewY>2.90</researchViewY>
+		<researchViewY>2.50</researchViewY>
 		<discoveredLetterTitle>About: Launching the ship</discoveredLetterTitle>
 		<discoveredLetterText>Escaping from this planet - it would be freedom at last, and maybe a return home.\n\nBut before you can even consider interstellar spaceflight, you'll need to reach orbit. The minimum requirements for a spaceworthy craft are a rocket engine, a ship bridge and basic sensors. To survive in space, your colonists will also need either a life-support system or EVA suits.\n\nThe amount of chemfuel required to launch a ship into orbit depends on its size. Larger ships may need multiple engines.</discoveredLetterText>
 		<discoveredLetterDisabledWhen>
