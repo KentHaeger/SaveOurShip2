@@ -2924,6 +2924,8 @@ namespace SaveOurShip2
 			if (vacuumSpeedMultiplier > 0.0f && vacuumSpeedMultiplier != 1.0f)
 			{
 				int newCellCost = Mathf.RoundToInt(__instance.nextCellCostLeft / vacuumSpeedMultiplier);
+				// Allowing cost to be zero breaks pawn movement making them invisible and unable to shoot
+				newCellCost = Mathf.Max(newCellCost, 1);
 				__instance.nextCellCostLeft = newCellCost;
 				__instance.nextCellCostTotal = newCellCost;
 			}
