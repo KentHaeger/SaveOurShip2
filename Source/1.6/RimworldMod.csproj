@@ -395,6 +395,7 @@
     <Compile Include="Vehicles\ShuttlePassengerUpgrade.cs" />
     <Compile Include="Vehicles\ShuttleRetreatGizmo.cs" />
     <Compile Include="Vehicles\ShuttleShieldUpgrade.cs" />
+    <Compile Include="Vehicles\ShuttleSignalJammerUpgrade.cs" />
     <Compile Include="Vehicles\ShuttleTakeoff.cs" />
     <Compile Include="Vehicles\SoS2TurretUpgrade.cs" />
     <Compile Include="Vehicles\SoS2VehicleTurret.cs" />
