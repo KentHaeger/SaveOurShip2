@@ -2922,6 +2922,12 @@ namespace SaveOurShip2
 			float vacuumSpeedMultiplier = ___pawn.GetStatValue(ResourceBank.StatDefOf.VacuumSpeedMultiplier);
 			if (vacuumSpeedMultiplier > 0.0f && vacuumSpeedMultiplier != 1.0f)
 			{
+				if (__instance.nextCellCostLeft < ResourceBank.TerrainDefOf.EmptySpace.pathCost)
+				{
+					// if pawn is already circumventing terrin cost, identifed by not having that cost included into
+					// next cell pathing, no vacuum speed multiplier for them, as ignoring terrain cost roughly replaces it.
+					return;
+				}
 				int newCellCost = Mathf.RoundToInt(__instance.nextCellCostLeft / vacuumSpeedMultiplier);
 				// Allowing cost to be zero breaks pawn movement making them invisible and unable to shoot
 				newCellCost = Mathf.Max(newCellCost, 1);
