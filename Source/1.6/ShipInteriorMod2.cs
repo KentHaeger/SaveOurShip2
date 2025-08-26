@@ -1202,6 +1202,13 @@ namespace SaveOurShip2
 								for (int i = 0; i < Rand.RangeInclusive(0, maxBooks); i++)
 								{
 									Book item = BookUtility.MakeBook(ThingDefOf.TextBook, ArtGenerationContext.Outsider);
+									// Anomaly bug - could generate "empty" books
+									int rerollCount = 0;
+									while (item.Title.NullOrEmpty() && rerollCount < 10)
+									{
+										rerollCount++;
+										item = BookUtility.MakeBook(ThingDefOf.TextBook, ArtGenerationContext.Outsider);
+									}
 									c.innerContainer.TryAdd(item, true);
 								}
 							}
