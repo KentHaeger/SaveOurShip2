@@ -26,7 +26,7 @@ namespace SaveOurShip2.Vehicles
                 tree = Vehicle.CompUpgradeTree;
             if (tree == null)
                 return;
-            if (!appliedYet && RGBMaterialPool.cache.ContainsKey(Vehicle))
+            if (!appliedYet && RGBMaterialPool.Cache.ContainsKey(Vehicle))
             {
                 Vehicle.Pattern = pattern;
                 Vehicle.patternToPaint = new PatternData(one, two, three, pattern, displacement, tiles);
