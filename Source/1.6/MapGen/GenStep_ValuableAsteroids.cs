@@ -24,6 +24,7 @@ namespace SaveOurShip2
 		{
 			SpawnList = new List<Thing>();
 			map.regionAndRoomUpdater.Enabled = false;
+			Log.Message("Disabled region updater on ValuableAsteroids step for map: " + map.Parent?.Label ?? "(no parent)");
 			int LittleAssTeroids = Rand.RangeInclusive(4, 12);
 			int BigAssTeroids = Rand.RangeInclusive(1, 2);
 			for (int i = 0; i < BigAssTeroids; i++)
@@ -35,7 +36,8 @@ namespace SaveOurShip2
 				GenerateSmallAsteroid(map, parms);
 			}
 			map.regionAndRoomUpdater.Enabled = true;
-			foreach(Thing t in SpawnList)
+			Log.Message("Enabled region updater on ValuableAsteroids step for map: " + map.Parent?.Label ?? "(no parent)");
+			foreach (Thing t in SpawnList)
 			{
 				t.Position = CellFinder.FindNoWipeSpawnLocNear(t.Position, map, ThingDef.Named("SpaceHive"), Rot4.East, 10);
 				GenSpawn.Spawn(t, t.Position, map);

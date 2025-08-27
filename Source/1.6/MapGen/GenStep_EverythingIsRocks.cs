@@ -15,7 +15,8 @@ namespace SaveOurShip2
 		public override void Generate(Map map, GenStepParams parms)
 		{
 			map.regionAndRoomUpdater.Enabled = false;
-			foreach(IntVec3 cell in map.AllCells)
+			Log.Message("Disabled region updater on EverythingIsRocks step for map: " + map.Parent?.Label ?? "(no parent)");
+			foreach (IntVec3 cell in map.AllCells)
 			{
 				GenSpawn.Spawn(GenStep_RocksFromGrid.RockDefAt(cell), cell, map);
 				map.roofGrid.SetRoof(cell, RoofDefOf.RoofRockThick);
@@ -26,6 +27,7 @@ namespace SaveOurShip2
 			genStep_ScatterLumpsMineable.countPer10kCellsRange = new FloatRange(num3, num3);
 			genStep_ScatterLumpsMineable.Generate(map, parms);
 			map.regionAndRoomUpdater.Enabled = true;
+			Log.Message("Enabled region updater on EverythingIsRocks step for map: " + map.Parent?.Label ?? "(no parent)");
 		}
 	}
 }
