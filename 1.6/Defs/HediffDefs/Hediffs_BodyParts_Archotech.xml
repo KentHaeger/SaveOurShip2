@@ -632,6 +632,7 @@
 					<ComfyTemperatureMax>20</ComfyTemperatureMax>
 					<VacuumResistance MayRequire="Ludeon.RimWorld.Odyssey">1</VacuumResistance>
 				</statOffsets>
+				<preventVacuumBurns MayRequire="Ludeon.RimWorld.Odyssey">true</preventVacuumBurns>
 			</li>
 		</stages>
 		<tags>
