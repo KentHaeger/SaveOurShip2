@@ -14,12 +14,5 @@
 		<generalTitle>[Save Our Ship 2] Archotech research projects</generalTitle>
 		<generalDescription>[ANY SUFFICIENTLY ADVANCED TECHNOLOGY IS INDISTINGUISHABLE FROM ME]</generalDescription>
 	</ResearchTabDef>
-
-	<ResearchTabDef>
-		<defName>ResearchTabDebug</defName>
-		<label>SOS2_Debug</label>
-		<generalTitle>DEBUG items</generalTitle>
-		<generalDescription>[ANY SUFFICIENTLY ADVANCED TECHNOLOGY IS INDISTINGUISHABLE FROM ME]</generalDescription>
-	</ResearchTabDef>
-
+	
 </Defs>
