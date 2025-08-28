@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Defs>
-	<SaveOurShip2.GlobalUnlockDef>
-		<defName>GlobalUnlocks</defName>
-		<AllShipsUnlockedFlag>false</AllShipsUnlockedFlag>
-	</SaveOurShip2.GlobalUnlockDef>
-</Defs>
