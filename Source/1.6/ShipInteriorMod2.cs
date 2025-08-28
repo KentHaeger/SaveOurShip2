@@ -165,11 +165,14 @@ namespace SaveOurShip2
 		{
 			get
 			{
-				return WorldComp.SlowTimeFlag;
+				return WorldComp?.SlowTimeFlag ?? false;
 			}
 			set
 			{
-				WorldComp.SlowTimeFlag = value;
+				if (WorldComp != null)
+				{
+					WorldComp.SlowTimeFlag = value;
+				}
 			}
 		}
 
