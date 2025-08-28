@@ -280,7 +280,8 @@ namespace SaveOurShip2
 		public static void DefsLoaded()
 		{
 			Log.Message("SOS2 " + SOS2version + " active");
-			randomPlants = DefDatabase<ThingDef>.AllDefs.Where(t => t.plant != null && !t.defName.Contains("Anima")).ToList();
+			// RA_MetalBean is from Ratkin Anomaly+, causes real bad effects and was requested to not spawn randomly. 
+			randomPlants = DefDatabase<ThingDef>.AllDefs.Where(t => t.plant != null && !t.defName.Contains("Anima") && t.defName != "RA_MetalBean").ToList();
 
 			foreach (ShipDef ship in DefDatabase<ShipDef>.AllDefs.Where(d => d.saveSysVer < 2 && !d.neverRandom).ToList())
 			{
