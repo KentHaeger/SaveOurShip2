@@ -522,7 +522,7 @@ namespace SaveOurShip2
 						yield return selectWeapons;
 					}
 					// Manual dodge is complicated, so hidden under devmode. Expected to be replaced with dodge chance.
-					if(Prefs.DevMode)
+					if(Prefs.DevMode && ModSettings_SoS.debugMode)
 					{
 						Command_Action dodgeLeft = new Command_Action
 						{
@@ -561,7 +561,7 @@ namespace SaveOurShip2
 
 					// Not known if it's compicated for the player to have slow time option or rather
 					// it's complicated to watch dodging at normal speed and understand things
-					if (Prefs.DevMode)
+					if (Prefs.DevMode && ModSettings_SoS.debugMode)
 					{
 						Command_Toggle toggleSlowTime = new Command_Toggle
 						{

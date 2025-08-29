@@ -9,6 +9,21 @@ namespace SaveOurShip2
 	public class AccuracyCalculator : IExposable
 	{
 		// Math stuff
+		// Submods are known to allow player to reach far better TWRs for decently strong/large combat ships.
+		// With dodge chance necghanics, it means that chance can go over roof and enemies 
+		private float dodgeChanceSubmodScale = 1;
+		public float DodgeChanceSubmodScale
+		{
+			get
+			{
+				return dodgeChanceSubmodScale;
+			}
+			set
+			{
+				// Multipler is only intended for reducing dodge chance and also eliminating mechanoic isn't allowed.
+				dodgeChanceSubmodScale = Mathf.Clamp(value, 0.1f, 1f);
+			}
+		}
 		// Weapon spread increased based on target map TWR
 		// This goes to XML likely
 		private const float magnitudeForDodge = 6.5f;
@@ -83,10 +98,11 @@ namespace SaveOurShip2
 		public AccuracyCalculator()
 		{
 		}
-		public AccuracyCalculator(ShipMapComp thisMapComp, ShipMapComp sourceMapComp)			
+		public AccuracyCalculator(ShipMapComp thisMapComp, ShipMapComp sourceMapComp, float dodgeChanceSubmodScaleArg)			
 		{
 			thisMap = thisMapComp.map;
 			sourceMap = sourceMapComp.map;
+			DodgeChanceSubmodScale = dodgeChanceSubmodScaleArg;
 		}
 		public float DodgeCance(ShipCombatProjectile proj)
 		{
@@ -143,7 +159,8 @@ namespace SaveOurShip2
 			float dodgeMultiplierFromShooting = DodgeChanceMultiplierFromShooting.Evaluate(SourceMapAccuracyBoost);
 			// pilot skill
 			float dodgeMultiplierFromPiloting = DodgeChanceMultiplierFromPiloting.Evaluate(ThisMapEvasionBoost);
-			float finalChance = baseChance * dodgeMultiplierFromShooting * dodgeMultiplierFromPiloting * ThisMapComp.SlowestThrustRatio() / baselineTWR;
+			float finalChance = baseChance * dodgeMultiplierFromShooting * dodgeMultiplierFromPiloting * ThisMapComp.SlowestThrustRatio() / baselineTWR
+				* DodgeChanceSubmodScale;
 			return Mathf.Clamp(finalChance, 0f, 1f);
 		}
 
@@ -240,6 +257,9 @@ namespace SaveOurShip2
 		{
 			Scribe_References.Look<Map>(ref thisMap, "ThisMap");
 			Scribe_References.Look<Map>(ref sourceMap, "SourceMap");
+			Scribe_Values.Look<int>(ref projectileCount, "projectileCount");
+			Scribe_Values.Look<int>(ref hitCount, "hitCount");
+			Scribe_Values.Look<float>(ref dodgeChanceSubmodScale, "dodgeChanceSubmodScale");
 		}
 
 		public bool IsValid

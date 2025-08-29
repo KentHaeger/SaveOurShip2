@@ -126,7 +126,7 @@ namespace SaveOurShip2
 		{
 			base.GetSettings<ModSettings_SoS>();
 		}
-		public const string SOS2version = "SteamV2.8.2";
+		public const string SOS2version = "GithubV2.8.11";
 		public const int SOS2ReqCurrentMinor = 5;
 		// 1.5.4063 public build (4062 constant) was not enough as there is no AnomalyUtility.TryDuplicatePawn_NewTemp method to harmony patch it.
 		// Historical builds are not available, so for sure can be increased just to next build, 4066
@@ -165,11 +165,14 @@ namespace SaveOurShip2
 		{
 			get
 			{
-				return WorldComp.SlowTimeFlag;
+				return WorldComp?.SlowTimeFlag ?? false;
 			}
 			set
 			{
-				WorldComp.SlowTimeFlag = value;
+				if (WorldComp != null)
+				{
+					WorldComp.SlowTimeFlag = value;
+				}
 			}
 		}
 
@@ -277,7 +280,15 @@ namespace SaveOurShip2
 		public static void DefsLoaded()
 		{
 			Log.Message("SOS2 " + SOS2version + " active");
-			randomPlants = DefDatabase<ThingDef>.AllDefs.Where(t => t.plant != null && !t.defName.Contains("Anima")).ToList();
+
+			string[] disallowedPlants = new string[]{
+				// Elder ocualr tree from Vanilla Psycasts Expanded
+				"AA_ElderAlienTree",
+				// RA_MetalBean is from Ratkin Anomaly+, causes real bad effects and was requested to not spawn randomly.
+				"RA_MetalBean"
+			};
+
+			randomPlants = DefDatabase<ThingDef>.AllDefs.Where(t => t.plant != null && !t.defName.Contains("Anima") && !disallowedPlants.Contains(t.defName)).ToList();
 
 			foreach (ShipDef ship in DefDatabase<ShipDef>.AllDefs.Where(d => d.saveSysVer < 2 && !d.neverRandom).ToList())
 			{
@@ -1201,7 +1212,21 @@ namespace SaveOurShip2
 									maxBooks = c.MaximumBooks / 2;
 								for (int i = 0; i < Rand.RangeInclusive(0, maxBooks); i++)
 								{
-									Book item = BookUtility.MakeBook(ThingDefOf.TextBook, ArtGenerationContext.Outsider);
+									ThingDef bookDef = ThingDefOf.TextBook;
+									const float odysseyMapChance = 0.2f;
+									if (ModsConfig.OdysseyActive && Rand.Chance(odysseyMapChance))
+									{
+										bookDef = ThingDefOf.Map;
+									}
+									Book item = BookUtility.MakeBook(bookDef, ArtGenerationContext.Outsider);
+									// Anomaly bug - could generate "empty" books
+									int rerollCount = 0;
+									while (item.Title.NullOrEmpty() && rerollCount < 10)
+									{
+										rerollCount++;
+										// Stick with textbooks in case of a bug
+										item = BookUtility.MakeBook(ThingDefOf.TextBook, ArtGenerationContext.Outsider);
+									}
 									c.innerContainer.TryAdd(item, true);
 								}
 							}

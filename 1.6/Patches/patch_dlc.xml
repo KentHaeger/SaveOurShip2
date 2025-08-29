@@ -818,6 +818,13 @@
 						<DecompressionResistance>0.75</DecompressionResistance>
 					</value>
 				</li>
+				<!-- Vacskin Gland -->
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/HediffDef[defName="VacskinGland"]/stages/li/statOffsets</xpath>
+					<value>
+						<DecompressionResistance>0.75</DecompressionResistance>
+					</value>
+				</li>
 				<!-- Odyssey Space Headgear -->
 				<li Class="PatchOperationAdd">
 					<xpath>Defs/ThingDef[defName="Apparel_VacsuitHelmet"]/equippedStatOffsets[not(DecompressionResistance)]</xpath>

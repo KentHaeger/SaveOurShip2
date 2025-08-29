@@ -891,10 +891,9 @@ namespace SaveOurShip2
 			Log.Message("SOS2: ".Colorize(Color.cyan) + map + " Starting combat vs map: ".Colorize(Color.green) + ShipCombatTargetMap);
 			TargetMapComp.ShipCombatTargetMap = ShipCombatOriginMap;
 			TargetMapComp.ShipCombatOriginMap = ShipCombatOriginMap;
-			Log.Warning("++++This map: " + this.map.Parent?.Label ?? "NoParent");
-			Log.Warning("++++Target map: " + TargetMapComp.map.Parent?.Label ?? "NoParent");
-			accuracyCalculator = new AccuracyCalculator(this, TargetMapComp);
-			TargetMapComp.accuracyCalculator = new AccuracyCalculator(TargetMapComp, this);
+
+			accuracyCalculator = new AccuracyCalculator(this, TargetMapComp, DodgeChanceSubmodScaleDef.GetEffectiveMultiplier());
+			TargetMapComp.accuracyCalculator = new AccuracyCalculator(TargetMapComp, this, DodgeChanceSubmodScaleDef.GetEffectiveMultiplier());
 			//start caches
 			RepathMap();
 			ResetCombatVars();
