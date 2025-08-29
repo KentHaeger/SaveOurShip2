@@ -5023,7 +5023,7 @@ namespace SaveOurShip2
 	}
 
 	// Additional null checks when loading
-	[HarmonyPatch(typeof(Patch_WorldHandling), "AllAerialVehicles_AliveOrDead")]
+	[HarmonyPatch(typeof(Patch_MapPawns), "AllAerialVehicles_AliveOrDead")]
 	public static class AllAerialVehiclesOnLoad
 	{
 		public static bool Prefix()
