@@ -534,7 +534,7 @@
 			<li>
 				<key>CargoCloaking</key>
 				<label>Cloaking Device</label>
-				<description>Install a miniaturized cloaking device to improve dodge chance in combat. Its heatsinks also slightly boost shield capacity.\n&lt;color=#bb8f04&gt;+25% ship combat dodge chance, +50 heatsink, -500 cargo capacity&lt;/color&gt;</description>
+				<description>Install a miniaturized cloaking device to improve dodge chance in combat. Its heatsinks also slightly boost shield capacity. When Odyssey is active, this device will also act as a signal jammer.\n&lt;color=#bb8f04&gt;+25% ship combat dodge chance, +50 heatsink, -500 cargo capacity&lt;/color&gt;</description>
 				<icon>UI/ShuttleUpgrades/CargoCloaking</icon>
 				<work>12000</work>
 				<gridCoordinate>(4,10)</gridCoordinate>
@@ -560,6 +560,8 @@
 							<heatVent>0.06125</heatVent>
 							<heatLoss>0.06125</heatLoss>
 						</sink>
+					</li>
+					<li Class="SaveOurShip2.Vehicles.ShuttleSignalJammerUpgrade" MayRequire="Ludeon.RimWorld.Odyssey">
 					</li>
 				</upgrades>
 				<replaces>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<SaveOurShip2.GlobalUnlockDef>
+		<defName>GlobalUnlocks</defName>
+		<AllShipsUnlockedFlag>false</AllShipsUnlockedFlag>
+	</SaveOurShip2.GlobalUnlockDef>
+	
+	<SaveOurShip2.DodgeChanceSubmodScaleDef>
+		<defName>DodgeChanceSubmodScale</defName>
+		<multiplierList>
+			<!-- Submods can add list items in case they allow reaching higher TWR than normal SOS 2 
+			     in that case player ship dodge chance goes to high, ship battles becoime too easy
+				 so nerfing multiplers (<1) are encouraged here. Allowed range: 0.1 to 1 -->
+			<li>1.0</li>
+		</multiplierList>
+	</SaveOurShip2.DodgeChanceSubmodScaleDef>
+</Defs>

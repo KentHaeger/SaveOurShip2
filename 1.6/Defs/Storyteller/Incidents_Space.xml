@@ -4,6 +4,7 @@
 	<IncidentDef>
 		<defName>ShipCombat</defName>
 		<label>ship combat</label>
+		<canOccurOnAllPlanetLayers>True</canOccurOnAllPlanetLayers>
 		<targetTags>
 			<li>Map_SpaceHome</li>
 		</targetTags>
@@ -16,6 +17,7 @@
 	<IncidentDef>
 		<defName>SpacePirates</defName>
 		<label>Pirates!</label>
+		<canOccurOnAllPlanetLayers>True</canOccurOnAllPlanetLayers>
 		<category>ThreatBig</category>
 		<targetTags>
 			<li>Map_SpaceHome</li>
@@ -30,6 +32,7 @@
 	<IncidentDef>
 		<defName>SpaceDebris</defName>
 		<label>space debris</label>
+		<canOccurOnAllPlanetLayers>True</canOccurOnAllPlanetLayers>
 		<category>ThreatSmall</category>
 		<targetTags>
 			<li>Map_SpaceHome</li>
@@ -49,6 +52,7 @@
 	<IncidentDef>
 		<defName>SpacePodFound</defName>
 		<label>transport pod recovery</label>
+		<canOccurOnAllPlanetLayers>True</canOccurOnAllPlanetLayers>
 		<category>Misc</category>
 		<targetTags>
 			<li>Map_SpaceHome</li>

@@ -10,7 +10,7 @@
 			<li>AdvancedFabrication</li>
 		</prerequisites>
 		<researchViewX>18.00</researchViewX>
-		<researchViewY>2.90</researchViewY>
+		<researchViewY>2.50</researchViewY>
 		<discoveredLetterTitle>About: Launching the ship</discoveredLetterTitle>
 		<discoveredLetterText>Escaping from this planet - it would be freedom at last, and maybe a return home.\n\nBut before you can even consider interstellar spaceflight, you'll need to reach orbit. The minimum requirements for a spaceworthy craft are a rocket engine, a ship bridge and basic sensors. To survive in space, your colonists will also need either a life-support system or EVA suits.\n\nThe amount of chemfuel required to launch a ship into orbit depends on its size. Larger ships may need multiple engines.</discoveredLetterText>
 		<discoveredLetterDisabledWhen>
@@ -978,31 +978,6 @@
 
 			<li>subject_gerund->coercing AI for entertainment purposes</li>
 
-		  </rulesStrings>
-		</generalRules>
-	</ResearchProjectDef>
-
-	<ResearchProjectDef ParentName="ShipResearchProjectBase">
-		<defName>ResearchShipDebugItems</defName>
-		<label>debug items</label>
-		<description>debug - Allow your colonists to pilot a ship, with basic computer assistance.</description>
-		<baseCost>80000</baseCost>
-		<techLevel>Spacer</techLevel>
-		<prerequisites>
-			<li>ShipBasics</li>
-			<li>ShipEngine</li>
-		</prerequisites>
-		<hideWhen IsNull="True" />
-		<tab>ResearchTabDebug</tab>
-		<generalRules>
-		  <rulesStrings>
-			<li>subject->starship navigation</li>
-
-			<li>subject_story->survived one starship landing, and decided that the next one should be intentional</li>
-			<li>subject_story->manually overrode the ship's targeting computer, destroying an enemy megastructure with a single well-placed torpedo</li>
-			<li>subject_story->carefully plotted a course through the nigh-impenetrable debris fields of the planet Ishwalla</li>
-
-			<li>subject_gerund->manually piloting starships</li>
 		  </rulesStrings>
 		</generalRules>
 	</ResearchProjectDef>
