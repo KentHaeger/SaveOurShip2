@@ -1125,6 +1125,22 @@ namespace SaveOurShip2
 				mapSize = new IntVec3(mapX, 1, ModSettings_SoS.enemyMapSize);
 			}
 
+			Map playerMap = ShipInteriorMod2.FindPlayerShipMap();
+			if (playerMap != null)
+			{
+				int playerMapSize = Mathf.Max(playerMap.Size.x, playerMap.Size.z);
+				if (playerMapSize > Mathf.Max(mapSize.z, mapSize.x))
+				{
+					// When player map is larger than enemy map, retrieving wrecks to the part of the map that is larger will
+					// be disabled because it auses some complicated bug in legacy ShipMove code.
+					// To prevent major inconvenience, try increasing eneny map size to match player map, but with certain limits
+					// Because don't want to consume too much resources with multiple enemy maps.
+					const int enemyMapAutoIncreaseLimit = 300;
+					mapSize.x = Mathf.Max(mapSize.x, Mathf.Min(enemyMapAutoIncreaseLimit, playerMap.Size.x));
+                    mapSize.z = Mathf.Max(mapSize.z, Mathf.Min(enemyMapAutoIncreaseLimit, playerMap.Size.z));
+                }
+			}
+
 			newMap = GetOrGenerateMapUtility.GetOrGenerateMap(ShipInteriorMod2.FindWorldTile(), mapSize, ResourceBank.WorldObjectDefOf.ShipEnemy);
 
 			var mp = (WorldObjectOrbitingShip)newMap.Parent;
