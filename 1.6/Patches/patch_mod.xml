@@ -168,4 +168,21 @@
 			</operations>
 		</match>
 	</Operation>
+
+	<Operation Class="PatchOperationFindMod">
+		<mods>
+			<li>Vanilla Furniture Expanded - Security</li>
+		</mods>
+		<match Class="PatchOperationAdd">
+		<xpath>Defs/ThingDef[defName="VFES_Turret_AntiAir"]/comps/li[@Class="VFESecurity.CompProperties_PointDefense"]/blacklistedProjectileDefs</xpath>
+			<value>
+				<li>Bullet_Fake_Torpedo_HighExplosive</li>
+				<li>Bullet_Torpedo_HighExplosive</li>
+				<li>Bullet_Fake_Torpedo_EMP</li>
+				<li>Bullet_Torpedo_EMP</li>
+				<li>Bullet_Fake_Torpedo_Antimatter</li>
+				<li>Bullet_Torpedo_Antimatter</li>
+			</value>
+		</match>
+	</Operation>
 </Patch>
