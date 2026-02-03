@@ -895,6 +895,25 @@
 		<match Class="PatchOperationSequence">
 			<success>Normal</success>
 			<operations>
+				<!-- Changes in space terrain and map generator so that they don't use old planet rendering, but patched Odyssey rendering instead-->
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/MapGeneratorDef[defName="EmptySpaceMap"]</xpath>
+					<value>
+						<renderWorld>true</renderWorld>
+					</value>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/MapGeneratorDef[defName="EmptySpaceMap"]</xpath>
+					<value>
+						<disableMapClippers>true</disableMapClippers>
+					</value>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>Defs/TerrainDef[defName="EmptySpace"]</xpath>
+					<value>
+						<dontRender>true</dontRender>
+					</value>
+				</li>
 				<!-- Drones -->
 				<li Class="PatchOperationAdd">
 					<xpath>Defs/ThingDef[@Name="BaseDrone"]/statBases</xpath>

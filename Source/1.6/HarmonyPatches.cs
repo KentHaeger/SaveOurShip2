@@ -606,6 +606,11 @@ namespace SaveOurShip2
 	{
 		public static void Prefix()
 		{
+			// Use Odyssey planet rendering instead if it is active
+			if (ModsConfig.OdysseyActive)
+			{
+				return;
+			}
 			var worldComp = ShipInteriorMod2.WorldComp;
 			Map map = Find.CurrentMap;
 			if ((worldComp.renderedThatAlready && !ModSettings_SoS.renderPlanet) || !map.IsSpace())
@@ -667,6 +672,10 @@ namespace SaveOurShip2
 	{
 		public static bool Prefix(SectionLayer __instance, MeshParts tags)
 		{
+			if (ModsConfig.OdysseyActive)
+			{
+				return true;
+			}
 			if (__instance.GetType().Name != "SectionLayer_Terrain")
 				return true;
 
@@ -1090,6 +1099,11 @@ namespace SaveOurShip2
 	{
 		public static void Postfix(SectionLayer __instance, Section ___section)
 		{
+			// Not using custom planet rendering with Odyssey.
+			if (ModsConfig.OdysseyActive)
+			{
+				return;
+			}
 			if (!___section.map.IsSpace()) return;
 
 			MeshRecalculateHelper.RecalculatePlanetLayer(__instance);
@@ -6055,7 +6069,54 @@ namespace SaveOurShip2
 		}
 	}
 
-	/*[HarmonyPatch(typeof(ActiveDropPod),"PodOpen")]
+	// If radius isn't adjusted, atmosphere will look like unnaturally large bubble around the planet
+	[HarmonyPatch(typeof(PlanetLayer), "get_Radius")]
+    public static class BackgroundPlanetExtraRadius
+    {
+        public static void Postfix(ref float __result)
+		{
+			if (Find.CurrentMap?.IsSpace() ?? false)
+			{
+				// Default 130
+				const float spaceLayerRadius = 101f;
+                __result = spaceLayerRadius;
+            }
+		}
+    }
+
+	// Parallax is responsible for how much is planet offset per moving view on the map
+	// Looks like lower value is better for planet moved further away (ship in high orbit)
+    [HarmonyPatch(typeof(PlanetLayer), "get_BackgroundWorldCameraParallaxDistancePer100Cells")]
+    public static class BackgroundPlanetExtraParallaxDistance
+    {
+        public static void Postfix(ref float __result)
+        {
+            if (Find.CurrentMap?.IsSpace() ?? false)
+            {
+                // Default 2.5
+                const float spaceParallaxDistance = 0.5f;
+                __result = spaceParallaxDistance;
+            }
+        }
+    }
+
+	// When drawing space map, but not world view or Odyssey map,
+	// offset camera further from planet. So that it looks like high orbit = small visible planet.
+    [HarmonyPatch(typeof(PlanetLayer), "get_BackgroundWorldCameraOffset")]
+    public static class BackgroundPlanetOffset
+    {
+        public static void Postfix(ref float __result)
+        {
+            if (Find.CurrentMap?.IsSpace() ?? false)
+            {
+                // Default 130
+                const float spaceOffset = 1000f;
+                __result = spaceOffset;
+            }
+        }
+    }
+
+    /*[HarmonyPatch(typeof(ActiveDropPod),"PodOpen")]
 	public static class ActivePodFix{
 		public static bool Prefix (ref ActiveDropPod __instance)
 		{
@@ -6098,7 +6159,7 @@ namespace SaveOurShip2
 			return true;
 		}
 	}*/
-	/*[HarmonyPatch(typeof(Pawn))]
+    /*[HarmonyPatch(typeof(Pawn))]
 	[HarmonyPatch("IsColonist",MethodType.Getter)]
 	public static class GizmoFix{
 		public static void Postfix(Pawn __instance, ref bool __result)
@@ -6115,7 +6176,7 @@ namespace SaveOurShip2
 		}
 	}*/
 
-	/*No longer necessary in 1.4
+    /*No longer necessary in 1.4
 	[HarmonyPatch(typeof(Pawn), "GetGizmos")]
 	public static class AnimalsHaveGizmosToo
 	{
@@ -6130,7 +6191,7 @@ namespace SaveOurShip2
 			}
 		}
 	}*/
-	/*[HarmonyPatch(typeof(TileFinder), "TryFindNewSiteTile")] //changed destructive patch, unsure if this is even needed anymore
+    /*[HarmonyPatch(typeof(TileFinder), "TryFindNewSiteTile")] //changed destructive patch, unsure if this is even needed anymore
 	public static class NoQuestsNearTileZero
 	{
 		public static bool Prefix(out int tile, int minDist, int maxDist, bool allowCaravans,
@@ -6174,7 +6235,7 @@ namespace SaveOurShip2
 		}
 	}*/
 
-	/*[HarmonyPatch(typeof(CompShipPart),"PostSpawnSetup")]
+    /*[HarmonyPatch(typeof(CompShipPart),"PostSpawnSetup")]
 	public static class RemoveVacuum{
 		public static void Postfix (CompShipPart __instance)
 		{
@@ -6182,7 +6243,7 @@ namespace SaveOurShip2
 				__instance.parent.Map.terrainGrid.SetTerrain (__instance.parent.Position,TerrainDef.Named("FakeFloorInsideShip"));
 		}
 	}*/
-	/*[HarmonyPatch(typeof(GenConstruct), "BlocksConstruction")]
+    /*[HarmonyPatch(typeof(GenConstruct), "BlocksConstruction")]
 	public static class HullTilesDontWipe
 	{
 		public static void Postfix(Thing constructible, Thing t, ref bool __result)
@@ -6212,8 +6273,8 @@ namespace SaveOurShip2
 		}
 	}*/
 
-	//Space crib - disabled, good transpiler example
-	/*[HarmonyPatch(typeof(GenTemperature), "TryGetTemperatureForCell")]
+    //Space crib - disabled, good transpiler example
+    /*[HarmonyPatch(typeof(GenTemperature), "TryGetTemperatureForCell")]
 	public static class BabiesAreSafeInSpaceCaskets
 	{
 		public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
@@ -6275,8 +6336,8 @@ namespace SaveOurShip2
 		}
 	}*/
 
-	// explosion patch disabled till fixed
-	/*[HarmonyPatch(typeof(DamageWorker))]
+    // explosion patch disabled till fixed
+    /*[HarmonyPatch(typeof(DamageWorker))]
 	[HarmonyPatch("ExplosionCellsToHit", new Type[] { typeof(IntVec3), typeof(Map), typeof(float), typeof(IntVec3), typeof(IntVec3) })]
 	public static class FasterExplosions
 	{
@@ -6349,7 +6410,7 @@ namespace SaveOurShip2
 		}
 	}
 	*/
-	/*[HarmonyPatch(typeof(Building), "Destroy")] //obs by newcache
+    /*[HarmonyPatch(typeof(Building), "Destroy")] //obs by newcache
 	public static class NotifyCombatManager
 	{
 		public static bool Prefix(Building __instance, DestroyMode mode, out Tuple<IntVec3, Faction, Map> __state)
@@ -6394,7 +6455,7 @@ namespace SaveOurShip2
 			}
 		}
 	}*/
-	/*vacuum pathfinding - disabled, not working
+    /*vacuum pathfinding - disabled, not working
 	[HarmonyPatch(typeof(PathFinder), "FindPath", typeof(IntVec3), typeof(LocalTargetInfo), typeof(TraverseParms),
 		typeof(PathEndMode), typeof(PathFinderCostTuning))]
 	public static class H_Vacuum_PathFinder
@@ -6542,8 +6603,8 @@ namespace SaveOurShip2
 		}
 	}*/
 
-	//OBSOLETE - shuttle patches
-	/*[HarmonyPatch(typeof(FlyShipLeaving), "LeaveMap")]
+    //OBSOLETE - shuttle patches
+    /*[HarmonyPatch(typeof(FlyShipLeaving), "LeaveMap")]
 	public static class LeavingPodFix
 	{
 		public static bool Prefix(ref FlyShipLeaving __instance)
