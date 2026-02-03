@@ -1129,9 +1129,16 @@ namespace SaveOurShip2
 			if (shipDef.saveSysVer == 2)
 			{
 				if (offsetX < 0 || offsetZ < 0) //unset offset, use offset from shipdef
-					offset = new IntVec3(shipDef.offsetX, 0, shipDef.offsetZ);
+				{
+                    // Center ship on map if no custom offset specified (like in fleet generation)
+					int centeredOffsetX = Mathf.Max(0, (map.Size.x - shipDef.sizeX) / 2);
+                    int centeredOffsetZ = Mathf.Max(0, (map.Size.z - shipDef.sizeZ) / 2);
+                    offset = new IntVec3(centeredOffsetX, 0, centeredOffsetZ);
+                }
 				else
+				{
 					offset = new IntVec3(offsetX, 0, offsetZ);
+				}
 			}
 			else //old system, from center
 				offset = map.Center;
