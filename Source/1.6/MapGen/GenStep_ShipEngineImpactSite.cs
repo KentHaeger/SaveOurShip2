@@ -33,7 +33,15 @@ namespace SaveOurShip2
 				GenSpawn.Spawn(chunk, new IntVec3(c.x + Rand.RangeInclusive(-20, 20), 0, c.z + Rand.RangeInclusive(-20, 20)),map);
 			}
 			ThingDef JTDrive = ThingDef.Named("JTDriveSalvage");
-			GenSpawn.Spawn(JTDrive, c, map);
+			Building spawnedDrive = GenSpawn.Spawn(JTDrive, c, map) as Building;
+			// Just don't want errors on non-critical unfogging if JT drive is overhauled, maybe in some submod.
+			if (spawnedDrive != null)
+			{
+				foreach (IntVec3 tile in spawnedDrive.OccupiedRect())
+				{
+					map.fogGrid.Unfog(tile);
+				}
+			}
 		}
 	}
 }
