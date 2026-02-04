@@ -5652,6 +5652,30 @@ namespace SaveOurShip2
 		}
 	}
 
+	// By default, deconstruct only designates 1 building per tile for deconstruction. Which is rarely reproduced minor inconvenience in vbase game
+	// but not handy for ship deconstruction, so gotta be fixed here
+	[HarmonyPatch(typeof(Designator_Deconstruct), "DesignateSingleCell")]
+	public static class SinglePassDeconstruct
+	{
+		private static AcceptanceReport acceptanceReport;
+		public static void Postfix(Designator_Deconstruct __instance, IntVec3 loc)
+		{
+			if (__instance.Map.IsSpace())
+			{
+				// Just repeat designation few more times to cover hull plating, normal building and possible attachment(s) 
+				for (int i = 0; i < 5; ++i)
+				{
+					Thing nextDeconstructible = __instance.TopDeconstructibleInCell(loc, out acceptanceReport);
+					if (nextDeconstructible == null)
+					{
+						return;
+					}
+                    __instance.DesignateThing(nextDeconstructible);
+                }
+			}
+        }
+    }
+
 	// Odyssey
 	[HarmonyPatch(typeof(ListerThings), "AnyThingWithDef")]
 	public static class ConsiderGravAnchorPresentOnSpaceMap
