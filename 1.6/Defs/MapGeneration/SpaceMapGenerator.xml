@@ -34,6 +34,7 @@
 		<genSteps>
 			<li>RocksFromGrid</li>
 			<li>ShipEngineImpactSite</li>
+			<li>ShipEngineImpactSiteUnfog</li>
 		</genSteps>
 	</MapGeneratorDef>
 	<GenStepDef>
@@ -42,6 +43,12 @@
 		<genStep Class="SaveOurShip2.GenStep_ShipEngineImpactSite">
 			<count>1</count>
 			<nearMapCenter>true</nearMapCenter>
+		</genStep>
+	</GenStepDef>
+	<GenStepDef>
+		<defName>ShipEngineImpactSiteUnfog</defName>
+		<order>1610</order>
+		<genStep Class="SaveOurShip2.GenStep_ShipEngineImpactSiteUnfog">
 		</genStep>
 	</GenStepDef>
 	
