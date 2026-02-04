@@ -139,6 +139,7 @@ namespace SaveOurShip2
 			public static ThingDef Weapon_GrenadeMechanite;
 			public static ThingDef Apparel_SpaceSuitHelmet;
 			public static ThingDef Apparel_SpaceSuitBody;
+			public static ThingDef JTDriveSalvage;
 			//vanilla defs
 			public static ThingDef Turret_Autocannon;
 			public static ThingDef Turret_Sniper;
