@@ -54,7 +54,7 @@
 		</graphicData>
 		<uiIconPath>Things/Building/Ship/ShipBeamModular_east</uiIconPath>
 		<statBases>
-			<WorkToBuild>1500</WorkToBuild>
+			<WorkToBuild>1200</WorkToBuild>
 			<MaxHitPoints>1000</MaxHitPoints>
 			<Flammability>0</Flammability>
 		</statBases>
@@ -115,7 +115,7 @@
 		</graphicData>
 		<uiIconPath>Things/Building/Ship/ShipBeamModular_north</uiIconPath>
 		<statBases>
-			<WorkToBuild>1600</WorkToBuild>
+			<WorkToBuild>1280</WorkToBuild>
 			<MaxHitPoints>1000</MaxHitPoints>
 			<Flammability>0</Flammability>
 		</statBases>
@@ -174,7 +174,7 @@
 			</damageData>
 		</graphicData>
 		<statBases>
-			<WorkToBuild>800</WorkToBuild>
+			<WorkToBuild>640</WorkToBuild>
 			<Flammability>0</Flammability>
 		</statBases>
 		<rotatable>true</rotatable>
@@ -320,7 +320,7 @@
 		<rotatable>true</rotatable>
 		<tickerType>Normal</tickerType>
 		<statBases>
-			<WorkToBuild>8000</WorkToBuild>
+			<WorkToBuild>6400</WorkToBuild>
 			<MaxHitPoints>500</MaxHitPoints>
 			<Flammability>0</Flammability>
 		</statBases>
@@ -413,7 +413,7 @@
 		<rotatable>true</rotatable>
 		<tickerType>Rare</tickerType>
 		<statBases>
-			<WorkToBuild>4000</WorkToBuild>
+			<WorkToBuild>3200</WorkToBuild>
 			<MaxHitPoints>500</MaxHitPoints>
 			<Flammability>0</Flammability>
 		</statBases>
@@ -748,7 +748,7 @@
 		<drawStyleCategory>Foundations</drawStyleCategory>
 		<statBases>
 			<MaxHitPoints>300</MaxHitPoints>
-			<WorkToBuild>900</WorkToBuild>
+			<WorkToBuild>720</WorkToBuild>
 			<Flammability>0.0</Flammability>
 			<Beauty>1</Beauty>
 		</statBases>
