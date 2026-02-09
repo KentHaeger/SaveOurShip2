@@ -37,7 +37,10 @@
 	<SoS.Settings.DifficultySoS>Ship combat difficulty factor (Min: {0} Max: {1} Default: {2} Current: {3})</SoS.Settings.DifficultySoS>
 	<SoS.Settings.DifficultySoS.Desc>Affects the size and strength of enemy ships.</SoS.Settings.DifficultySoS.Desc>
 	<SoS.Settings.FrequencySoS>Ship Combat Frequency (Min: {0} Max: {1} Default: {2} Current: {3})</SoS.Settings.FrequencySoS>
-	<SoS.Settings.FrequencySoS.Desc>Higher values mean less cooldown time between ship battles.</SoS.Settings.FrequencySoS.Desc>
+	<SoS.Settings.FrequencySoS.Desc>Higher values mean less cooldown time between ship battles.
+0 frequency means player ship won't be attacked unless player has notoriety.
+1 frequency means cooldown between ship battles is 5 days. Every 5 days average for samll ships and every 15 days average for larger ships ship battle will happen regardless of storyteller settings. Or more often if storyteller causes causes ship battle, which is considered major threat, replacement for raid in space.
+Small ships - up to 100 CR. Large ships - above 1500 CR .</SoS.Settings.FrequencySoS.Desc>
 	<SoS.Settings.NavyShipChance>Navy chance (Min: {0} Max: {1} Default: {2} Current: {3})</SoS.Settings.NavyShipChance>
 	<SoS.Settings.NavyShipChance.Desc>How likely navies will appear in random encounters.</SoS.Settings.NavyShipChance.Desc>
 	<SoS.Settings.FleetChance>Random fleet chance (Min: {0} Max: {1} Default: {2} Current: {3})</SoS.Settings.FleetChance>

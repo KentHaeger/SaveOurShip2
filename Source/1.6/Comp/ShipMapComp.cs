@@ -1795,14 +1795,32 @@ namespace SaveOurShip2
 					{
 						if (IsPlayerShipMap)
 						{
+							// Check for bounty hunters attack
 							if (ShipInteriorMod2.WorldComp.PlayerFactionBounty > 20 && tick - LastBountyRaidTick > Mathf.Max(600000f / Mathf.Sqrt(ShipInteriorMod2.WorldComp.PlayerFactionBounty), 60000f))
 							{
 								LastBountyRaidTick = tick;
 								Building_ShipBridge bridge = MapRootListAll.FirstOrDefault();
 								if (bridge == null)
+								{
 									return;
+								}
+								Log.Message("Ship battle starting because of bounty");
 								StartShipEncounter(bounty: true);
 							}
+							// Check for lazy storyteller
+							if (ShipBattleRecommendedIntervalExpired())
+							{
+                                Building_ShipBridge bridge = MapRootListAll.FirstOrDefault();
+								// It's not ideal to return from ticking method on start ship encounter, but changing that may cause issues.
+								// If anything was skipped, it will still be handled on next call already in battle.
+								if (bridge == null)
+								{
+									return;
+								}
+                                Log.Message("Ship battle starting because of reqired frequency");
+                                LastAttackTick = Find.TickManager.TicksGame;
+                                StartShipEncounter();
+                            }
 						}
 					}
 					//auto claim
@@ -3196,5 +3214,32 @@ namespace SaveOurShip2
 			}
 			return false;
 		}
-	}
+		// No ship battles should happen if mandatory interval is not expired. Except for bounty hunters based on notoriety
+		public bool ShipBattleMandatoryIntervalExpired()
+		{
+			// Old code was: Find.TickManager.TicksGame < mapComp.LastAttackTick + 300000 / ModSettings_SoS.frequencySoS
+			// Which means baseline interval between ship battles is 5 days.
+			if (Mathf.Approximately((float)ModSettings_SoS.frequencySoS, 0f))
+			{
+				return false;
+			}
+			return Find.TickManager.TicksGame > LastAttackTick + GenDate.TicksPerDay * 5 / (float)ModSettings_SoS.frequencySoS;
+        }
+		// If recommended interval is expired, ship battle should be triggered manully, not relying on storyteller, that can be lazy
+		public bool ShipBattleRecommendedIntervalExpired()
+		{
+            if (Mathf.Approximately((float)ModSettings_SoS.frequencySoS, 0f))
+            {
+                return false;
+            }
+            int baselineInterval = (int)(GenDate.TicksPerDay * 5 / (float)ModSettings_SoS.frequencySoS);
+			// Ensure random is the same for every check performed after specific last battle
+			float randomMultiplier = Mathf.Lerp(0.8f, 1.15f, Rand.ValueSeeded(LastAttackTick));
+			// normal interval at 100 or lower threat, 3x interval at 1500 or higher - for less frequent battles at bigger CRs
+			float threatParameter = Mathf.Clamp01((MapThreat() - 100) / 1400f);
+			float crMultiplier = Mathf.Lerp(1f, 3f, threatParameter);
+			int interval = (int)(baselineInterval * randomMultiplier * crMultiplier);
+			return Find.TickManager.TicksGame > Mathf.Max(LastAttackTick,  map.generationTick) + interval;
+        }
+    }
 }
