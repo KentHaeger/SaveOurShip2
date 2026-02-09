@@ -11,7 +11,8 @@ namespace SaveOurShip2
 		{
 			Map map = (Map)parms.target;
 			ShipMapComp mapComp = map.GetComponent<ShipMapComp>();
-			if (mapComp.ShipMapState != ShipMapState.nominal || mapComp.Cloaks.Any(c => c.active) || mapComp.NextTargetMap != null || ModSettings_SoS.frequencySoS == 0 || Find.TickManager.TicksGame < mapComp.LastAttackTick + 300000 / ModSettings_SoS.frequencySoS)
+			if (mapComp.ShipMapState != ShipMapState.nominal || mapComp.Cloaks.Any(c => c.active) || mapComp.NextTargetMap != null ||
+				ModSettings_SoS.frequencySoS == 0 || !mapComp.ShipBattleMandatoryIntervalExpired())
 			{
 				return false;
 			}
@@ -80,8 +81,8 @@ namespace SaveOurShip2
 			{
 				parms.customLetterText = "";
 				SendStandardLetter(def.letterLabel, TranslatorFormattedStringExtensions.Translate("SoS.PirateImmediateAttack"), def.letterDef, parms, TargetInfo.Invalid, Array.Empty<NamedArgument>());
-
-				mapComp.StartShipEncounter(ship);
+                Log.Message("Ship battle starting, pirate attack");
+                mapComp.StartShipEncounter(ship);
 			}
 			return true;
 		}
