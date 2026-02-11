@@ -1599,7 +1599,6 @@ namespace SaveOurShip2
 											{
 												Projectile dummyProjectile = (Projectile)ThingMaker.MakeThing(ResourceBank.ThingDefOf.Shuttle_Laser);
 												shuttleHit.GetComp<CompShipHeatShield>().HitShield(dummyProjectile);
-												dummyProjectile.Destroy();
 											}
 											else
 											{
@@ -1800,26 +1799,24 @@ namespace SaveOurShip2
 							{
 								LastBountyRaidTick = tick;
 								Building_ShipBridge bridge = MapRootListAll.FirstOrDefault();
-								if (bridge == null)
+								if (bridge != null)
 								{
-									return;
-								}
-								Log.Message("Ship battle starting because of bounty");
-								StartShipEncounter(bounty: true);
+                                    Log.Message("Ship battle starting because of bounty");
+                                    StartShipEncounter(bounty: true);
+                                }
 							}
 							// Check for lazy storyteller
-							if (ShipBattleRecommendedIntervalExpired())
+							else if (ShipBattleRecommendedIntervalExpired())
 							{
                                 Building_ShipBridge bridge = MapRootListAll.FirstOrDefault();
 								// It's not ideal to return from ticking method on start ship encounter, but changing that may cause issues.
 								// If anything was skipped, it will still be handled on next call already in battle.
-								if (bridge == null)
+								if (bridge != null)
 								{
-									return;
-								}
-                                Log.Message("Ship battle starting because of reqired frequency");
-                                LastAttackTick = Find.TickManager.TicksGame;
-                                StartShipEncounter();
+                                    Log.Message("Ship battle starting because of reqired frequency");
+                                    LastAttackTick = Find.TickManager.TicksGame;
+                                    StartShipEncounter();
+                                }
                             }
 						}
 					}
