@@ -389,7 +389,7 @@ namespace SaveOurShip2
 			rect.y += 5;
 			rect.x = offset;
 			rect.height = Text.LineHeight;
-			Widgets.Label(rect, "SoS.Combat.Hull".Translate(Mathf.Round(shuttle.statHandler.GetStatValue(VehicleStatDefOf.BodyIntegrity) * 100f)));
+			Widgets.Label(rect, "SoS.Combat.Hull".Translate(shuttle.statHandler.GetStatValue(VehicleStatDefOf.BodyIntegrity).ToString("P0")));
 		}
 		private static void DrawShuttleHeat(float offset, float baseY, VehiclePawn shuttle)
 		{
@@ -406,7 +406,7 @@ namespace SaveOurShip2
 			rect.y += 5;
 			rect.x = offset;
 			rect.height = Text.LineHeight;
-			Widgets.Label(rect, "SoS.Combat.Shields".Translate(heatMax == 0 ? "SoS.NA".Translate().ToString() : ((1f - heatCurrent / heatMax) * 100f).ToString("F0")));
+			Widgets.Label(rect, "SoS.Combat.Shields".Translate(heatMax == 0 ? "SoS.NA".Translate().ToString() : (1f - heatCurrent / heatMax).ToString("P0")));
 		}
 		public static Rect FillableBarWithDepletion(Rect rect, float fillPercent, float fillDepletion, Texture2D fillTex, Texture2D depletionTex)
 		{
