@@ -162,7 +162,8 @@
 	<SoS.StatsShipHeatMaximumShort>maximum</SoS.StatsShipHeatMaximumShort>
 	<SoS.StatsShipHeatMaximum>Heat maximum: {0}</SoS.StatsShipHeatMaximum>
 	<SoS.StatsShipCombatRating>Combat rating: {0}</SoS.StatsShipCombatRating>
-	<SoS.StatsShipCombatThrust>Thrust/Weight ratio: {0}</SoS.StatsShipCombatThrust>
+	<SoS.StatsShipCombatThrust>Ship Thrust/Weight ratio: {0}</SoS.StatsShipCombatThrust>
+	<SoS.StatsShipCombatMapThrust>Fleet Thrust/Weight ratio: {0}</SoS.StatsShipCombatMapThrust>
 	<SoS.ReportInterReady>Ready for interstellar travel.</SoS.ReportInterReady>
 	<SoS.ReportInterNotReady>Not ready for interstellar travel:</SoS.ReportInterNotReady>
 	<SoS.ReportNeedPilot>Ship requires either a pilot or an AI core.</SoS.ReportNeedPilot>

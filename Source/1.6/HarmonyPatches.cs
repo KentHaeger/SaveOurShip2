@@ -38,6 +38,7 @@ namespace SaveOurShip2
 	[HarmonyPatch(typeof(ColonistBar), "ColonistBarOnGUI")]
 	public static class ShipCombatOnGUI
 	{
+		private static float cachedThrustRatio = -1f;
 		public static void Postfix(ColonistBar __instance)
 		{
 			if (ModSettings_SoS.debugMode)
@@ -119,7 +120,16 @@ namespace SaveOurShip2
 			float screenHalf = (float)UI.screenWidth / 2 + ModSettings_SoS.offsetUIx - 200;
 			//player heat & energy bars
 			float baseY = __instance.Size.y + 40 + ModSettings_SoS.offsetUIy;
-			foreach (int i in playerMapComp.ShipsOnMap.Keys)
+			int playerShipCount = 0;
+            foreach (int i in playerMapComp.ShipsOnMap.Keys)
+			{
+                var bridge = playerMapComp.ShipsOnMap[i].Core;
+				if (bridge != null)
+				{
+					playerShipCount += 1;
+				}
+            }
+            foreach (int i in playerMapComp.ShipsOnMap.Keys)
 			{
 				var bridge = playerMapComp.ShipsOnMap[i].Core;
 				if (bridge == null)
@@ -140,8 +150,17 @@ namespace SaveOurShip2
 					StringBuilder stringBuilder = new StringBuilder();
 					stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.StatsShipCombatRating", bridge.Ship.Threat));
 					stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.StatsShipMass", bridge.Ship.MassActual));
-					stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.StatsShipCombatThrust", bridge.Ship.ThrustRatio.ToString("F3")));
-					if (bridge.heatComp.myNet.Depletion > 0)
+                    stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.StatsShipCombatThrust", bridge.Ship.ThrustRatio.ToString("F3")));
+					if (playerShipCount > 1)
+					{
+						if (Find.TickManager.TicksGame % 60 == 0 || cachedThrustRatio < 0)
+						{
+							// TODO: Organize code that does all that * 14 and * 500 math to TWR
+							cachedThrustRatio = playerMapComp.SlowestThrustToWeight() * 500;
+                        }
+						stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.StatsShipCombatMapThrust", cachedThrustRatio.ToString("F3")));
+					}
+                    if (bridge.heatComp.myNet.Depletion > 0)
 					{
 						stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.StatsShipHeatMaximum", bridge.heatComp.myNet.StorageCapacityRaw));
 					}
