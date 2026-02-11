@@ -303,10 +303,10 @@ namespace SaveOurShip2
 						}
 						if (mapComp.ShipMapState == ShipMapState.inCombat && !heatComp.Venting)
 						{
-							if (heatComp.Props.pointDefense) //PD mode
+							if (heatComp.Props.pointDefense && !WarmingUp) //PD mode
 							{
 								bool pdActive = false;
-								if (burstCooldownTicksLeft <= 0 && this.IsHashIntervalTick(10))
+								if (this.IsHashIntervalTick(10))
 								{
 									pdActive = IncomingPtDefTargetsInRange();
 									if (!PlayerControlled)
