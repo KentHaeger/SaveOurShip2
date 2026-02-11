@@ -1861,8 +1861,9 @@ namespace SaveOurShip2
 			// Now 5% of normall takoff cost or 100% of grav takeoff is extremely rough approximation. Gravlike uses such huge nubmer 
 			// because of different design with < 1 TWR.
 			// This check is not good, but previous check was even worse and requuired waay too much when grav engine is involved
-			if (ship.FuelNeeded(true) < Mathf.Min(ship.MassActual * 1.05f, ship.MassTakeoff * 2.0f))
-				newResult.Add("SoS.NeedsMoreFuel".Translate(ship.FuelNeeded(true), ship.MassActual));
+			float veryRoughMassEstimation = Mathf.Min(ship.MassActual * 1.05f, ship.MassTakeoff * 2.0f);
+            if (ship.FuelNeeded(true) < veryRoughMassEstimation)
+				newResult.Add("SoS.NeedsMoreFuel".Translate(ship.FuelNeeded(true), veryRoughMassEstimation));
 			if (ship.Sensors.NullOrEmpty())
 				newResult.Add("ShipReportMissingPart".Translate() + ": " + ThingDefOf.Ship_SensorCluster.label);
 			if (!ship.HasMannedBridge())
