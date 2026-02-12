@@ -155,6 +155,7 @@
     <Compile Include="SoSDebugActions.cs" />
     <Compile Include="SoSSpawnOverride.cs" />
     <Compile Include="TranslationUtility.cs" />
+    <Compile Include="TWRMath.cs" />
     <Compile Include="Vehicles\CompHoverMode.cs" />
     <Compile Include="Vehicles\CompProperties_HoverMode.cs" />
     <Compile Include="Vehicles\CompVehicleHeatNet.cs" />
