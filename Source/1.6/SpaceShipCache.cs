@@ -175,7 +175,7 @@ namespace SaveOurShip2
         }
 		public float MaxTakeoff = 0;
 		public float ThrustRaw = 0;
-		public float ThrustRatio => 14 * ThrustRaw * 500f / Mathf.Pow(MassSum, 1.2f);
+		public float ThrustRatio => ThrustRaw * TWRMath.TWRSmallMultiplier * TWRMath.TWRLargeMultiplier / Mathf.Pow(MassSum, 1.2f);
 		public int Rot => Engines.First().parent.Rotation.AsInt;
 		public bool IsWreck => Core == null; //not a real ship
 		public bool IsStuck => IsWreck || Bridges.All(b => b.TacCon) || Engines.NullOrEmpty(); //ship but cant move on its own

@@ -2521,7 +2521,7 @@ namespace SaveOurShip2
 				if (currPower < enginePower)
 					enginePower = currPower;
 			}
-			return enginePower * 14;
+			return enginePower * TWRMath.TWRSmallMultiplier;
 		}
 		//find worst t/w ship, getting final value, same as T/W shown in UI. 
 		public float SlowestThrustRatio() 

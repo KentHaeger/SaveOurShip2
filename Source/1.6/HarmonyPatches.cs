@@ -155,8 +155,7 @@ namespace SaveOurShip2
 					{
 						if (Find.TickManager.TicksGame % 60 == 0 || cachedThrustRatio < 0)
 						{
-							// TODO: Organize code that does all that * 14 and * 500 math to TWR
-							cachedThrustRatio = playerMapComp.SlowestThrustToWeight() * 500;
+							cachedThrustRatio = playerMapComp.SlowestThrustToWeight() * TWRMath.TWRLargeMultiplier;
                         }
 						stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.StatsShipCombatMapThrust", cachedThrustRatio.ToString("F3")));
 					}
