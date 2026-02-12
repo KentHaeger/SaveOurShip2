@@ -86,9 +86,10 @@ namespace SaveOurShip2
 			Scribe_Values.Look(ref difficultySoS, "difficultySoS", 1.0);
 			Scribe_Values.Look(ref frequencySoS, "frequencySoS", 1.0);
 			Scribe_Values.Look(ref navyShipChance, "navyShipChance", 0.4);
-			Scribe_Values.Look(ref fleetChance, "fleetChance", 0.3);
+            Scribe_Values.Look(ref fleetChance, "fleetChance", 0.3);
+            Scribe_Values.Look(ref dodgeSkillImpact, "dodgeSkillImpact", 1);
 
-			Scribe_Values.Look(ref easyMode, "easyMode", false);
+            Scribe_Values.Look(ref easyMode, "easyMode", false);
 			Scribe_Values.Look(ref shipMapPhysics, "shipMapPhysics", false);
 			//Scribe_Values.Look(ref useVacuumPathfinding, "useVacuumPathfinding", true);
 			Scribe_Values.Look(ref renderPlanet, "renderPlanet", true);
@@ -112,7 +113,8 @@ namespace SaveOurShip2
 			difficultySoS = 1,
 			frequencySoS = 1,
 			navyShipChance = 0.4,
-			fleetChance = 0.3;
+			fleetChance = 0.3,
+			dodgeSkillImpact = 1;
 		public static bool
 			easyMode = false,
 			shipMapPhysics = false,
@@ -286,7 +288,9 @@ namespace SaveOurShip2
 			difficultySoS = options.Slider((float)difficultySoS, 0.1f, 10f);
 			options.Label("SoS.Settings.FrequencySoS".Translate("0", "10", "1", Math.Round(frequencySoS, 1).ToString()), -1f, "SoS.Settings.FrequencySoS.Desc".Translate());
 			frequencySoS = options.Slider((float)frequencySoS, 0f, 10f);
-			options.Label("SoS.Settings.NavyShipChance".Translate("0", "1", "0.2", Math.Round(navyShipChance, 1).ToString()), -1f, "SoS.Settings.NavyShipChance.Desc".Translate());
+            options.Label("SoS.Settings.DodgeSkillImpact".Translate("0", "3", "1", Math.Round(dodgeSkillImpact, 1).ToString()), -1f, "SoS.Settings.DodgeSkillImpact.Desc".Translate());
+            dodgeSkillImpact = options.Slider((float)dodgeSkillImpact, 0f, 3f);
+            options.Label("SoS.Settings.NavyShipChance".Translate("0", "1", "0.2", Math.Round(navyShipChance, 1).ToString()), -1f, "SoS.Settings.NavyShipChance.Desc".Translate());
 			navyShipChance = options.Slider((float)navyShipChance, 0f, 1f);
 			options.Label("SoS.Settings.FleetChance".Translate("0", "1", "0.3", Math.Round(fleetChance, 1).ToString()), -1f, "SoS.Settings.FleetChance.Desc".Translate());
 			fleetChance = options.Slider((float)fleetChance, 0f, 1f);
