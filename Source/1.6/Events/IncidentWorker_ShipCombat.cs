@@ -20,10 +20,9 @@ namespace SaveOurShip2
 				return false;
             }
 
-			foreach (Building_ShipCloakingDevice cloak in mapComp.Cloaks)
+			if(mapComp.GetActiveCloak() != null)
 			{
-				if (cloak.active)
-					return false;
+				return false;
 			}
 			return true;
 		}

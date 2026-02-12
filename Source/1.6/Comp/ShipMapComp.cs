@@ -906,8 +906,11 @@ namespace SaveOurShip2
 				Log.Warning("SOS2: ".Colorize(Color.cyan) + map + " Error: Unable to start ship encounter.");
 				return;
 			}
-			//origin vars
-			ShipFaction = map.Parent.Faction;
+            Log.Message("Notoriery at ship battle start: " + ShipInteriorMod2.WorldComp.PlayerFactionBounty);
+			Building_ShipCloakingDevice activeCloak = GetActiveCloak();
+            Log.Message("Active cloak at ship battle start: " + activeCloak != null ? activeCloak.ThingID : "no");
+            //origin vars
+            ShipFaction = map.Parent.Faction;
 			attackedTradeship = false;
 			//target or create map + spawn ships
 			ShipCombatOriginMap = map;
@@ -3237,6 +3240,16 @@ namespace SaveOurShip2
 			float crMultiplier = Mathf.Lerp(1f, 3f, threatParameter);
 			int interval = (int)(baselineInterval * randomMultiplier * crMultiplier);
 			return Find.TickManager.TicksGame > Mathf.Max(LastAttackTick,  map.generationTick) + interval;
+        }
+
+		public Building_ShipCloakingDevice GetActiveCloak()
+		{
+            foreach (Building_ShipCloakingDevice cloak in Cloaks)
+            {
+                if (cloak.active)
+                    return cloak;
+            }
+            return null;
         }
     }
 }
