@@ -171,10 +171,13 @@ namespace SaveOurShip2
 				baseChance *= 0.5f;
 			// attacker tactician shooting skill
 			float dodgeMultiplierFromShooting = DodgeChanceMultiplierFromShooting.Evaluate(SourceMapAccuracyBoost);
-			// pilot skill
-			float dodgeMultiplierFromPiloting = DodgeChanceMultiplierFromPiloting.Evaluate(ThisMapEvasionBoost);
-			// Extra buildings
-			float dodgeMultiplierFromBuildings = ThisMapEvasionScaleFromBuildings;
+			dodgeMultiplierFromShooting = Mathf.LerpUnclamped(1, dodgeMultiplierFromShooting, (float)ModSettings_SoS.dodgeSkillImpact);
+            // pilot skill
+            float dodgeMultiplierFromPiloting = DodgeChanceMultiplierFromPiloting.Evaluate(ThisMapEvasionBoost);
+            dodgeMultiplierFromPiloting = Mathf.LerpUnclamped(1, dodgeMultiplierFromPiloting, (float)ModSettings_SoS.dodgeSkillImpact);
+
+            // Extra buildings
+            float dodgeMultiplierFromBuildings = ThisMapEvasionScaleFromBuildings;
 			// TWR
 			float dodgeMultiplierFromTWR = DodgeChanceMultiplier.Evaluate(ThisMapComp.SlowestThrustRatio());
 			float finalChance = baseChance * dodgeMultiplierFromShooting * dodgeMultiplierFromPiloting * dodgeMultiplierFromTWR *
@@ -184,6 +187,7 @@ namespace SaveOurShip2
 
 		private bool ShouldLogDataNow
 		{
+			// Sort of arbitrary seetting preventing excess log spam
 			get
 			{
 				return projectileCount < 5;
@@ -246,7 +250,8 @@ namespace SaveOurShip2
 			dodgeAngle *= DodgeMultiplierFromCurrentRange.Evaluate(proj.range);
 			//shooter adj 0-70% for miss angle
 			float shooterMultiplierFoDodge = (100 - proj.accBoost * 2f) / 100;
-			if (ModSettings_SoS.debugMode)
+			shooterMultiplierFoDodge = Mathf.LerpUnclamped(1, shooterMultiplierFoDodge, (float)ModSettings_SoS.dodgeSkillImpact);
+            if (ModSettings_SoS.debugMode)
 			{
 				Log.Warning("shooterMultiplierFoDodge: " + shooterMultiplierFoDodge);
 			}
@@ -266,7 +271,7 @@ namespace SaveOurShip2
 
 			if (ShouldLogDataNow)
 			{
-				Log.Warning("++TotalSpread: " + totalSpread.ToString("F3"));
+				Log.Warning("TotalSpread: " + totalSpread.ToString("F3"));
 			}
 			return Rand.Range(-totalSpread, totalSpread);
 		}

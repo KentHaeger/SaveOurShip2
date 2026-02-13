@@ -41,6 +41,8 @@
 0 frequency means player ship won't be attacked unless player has notoriety.
 1 frequency means cooldown between ship battles is 5 days. Every 5 days average for samll ships and every 15 days average for larger ships ship battle will happen regardless of storyteller settings. Or more often if storyteller causes causes ship battle, which is considered major threat, replacement for raid in space.
 Small ships - up to 100 CR. Large ships - above 1500 CR .</SoS.Settings.FrequencySoS.Desc>
+	<SoS.Settings.DodgeSkillImpact>Pawn skills impact on ship dodge (Min: {0} Max: {1} Default: {2} Current: {3})</SoS.Settings.DodgeSkillImpact>
+	<SoS.Settings.DodgeSkillImpact.Desc>Determines how much pilot intellectual skill and tactician shooting skill affect ship dodge mechanics and weapon accuracy. Less than 1 means reduced impact, above 1 means increased impact. As player pawns thend to have higer skills compared to enemies, increased impact usually means lower difficulty and reduced impact means higher difficulty.</SoS.Settings.DodgeSkillImpact.Desc>
 	<SoS.Settings.NavyShipChance>Navy chance (Min: {0} Max: {1} Default: {2} Current: {3})</SoS.Settings.NavyShipChance>
 	<SoS.Settings.NavyShipChance.Desc>How likely navies will appear in random encounters.</SoS.Settings.NavyShipChance.Desc>
 	<SoS.Settings.FleetChance>Random fleet chance (Min: {0} Max: {1} Default: {2} Current: {3})</SoS.Settings.FleetChance>
