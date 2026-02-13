@@ -826,6 +826,21 @@ namespace SaveOurShip2
 							if ((!m.IsSpace() && !m.IsTempIncidentMap) || (ckActive && m != Map))
 								landableMaps.Add(m);
 						}
+						if (landableMaps.Empty())
+						{
+							string targetPlaceholder = TranslatorFormattedStringExtensions.Translate("SoS.LandSomewhere");
+							Command_Action landShipDisabled = new Command_Action
+							{
+								groupable = false,
+								action = delegate { },
+								defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.Land", targetPlaceholder),
+								defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.LandDesc", targetPlaceholder),
+								icon = ContentFinder<Texture2D>.Get("UI/Planet_Landing_Icon")
+							};
+                            landShipDisabled.Disable();
+                            landShipDisabled.disabledReason = TranslatorFormattedStringExtensions.Translate("SoS.LandNoTargetTile");
+							yield return landShipDisabled;
+                        }
 						foreach (Map m in landableMaps)
 						{
 							Command_Action landShip = new Command_Action
@@ -835,8 +850,8 @@ namespace SaveOurShip2
 								{
 									ShipInteriorMod2.UnDockWarning(delegate { mapComp.MoveToMap = m; Ship.CreateShipSketchIfFuelPct(ShipInteriorMod2.pctFuelLand, m, 0, true); }, mapComp, shipIndex);
 								},
-								defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.Land") + " (" + m.Parent.Label + ")",
-								defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.LandDesc") + m.Parent.Label,
+								defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.Land", m.Parent.Label),
+								defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.LandDesc", m.Parent.Label),
 								icon = ContentFinder<Texture2D>.Get("UI/Planet_Landing_Icon")
 							};
 							if (ShipCountdown.CountingDown || !Ship.HasPilotRCSAndFuel(ShipInteriorMod2.pctFuelLand, false))

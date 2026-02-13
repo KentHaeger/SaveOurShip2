@@ -198,8 +198,11 @@
 	<SoS.MoveFailFuel>Not enough fuel to move ship, required {0} fuel</SoS.MoveFailFuel>
 	<SoS.MoveFailFaction>Ship from another faction next to target area. Move aborted.</SoS.MoveFailFaction>
 	<SoS.MoveFailCombat>Main ship map is in battle.</SoS.MoveFailCombat>
-	<SoS.Land>Land ship</SoS.Land>
-	<SoS.LandDesc>Land this ship near </SoS.LandDesc>
+	<SoS.Land>Land ship ({0})</SoS.Land>
+	<SoS.LandDesc>Land this ship near {0}</SoS.LandDesc>
+	<!-- Used in 2 above strings as key filler when there in actual location to land available -->
+	<SoS.LandSomewhere>somewhere</SoS.LandSomewhere>
+	<SoS.LandNoTargetTile>There is no surface map to land on. Observe planet surface tile with ship scanner or science console.</SoS.LandNoTargetTile>
 	<SoS.Rebuild>Rebuild ship parts</SoS.Rebuild>
 	<SoS.RebuildDesc>Places blueprints for destroyed buildings on this ship.</SoS.RebuildDesc>
 	<SoS.BridgeConnectTooltip>Bridge is not connected! Make sure this is hooked up to both heat and power networks.</SoS.BridgeConnectTooltip>
