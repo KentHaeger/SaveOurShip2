@@ -908,7 +908,10 @@ namespace SaveOurShip2
 			}
             Log.Message("Notoriery at ship battle start: " + ShipInteriorMod2.WorldComp.PlayerFactionBounty);
 			Building_ShipCloakingDevice activeCloak = GetActiveCloak();
-            Log.Message("Active cloak at ship battle start: " + activeCloak != null ? activeCloak.ThingID : "no");
+			if (activeCloak != null)
+			{
+				Log.Message("Active cloak at ship battle start: " + activeCloak.ThingID);
+			}
             //origin vars
             ShipFaction = map.Parent.Faction;
 			attackedTradeship = false;
