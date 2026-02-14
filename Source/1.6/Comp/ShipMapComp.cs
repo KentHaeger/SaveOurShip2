@@ -1809,7 +1809,7 @@ namespace SaveOurShip2
                                 }
 							}
 							// Check for lazy storyteller
-							else if (ShipBattleRecommendedIntervalExpired())
+							else if (ShipBattleRecommendedIntervalExpired() && GetActiveCloak() == null)
 							{
                                 Building_ShipBridge bridge = MapRootListAll.FirstOrDefault();
 								// It's not ideal to return from ticking method on start ship encounter, but changing that may cause issues.
