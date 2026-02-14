@@ -61,9 +61,9 @@
       <HintPath>..\..\..\..\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="SmashTools">
-      <HintPath>..\..\..\Vehicle-Framework\1.6\Assemblies\SmashTools.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="SmashTools, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Partial\_VFVersions\VF_DEV_Steam\1.6\Assemblies\SmashTools.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
@@ -92,8 +92,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Vehicles">
-      <HintPath>..\..\..\Vehicle-Framework\1.6\Assemblies\Vehicles.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\..\Partial\_VFVersions\VF_DEV_Steam\1.6\Assemblies\Vehicles.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
