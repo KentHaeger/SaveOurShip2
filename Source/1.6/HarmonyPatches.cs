@@ -6064,6 +6064,36 @@ namespace SaveOurShip2
         }
     }
 
+    // Due to base game not handling biome diseases correctly and still causing random disease 
+    // to sickly pawn in a biome without diseases, this has to be fixed, considering
+    // disease caused is apparently always organ decay, which is waay to rough.
+    // Changing to sickly pawn has nowhere to get infection from when put into sterile spacedship environment
+    [HarmonyPatch(typeof(IncidentWorker_Disease), "ApplyToPawns")]
+    public static class NoRandomOrganDecayInSpace
+    {
+        public static bool Prefix(IncidentWorker_Disease __instance, IEnumerable<Pawn> pawns)
+        {
+            // Sickly trait causes incident on exactly one pawn
+            if (pawns.Count() != 1)
+            {
+                return true;
+            }
+            Pawn pawn = pawns.First();
+            if (pawn.Spawned)
+            {
+                if (!(pawn.Map?.IsSpace() ?? false))
+                {
+                    return true;
+                }
+            }
+            if (__instance.def.diseaseIncident == HediffDefOf.OrganDecay)
+            {
+                return false;
+            }
+            return true;
+        }
+    }
+
     /*[HarmonyPatch(typeof(ActiveDropPod),"PodOpen")]
 	public static class ActivePodFix{
 		public static bool Prefix (ref ActiveDropPod __instance)
