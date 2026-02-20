@@ -45,7 +45,7 @@ namespace SaveOurShip2.Vehicles
         public static int GetPilotIntellectualSkill(this VehiclePawn vehicle)
         {
             int result = vehicle.GetVehicleCrewSkill(SkillDefOf.Intellectual);
-            if (upgrades != null)
+            if (upgrades != null && vehicle.CompUpgradeTree?.upgrades != null)
             {
                 foreach (var (upgradeKey, skillValue) in upgrades)
                 {
