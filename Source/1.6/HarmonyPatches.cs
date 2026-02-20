@@ -2769,6 +2769,10 @@ namespace SaveOurShip2
 				return;
 			}
 			Pawn pawn = selectedPawns.First();
+			if (!c.InBounds(pawn.Map))
+			{
+				return;
+			}
 			if (pawn.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation))
 			{
 				foreach (Thing current in c.GetThingList(pawn.Map))
