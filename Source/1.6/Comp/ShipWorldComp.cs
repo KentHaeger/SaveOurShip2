@@ -1,4 +1,5 @@
-﻿using Verse;
+﻿using UnityEngine;
+using Verse;
 using RimWorld;
 using RimWorld.Planet;
 using System.Collections.Generic;
@@ -84,8 +85,33 @@ namespace SaveOurShip2
 				Log.Warning("SOS2: Insect faction not found! SOS2 gameplay experience will be affected.");
 		}
 
-		// Will show that letter once per save in order not to annoy players
-		private bool difficultyLetterShown = false;
+		public bool NotorietyActive
+		{
+			get
+			{
+				return PlayerFactionBounty > 20;
+			}
+		}
+		public int TicksBetweenNotorietyAttacks
+        {
+            get
+            {
+                // Updated formula: bounty hunters attack evry (15 days / Sqrt(notoriety)) with min notoriety 20 causing attachs every ~ 3.4 days,
+				// every 2 days at 55 notoriety, every 1.5 days at 100 notoriety
+                return (int)Mathf.Max((float)GenDate.TicksPerDay * 15 / Mathf.Sqrt(PlayerFactionBounty), (float)GenDate.TicksPerDay);
+            }
+        }
+
+		public int BountyPayment
+		{
+			get
+			{
+				return 1250 * PlayerFactionBounty;
+			}
+		}
+
+        // Will show that letter once per save in order not to annoy players
+        private bool difficultyLetterShown = false;
 		public override void WorldComponentTick()
 		{
 			if (Find.TickManager.TicksGame % GenTicks.TickRareInterval == 0)

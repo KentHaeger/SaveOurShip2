@@ -467,6 +467,11 @@
 	<SoS.SatelliteRepair>Repair</SoS.SatelliteRepair>
 	<SoS.SatelliteHack>Hack</SoS.SatelliteHack>
 
+	<!-- notorietuy alert -->
+	<SoS.Alert.NotoriertyLabel>Notoriety: {0}</SoS.Alert.NotoriertyLabel>
+	<SoS.Alert.NotoriertyLowDesc>Because of pirating trade ships and/or because of using Orbital Bombardment (submod), player ship got notorious. Not too much yet, but continued piracy or bombardment will make it higher and attract bounty hunters.</SoS.Alert.NotoriertyLowDesc>
+	<SoS.Alert.NotoriertyHighDesc>Because of pirating trade ships and/or because of using Orbital Bombardment (submod), player ship got very notorious and is chased by bounty hunters. Attacks will happen roughly evey {0} days.</SoS.Alert.NotoriertyHighDesc>
+
 	<!-- This scetion and lower were added during major translation upgrade -->
 	<!-- Archotech and endgame stuff -->
 	<SoS.ArchotechIdeoKeep>Discover the truth of {0}</SoS.ArchotechIdeoKeep>
