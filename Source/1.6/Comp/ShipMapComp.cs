@@ -1801,8 +1801,8 @@ namespace SaveOurShip2
 						if (IsPlayerShipMap)
 						{
 							// Check for bounty hunters attack
-							if (ShipInteriorMod2.WorldComp.PlayerFactionBounty > 20 && tick - LastBountyRaidTick > Mathf.Max(600000f / Mathf.Sqrt(ShipInteriorMod2.WorldComp.PlayerFactionBounty), 60000f))
-							{
+							if (ShipInteriorMod2.WorldComp.NotorietyActive && tick - LastBountyRaidTick > ShipInteriorMod2.WorldComp.TicksBetweenNotorietyAttacks)
+                            {
 								LastBountyRaidTick = tick;
 								Building_ShipBridge bridge = MapRootListAll.FirstOrDefault();
 								if (bridge != null)

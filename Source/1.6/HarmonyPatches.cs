@@ -1782,18 +1782,20 @@ namespace SaveOurShip2
 				//pay bounty, gray if not enough money
 				if (bounty > 1)
 				{
-					DiaOption diaOption3 = new DiaOption(TranslatorFormattedStringExtensions.Translate("SoS.TradePayBounty", 2500 * bounty));
+					int bountyPayment = ShipInteriorMod2.WorldComp.BountyPayment;
+                    DiaOption diaOption3 = new DiaOption(TranslatorFormattedStringExtensions.Translate("SoS.TradePayBounty", bountyPayment));
+
 					diaOption3.action = delegate
 					{
-						TradeUtility.LaunchThingsOfType(ThingDefOf.Silver, 2500 * bounty, __instance.Map, null);
+						TradeUtility.LaunchThingsOfType(ThingDefOf.Silver, bountyPayment, __instance.Map, null);
 						bounty = 0;
 						ShipInteriorMod2.WorldComp.PlayerFactionBounty = bounty;
 					};
 					diaOption3.resolveTree = true;
 					diaNode.options.Add(diaOption3);
-					if (AmountSendableSilver(__instance.Map) < 2500 * bounty)
+					if (AmountSendableSilver(__instance.Map) < bountyPayment)
 					{
-						diaOption3.Disable(TranslatorFormattedStringExtensions.Translate("SoS.NotEnoughForBounty", 2500 * bounty));
+						diaOption3.Disable(TranslatorFormattedStringExtensions.Translate("SoS.NotEnoughForBounty", bountyPayment));
 					}
 				}
 			}
