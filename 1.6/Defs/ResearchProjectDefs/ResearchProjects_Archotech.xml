@@ -307,7 +307,7 @@
   <ResearchProjectDef ParentName="ArchotechResearchProjectBase">
     <defName>ArchotechPillarC</defName>
     <label>locate gamma pillar</label>
-    <description>Discover the location of an archotech pillar. This particular specimen is somewhere on the planet's surface. New loction will appear when this research is completed.</description>
+    <description>Discover the location of an archotech pillar. This particular specimen is somewhere on the planet's surface. New location will appear when this research is completed.</description>
     <baseCost>1000</baseCost>
     <researchViewX>5</researchViewX>
     <researchViewY>3</researchViewY>
@@ -318,7 +318,7 @@
   <ResearchProjectDef ParentName="ArchotechResearchProjectBase">
     <defName>ArchotechPillarD</defName>
     <label>locate delta pillar</label>
-    <description>Discover the location of an archotech pillar. This particular specimen is somewhere beneath the planet's crust. Cave entrance site will appear on planet surface when this research is completed.</description>
+    <description>Discover the location of an archotech pillar. This particular specimen is somewhere beneath the planet's crust. Cave entrance site will appear on the planet surface when this research is completed.</description>
     <baseCost>1000</baseCost>
     <researchViewX>5</researchViewX>
     <researchViewY>4</researchViewY>
