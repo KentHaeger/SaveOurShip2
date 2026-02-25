@@ -285,44 +285,44 @@
   <ResearchProjectDef ParentName="ArchotechResearchProjectBase">
     <defName>ArchotechPillarA</defName>
     <label>locate alpha pillar</label>
-    <description>Discover the location of an archotech pillar. This particular specimen is somewhere in orbit.</description>
+    <description>Discover the location of an archotech pillar. This particular specimen is somewhere in orbit. You will need to engage the Horizon in ship combat from your ship's pilot console or AI/Drone core when this research is completed.</description>
     <baseCost>1000</baseCost>
     <researchViewX>5</researchViewX>
     <researchViewY>1</researchViewY>
 	<discoveredLetterTitle>Archotech pillar detected</discoveredLetterTitle>
-    <discoveredLetterText>You have managed to discern the location of an archotech pillar! This specimen resides aboard the KSS Horizon, an ancient terraforming station.\n\nScans indicate the station's dome section has maintained a functioning ecosystem for thousands of years. However, it is currently occupied by a clan of space pirates - and, given the number of heavy armaments they have mounted on the station's hull, they intend to discourage visitors.\n\nYou will need to engage the Horizon in ship combat from your bridge.</discoveredLetterText>
+    <discoveredLetterText>You have managed to discern the location of an archotech pillar! This specimen resides aboard the KSS Horizon, an ancient terraforming station.\n\nScans indicate the station's dome section has maintained a functioning ecosystem for thousands of years. However, it is currently occupied by a clan of space pirates - and, given the number of heavy armaments they have mounted on the station's hull, they intend to discourage visitors.\n\nYou will need to engage the Horizon in ship combat from your ship's pilot console or AI/Drone core.</discoveredLetterText>
   </ResearchProjectDef>
   
   <ResearchProjectDef ParentName="ArchotechResearchProjectBase">
     <defName>ArchotechPillarB</defName>
     <label>locate beta pillar</label>
-    <description>Discover the location of an archotech pillar. This particular specimen is somewhere on one of the planet's moons.</description>
+    <description>Discover the location of an archotech pillar. This particular specimen is somewhere on one of the planet's moons. To approach the site select the "Raid Moon base" option on your ship's pilot console or AI/Drone core when this research is completed.</description>
     <baseCost>1000</baseCost>
     <researchViewX>5</researchViewX>
     <researchViewY>2</researchViewY>
 	<discoveredLetterTitle>Archotech pillar detected</discoveredLetterTitle>
-    <discoveredLetterText>You have managed to discern the location of an archotech pillar! This specimen is apparently being studied by a mechanoid hive on one of the planet's moons.\n\nScans indicate the hive is defended by a very large mechanoid warship.\n\nTo approach the site select the "Moon Hive" option on your bridge.</discoveredLetterText>
+    <discoveredLetterText>You have managed to discern the location of an archotech pillar! This specimen is apparently being studied by a mechanoid hive on one of the planet's moons.\n\nScans indicate the hive is defended by a very large mechanoid warship.\n\nTo approach the site select the "Raid Moon base" option on your ship's pilot console or AI/Drone core.</discoveredLetterText>
   </ResearchProjectDef>
   
   <ResearchProjectDef ParentName="ArchotechResearchProjectBase">
     <defName>ArchotechPillarC</defName>
     <label>locate gamma pillar</label>
-    <description>Discover the location of an archotech pillar. This particular specimen is somewhere on the planet's surface.</description>
+    <description>Discover the location of an archotech pillar. This particular specimen is somewhere on the planet's surface. New location will appear when this research is completed.</description>
     <baseCost>1000</baseCost>
     <researchViewX>5</researchViewX>
     <researchViewY>3</researchViewY>
 	<discoveredLetterTitle>Archotech pillar detected</discoveredLetterTitle>
-    <discoveredLetterText>You have managed to discern the location of an archotech pillar! This specimen is the most sacred artifact of the planet's tribal cultures, referred to as the Star Totem.\n\nIt was once a sacred meeting place where rival tribes spoke under a banner of peace, but has been captured and defiled by a savage berserker clan.\n\nWhen your raiding party arrives at the site, they will be joined by allies from any tribes you have befriended, eager to see the sacred totem return to friendly hands.</discoveredLetterText>
+    <discoveredLetterText>You have managed to discern the location of an archotech pillar! This specimen is the most sacred artifact of the planet's tribal cultures, referred to as the Star Totem.\n\nIt was once a sacred meeting place where rival tribes spoke under a banner of peace, but has been captured and defiled by a savage berserker clan.\n\nWhen your raiding party arrives at the site, they will be joined by allies from any tribes you have befriended, eager to see the sacred totem return to friendly hands.\n\nTotem site can be found on the planet surface now.</discoveredLetterText>
   </ResearchProjectDef>
   
   <ResearchProjectDef ParentName="ArchotechResearchProjectBase">
     <defName>ArchotechPillarD</defName>
     <label>locate delta pillar</label>
-    <description>Discover the location of an archotech pillar. This particular specimen is somewhere beneath the planet's crust.</description>
+    <description>Discover the location of an archotech pillar. This particular specimen is somewhere beneath the planet's crust. Cave entrance site will appear on the planet surface when this research is completed.</description>
     <baseCost>1000</baseCost>
     <researchViewX>5</researchViewX>
     <researchViewY>4</researchViewY>
 	<discoveredLetterTitle>Archotech pillar detected</discoveredLetterTitle>
-    <discoveredLetterText>You have managed to discern the location of an archotech pillar! This specimen sits deep underground, at the center of a colossal insect hive.\n\nScans detect a large breeding population of Sorne Geneline insects as well as several anomalous readings - perhaps archospiders or something even worse.\n\nYour raiding party is advised to train in close-quarters combat...</discoveredLetterText>
+    <discoveredLetterText>You have managed to discern the location of an archotech pillar! This specimen sits deep underground, at the center of a colossal insect hive.\n\nScans detect a large breeding population of Sorne Geneline insects as well as several anomalous readings - perhaps archospiders or something even worse.\n\nYour raiding party is advised to train in close-quarters combat...\n\nCave entrance site can be found on the planet surface now.</discoveredLetterText>
   </ResearchProjectDef>
 </Defs>
