@@ -312,7 +312,7 @@
     <researchViewX>5</researchViewX>
     <researchViewY>3</researchViewY>
 	<discoveredLetterTitle>Archotech pillar detected</discoveredLetterTitle>
-    <discoveredLetterText>You have managed to discern the location of an archotech pillar! This specimen is the most sacred artifact of the planet's tribal cultures, referred to as the Star Totem.\n\nIt was once a sacred meeting place where rival tribes spoke under a banner of peace, but has been captured and defiled by a savage berserker clan.\n\nWhen your raiding party arrives at the site, they will be joined by allies from any tribes you have befriended, eager to see the sacred totem return to friendly hands.\n\nTotem site can be found on planet surface now.</discoveredLetterText>
+    <discoveredLetterText>You have managed to discern the location of an archotech pillar! This specimen is the most sacred artifact of the planet's tribal cultures, referred to as the Star Totem.\n\nIt was once a sacred meeting place where rival tribes spoke under a banner of peace, but has been captured and defiled by a savage berserker clan.\n\nWhen your raiding party arrives at the site, they will be joined by allies from any tribes you have befriended, eager to see the sacred totem return to friendly hands.\n\nTotem site can be found on the planet surface now.</discoveredLetterText>
   </ResearchProjectDef>
   
   <ResearchProjectDef ParentName="ArchotechResearchProjectBase">
@@ -323,6 +323,6 @@
     <researchViewX>5</researchViewX>
     <researchViewY>4</researchViewY>
 	<discoveredLetterTitle>Archotech pillar detected</discoveredLetterTitle>
-    <discoveredLetterText>You have managed to discern the location of an archotech pillar! This specimen sits deep underground, at the center of a colossal insect hive.\n\nScans detect a large breeding population of Sorne Geneline insects as well as several anomalous readings - perhaps archospiders or something even worse.\n\nYour raiding party is advised to train in close-quarters combat...\n\nCave entrance site can be found on planet surface now.</discoveredLetterText>
+    <discoveredLetterText>You have managed to discern the location of an archotech pillar! This specimen sits deep underground, at the center of a colossal insect hive.\n\nScans detect a large breeding population of Sorne Geneline insects as well as several anomalous readings - perhaps archospiders or something even worse.\n\nYour raiding party is advised to train in close-quarters combat...\n\nCave entrance site can be found on the planet surface now.</discoveredLetterText>
   </ResearchProjectDef>
 </Defs>
