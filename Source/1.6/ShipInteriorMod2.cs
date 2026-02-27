@@ -2182,27 +2182,39 @@ namespace SaveOurShip2
 			}
 			return true;
 		}
-		public static bool CanPlaceShipOnVec(IntVec3 v, Map map, bool excludePlayer = false)
+		public static bool CanPlaceShipOnVec(IntVec3 v, Map map, bool excludePlayer = false, bool ignoreErrors = false)
 		{
 			RoofDef roof = map.roofGrid.RoofAt(v);
 			if (v.InNoBuildEdgeArea(map))
 			{
-				Log.Error("[SoS2] Ship unable to land on cell " + v + ": it is outside the build area");
+				if (!ignoreErrors)
+				{
+					Log.Error("[SoS2] Ship unable to land on cell " + v + ": it is outside the build area");
+				}
 				return false;
 			}
 			else if (roof != null && roof.isThickRoof)
             {
-				Log.Error("[SoS2] Ship unable to land on cell " + v + ": it is under a mountain");
+				if (!ignoreErrors)
+				{
+					Log.Error("[SoS2] Ship unable to land on cell " + v + ": it is under a mountain");
+				}
 				return false;
 			}
 			else if (!v.GetTerrain(map).affordances.Contains(TerrainAffordanceDefOf.Heavy))
             {
-				Log.Error("[SoS2] Ship unable to land on cell " + v + ": it does not support heavy buildings");
+				if (!ignoreErrors)
+				{
+					Log.Error("[SoS2] Ship unable to land on cell " + v + ": it does not support heavy buildings");
+				}
 				return false;
 			}
 			else if (v.GetThingList(map).Any(t => t is Building b && b.def.passability!=Traversability.Standable && (!excludePlayer || b.Faction != Faction.OfPlayer)))
             {
-				Log.Error("[SoS2] Ship unable to land on cell " + v + ": it contains a non-player building");
+				if (!ignoreErrors)
+				{
+					Log.Error("[SoS2] Ship unable to land on cell " + v + ": it contains a non-player building");
+				}
 				return false;
 			}
 			return true;

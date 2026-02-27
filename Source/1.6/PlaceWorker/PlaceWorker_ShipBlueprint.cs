@@ -30,7 +30,7 @@ namespace SaveOurShip2
 				if (!pos.InBounds(map))
 					return;
 				areaAdj.Add(pos);
-				if (clear && !ShipInteriorMod2.CanPlaceShipOnVec(pos, map, true))
+				if (clear && !ShipInteriorMod2.CanPlaceShipOnVec(pos, map, true, ignoreErrors:true))
 					clear = false;
 			}
 			if (!clear)
