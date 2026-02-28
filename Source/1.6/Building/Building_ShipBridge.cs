@@ -1224,6 +1224,10 @@ namespace SaveOurShip2
 		public override string GetInspectString()
 		{
 			string text = base.GetInspectString();
+			if (!Spawned)
+			{
+				return text;
+			}
 			text += "\n" + TranslatorFormattedStringExtensions.Translate("SoS.StatsShipName", Ship.Name);
 			return text;
 		}
@@ -1284,7 +1288,7 @@ namespace SaveOurShip2
 				selected = false;
 			//td rem this?
 			int ticks = Find.TickManager.TicksGame;
-			if (ticks % 8 == 0)
+			if (ticks % 8 == 0 && Spawned)
 				UpdateUI();
 
 			if (ticks % 250 == 0)
