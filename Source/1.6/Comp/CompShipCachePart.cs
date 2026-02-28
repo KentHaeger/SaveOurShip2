@@ -81,6 +81,11 @@ namespace SaveOurShip2
 		}
 		public override string CompInspectStringExtra()
 		{
+			// AI cores were allowed to be minified. And while minified they are not fully functional shop parts.
+			if (!parent.Spawned)
+			{
+				return String.Empty;
+			}
 			StringBuilder stringBuilder = new StringBuilder();
 			if (Prefs.DevMode)
 			{
