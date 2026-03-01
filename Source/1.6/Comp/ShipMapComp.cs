@@ -1716,14 +1716,14 @@ namespace SaveOurShip2
 					ShipInteriorMod2.WorldComp.renderedThatAlready = false;
 				//move WO
 				//max 1000 = 150, min 130 = 100
-				float ratio = (Altitude - ShipInteriorMod2.altitudeLand) / (ShipInteriorMod2.altitudeNominal - ShipInteriorMod2.altitudeLand);
-				if (!Takeoff) //reverse scaling - altitude always points up
-				{
-					ratio = 1 - ratio;
-				}
-				//vec to target - vec to origin, scale by altitude
-				//td get a math wizard to make this a curve and point it at equator orbit or around planet to ground
-				Vector3 d = mapParent.targetDrawPos - mapParent.originDrawPos;
+				float ratio = AltitudeRatio;
+                if (!Takeoff) //reverse scaling - altitude always points up
+                {
+                    ratio = 1 - ratio;
+                }
+                //vec to target - vec to origin, scale by altitude
+                //td get a math wizard to make this a curve and point it at equator orbit or around planet to ground
+                Vector3 d = mapParent.targetDrawPos - mapParent.originDrawPos;
 				mapParent.drawPos = mapParent.originDrawPos + new Vector3(d.x * ratio, d.y * ratio, d.z * ratio);
 			}
 			if (callSlowTick) //origin only: call both slow ticks
@@ -1736,6 +1736,14 @@ namespace SaveOurShip2
 			{
 				SlowTick(tick);
 			}
+		}
+
+		public float AltitudeRatio
+		{
+			get
+			{
+                return (Altitude - ShipInteriorMod2.altitudeLand) / (ShipInteriorMod2.altitudeNominal - ShipInteriorMod2.altitudeLand);
+            }
 		}
 
 		public void RecalculateThreat()
