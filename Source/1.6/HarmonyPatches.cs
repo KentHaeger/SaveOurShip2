@@ -6063,9 +6063,18 @@ namespace SaveOurShip2
         {
             if (Find.CurrentMap?.IsSpace() ?? false)
             {
-                // Default 130
+				// Default 130
                 const float spaceOffset = 1000f;
-                __result = spaceOffset;
+				ShipMapComp mapComp = Find.CurrentMap.GetComponent<ShipMapComp>();
+				if (mapComp.ShipMapState == ShipMapState.inTransit)
+				{
+					// At ratio = 0 it looks as decent close-up view of [planet surface 
+					__result = spaceOffset * mapComp.AltitudeRatio;
+                }
+				else
+				{
+					__result = spaceOffset;
+				}
             }
         }
     }
