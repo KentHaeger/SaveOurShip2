@@ -188,21 +188,6 @@ namespace SaveOurShip2
 			}
 		}
 
-		public static bool SlowTimeFlag
-		{
-			get
-			{
-				return WorldComp?.SlowTimeFlag ?? false;
-			}
-			set
-			{
-				if (WorldComp != null)
-				{
-					WorldComp.SlowTimeFlag = value;
-				}
-			}
-		}
-
 		// When umlocking all ships, set crew limit to spawn, as player is more likely to be able to handle destroyer (not intended as starting ship)
 		// with a few pawns. While managing full destroyer (or above!) crew is waay too tedious
 		private static ExtraShipGenOptions extraShipGenOptions = new ExtraShipGenOptions();

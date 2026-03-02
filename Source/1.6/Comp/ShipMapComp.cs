@@ -2694,8 +2694,6 @@ namespace SaveOurShip2
 			if (loser.GetComponent<ShipMapComp>().ShipMapState != ShipMapState.inCombat)
 				return;
 			Log.Message("SOS2: ".Colorize(Color.cyan) + loser + " Lost ship battle!".Colorize(Color.red));
-			// In case slow time was enabled, it is now no longer needed
-			ShipInteriorMod2.SlowTimeFlag = false;
 			//tgtMap is opponent of origin
 			Map tgtMap = OriginMapComp.ShipCombatTargetMap;
 			var tgtMapComp = OriginMapComp.TargetMapComp;

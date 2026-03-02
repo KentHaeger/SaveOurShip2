@@ -561,27 +561,6 @@ namespace SaveOurShip2
 						yield return dodgeRight;
 					}
 
-					// Not known if it's compicated for the player to have slow time option or rather
-					// it's complicated to watch dodging at normal speed and understand things
-					if (Prefs.DevMode && ModSettings_SoS.debugMode)
-					{
-						Command_Toggle toggleSlowTime = new Command_Toggle
-						{
-							toggleAction = delegate
-							{
-								ShipInteriorMod2.SlowTimeFlag = !ShipInteriorMod2.SlowTimeFlag;
-							},
-							defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.ToggleSlowLabel"),
-							defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.ToggleCloakDesc"),
-							isActive = () => ShipInteriorMod2.SlowTimeFlag
-						};
-						if (ShipInteriorMod2.SlowTimeFlag)
-							toggleSlowTime.icon = ContentFinder<Texture2D>.Get("UI/CloakingDeviceOn");
-						else
-							toggleSlowTime.icon = ContentFinder<Texture2D>.Get("UI/CloakingDeviceOff");
-						yield return toggleSlowTime;
-					}
-
 					foreach (ShipMapComp.ShuttleMissionData mission in mapComp.ShuttleMissions)
                     {
 						Command_Action changeShuttleMission = new Command_Action
