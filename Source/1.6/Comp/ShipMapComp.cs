@@ -3063,7 +3063,10 @@ namespace SaveOurShip2
 			public float weaponCooldown;
 			public bool liftedOffYet;
 			public int uniqueID;
-
+            // For caching UI strings
+            public string UIPlayerShuttleInfo;
+            public string UIPlayerShuttleInfo2;
+            public string UIShuttleInfo;
             public void ExposeData()
             {
 				Scribe_References.Look<VehiclePawn>(ref shuttle, "shuttle");

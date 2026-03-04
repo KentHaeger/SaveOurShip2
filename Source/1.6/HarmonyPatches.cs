@@ -193,13 +193,16 @@ namespace SaveOurShip2
 			{
 				ShuttleMissionData mission = missionsSorted[i];
 				baseY += 30;
-				string str = "SoS.Combat.PlayerShuttleInfo".Translate(
-					mission.shuttle.Name != null ? mission.shuttle.Name.ToString() : mission.shuttle.def.label,
-					ShuttleMissionData.MissionGerund(mission.mission));
-				int strSize = 5 + str.Length * 6;
+				if (mission.UIPlayerShuttleInfo.NullOrEmpty() || mission.shuttle.IsHashIntervalTick(GenTicks.TicksPerRealSecond))
+				{
+					mission.UIPlayerShuttleInfo = "SoS.Combat.PlayerShuttleInfo".Translate(
+						mission.shuttle.Name != null ? mission.shuttle.Name.ToString() : mission.shuttle.def.label,
+						ShuttleMissionData.MissionGerund(mission.mission));
+				}
+				int strSize = 5 + (int)Text.CalcSize(mission.UIPlayerShuttleInfo).x;
 				Rect rect2 = new Rect(screenHalf - 380 - strSize, baseY - 40, 295 + strSize, 25);
 				Widgets.DrawMenuSection(rect2);
-				Widgets.Label(rect2.ContractedBy(3), str);
+				Widgets.Label(rect2.ContractedBy(3), mission.UIPlayerShuttleInfo);
 
 				DrawShuttleHealth(screenHalf - 220, baseY, mission.shuttle);
 				DrawShuttleHeat(screenHalf - 365, baseY, mission.shuttle);
@@ -245,13 +248,16 @@ namespace SaveOurShip2
 				if (mission.shuttle.Faction == Faction.OfPlayer)
 				{
 					baseY += 30;
-					string str = "SoS.Combat.PlayerShuttleInfo2".Translate(
-						mission.shuttle.Name != null ? mission.shuttle.Name.ToString() : mission.shuttle.def.label,
-						ShuttleMissionData.MissionGerund(mission.mission));
-					int strSize = 5 + str.Length * 6;
+					if (mission.UIPlayerShuttleInfo2.NullOrEmpty() || mission.shuttle.IsHashIntervalTick(GenTicks.TicksPerRealSecond))
+					{
+                        mission.UIPlayerShuttleInfo2 = "SoS.Combat.PlayerShuttleInfo2".Translate(
+							mission.shuttle.Name != null ? mission.shuttle.Name.ToString() : mission.shuttle.def.label,
+							ShuttleMissionData.MissionGerund(mission.mission));
+                    }
+					int strSize = 5 + (int)Text.CalcSize(mission.UIPlayerShuttleInfo2).x;
 					Rect rect2 = new Rect(screenHalf - 430 - strSize, baseY - 40, 295 + strSize, 25);
 					Widgets.DrawMenuSection(rect2);
-					Widgets.Label(rect2.ContractedBy(3), str);
+					Widgets.Label(rect2.ContractedBy(3), mission.UIPlayerShuttleInfo2);
 
 					DrawShuttleHealth(screenHalf - 220, baseY, mission.shuttle);
 					DrawShuttleHeat(screenHalf - 365, baseY, mission.shuttle);
@@ -259,14 +265,17 @@ namespace SaveOurShip2
 				else
 				{
 					baseY += 30;
-					string str = "SoS.Combat.ShuttleInfo".Translate(
-						mission.shuttle.Name != null ? mission.shuttle.Name.ToString() : mission.shuttle.def.label,
-						ShuttleMissionData.MissionGerund(mission.mission));
-					int strSize = 5 + str.Length * 6;
+					if (mission.UIShuttleInfo.NullOrEmpty() || mission.shuttle.IsHashIntervalTick(GenTicks.TicksPerRealSecond))
+					{
+						mission.UIShuttleInfo = "SoS.Combat.ShuttleInfo".Translate(
+							mission.shuttle.Name != null ? mission.shuttle.Name.ToString() : mission.shuttle.def.label,
+							ShuttleMissionData.MissionGerund(mission.mission));
+					}
+					int strSize = 5 + (int)Text.CalcSize(mission.UIShuttleInfo).x;
 					Rect rect2 = new Rect(screenHalf + 490, baseY - 40, 300 + strSize, 25);
 					Widgets.DrawMenuSection(rect2);
 					Rect rect3 = new Rect(screenHalf + 785, baseY - 40, 300 + strSize, 25);
-					Widgets.Label(rect3.ContractedBy(3), str);
+					Widgets.Label(rect3.ContractedBy(3), mission.UIShuttleInfo);
 					DrawShuttleHealth(screenHalf + 505, baseY, mission.shuttle);
 					DrawShuttleHeat(screenHalf + 650, baseY, mission.shuttle);
 				}
