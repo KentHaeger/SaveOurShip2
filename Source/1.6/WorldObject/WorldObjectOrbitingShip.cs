@@ -498,7 +498,19 @@ namespace SaveOurShip2
 			alsoRemoveWorldObject = false;
 			return false;
 		}
-	}
+
+		// TODO: these coordinates are set properly for ship launch when there is no ship map yet.
+		// But code setting coordinates for landing ship needs rework and these coordinates applied too.
+		// Currently, ahip landing will show that planet pole is approaching behind the map, rather than actual location.
+		public void UpdateTransitionCoordinates(Map landMap, Map targetMap)
+		{
+			originDrawPos = landMap.Tile.Layer.Origin + Find.WorldGrid.GetTileCenter(landMap.Tile);
+            targetDrawPos = targetMap.Tile.Layer.Origin + Find.WorldGrid.GetTileCenter(targetMap.Tile);
+			drawPos = originDrawPos;
+            Log.Message("Updated transition coordinates, origin: " + originDrawPos);
+            Log.Message("Updated transition coordinates, target: " + targetDrawPos);
+        }
+    }
 
 	public class OrbitalMovementDirection
 	{

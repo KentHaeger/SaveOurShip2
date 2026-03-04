@@ -36,11 +36,22 @@ namespace SaveOurShip2
 
 	//GUI
 	[HarmonyPatch(typeof(ColonistBar), "ColonistBarOnGUI")]
+	[StaticConstructorOnStartup]
 	public static class ShipCombatOnGUI
 	{
-		private static float cachedThrustRatio = -1f;
-		public static void Postfix(ColonistBar __instance)
+		private const int tooltipUpdateInterval = GenTicks.TicksPerRealSecond;
+		private static string rulerTooltip;
+
+		static ShipCombatOnGUI()
 		{
+
+		}
+        public static void Postfix(ColonistBar __instance)
+		{
+			if (Event.current.type == EventType.Layout)
+			{
+				return;
+			}
 			if (ModSettings_SoS.debugMode)
 			{
 				Map currentMap = Find.CurrentMap;
@@ -131,44 +142,45 @@ namespace SaveOurShip2
             }
             foreach (int i in playerMapComp.ShipsOnMap.Keys)
 			{
-				var bridge = playerMapComp.ShipsOnMap[i].Core;
+				SpaceShipCache ship = playerMapComp.ShipsOnMap[i];
+                var bridge = ship.Core;
 				if (bridge == null)
 					continue;
 
 				baseY += 45;
-				string str = bridge.ShipName;
-				int strSize = 5 + str.Length * 8;
+				string shipName = bridge.ShipName;
+				float strSize = 5 + Text.CalcSize(shipName).x;
 				Rect rect2 = new Rect(screenHalf - 430 - strSize, baseY - 40, 395 + strSize, 35);
 				Widgets.DrawMenuSection(rect2);
-				Widgets.Label(rect2.ContractedBy(6), str);
+				Widgets.Label(rect2.ContractedBy(6), shipName);
 
 				DrawPower(screenHalf - 220, baseY, bridge);
 				DrawHeat(screenHalf - 415, baseY, bridge);
 
 				if (Mouse.IsOver(rect2))
 				{
-					StringBuilder stringBuilder = new StringBuilder();
-					stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.StatsShipCombatRating", bridge.Ship.Threat));
-					stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.StatsShipMass", bridge.Ship.MassActual));
-                    stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.StatsShipCombatThrust", bridge.Ship.ThrustRatio.ToString("F3")));
-					if (playerShipCount > 1)
+					if (ship.cachedTooltip.NullOrEmpty() || bridge.IsHashIntervalTick(tooltipUpdateInterval))
 					{
-						if (Find.TickManager.TicksGame % 60 == 0 || cachedThrustRatio < 0)
+						StringBuilder stringBuilder = new StringBuilder();
+						stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.StatsShipCombatRating", bridge.Ship.Threat));
+						stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.StatsShipMass", bridge.Ship.MassActual));
+						stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.StatsShipCombatThrust", bridge.Ship.ThrustRatio.ToString("F3")));
+						if (playerShipCount > 1)
 						{
-							cachedThrustRatio = playerMapComp.SlowestThrustToWeight() * TWRMath.TWRLargeMultiplier;
-                        }
-						stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.StatsShipCombatMapThrust", cachedThrustRatio.ToString("F3")));
-					}
-                    if (bridge.heatComp.myNet.Depletion > 0)
-					{
-						stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.StatsShipHeatMaximum", bridge.heatComp.myNet.StorageCapacityRaw));
-					}
-					if (bridge.heatCap == 0 || bridge.powerCap == 0)
-					{
-						stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.BridgeConnectTooltip"));
-					}
-
-					TooltipHandler.TipRegion(rect2, stringBuilder.ToString());
+							float thrustRatio = playerMapComp.SlowestThrustToWeightCached() * TWRMath.TWRLargeMultiplier;
+                            stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.StatsShipCombatMapThrust", thrustRatio.ToString("F3")));
+						}
+						if (bridge.heatComp.myNet.Depletion > 0)
+						{
+							stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.StatsShipHeatMaximum", bridge.heatComp.myNet.StorageCapacityRaw));
+						}
+						if (bridge.heatCap == 0 || bridge.powerCap == 0)
+						{
+							stringBuilder.AppendLine(TranslatorFormattedStringExtensions.Translate("SoS.BridgeConnectTooltip"));
+						}
+                        ship.cachedTooltip = stringBuilder.ToString();
+                    }
+					TooltipHandler.TipRegion(rect2, ship.cachedTooltip);
 				}
 			}
 			Text.Font = GameFont.Tiny;
@@ -181,13 +193,16 @@ namespace SaveOurShip2
 			{
 				ShuttleMissionData mission = missionsSorted[i];
 				baseY += 30;
-				string str = "SoS.Combat.PlayerShuttleInfo".Translate(
-					mission.shuttle.Name != null ? mission.shuttle.Name.ToString() : mission.shuttle.def.label,
-					ShuttleMissionData.MissionGerund(mission.mission));
-				int strSize = 5 + str.Length * 6;
+				if (mission.UIPlayerShuttleInfo.NullOrEmpty() || mission.shuttle.IsHashIntervalTick(GenTicks.TicksPerRealSecond))
+				{
+					mission.UIPlayerShuttleInfo = "SoS.Combat.PlayerShuttleInfo".Translate(
+						mission.shuttle.Name != null ? mission.shuttle.Name.ToString() : mission.shuttle.def.label,
+						ShuttleMissionData.MissionGerund(mission.mission));
+				}
+				int strSize = 5 + (int)Text.CalcSize(mission.UIPlayerShuttleInfo).x;
 				Rect rect2 = new Rect(screenHalf - 380 - strSize, baseY - 40, 295 + strSize, 25);
 				Widgets.DrawMenuSection(rect2);
-				Widgets.Label(rect2.ContractedBy(3), str);
+				Widgets.Label(rect2.ContractedBy(3), mission.UIPlayerShuttleInfo);
 
 				DrawShuttleHealth(screenHalf - 220, baseY, mission.shuttle);
 				DrawShuttleHeat(screenHalf - 365, baseY, mission.shuttle);
@@ -233,13 +248,16 @@ namespace SaveOurShip2
 				if (mission.shuttle.Faction == Faction.OfPlayer)
 				{
 					baseY += 30;
-					string str = "SoS.Combat.PlayerShuttleInfo2".Translate(
-						mission.shuttle.Name != null ? mission.shuttle.Name.ToString() : mission.shuttle.def.label,
-						ShuttleMissionData.MissionGerund(mission.mission));
-					int strSize = 5 + str.Length * 6;
+					if (mission.UIPlayerShuttleInfo2.NullOrEmpty() || mission.shuttle.IsHashIntervalTick(GenTicks.TicksPerRealSecond))
+					{
+                        mission.UIPlayerShuttleInfo2 = "SoS.Combat.PlayerShuttleInfo2".Translate(
+							mission.shuttle.Name != null ? mission.shuttle.Name.ToString() : mission.shuttle.def.label,
+							ShuttleMissionData.MissionGerund(mission.mission));
+                    }
+					int strSize = 5 + (int)Text.CalcSize(mission.UIPlayerShuttleInfo2).x;
 					Rect rect2 = new Rect(screenHalf - 430 - strSize, baseY - 40, 295 + strSize, 25);
 					Widgets.DrawMenuSection(rect2);
-					Widgets.Label(rect2.ContractedBy(3), str);
+					Widgets.Label(rect2.ContractedBy(3), mission.UIPlayerShuttleInfo2);
 
 					DrawShuttleHealth(screenHalf - 220, baseY, mission.shuttle);
 					DrawShuttleHeat(screenHalf - 365, baseY, mission.shuttle);
@@ -247,14 +265,17 @@ namespace SaveOurShip2
 				else
 				{
 					baseY += 30;
-					string str = "SoS.Combat.ShuttleInfo".Translate(
-						mission.shuttle.Name != null ? mission.shuttle.Name.ToString() : mission.shuttle.def.label,
-						ShuttleMissionData.MissionGerund(mission.mission));
-					int strSize = 5 + str.Length * 6;
+					if (mission.UIShuttleInfo.NullOrEmpty() || mission.shuttle.IsHashIntervalTick(GenTicks.TicksPerRealSecond))
+					{
+						mission.UIShuttleInfo = "SoS.Combat.ShuttleInfo".Translate(
+							mission.shuttle.Name != null ? mission.shuttle.Name.ToString() : mission.shuttle.def.label,
+							ShuttleMissionData.MissionGerund(mission.mission));
+					}
+					int strSize = 5 + (int)Text.CalcSize(mission.UIShuttleInfo).x;
 					Rect rect2 = new Rect(screenHalf + 490, baseY - 40, 300 + strSize, 25);
 					Widgets.DrawMenuSection(rect2);
 					Rect rect3 = new Rect(screenHalf + 785, baseY - 40, 300 + strSize, 25);
-					Widgets.Label(rect3.ContractedBy(3), str);
+					Widgets.Label(rect3.ContractedBy(3), mission.UIShuttleInfo);
 					DrawShuttleHealth(screenHalf + 505, baseY, mission.shuttle);
 					DrawShuttleHeat(screenHalf + 650, baseY, mission.shuttle);
 				}
@@ -369,11 +390,11 @@ namespace SaveOurShip2
 			}*/
 			if (Mouse.IsOver(rect))
 			{
-				string iconTooltipText = "SoS.CombatTooltip".Translate();
-				if (!iconTooltipText.NullOrEmpty())
+				if (rulerTooltip.NullOrEmpty())
 				{
-					TooltipHandler.TipRegion(rect, iconTooltipText);
-				}
+                    rulerTooltip = "SoS.CombatTooltip".Translate();
+                }
+				TooltipHandler.TipRegion(rect, rulerTooltip);
 			}
 		}
 		private static void DrawPower(float offset, float baseY, Building_ShipBridge bridge)
@@ -383,11 +404,8 @@ namespace SaveOurShip2
 			rect.y += 7;
 			rect.x = offset;
 			rect.height = Text.LineHeight;
-			if (bridge.powerCap > 0)
-				Widgets.Label(rect, TranslatorFormattedStringExtensions.Translate("SoS.Combat.Energy", bridge.power.ToString("N0"), bridge.powerCap.ToString("N0")));
-			else
-				Widgets.Label(rect, TranslatorFormattedStringExtensions.Translate("SoS.Combat.NoEnergy"));
-		}
+			Widgets.Label(rect, bridge.GetPowerString());
+        }
 		private static void DrawHeat(float offset, float baseY, Building_ShipBridge bridge)
 		{
 			Rect rect = new Rect(offset - 15, baseY - 40, 200, 35);
@@ -395,10 +413,7 @@ namespace SaveOurShip2
 			rect.y += 7;
 			rect.x = offset;
 			rect.height = Text.LineHeight;
-			if (bridge.heatCap > 0)
-				Widgets.Label(rect, TranslatorFormattedStringExtensions.Translate("SoS.Combat.Heat", Mathf.Floor(bridge.heat).ToString("N0"), bridge.heatCap.ToString("N0")));
-			else
-				Widgets.Label(rect, TranslatorFormattedStringExtensions.Translate("SoS.Combat.NoHeat"));
+            Widgets.Label(rect, bridge.GetHeatString());
 		}
 		private static void DrawShuttleHealth(float offset, float baseY, VehiclePawn shuttle)
 		{
@@ -900,32 +915,6 @@ namespace SaveOurShip2
 				Room room = __instance.Position.GetRoom(__instance.Map);
 				if (ShipInteriorMod2.ExposedToOutside(room))
 					__instance.TakeDamage(new DamageInfo(DamageDefOf.Extinguish, 100, category: DamageInfo.SourceCategory.ThingOrUnknown));
-			}
-		}
-	}
-
-	//Time
-	[HarmonyPatch(typeof(TickManager), "get_TickRateMultiplier")]
-	public static class SlowTimeForDodge
-	{
-		public static void Postfix(ref float __result)
-		{
-			if (ShipInteriorMod2.SlowTimeFlag)
-			{
-				__result = 0.33f;
-			}
-		}
-	}
-
-	//Disable slow time when leaving devmode
-	[HarmonyPatch(typeof(Prefs), "set_DevMode")]
-	public static class AutoDisableSlowTime
-	{
-		public static void Postfix(bool value)
-		{
-			if (!value)
-			{
-				ShipInteriorMod2.SlowTimeFlag = false;
 			}
 		}
 	}
@@ -6023,60 +6012,65 @@ namespace SaveOurShip2
 		}
 	}
 
-	// If radius isn't adjusted, atmosphere will look like unnaturally large bubble around the planet
-	[HarmonyPatch(typeof(PlanetLayer), "get_Radius")]
-    public static class BackgroundPlanetExtraRadius
-    {
-        public static void Postfix(ref float __result)
+    [HarmonyPatch(typeof(World), "WorldUpdate")]
+    public static class WorldUpdateRadiusHandler
+	{
+		private static float normalRadius = -1f;
+		private static float normalCametraOffset = -1f;
+
+		private static PlanetLayer Orbit
 		{
-			if (Find.CurrentMap?.IsSpace() ?? false)
+			get
 			{
-				// Default 130
-				const float spaceLayerRadius = 101f;
-                __result = spaceLayerRadius;
+				return Find.World?.grid?.Surface?.zoomOutToLayer;
             }
 		}
-    }
-
-	// Parallax is responsible for how much is planet offset per moving view on the map
-	// Looks like lower value is better for planet moved further away (ship in high orbit)
-    [HarmonyPatch(typeof(PlanetLayer), "get_BackgroundWorldCameraParallaxDistancePer100Cells")]
-    public static class BackgroundPlanetExtraParallaxDistance
-    {
-        public static void Postfix(ref float __result)
-        {
-            if (Find.CurrentMap?.IsSpace() ?? false)
-            {
-                // Default 2.5
-                const float spaceParallaxDistance = 0.5f;
-                __result = spaceParallaxDistance;
-            }
-        }
-    }
-
-	// When drawing space map, but not world view or Odyssey map,
-	// offset camera further from planet. So that it looks like high orbit = small visible planet.
-    [HarmonyPatch(typeof(PlanetLayer), "get_BackgroundWorldCameraOffset")]
-    public static class BackgroundPlanetOffset
-    {
-        public static void Postfix(ref float __result)
-        {
-            if (Find.CurrentMap?.IsSpace() ?? false)
-            {
-				// Default 130
-                const float spaceOffset = 1000f;
-				ShipMapComp mapComp = Find.CurrentMap.GetComponent<ShipMapComp>();
-				if (mapComp.ShipMapState == ShipMapState.inTransit)
+		// This is to prevent layer radius being persistent in the scope of whole program run.
+		// At least, creating new game or loading a save will discard saved settings.
+		public static void PrurgeLayerRadiusSettings()
+		{
+			if (Orbit != null)
+			{
+				// Restore settings
+				if (normalRadius >= 0)
 				{
-					// At ratio = 0 it looks as decent close-up view of [planet surface 
-					__result = spaceOffset * mapComp.AltitudeRatio;
+					Orbit.radius = normalRadius;
+					Orbit.backgroundWorldCameraOffset = normalCametraOffset;
                 }
-				else
-				{
-					__result = spaceOffset;
-				}
+				normalRadius = -1f;
+				normalCametraOffset = -1f;
             }
         }
+		public static void Prefix()
+		{
+			if (normalRadius < 0)
+			{
+                normalRadius = Orbit.radius;
+                normalCametraOffset = Orbit.backgroundWorldCameraOffset;
+            }
+			Map map = Find.CurrentMap;
+			if( map == null || !map.IsSpace())
+			{
+                Orbit.radius = normalRadius;
+                Orbit.backgroundWorldCameraOffset = normalCametraOffset;
+            }
+			else
+			{
+                const float spaceLayerRadius = 101f;
+                Orbit.radius = spaceLayerRadius;
+                const float spaceOffset = 1000f;
+                ShipMapComp mapComp = Find.CurrentMap.GetComponent<ShipMapComp>();
+                if (mapComp.ShipMapState == ShipMapState.inTransit)
+                {
+                    // At ratio = 0 it looks as decent close-up view of planet surface
+                    Orbit.backgroundWorldCameraOffset = spaceOffset * mapComp.AltitudeRatio;
+                }
+                else
+                {
+                    Orbit.backgroundWorldCameraOffset = spaceOffset;
+                }
+            }
+		}
     }
 
     // Due to base game not handling biome diseases correctly and still causing random disease 

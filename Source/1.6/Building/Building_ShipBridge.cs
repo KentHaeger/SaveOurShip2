@@ -561,27 +561,6 @@ namespace SaveOurShip2
 						yield return dodgeRight;
 					}
 
-					// Not known if it's compicated for the player to have slow time option or rather
-					// it's complicated to watch dodging at normal speed and understand things
-					if (Prefs.DevMode && ModSettings_SoS.debugMode)
-					{
-						Command_Toggle toggleSlowTime = new Command_Toggle
-						{
-							toggleAction = delegate
-							{
-								ShipInteriorMod2.SlowTimeFlag = !ShipInteriorMod2.SlowTimeFlag;
-							},
-							defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.ToggleSlowLabel"),
-							defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.ToggleCloakDesc"),
-							isActive = () => ShipInteriorMod2.SlowTimeFlag
-						};
-						if (ShipInteriorMod2.SlowTimeFlag)
-							toggleSlowTime.icon = ContentFinder<Texture2D>.Get("UI/CloakingDeviceOn");
-						else
-							toggleSlowTime.icon = ContentFinder<Texture2D>.Get("UI/CloakingDeviceOff");
-						yield return toggleSlowTime;
-					}
-
 					foreach (ShipMapComp.ShuttleMissionData mission in mapComp.ShuttleMissions)
                     {
 						Command_Action changeShuttleMission = new Command_Action
@@ -848,7 +827,10 @@ namespace SaveOurShip2
 								groupable = false,
 								action = delegate
 								{
-									ShipInteriorMod2.UnDockWarning(delegate { mapComp.MoveToMap = m; Ship.CreateShipSketchIfFuelPct(ShipInteriorMod2.pctFuelLand, m, 0, true); }, mapComp, shipIndex);
+									ShipInteriorMod2.UnDockWarning(delegate {
+										mapComp.MoveToMap = m;
+                                        Ship.CreateShipSketchIfFuelPct(ShipInteriorMod2.pctFuelLand, m, 0, true);
+									}, mapComp, shipIndex);
 								},
 								defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.Land", m.Parent.Label),
 								defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.LandDesc", m.Parent.Label),
@@ -1420,5 +1402,50 @@ namespace SaveOurShip2
 			dialog_NodeTree.closeOnCancel = true;
 			Find.WindowStack.Add(dialog_NodeTree);
 		}
+
+        const int updateInterval = GenTicks.TicksPerRealSecond / 5;
+        // "Energy: xxx/yyy"
+        private string powerString;
+		public string GetPowerString()
+		{
+			const int updateInterval = GenTicks.TicksPerRealSecond / 5;
+			if (powerString.NullOrEmpty() || Time.frameCount % updateInterval == 0)
+			{
+				if (powerCap > 0)
+				{
+                    powerString = TranslatorFormattedStringExtensions.Translate("SoS.Combat.Energy", power.ToString("N0"), powerCap.ToString("N0"));
+				}
+				else
+				{
+                    powerString = TranslatorFormattedStringExtensions.Translate("SoS.Combat.NoEnergy");
+				}
+			}
+			return powerString;
+        }
+
+		// "Heat: xxx/yyy"
+		private string heatString;
+		public string GetHeatString()
+		{
+			if (powerString.NullOrEmpty() || Time.frameCount % updateInterval == 0)
+			{
+                // For the case when it is set to exactly 0 after hame load
+				// Enough to poke this once for both heat and power
+                if (heatCap == 0)
+				{
+					UpdateUI();
+				}
+				if (heatCap > 0)
+				{
+                    heatString = TranslatorFormattedStringExtensions.Translate("SoS.Combat.Heat", Mathf.Floor(heat).ToString("N0"), heatCap.ToString("N0"));
+                }
+				else
+				{
+                    heatString = TranslatorFormattedStringExtensions.Translate("SoS.Combat.NoHeat");
+                }
+			}
+			return heatString;
+        }
+
 	}
 }

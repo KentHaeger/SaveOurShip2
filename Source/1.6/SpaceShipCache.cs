@@ -179,6 +179,8 @@ namespace SaveOurShip2
 		public int Rot => Engines.First().parent.Rotation.AsInt;
 		public bool IsWreck => Core == null; //not a real ship
 		public bool IsStuck => IsWreck || Bridges.All(b => b.TacCon) || Engines.NullOrEmpty(); //ship but cant move on its own
+		// A cache for persistent UI to avoid intorducing extra data structures
+		public string cachedTooltip;
 		public bool CanFire() //ship has any engine that can fire
 		{
 			if (IsStuck)

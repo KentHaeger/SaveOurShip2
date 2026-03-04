@@ -1721,10 +1721,11 @@ namespace SaveOurShip2
                 {
                     ratio = 1 - ratio;
                 }
-                //vec to target - vec to origin, scale by altitude
-                //td get a math wizard to make this a curve and point it at equator orbit or around planet to ground
-                Vector3 d = mapParent.targetDrawPos - mapParent.originDrawPos;
+				//vec to target - vec to origin, scale by altitude
+				//td get a math wizard to make this a curve and point it at equator orbit or around planet to ground
+				Vector3 d = mapParent.targetDrawPos - mapParent.originDrawPos;
 				mapParent.drawPos = mapParent.originDrawPos + new Vector3(d.x * ratio, d.y * ratio, d.z * ratio);
+
 			}
 			if (callSlowTick) //origin only: call both slow ticks
 			{
@@ -2517,7 +2518,7 @@ namespace SaveOurShip2
 			}
 		}
 		//find worst t/w ship. Internal value, not final, different from what is shown in the UI.
-		public float SlowestThrustToWeight() //find worst t/w ship
+		public float SlowestThrustToWeight()
 		{
 			if (ShipsOnMap.NullOrEmpty())
 				return 0f;
@@ -2537,8 +2538,22 @@ namespace SaveOurShip2
 			}
 			return enginePower * TWRMath.TWRSmallMultiplier;
 		}
-		//find worst t/w ship, getting final value, same as T/W shown in UI. 
-		public float SlowestThrustRatio() 
+
+		private float slowestThrustToWeightCached = -1f;
+
+        // For frequent UI updates
+		public float SlowestThrustToWeightCached()
+		{
+			// For properly observing ship battle state when paused after some engine destruction, need to update this duting pause too
+			if (slowestThrustToWeightCached < 0 || Time.frameCount % GenTicks.TicksPerRealSecond == 0)
+			{
+				slowestThrustToWeightCached = SlowestThrustToWeight();
+            }
+			return slowestThrustToWeightCached;
+		}
+
+        //find worst t/w ship, getting final value, same as T/W shown in UI. 
+        public float SlowestThrustRatio()
 		{
 			if (ShipsOnMap.NullOrEmpty())
 				return 0f;
@@ -2694,8 +2709,6 @@ namespace SaveOurShip2
 			if (loser.GetComponent<ShipMapComp>().ShipMapState != ShipMapState.inCombat)
 				return;
 			Log.Message("SOS2: ".Colorize(Color.cyan) + loser + " Lost ship battle!".Colorize(Color.red));
-			// In case slow time was enabled, it is now no longer needed
-			ShipInteriorMod2.SlowTimeFlag = false;
 			//tgtMap is opponent of origin
 			Map tgtMap = OriginMapComp.ShipCombatTargetMap;
 			var tgtMapComp = OriginMapComp.TargetMapComp;
@@ -3050,7 +3063,10 @@ namespace SaveOurShip2
 			public float weaponCooldown;
 			public bool liftedOffYet;
 			public int uniqueID;
-
+            // For caching UI strings
+            public string UIPlayerShuttleInfo;
+            public string UIPlayerShuttleInfo2;
+            public string UIShuttleInfo;
             public void ExposeData()
             {
 				Scribe_References.Look<VehiclePawn>(ref shuttle, "shuttle");

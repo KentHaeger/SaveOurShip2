@@ -96,7 +96,7 @@ namespace SaveOurShip2
 						mapComp.PrevTile = originMap.Tile;
 						mapComp.EnginesOn = true;
 						mapComp.ShipMapState = ShipMapState.inTransit;
-						CameraJumper.TryJump(mapComp.MapRootListAll.FirstOrDefault().Position, originMap);
+                        CameraJumper.TryJump(mapComp.MapRootListAll.FirstOrDefault().Position, originMap);
 					}
 					else //normal move to target map, claim moved ships for player
 					{
