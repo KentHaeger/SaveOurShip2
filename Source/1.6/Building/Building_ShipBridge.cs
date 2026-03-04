@@ -1402,5 +1402,50 @@ namespace SaveOurShip2
 			dialog_NodeTree.closeOnCancel = true;
 			Find.WindowStack.Add(dialog_NodeTree);
 		}
+
+        const int updateInterval = GenTicks.TicksPerRealSecond / 5;
+        // "Energy: xxx/yyy"
+        private string powerString;
+		public string GetPowerString()
+		{
+			const int updateInterval = GenTicks.TicksPerRealSecond / 5;
+			if (powerString.NullOrEmpty() || Time.frameCount % updateInterval == 0)
+			{
+				if (powerCap > 0)
+				{
+                    powerString = TranslatorFormattedStringExtensions.Translate("SoS.Combat.Energy", power.ToString("N0"), powerCap.ToString("N0"));
+				}
+				else
+				{
+                    powerString = TranslatorFormattedStringExtensions.Translate("SoS.Combat.NoEnergy");
+				}
+			}
+			return powerString;
+        }
+
+		// "Heat: xxx/yyy"
+		private string heatString;
+		public string GetHeatString()
+		{
+			if (powerString.NullOrEmpty() || Time.frameCount % updateInterval == 0)
+			{
+                // For the case when it is set to exactly 0 after hame load
+				// Enough to poke this once for both heat and power
+                if (heatCap == 0)
+				{
+					UpdateUI();
+				}
+				if (heatCap > 0)
+				{
+                    heatString = TranslatorFormattedStringExtensions.Translate("SoS.Combat.Heat", Mathf.Floor(heat).ToString("N0"), heatCap.ToString("N0"));
+                }
+				else
+				{
+                    heatString = TranslatorFormattedStringExtensions.Translate("SoS.Combat.NoHeat");
+                }
+			}
+			return heatString;
+        }
+
 	}
 }

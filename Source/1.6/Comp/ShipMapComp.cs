@@ -2518,7 +2518,7 @@ namespace SaveOurShip2
 			}
 		}
 		//find worst t/w ship. Internal value, not final, different from what is shown in the UI.
-		public float SlowestThrustToWeight() //find worst t/w ship
+		public float SlowestThrustToWeight()
 		{
 			if (ShipsOnMap.NullOrEmpty())
 				return 0f;
@@ -2538,8 +2538,22 @@ namespace SaveOurShip2
 			}
 			return enginePower * TWRMath.TWRSmallMultiplier;
 		}
-		//find worst t/w ship, getting final value, same as T/W shown in UI. 
-		public float SlowestThrustRatio() 
+
+		private float slowestThrustToWeightCached = -1f;
+
+        // For frequent UI updates
+		public float SlowestThrustToWeightCached()
+		{
+			// For properly observing ship battle state when paused after some engine destruction, need to update this duting pause too
+			if (slowestThrustToWeightCached < 0 || Time.frameCount % GenTicks.TicksPerRealSecond == 0)
+			{
+				slowestThrustToWeightCached = SlowestThrustToWeight();
+            }
+			return slowestThrustToWeightCached;
+		}
+
+        //find worst t/w ship, getting final value, same as T/W shown in UI. 
+        public float SlowestThrustRatio()
 		{
 			if (ShipsOnMap.NullOrEmpty())
 				return 0f;
