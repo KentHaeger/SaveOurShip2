@@ -1721,10 +1721,11 @@ namespace SaveOurShip2
                 {
                     ratio = 1 - ratio;
                 }
-                //vec to target - vec to origin, scale by altitude
-                //td get a math wizard to make this a curve and point it at equator orbit or around planet to ground
-                Vector3 d = mapParent.targetDrawPos - mapParent.originDrawPos;
+				//vec to target - vec to origin, scale by altitude
+				//td get a math wizard to make this a curve and point it at equator orbit or around planet to ground
+				Vector3 d = mapParent.targetDrawPos - mapParent.originDrawPos;
 				mapParent.drawPos = mapParent.originDrawPos + new Vector3(d.x * ratio, d.y * ratio, d.z * ratio);
+
 			}
 			if (callSlowTick) //origin only: call both slow ticks
 			{

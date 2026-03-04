@@ -2245,26 +2245,29 @@ namespace SaveOurShip2
 
 			//vars1
 			var mapParent = (WorldObjectOrbitingShip)map.Parent;
-			/*mapPar.drawPos = originMap.Parent.DrawPos;
-			mapPar.originDrawPos = originMap.Parent.DrawPos;
-			mapPar.targetDrawPos = mapPar.NominalPos;*/
-			Vector3 originPos = originMap.Tile.Layer.Origin + Find.WorldGrid.GetTileCenter(originMap.Tile);
-			// originMap.Parent.DrawPos;
-			Vector3 targetPos = map.Tile.Layer.Origin + Find.WorldGrid.GetTileCenter(map.Tile);
-			//map.Tile.Layer.GetTileCenter(map.Tile.tileId);
-			Log.Warning("Target pos for launch: " + targetPos);
-			WorldObjectMath.GetSphericalFromCartesian(targetPos, out float phi, out float theta, out float radius);
-			mapParent.Phi = phi;
+            /*mapPar.drawPos = originMap.Parent.DrawPos;
+            mapPar.originDrawPos = originMap.Parent.DrawPos;
+            mapPar.targetDrawPos = mapPar.NominalPos;*/
+            Vector3 originPos = originMap.Tile.Layer.Origin + Find.WorldGrid.GetTileCenter(originMap.Tile);
+            // originMap.Parent.DrawPos;
+            Vector3 targetPos = map.Tile.Layer.Origin + Find.WorldGrid.GetTileCenter(map.Tile);
+            //map.Tile.Layer.GetTileCenter(map.Tile.tileId);
+            Log.Warning("Target pos for launch: " + targetPos);
+            WorldObjectMath.GetSphericalFromCartesian(targetPos, out float phi, out float theta, out float radius);
+
+            mapParent.Phi = phi;
 			mapParent.Theta = theta;
 			mapParent.Radius = radius;
 			mapParent.OrbitSet();
-			Log.Warning("Launched to orbit with radius: " + mapParent.Radius.ToString("F2"));
-			Log.Warning("Theta: " + theta);
-			Log.Warning("Phi: " + phi);
+            mapParent.drawPos = originPos;
+            mapParent.originDrawPos = originPos;
+            mapParent.targetDrawPos = targetPos;
 
-			mapParent.drawPos = originPos;
-			mapParent.originDrawPos = originPos;
-			mapParent.targetDrawPos = targetPos;
+            //map.Tile.Layer.GetTileCenter(map.Tile.tileId);
+            Log.Message("Target pos for launch: " + targetPos);
+            Log.Message("Launched to orbit with radius: " + mapParent.Radius.ToString("F2"));
+			Log.Message("Theta: " + theta);
+			Log.Message("Phi: " + phi);
 
 			mapComp.Heading = 1;
 			mapComp.Altitude = altitudeLand; //startup altitude
@@ -2354,7 +2357,7 @@ namespace SaveOurShip2
 			{
 				sourceMapComp.UndockAllFrom(shipIndex);
 			}
-			// Have to uninstall in separatre loop over tiles, as uninstalling can create minified thing it other tile if current on already contains items.
+			// Have to uninstall in separatre loop over tiles, as uninstalling can create minified thing it *other* tile if current is already occupied.
 			List<Building> toUninstall = new List<Building>();
 			List<MinifiedThing> toInstallAfterMove = new List<MinifiedThing>();
 			foreach (IntVec3 pos in sourceArea)

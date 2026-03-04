@@ -5997,60 +5997,65 @@ namespace SaveOurShip2
 		}
 	}
 
-	// If radius isn't adjusted, atmosphere will look like unnaturally large bubble around the planet
-	[HarmonyPatch(typeof(PlanetLayer), "get_Radius")]
-    public static class BackgroundPlanetExtraRadius
-    {
-        public static void Postfix(ref float __result)
+    [HarmonyPatch(typeof(World), "WorldUpdate")]
+    public static class WorldUpdateRadiusHandler
+	{
+		private static float normalRadius = -1f;
+		private static float normalCametraOffset = -1f;
+
+		private static PlanetLayer Orbit
 		{
-			if (Find.CurrentMap?.IsSpace() ?? false)
+			get
 			{
-				// Default 130
-				const float spaceLayerRadius = 101f;
-                __result = spaceLayerRadius;
+				return Find.World?.grid?.Surface?.zoomOutToLayer;
             }
 		}
-    }
-
-	// Parallax is responsible for how much is planet offset per moving view on the map
-	// Looks like lower value is better for planet moved further away (ship in high orbit)
-    [HarmonyPatch(typeof(PlanetLayer), "get_BackgroundWorldCameraParallaxDistancePer100Cells")]
-    public static class BackgroundPlanetExtraParallaxDistance
-    {
-        public static void Postfix(ref float __result)
-        {
-            if (Find.CurrentMap?.IsSpace() ?? false)
-            {
-                // Default 2.5
-                const float spaceParallaxDistance = 0.5f;
-                __result = spaceParallaxDistance;
-            }
-        }
-    }
-
-	// When drawing space map, but not world view or Odyssey map,
-	// offset camera further from planet. So that it looks like high orbit = small visible planet.
-    [HarmonyPatch(typeof(PlanetLayer), "get_BackgroundWorldCameraOffset")]
-    public static class BackgroundPlanetOffset
-    {
-        public static void Postfix(ref float __result)
-        {
-            if (Find.CurrentMap?.IsSpace() ?? false)
-            {
-				// Default 130
-                const float spaceOffset = 1000f;
-				ShipMapComp mapComp = Find.CurrentMap.GetComponent<ShipMapComp>();
-				if (mapComp.ShipMapState == ShipMapState.inTransit)
+		// This is to prevent layer radius being persistent in the scope of whole program run.
+		// At least, creating new game or loading a save will discard saved settings.
+		public static void PrurgeLayerRadiusSettings()
+		{
+			if (Orbit != null)
+			{
+				// Restore settings
+				if (normalRadius >= 0)
 				{
-					// At ratio = 0 it looks as decent close-up view of [planet surface 
-					__result = spaceOffset * mapComp.AltitudeRatio;
+					Orbit.radius = normalRadius;
+					Orbit.backgroundWorldCameraOffset = normalCametraOffset;
                 }
-				else
-				{
-					__result = spaceOffset;
-				}
+				normalRadius = -1f;
+				normalCametraOffset = -1f;
             }
         }
+		public static void Prefix()
+		{
+			if (normalRadius < 0)
+			{
+                normalRadius = Orbit.radius;
+                normalCametraOffset = Orbit.backgroundWorldCameraOffset;
+            }
+			Map map = Find.CurrentMap;
+			if( map == null || !map.IsSpace())
+			{
+                Orbit.radius = normalRadius;
+                Orbit.backgroundWorldCameraOffset = normalCametraOffset;
+            }
+			else
+			{
+                const float spaceLayerRadius = 101f;
+                Orbit.radius = spaceLayerRadius;
+                const float spaceOffset = 1000f;
+                ShipMapComp mapComp = Find.CurrentMap.GetComponent<ShipMapComp>();
+                if (mapComp.ShipMapState == ShipMapState.inTransit)
+                {
+                    // At ratio = 0 it looks as decent close-up view of planet surface
+                    Orbit.backgroundWorldCameraOffset = spaceOffset * mapComp.AltitudeRatio;
+                }
+                else
+                {
+                    Orbit.backgroundWorldCameraOffset = spaceOffset;
+                }
+            }
+		}
     }
 
     // Due to base game not handling biome diseases correctly and still causing random disease 

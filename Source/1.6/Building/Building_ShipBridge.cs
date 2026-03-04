@@ -827,7 +827,10 @@ namespace SaveOurShip2
 								groupable = false,
 								action = delegate
 								{
-									ShipInteriorMod2.UnDockWarning(delegate { mapComp.MoveToMap = m; Ship.CreateShipSketchIfFuelPct(ShipInteriorMod2.pctFuelLand, m, 0, true); }, mapComp, shipIndex);
+									ShipInteriorMod2.UnDockWarning(delegate {
+										mapComp.MoveToMap = m;
+                                        Ship.CreateShipSketchIfFuelPct(ShipInteriorMod2.pctFuelLand, m, 0, true);
+									}, mapComp, shipIndex);
 								},
 								defaultLabel = TranslatorFormattedStringExtensions.Translate("SoS.Land", m.Parent.Label),
 								defaultDesc = TranslatorFormattedStringExtensions.Translate("SoS.LandDesc", m.Parent.Label),
