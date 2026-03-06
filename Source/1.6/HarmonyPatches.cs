@@ -6103,6 +6103,17 @@ namespace SaveOurShip2
         }
     }
 
+    // Shield belts are active on pawns off-map, but base game doesn't have ways to harm those pawns with ranged weapons.
+    // If ranged damage is applied in mods to those pawns, will try to show related visuals on null map, causing errors.
+    [HarmonyPatch(typeof(FleckMaker), "Static", new Type[] { typeof(Vector3), typeof(Map), typeof(FleckDef), typeof(float) })]
+    public static class PreventFlecksOffMap
+    {
+        public static bool Prefix(Map map)
+        {
+            return map != null;
+        }
+    }
+
     /*[HarmonyPatch(typeof(ActiveDropPod),"PodOpen")]
 	public static class ActivePodFix{
 		public static bool Prefix (ref ActiveDropPod __instance)
