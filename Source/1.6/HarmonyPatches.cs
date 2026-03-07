@@ -6029,21 +6029,26 @@ namespace SaveOurShip2
 		// At least, creating new game or loading a save will discard saved settings.
 		public static void PrurgeLayerRadiusSettings()
 		{
-			if (Orbit != null)
+			if (Orbit == null)
 			{
-				// Restore settings
-				if (normalRadius >= 0)
-				{
-					Orbit.radius = normalRadius;
-					Orbit.backgroundWorldCameraOffset = normalCametraOffset;
-                }
-				normalRadius = -1f;
-				normalCametraOffset = -1f;
+				return;
+			}
+			// Restore settings
+			if (normalRadius >= 0)
+			{
+				Orbit.radius = normalRadius;
+				Orbit.backgroundWorldCameraOffset = normalCametraOffset;
             }
+			normalRadius = -1f;
+			normalCametraOffset = -1f;
         }
 		public static void Prefix()
 		{
-			if (normalRadius < 0)
+            if (Orbit == null)
+            {
+                return;
+            }
+            if (normalRadius < 0)
 			{
                 normalRadius = Orbit.radius;
                 normalCametraOffset = Orbit.backgroundWorldCameraOffset;
