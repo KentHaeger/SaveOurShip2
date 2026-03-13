@@ -28,6 +28,11 @@ namespace SaveOurShip2
 			}
 		}
 
+		public bool IsKnownSpaceMap(Map map)
+		{
+			return spaceMaps.ContainsKey(map.uniqueID);
+		}
+
 		public void RecacheSpaceMaps()
 		{
 			spaceMaps = new Dictionary<int, bool>();

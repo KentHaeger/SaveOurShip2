@@ -29,9 +29,7 @@ namespace SaveOurShip2
 
 		public ShipWorldComp(World world) : base(world)
 		{
-			ShipInteriorMod2.PurgeWorldComp();
-			WorldUpdateRadiusHandler.PrurgeLayerRadiusSettings();
-
+			ShipInteriorMod2.PurgeSaveSpecificState();
         }
 
 		private int nextShipId = 0;
@@ -149,8 +147,7 @@ namespace SaveOurShip2
 
 			if (Scribe.mode == LoadSaveMode.LoadingVars)
 			{
-				ShipInteriorMod2.PurgeWorldComp();
-                WorldUpdateRadiusHandler.PrurgeLayerRadiusSettings();
+				ShipInteriorMod2.PurgeSaveSpecificState();
             }
 			// Devmode-only flag should be reset to false if devmode is not enabled after loading a save where it is set to true
 			if (Scribe.mode == LoadSaveMode.PostLoadInit)

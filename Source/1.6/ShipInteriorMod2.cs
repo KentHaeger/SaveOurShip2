@@ -212,12 +212,21 @@ namespace SaveOurShip2
 				return worldComp;
 			}
 		}
-		public static void PurgeWorldComp()
+		public static void PurgeSaveSpecificState()
 		{
-			worldComp = null;
-		}
+			// World component is stored as static, therefore needs to be purged on save chane or new game
+			PurgeWorldComp();
+			// Harmony patch caches and performance caches
+            WorldUpdateRadiusHandler.PrurgeLayerRadiusSettings();
+            FasterComfortableTemperature.PurgeCache();
+        }
 
-		public static RoofDef[] compatibleAirtightRoofs; // Additional array of compatible RoofDefs from other mods.
+        public static void PurgeWorldComp()
+        {
+            worldComp = null;
+        }
+
+        public static RoofDef[] compatibleAirtightRoofs; // Additional array of compatible RoofDefs from other mods.
 		public static TerrainDef[] rockTerrains; // Contains terrain types that are considered a "rock".
 		public static string[] allowedQuests;
 		public static string[] allowedToObserve;

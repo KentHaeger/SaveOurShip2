@@ -80,8 +80,9 @@ namespace SaveOurShip2
 			public static ThingDef ShipArchotechPillarB;
 			public static ThingDef ShipArchotechPillarC;
 			public static ThingDef ShipArchotechPillarD;
-			public static ThingDef Ship_Beam;
-			public static ThingDef Ship_Beam_Wrecked;
+            public static ThingDef Ship_Beam;
+            public static ThingDef Ship_Beam_Unpowered;
+            public static ThingDef Ship_Beam_Wrecked;
 			public static ThingDef Ship_BeamMech;
 			public static ThingDef Ship_BeamArchotech;
 			public static ThingDef HullFoamWall;
