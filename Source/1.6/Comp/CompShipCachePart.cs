@@ -383,7 +383,7 @@ namespace SaveOurShip2
 			{
 				mapComp.ClearRoofCache();
 			}
-			// Redrawing every 60 frames handles unfogged and paused case, which would otherwise stay cached (and not hide roof on unfog) indefenetely long
+			// Redrawing every x frames handles unfogged and paused case, which would otherwise stay cached (and not hide roof on unfog) indefenetely long
 			if (RoofCacheDirty || Time.frameCount % 30 == 0)
 			{
 				RoofCacheDirty = false;
