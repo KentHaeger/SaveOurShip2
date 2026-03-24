@@ -6018,6 +6018,10 @@ namespace SaveOurShip2
 		private static float normalRadius = -1f;
 		private static float normalCametraOffset = -1f;
 
+		const float spaceLayerRadiusForBackground = 101f;
+		const float defaultSpaceLayerRadius = 130f;
+		const float defaultCameraOffset = 160f;
+
 		private static PlanetLayer Orbit
 		{
 			get
@@ -6061,8 +6065,7 @@ namespace SaveOurShip2
             }
 			else
 			{
-                const float spaceLayerRadius = 101f;
-                Orbit.radius = spaceLayerRadius;
+                Orbit.radius = spaceLayerRadiusForBackground;
                 const float spaceOffset = 1000f;
                 ShipMapComp mapComp = Find.CurrentMap.GetComponent<ShipMapComp>();
                 if (mapComp.ShipMapState == ShipMapState.inTransit)
@@ -6075,6 +6078,24 @@ namespace SaveOurShip2
                     Orbit.backgroundWorldCameraOffset = spaceOffset;
                 }
             }
+		}
+		public static void Postfix()
+		{
+			if (Orbit == null)
+			{
+				return;
+			}
+			Orbit.radius = normalRadius;
+			// Retroactive fix, for change applied to Orbit.radius globally and saved into a save file.
+			// In this case, rollback change as nicely as possible based on the fact that setting radius to 101 globally
+			// (not just for background) doesn't look nice, so no mod is expected to do that intentionally.
+			if (Mathf.Approximately(Orbit.radius,spaceLayerRadiusForBackground) && WorldRendererUtility.WorldSelected)
+			{
+				normalRadius = defaultSpaceLayerRadius;
+				normalCametraOffset = defaultCameraOffset;
+				Orbit.radius = defaultSpaceLayerRadius;
+				Orbit.backgroundWorldCameraOffset = defaultCameraOffset;
+			}
 		}
     }
 
