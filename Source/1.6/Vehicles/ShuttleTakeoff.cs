@@ -67,7 +67,8 @@ namespace SaveOurShip2.Vehicles
             if (mp != null && !mp.HasMap)
 			{
                 // By default, there will be no option for pillar sites. Landed ship (Charlon Whitestone) is handled by Framework.
-                if (mp is MoonBase || mp.GetComponent<TribalPillarSiteComp>() != null || mp.GetComponent<InsectPillarSiteComp>() != null)
+                if (mp is MoonBase || mp.GetComponent<TribalPillarSiteComp>() != null || mp.GetComponent<InsectPillarSiteComp>() != null
+					|| mp.GetComponent<ImpactSiteComp>() != null)
                 {
                     yield return new ArrivalOption("VF_LandVehicleTargetedLanding".Translate(mp.Label),
                        new ArrivalAction_LoadMap(vehicle, AerialVehicleArrivalModeDefOf.TargetedLanding));
