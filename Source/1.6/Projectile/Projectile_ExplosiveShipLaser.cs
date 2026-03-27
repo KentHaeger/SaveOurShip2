@@ -8,7 +8,7 @@ using RimWorld;
 
 namespace SaveOurShip2
 {
-	class Projectile_ExplosiveShipLaser : Projectile_ExplosiveShip
+	public class Projectile_ExplosiveShipLaser : Projectile_ExplosiveShip
 	{
 		protected override void Impact(Thing hitThing, bool blockedByShield = false)
 		{
