@@ -335,7 +335,7 @@ namespace SaveOurShip2
 				{
 					foreach (Building building in ship.Buildings)
 					{
-						if (building.def == ResourceBank.ThingDefOf.GravEngine)
+						if (ResourceBank.IsGravEngine(building.def))
 						{
 							gravEngineCount++;
 						}

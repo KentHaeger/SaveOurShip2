@@ -343,5 +343,12 @@ namespace SaveOurShip2
         {
 			public static ShipDef MechPsychicAmp;
 		}
+
+		public static bool IsGravEngine(ThingDef def)
+		{
+			const string VGEHulkEngineDefName = "VGE_GravhulkEngine";
+			const string VGEJumperEngineDefName = "VGE_GravjumperEngine";
+			return def == ThingDefOf.GravEngine || def.defName == VGEHulkEngineDefName || def.defName == VGEJumperEngineDefName;
+		}
 	}
 }

@@ -904,7 +904,7 @@ namespace SaveOurShip2
 				{
 					Mass += b.def.Size.x * b.def.Size.z * 3;
 				}
-				if (b.def == ResourceBank.ThingDefOf.GravEngine)
+				if (ResourceBank.IsGravEngine(b.def))
                 {
 					HasGravEngine = true;
                 }
@@ -1021,7 +1021,7 @@ namespace SaveOurShip2
 					Mass -= b.def.Size.x * b.def.Size.z * 3;
 				}
 				// Only one should exist, so removal nmeans no grav engines left
-				if (b.def == ResourceBank.ThingDefOf.GravEngine)
+				if (ResourceBank.IsGravEngine(b.def))
 				{
 					HasGravEngine = false;
 				}
