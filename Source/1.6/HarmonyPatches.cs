@@ -1377,10 +1377,19 @@ namespace SaveOurShip2
 	{
 		public static void Prefix(RoofCollapseBufferResolver __instance)
 		{
+			// Those checks looks wired, but NRE was reported in modded game, so it looks like some strange cases with buffer are possible
+			if (__instance.map == null || __instance.map.roofCollapseBuffer == null || __instance.map.roofGrid == null)
+			{
+				return;
+			}
 			RoofCollapseBuffer buffer = __instance.map.roofCollapseBuffer;
+			if (buffer.CellsMarkedToCollapse == null)
+			{
+				return;
+			}
 			for (int i = buffer.CellsMarkedToCollapse.Count - 1; i >= 0; i--)
 			{
-				if (!__instance.map.roofGrid.RoofAt(buffer.CellsMarkedToCollapse[i]).canCollapse)
+				if (!(__instance.map.roofGrid.RoofAt(buffer.CellsMarkedToCollapse[i])?.canCollapse ?? true))
 				{
 					buffer.CellsMarkedToCollapse.RemoveAt(i);
 				}
