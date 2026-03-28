@@ -22,13 +22,14 @@ namespace SaveOurShip2
 		public float radius = -1;
 		public bool shutDown;
 		bool vehicleWantsShutDown = false;
-		private int lastIntercepted = -69;
-		private float lastInterceptAngle;
+		// Made public for more convenient access for Combat Extended compatibility patch
+		public int lastIntercepted = -69;
+		public float lastInterceptAngle;
 
 		public CompFlickable flickComp;
 		public CompPowerTrader powerComp;
 		public CompBreakdownable breakComp;
-		VehiclePawn parentVehicle;
+		public VehiclePawn parentVehicle;
 
 		public override void PostSpawnSetup(bool respawningAfterLoad)
 		{

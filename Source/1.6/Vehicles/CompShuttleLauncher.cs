@@ -10,7 +10,7 @@ using Verse;
 
 namespace SaveOurShip2.Vehicles
 {
-    class CompShuttleLauncher : CompVehicleLauncher
+    public class CompShuttleLauncher : CompVehicleLauncher
     {
         public float retreatAtHealth;
 

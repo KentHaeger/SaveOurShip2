@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace SaveOurShip2.Vehicles
 {
-    class CompVehicleHeatNet : ThingComp
+    public class CompVehicleHeatNet : ThingComp
     {
         public ShipHeatNet myNet;
         public static string storedHeatLabel = "heatNetStroageUsed";
