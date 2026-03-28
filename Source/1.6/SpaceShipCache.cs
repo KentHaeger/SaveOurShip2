@@ -853,7 +853,16 @@ namespace SaveOurShip2
 				if (heatComp != null)
 				{
 					ThreatRaw += heatComp.Props.threat;
-					if (b is Building_ShipTurret turret)
+					Building_ShipTurret turret = null;
+					if (b is Building_ShipTurret)
+					{
+						turret = b as Building_ShipTurret;
+					}
+					else if (ModIntegration.IsCEEnabled() && ShipHeatNet.IsCompatibleCETurret(b))
+					{
+						turret = ShipHeatNet.CESafeCastToTurret(b);
+					}
+					if (turret != null)
 					{
 						Turrets.Add(turret);
 						if (turret.spinalComp != null)

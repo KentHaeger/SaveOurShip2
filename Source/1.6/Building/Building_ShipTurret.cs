@@ -61,19 +61,48 @@ namespace SaveOurShip2
 				return false;
 			}
 		}
+
+		private bool HasHeat()
+		{
+			return heatComp != null && heatComp.myNet != null;
+		}
+		private bool HasHeatAndConsole()
+		{
+			return HasHeat() && (heatComp.myNet.PilCons.Any() || heatComp.myNet.AICores.Any() || heatComp.myNet.TacCons.Any());
+		}
 		public bool IsThreat //is turret a threat
 		{
 			get
 			{
-				if (!(Spawned && heatComp != null && heatComp.myNet != null && (powerComp == null || powerComp.PowerOn) && (heatComp.myNet.PilCons.Any() || heatComp.myNet.AICores.Any() || heatComp.myNet.TacCons.Any())))
+				// TODO: that would be some work to do sometime, to ensure it works without errors when ship psarts get destroyed. And get rid of rty block,   
+				try
+				{
+					bool hasHeat = HasHeat();
+					bool hasPower = powerComp == null || powerComp.PowerOn;
+					bool hasHeatAndConsole = HasHeatAndConsole();
+					bool isSpawned = Spawned;
+					if (ModIntegration.IsCEEnabled())
+					{
+						// Temporary fix for when CE uses teir own turret as building on map, but does create SOS turret object to add to turret list,
+						// that representativbe object is not spawned after ship generation
+						// Non-spawned turret shouldn't be in the list anyways
+						isSpawned = true;
+					}
+					if (!(isSpawned && hasPower && hasHeatAndConsole))
+						return false;
+					if ((torpComp != null && !torpComp.Loaded) || (fuelComp != null && fuelComp.Fuel == 0f))
+						return false;
+					if (Faction != Faction.OfPlayer && SpinalHasNoAmps)
+						return false;
+					if ((powerComp != null && powerComp.PowerNet.CurrentStoredEnergy() < EnergyToFire) || (heatComp.Props.heatPerPulse > 0 && heatComp.myNet.StorageCapacity < HeatToFire))
+						return false;
+					return true;
+				}
+				catch (Exception ex)
+				{
+					Log.Warning("Error determinig if turret poses a threat: " + ex.Message);
 					return false;
-				if ((torpComp != null && !torpComp.Loaded) || (fuelComp != null && fuelComp.Fuel == 0f))
-					return false;
-				if (Faction != Faction.OfPlayer && SpinalHasNoAmps)
-					return false;
-				if ((powerComp != null && powerComp.PowerNet.CurrentStoredEnergy() < EnergyToFire) || (heatComp.Props.heatPerPulse > 0 && heatComp.myNet.StorageCapacity < HeatToFire))
-					return false;
-				return true;
+				}
 			}
 		}
 		public float EnergyToFire => heatComp.Props.energyToFire * (1 + AmplifierDamageBonus);
