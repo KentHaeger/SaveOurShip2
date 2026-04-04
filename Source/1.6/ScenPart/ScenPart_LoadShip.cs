@@ -537,11 +537,14 @@ namespace SaveOurShip2
 				foreach (Building b in map.listerBuildings.allBuildingsColonist.Where(b => b.TryGetComp<CompCryptoLaunchable>() != null))
 				{
 					Building_CryptosleepCasket c = b as Building_CryptosleepCasket;
-					if (c.ContainedThing is Pawn p)
+					if (c != null)
 					{
-						p.health.AddHediff(HediffDefOf.CryptosleepSickness, null, null, null);
+						if (c.ContainedThing is Pawn p)
+						{
+							p.health.AddHediff(HediffDefOf.CryptosleepSickness, null, null, null);
+						}
+						c.Open();
 					}
-					c.Open();
 				}
 			}
 			catch (Exception e)
