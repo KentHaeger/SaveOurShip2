@@ -63,6 +63,15 @@ namespace SaveOurShip2
 		bool isArchoTile;
 		bool isFoamTile;
 		bool isWreckTile;
+		bool isAnyTile;
+
+		public bool IsAnyTile
+		{
+			get
+			{
+				return isAnyTile;
+			}
+		}
 
 		public HashSet<IntVec3> cellsUnder;
 		Map map;
@@ -140,6 +149,7 @@ namespace SaveOurShip2
 			isArchoTile = parent.def == ResourceBank.ThingDefOf.ShipHullTileArchotech;
 			isFoamTile = parent.def == ResourceBank.ThingDefOf.ShipHullfoamTile;
 			isWreckTile = parent.def == ResourceBank.ThingDefOf.ShipHullTileWrecked;
+			isAnyTile = isTile || isMechTile || isArchoTile || isFoamTile || isWreckTile;
 			if (!respawningAfterLoad && Props.AnyPart)
 			{
 				if (!ShipInteriorMod2.MoveShipFlag)
@@ -374,15 +384,16 @@ namespace SaveOurShip2
 				}
 			}
 		}
+
 		public override void PostDraw()
 		{
 			base.PostDraw();
+			DrawRoof();
+		}
+		public void DrawRoof()
+		{
 			if (!Props.roof || !parent.Spawned)
 				return;
-			if (mapComp != null && mapComp.ShowRoofOverlayCached != Find.PlaySettings.showRoofOverlay)
-			{
-				mapComp.ClearRoofCache();
-			}
 			// Redrawing every x frames handles unfogged and paused case, which would otherwise stay cached (and not hide roof on unfog) indefenetely long
 			if (RoofCacheDirty || Time.frameCount % 30 == 0)
 			{

@@ -1095,6 +1095,7 @@ namespace SaveOurShip2
 			{
 				Log.Message("Custom limit:" + extraShipGenOptions.CustomCrewLimit);
 			}
+			ShipMapComp mapComp = map.GetComponent<ShipMapComp>();
 			cellsToFog = new List<IntVec3>();
 			//List<IntVec3> cellsNotToFog = new List<IntVec3>();
 			planters = new List<Thing>();
@@ -1672,7 +1673,6 @@ namespace SaveOurShip2
 			//5: starship bow special dungeon
 			if (wreckLevel > 0)
 			{
-				var mapComp = map.GetComponent<ShipMapComp>();
 				bool madeLines = false;
 				int holeNum = 0;
 				//split
@@ -1823,6 +1823,7 @@ namespace SaveOurShip2
 				}
 			}
 			extraShipGenOptions.RequestCustomShip = false;
+			mapComp.RebuildRoofedPartsCache();
 		}
 		private static void ShipPawnGen(Pawn p, bool isDungeon, Lord lord) //td make proper pawngen req?
 		{

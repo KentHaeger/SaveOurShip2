@@ -234,6 +234,47 @@ namespace SaveOurShip2
 				AccumulateToNetNew(newBatch, net);
 		}
 
+		private List<CompShipCachePart> roofedPartsCache = new List<CompShipCachePart>();
+
+		public void RebuildRoofedPartsCache()
+		{
+			roofedPartsCache.Clear();
+			foreach (SpaceShipCache ship in shipsOnMap.Values)
+			{
+				foreach (Building b in ship.Buildings)
+				{
+					CompShipCachePart part = b.TryGetComp<CompShipCachePart>();
+					if (part != null)
+					{
+						roofedPartsCache.Add(part);
+					}
+				}
+			}
+		}
+
+		private void DrawPartsRoofCached()
+		{
+			foreach (CompShipCachePart part in roofedPartsCache)
+			{
+				bool needDrawRoof = Find.PlaySettings.showRoofOverlay || map.fogGrid.IsFogged(part.parent.Position);
+				if (needDrawRoof && !part.parent.Destroyed)
+				{
+					part.DrawRoof();
+				}
+			}
+		}
+
+		public override void MapComponentDraw()
+		{
+			base.MapComponentDraw();
+			// Draw ship roofs
+			if (Find.TickManager.TicksGame % GenTicks.TicksPerRealSecond == 0 || Time.frameCount % (GenTicks.TicksPerRealSecond * 2) == 0)
+			{
+				RebuildRoofedPartsCache();
+			}
+			DrawPartsRoofCached();
+		}
+
 		/*void AccumulateToNet(CompShipHeat comp, ShipHeatNet net, ref List<CompShipHeat> used)
 		{
 			used.Add(comp);

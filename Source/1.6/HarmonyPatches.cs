@@ -1977,7 +1977,10 @@ namespace SaveOurShip2
 	{
 		public static void Postfix(RoofGrid __instance, int index, ref Color __result)
 		{
-			if (__instance.RoofAt(index) == ResourceBank.RoofDefOf.RoofShip)
+			ShipMapComp mapComp = __instance.map.GetComponent<ShipMapComp>();
+			IntVec3 pos = __instance.map.cellIndices.IndexToCell(index);
+			bool constructedToofOnShip = mapComp.ShipIndexOnVec(pos) != -1 && __instance.RoofAt(index) == RoofDefOf.RoofConstructed;
+			if (__instance.RoofAt(index) == ResourceBank.RoofDefOf.RoofShip || constructedToofOnShip)
 				__result = Color.clear;
 		}
 	}
