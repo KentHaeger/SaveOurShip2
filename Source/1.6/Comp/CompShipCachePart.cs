@@ -388,7 +388,11 @@ namespace SaveOurShip2
 		public override void PostDraw()
 		{
 			base.PostDraw();
-			DrawRoof();
+			// Hull plating no longer uses dynamic draw and draw roof called separately. However, other parts still can use this.
+			if (!isAnyTile)
+			{
+				DrawRoof();
+			}
 		}
 		public void DrawRoof()
 		{
