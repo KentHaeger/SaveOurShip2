@@ -5162,7 +5162,7 @@ namespace SaveOurShip2
 	{
 		public static void Postfix(VehiclePawn __instance, Pawn pawn, ref bool __result)
 		{
-			if (pawn.Faction == Faction.OfPlayer && SoS2VehicleUtility.IsShuttle(__instance) && __instance.Faction != Faction.OfPlayer && __result)
+			if (pawn.Faction == Faction.OfPlayer && SoS2VehicleUtility.IsSOS2Shuttle(__instance) && __instance.Faction != Faction.OfPlayer && __result)
 			{
 				__instance.SetFaction(Faction.OfPlayer);
 			}
@@ -5405,7 +5405,7 @@ namespace SaveOurShip2
 	{
 		public static void Postfix(IThingHolder holder, Thing forThing, ref float temperature, ref bool __result)
 		{
-			if (holder is VehiclePawn vehicle && SoS2VehicleUtility.IsShuttle(vehicle))
+			if (holder is VehiclePawn vehicle && SoS2VehicleUtility.IsSOS2Shuttle(vehicle))
 			{
 				if (forThing is Pawn)
 				{
@@ -5418,6 +5418,25 @@ namespace SaveOurShip2
 					temperature = -10f;
 					__result = true;
 				}
+			}
+		}
+	}
+
+	[HarmonyPatch(typeof(LandingTargeter), "TryCancelTargeter")]
+	public static class CorrectLocalLaunchCancel
+	{
+		public static bool Prefix(LandingTargeter __instance)
+		{
+			// "Local flight" command allows picking destination for vehicle parked on local map, not for vehicle arriving from the world
+			// So it certainly needs different cancellation as the vehicle will be thrown out to the world map without pilot with existing cancellation sequence
+			if (SoS2VehicleUtility.IsSOS2Shuttle(__instance.vehicle) && __instance.vehicle.Spawned)
+			{
+				__instance.StopTargeting();
+				return false;
+			}
+			else
+			{
+				return true;
 			}
 		}
 	}
