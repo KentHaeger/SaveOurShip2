@@ -27,18 +27,12 @@ namespace SaveOurShip2
 		public int LastStarshipBowTick = -StarhipBowTimeout;
 		public int LastFoundAmplifierTick = 0;
 
-		// Purging persistent data related to old save after other game is loaded or new game is started
-		private void PurgePersistentData()
+		public ShipWorldComp(World world) : base(world)
 		{
 			ShipInteriorMod2.PurgeWorldComp();
 			WorldUpdateRadiusHandler.PrurgeLayerRadiusSettings();
-			AccessExtensions.Utility.RecacheSpaceMaps();
-		}
 
-		public ShipWorldComp(World world) : base(world)
-		{
-			PurgePersistentData();
-		}
+        }
 
 		private int nextShipId = 0;
 		private int newShipId
