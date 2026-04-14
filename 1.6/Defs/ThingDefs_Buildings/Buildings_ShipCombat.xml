@@ -2114,7 +2114,7 @@
 		</graphicData>
 		<size>(5,1)</size>
 		<rotatable>true</rotatable>
-		<tickerType>Normal</tickerType>
+		<tickerType>Rare</tickerType>
 		<altitudeLayer>BuildingOnTop</altitudeLayer>
 		<passability>PassThroughOnly</passability>
 		<castEdgeShadows>false</castEdgeShadows>

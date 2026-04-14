@@ -9,9 +9,20 @@ namespace SaveOurShip2
 	{
 		public static ShipGameComp Utility;
 
-		public static bool IsSpace(this Map map)
+        public static bool IsSpace(this Map map)
 		{
 			return Utility[map];
+		}
+
+        // For performance optimization, normally use IsSpace
+        public static bool IsKnownMap(this Map map)
+        {
+            return Utility.IsKnownMap(map);
+        }
+
+		public static bool IsKnownMapInSpace(this Map map)
+		{
+			return Utility.IsKnownMapInSpace(map);
 		}
 
 		public static float DecompressionResistance(this Pawn pawn)

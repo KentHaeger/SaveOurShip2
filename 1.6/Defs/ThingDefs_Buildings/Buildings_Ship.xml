@@ -72,6 +72,7 @@
 			</li>
 		</comps>
 		<rotatable>false</rotatable>
+		<tickerType>Never</tickerType>
 		<building>
 			<shipPart>true</shipPart>
 			<blueprintGraphicData>
@@ -140,6 +141,7 @@
 			</li>
 		</comps>
 		<rotatable>false</rotatable>
+		<tickerType>Never</tickerType>
 		<building>
 			<shipPart>true</shipPart>
 			<blueprintGraphicData>
@@ -725,7 +727,7 @@
 		<defName>ShipHullTile</defName>
 		<label>hull plating</label>
 		<designatorDropdown>Ship_Hulls</designatorDropdown>
-		<drawerType>MapMeshAndRealTime</drawerType>
+		<drawerType>MapMeshOnly</drawerType>
 		<category>Building</category>
 		<graphicData>
 			<texPath>Things/Building/Ship/HullPlateTransparent</texPath>
@@ -768,6 +770,7 @@
 			<li>SaveOurShip2.PlaceWorker_ShipPlating</li>
 		</placeWorkers>
 		<rotatable>false</rotatable>
+		<tickerType>Never</tickerType>
 		<selectable>false</selectable>
 		<neverMultiSelect>true</neverMultiSelect>
 		<soundImpactDefault>BulletImpact_Metal</soundImpactDefault>
@@ -1158,7 +1161,7 @@
 			<MaxHitPoints>300</MaxHitPoints>
 			<Flammability>0</Flammability>
 		</statBases>
-		<tickerType>Normal</tickerType>
+		<tickerType>Rare</tickerType>
 		<description>A small thruster that is required to reposition ships. One is required for every 2000 weight.</description>
 		<size>(1,1)</size>
 		<receivesSignals>true</receivesSignals>

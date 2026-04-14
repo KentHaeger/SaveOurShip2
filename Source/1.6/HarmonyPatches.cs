@@ -741,8 +741,16 @@ namespace SaveOurShip2
 	{
 		public static bool Prefix(Map __instance, out bool __state)
 		{
-			__state = __instance.info?.parent != null &&
-						   (__instance.info.parent is WorldObjectOrbitingShip || __instance.info.parent is SpaceSite || __instance.info.parent is MoonBase || __instance.Parent.AllComps.Any(comp => comp is MoonPillarSiteComp));
+			if (__instance.IsKnownMap())
+			{
+				// Minor optimization getting rid of multiple "is" checks in the condition below if map was already recorded as space/non-space map
+				__state = __instance.IsKnownMapInSpace();
+			}
+			else
+			{
+				__state = __instance.info?.parent != null &&
+							   (__instance.info.parent is WorldObjectOrbitingShip || __instance.info.parent is SpaceSite || __instance.info.parent is MoonBase || __instance.Parent.AllComps.Any(comp => comp is MoonPillarSiteComp));
+			}
 			return !__state;
 		}
 		public static void Postfix(Map __instance, ref BiomeDef __result, bool __state)
@@ -876,9 +884,18 @@ namespace SaveOurShip2
 		{
 			if (___room.Map.terrainGrid.TerrainAt(IntVec3.Zero) != ResourceBank.TerrainDefOf.EmptySpace)
 				return;
+			const float vacuumTemperature = -100f;
+			if (___room.TouchesMapEdge)
+			{
+                __instance.Temperature = vacuumTemperature;
+				return;
+            }
 			if (___room.Role != RoomRoleDefOf.None && ___room.OpenRoofCount > 0)
-				__instance.Temperature = -100f;
-		}
+			{
+				__instance.Temperature = vacuumTemperature;
+			}
+
+        }
 	}
 
 	[HarmonyPatch(typeof(RoomTempTracker), "WallEqualizationTempChangePerInterval")]
@@ -1183,6 +1200,10 @@ namespace SaveOurShip2
 		// Thread spawner
 		public static void Prefix()
 		{
+			if (ModsConfig.OdysseyActive)
+			{
+				return;
+			}
 			if (!MapChangeHelper.MapIsSpace || Find.CurrentMap == null || !MapSections.ContainsKey(Find.CurrentMap)) return;
 
 			// Calculate all the various fields we're going to be using this call before we start making threads
@@ -1208,7 +1229,11 @@ namespace SaveOurShip2
 		// The real thread waiter
 		public static void Postfix()
 		{
-			if (!MeshRecalculateHelper.Tasks.Any()) return;
+            if (ModsConfig.OdysseyActive)
+            {
+                return;
+            }
+            if (!MeshRecalculateHelper.Tasks.Any()) return;
 
 			// Wait on threads to complete
 			Task.WaitAll(MeshRecalculateHelper.Tasks.ToArray());
@@ -1961,7 +1986,10 @@ namespace SaveOurShip2
 	{
 		public static void Postfix(RoofGrid __instance, int index, ref Color __result)
 		{
-			if (__instance.RoofAt(index) == ResourceBank.RoofDefOf.RoofShip)
+			ShipMapComp mapComp = __instance.map.GetComponent<ShipMapComp>();
+			IntVec3 pos = __instance.map.cellIndices.IndexToCell(index);
+			bool constructedToofOnShip = mapComp.ShipIndexOnVec(pos) != -1 && __instance.RoofAt(index) == RoofDefOf.RoofConstructed;
+			if (__instance.RoofAt(index) == ResourceBank.RoofDefOf.RoofShip || constructedToofOnShip)
 				__result = Color.clear;
 		}
 	}
@@ -5641,6 +5669,12 @@ namespace SaveOurShip2
 	{
 		public static bool Prefix(Map map, ref bool __result)
 		{
+			ShipMapComp mapComp = map.GetComponent<ShipMapComp>();
+			if( mapComp.ShipsOnMap.Values.Any(ship => ship.Core?.powerCap > 0))
+			{
+				__result = false;
+				return false;
+			}
 			if (map.listerBuildings.ColonistsHaveBuilding((Thing building) => building is Building_ShipCapacitor))
 			{
 				__result = false;
@@ -5875,9 +5909,12 @@ namespace SaveOurShip2
 	{
 		public static bool Prefix(CompOxygenPusher __instance)
         {
+			if (!(__instance.parent.Map?.Biome?.inVacuum ?? true))
+			{
+				return false;
+			}
 			// Room for oxyden pusher belonging to ship vent can be null if that vent exhaust is blocked by impassable building
 			return GetRoomFixed(__instance.parent) != null;
-
         }
 		static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
 		{
@@ -6167,6 +6204,50 @@ namespace SaveOurShip2
             return map != null;
         }
     }
+
+    // This is for fast mode
+    /*[HarmonyPatch(typeof(SteadyEnvironmentEffects), "SteadyEnvironmentEffectsTick")]
+    public static class FastModeSteadyEnvironmentEffects
+    {
+        public static bool Prefix(SteadyEnvironmentEffects __instance)
+        {
+			return !__instance.map.IsSpace();
+        }
+    }*/
+
+	/*
+    [HarmonyPatch(typeof(GenThing), "TrueCenter", new Type[] { typeof(Thing) })]
+    [HarmonyPriority(10)]
+    public static class FastTrueCenter
+    {
+		[HarmonyPriority(10)]
+		public static bool Prefix(Thing t, ref Vector3 __result)
+        {
+            if (t.def.category == ThingCategory.Item && t.Spawned)
+            {
+                __result = GenThing.ItemCenterAt(t);
+                return false;
+            }
+            __result = GenThing.TrueCenter(t.Position, t.Rotation, t.def.size, t.def.Altitude);
+            return false;
+        }
+    }
+	*/
+
+    /*[HarmonyPatch(typeof(Patch_Rendering), "TrueCenterVehicle")]
+    public static class FastTrueCenter
+	{
+		public static bool Prefix(Thing t, ref Vector3 __result)
+		{
+            if (t.def.category == ThingCategory.Item && t.Spawned)
+            {
+                __result = GenThing.ItemCenterAt(t);
+				return false;
+            }
+            __result = GenThing.TrueCenter(t.Position, t.Rotation, t.def.size, t.def.Altitude);
+            return false;
+        }
+	}*/
 
     /*[HarmonyPatch(typeof(ActiveDropPod),"PodOpen")]
 	public static class ActivePodFix{

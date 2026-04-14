@@ -30,7 +30,7 @@
 			<MaxHitPoints>500</MaxHitPoints>
 			<Flammability>0</Flammability>
 		</statBases>
-		<tickerType>Normal</tickerType>
+		<tickerType>Rare</tickerType>
 		<description>The outer structural elements of a ship's hull that have been damaged beyond repair. No longer spaceworthy.</description>
 		
 		<comps>

@@ -212,12 +212,22 @@ namespace SaveOurShip2
 				return worldComp;
 			}
 		}
-		public static void PurgeWorldComp()
+		public static void PurgeSaveSpecificState()
 		{
-			worldComp = null;
+			// World component is stored as static, therefore needs to be purged on save chane or new game
+			PurgeWorldComp();
+			// Harmony patch caches and performance caches
+            WorldUpdateRadiusHandler.PrurgeLayerRadiusSettings();
+            FasterComfortableTemperature.PurgeCache();
+			AccessExtensions.Utility.RecacheSpaceMaps();
 		}
 
-		public static RoofDef[] compatibleAirtightRoofs; // Additional array of compatible RoofDefs from other mods.
+        public static void PurgeWorldComp()
+        {
+            worldComp = null;
+        }
+
+        public static RoofDef[] compatibleAirtightRoofs; // Additional array of compatible RoofDefs from other mods.
 		public static TerrainDef[] rockTerrains; // Contains terrain types that are considered a "rock".
 		public static string[] allowedQuests;
 		public static string[] allowedToObserve;
@@ -1086,6 +1096,7 @@ namespace SaveOurShip2
 			{
 				Log.Message("Custom limit:" + extraShipGenOptions.CustomCrewLimit);
 			}
+			ShipMapComp mapComp = map.GetComponent<ShipMapComp>();
 			cellsToFog = new List<IntVec3>();
 			//List<IntVec3> cellsNotToFog = new List<IntVec3>();
 			planters = new List<Thing>();
@@ -1663,7 +1674,6 @@ namespace SaveOurShip2
 			//5: starship bow special dungeon
 			if (wreckLevel > 0)
 			{
-				var mapComp = map.GetComponent<ShipMapComp>();
 				bool madeLines = false;
 				int holeNum = 0;
 				//split
@@ -1814,6 +1824,7 @@ namespace SaveOurShip2
 				}
 			}
 			extraShipGenOptions.RequestCustomShip = false;
+			mapComp.RebuildRoofedPartsCache();
 		}
 		private static void ShipPawnGen(Pawn p, bool isDungeon, Lord lord) //td make proper pawngen req?
 		{
