@@ -219,7 +219,8 @@ namespace SaveOurShip2
 			// Harmony patch caches and performance caches
             WorldUpdateRadiusHandler.PrurgeLayerRadiusSettings();
             FasterComfortableTemperature.PurgeCache();
-        }
+			AccessExtensions.Utility.RecacheSpaceMaps();
+		}
 
         public static void PurgeWorldComp()
         {

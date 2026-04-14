@@ -28,9 +28,15 @@ namespace SaveOurShip2
 			}
 		}
 
-		public bool IsKnownSpaceMap(Map map)
+		public bool IsKnownMap(Map map)
 		{
 			return spaceMaps.ContainsKey(map.uniqueID);
+		}
+
+		// Just a safety measure avoiding potential infinite recursion between bool thiis[Map] and biomre getter used there and having Harmony patch
+		public bool IsKnownMapInSpace(Map map)
+		{
+			return spaceMaps[map.uniqueID];
 		}
 
 		public void RecacheSpaceMaps()

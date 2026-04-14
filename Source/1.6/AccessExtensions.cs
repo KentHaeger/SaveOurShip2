@@ -15,12 +15,17 @@ namespace SaveOurShip2
 		}
 
         // For performance optimization, normally use IsSpace
-        public static bool IsKnownSpaceMap(this Map map)
+        public static bool IsKnownMap(this Map map)
         {
-            return Utility.IsKnownSpaceMap(map);
+            return Utility.IsKnownMap(map);
         }
 
-        public static float DecompressionResistance(this Pawn pawn)
+		public static bool IsKnownMapInSpace(this Map map)
+		{
+			return Utility.IsKnownMapInSpace(map);
+		}
+
+		public static float DecompressionResistance(this Pawn pawn)
 		{
 			float resistance = pawn.GetStatValue(ResourceBank.StatDefOf.DecompressionResistance);
 			resistance += pawn.CurrentBed()?.GetStatValue(ResourceBank.StatDefOf.DecompressionResistanceOffset) ?? 0.0f;

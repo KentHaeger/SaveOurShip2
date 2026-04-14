@@ -741,10 +741,10 @@ namespace SaveOurShip2
 	{
 		public static bool Prefix(Map __instance, out bool __state)
 		{
-			if (__instance.IsKnownSpaceMap())
+			if (__instance.IsKnownMap())
 			{
-				// Minor optimization getting rid of multiple "is" checks in the condition below if map was already recorded as space map
-				__state = true;
+				// Minor optimization getting rid of multiple "is" checks in the condition below if map was already recorded as space/non-space map
+				__state = __instance.IsKnownMapInSpace();
 			}
 			else
 			{
