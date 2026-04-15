@@ -108,6 +108,10 @@ namespace SaveOurShip2
         public static bool Prefix(Thing diedThing, Map map, DestroyMode mode, CellRect leavingsRect, Predicate<IntVec3> nearPlaceValidator = null,
             List<Thing> listOfLeavingsOut = null)
         {
+            if (mode == DestroyMode.Deconstruct)
+            {
+                return true;
+            }
             if (diedThing.def == ResourceBank.ThingDefOf.ShipHullTile)
             {
                 // hull tile drops nothing
