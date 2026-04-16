@@ -108,7 +108,7 @@ namespace SaveOurShip2
         public static bool Prefix(Thing diedThing, Map map, DestroyMode mode, CellRect leavingsRect, Predicate<IntVec3> nearPlaceValidator = null,
             List<Thing> listOfLeavingsOut = null)
         {
-            if (mode == DestroyMode.Deconstruct)
+            if (mode != DestroyMode.KillFinalize)
             {
                 return true;
             }
