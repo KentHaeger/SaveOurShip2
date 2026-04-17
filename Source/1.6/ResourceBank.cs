@@ -84,7 +84,9 @@ namespace SaveOurShip2
             public static ThingDef Ship_Beam_Unpowered;
             public static ThingDef Ship_Beam_Wrecked;
 			public static ThingDef Ship_BeamMech;
+			public static ThingDef Ship_BeamMech_Unpowered;
 			public static ThingDef Ship_BeamArchotech;
+			public static ThingDef Ship_BeamArchotech_Unpowered;
 			public static ThingDef HullFoamWall;
 			public static ThingDef ShipAirlockWrecked;
 			public static ThingDef ShipHullTileWrecked;
@@ -351,5 +353,21 @@ namespace SaveOurShip2
 			const string VGEJumperEngineDefName = "VGE_GravjumperEngine";
 			return def == ThingDefOf.GravEngine || def.defName == VGEHulkEngineDefName || def.defName == VGEJumperEngineDefName;
 		}
+
+		// Used for fast leavings, other types of plating in submods can be expensive and can leave something behind.
+		public static bool IsNonModdedPlating(ThingDef def)
+		{
+			return def == ThingDefOf.ShipHullTile || def == ThingDefOf.ShipHullTileMech ||
+				def == ThingDefOf.ShipHullTileArchotech || def == ThingDefOf.ShipHullTileWrecked;
+		}
+
+		public static bool IsNonModdedHull(ThingDef def)
+		{
+			return def == ThingDefOf.Ship_Beam || def == ThingDefOf.Ship_Beam_Unpowered ||
+				def == ThingDefOf.Ship_BeamMech || def == ThingDefOf.Ship_BeamMech_Unpowered ||
+				def == ThingDefOf.Ship_BeamArchotech || def == ThingDefOf.Ship_BeamArchotech_Unpowered ||
+				def == ThingDefOf.Ship_Beam_Wrecked;
+		}
+
 	}
 }
