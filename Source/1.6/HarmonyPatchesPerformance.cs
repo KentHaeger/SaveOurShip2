@@ -112,13 +112,12 @@ namespace SaveOurShip2
             {
                 return true;
             }
-            if (diedThing.def == ResourceBank.ThingDefOf.ShipHullTile)
+            if(ResourceBank.IsNonModdedPlating(diedThing.def))
             {
-                // hull tile drops nothing
+                // normal hull tile drops nothing
                 return false;
             }
-            if (diedThing.def == ResourceBank.ThingDefOf.Ship_Beam || 
-                diedThing.def == ResourceBank.ThingDefOf.Ship_Beam_Unpowered)
+            if (ResourceBank.IsNonModdedHull(diedThing.def))
             {
                 Thing slag = ThingMaker.MakeThing(ThingDefOf.ChunkSlagSteel);
                 if (GenDrop.TryDropSpawn(slag, leavingsRect.CenterCell, map, ThingPlaceMode.Near, out var lastResultingThing, null, nearPlaceValidator, playDropSound: false))
