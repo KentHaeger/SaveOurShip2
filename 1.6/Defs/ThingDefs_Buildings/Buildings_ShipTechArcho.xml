@@ -442,7 +442,7 @@
 		<defName>ShipAirlockArchotech</defName>
 		<label>archotech ship airlock</label>
 		<designatorDropdown>Ship_Airlocks</designatorDropdown>
-		<description>Allows access to a ship or divides rooms inside it. Low-energy plasma barriers prevent gases from escaping.</description>
+		<description>Allows access to a ship or divides rooms inside it. Low-energy plasma barriers prevent gases from escaping. In Odyssey space, partially allows vacuum in when open, so having double airlocks on ship exits is recommended.</description>
 		<category>Building</category>
 		<thingClass>SaveOurShip2.Building_ShipAirlock</thingClass>
 		<designationCategory>Ship</designationCategory>
