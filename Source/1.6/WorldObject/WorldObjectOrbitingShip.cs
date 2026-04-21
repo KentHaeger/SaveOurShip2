@@ -15,6 +15,7 @@ namespace SaveOurShip2
 {
 	public class WorldObjectOrbitingShip : MapParent
 	{
+		public WorldObject_FastTileGetter fastTileGetter = new WorldObject_FastTileGetter();
 		private string nameInt;
 		public string Name
 		{
