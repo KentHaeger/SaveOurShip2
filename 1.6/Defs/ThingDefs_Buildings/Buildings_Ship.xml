@@ -1781,9 +1781,6 @@
 				<airPerSecondPerHundredCells>2</airPerSecondPerHundredCells>
 			</li>
 		</comps>
-		<placeWorkers>
-			<li>SaveOurShip2.PlaceWorker_OnShipHull</li>
-		</placeWorkers>
 		<costList>
 			<Steel>60</Steel>
 			<Plasteel>30</Plasteel>
@@ -1844,9 +1841,6 @@
 				<airPerSecondPerHundredCells>1</airPerSecondPerHundredCells>
 			</li>
 		</comps>
-		<placeWorkers>
-			<li>SaveOurShip2.PlaceWorker_OnShipHull</li>
-		</placeWorkers>
 		<costList>
 			<Steel>20</Steel>
 			<Plasteel>10</Plasteel>
