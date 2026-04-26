@@ -12,7 +12,7 @@ namespace SaveOurShip2
 {
 	class MoonBase : MapParent
 	{
-
+		public WorldObject_FastTileGetter fastTileGetter = new WorldObject_FastTileGetter();
 		public float theta;
 		public float radius;
 		public float phi;

@@ -13,7 +13,7 @@ using Vehicles.World;
 
 namespace SaveOurShip2
 {
-	// Here go complicated things like patches to delegates requiring manual method search rather than simple annotation
+	// A group of Harmony patches adjusting CompLaunchable range so that it is calculated from actual world object location, but not tile cloation.
 	public static class HarmonyPatchesShuttleRange
 	{
 		public static void Apply(Harmony harmony)
@@ -42,9 +42,7 @@ namespace SaveOurShip2
 		public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
 		{
 			MethodInfo originalDrawRadius = AccessTools.Method(typeof(GenDraw), nameof(GenDraw.DrawWorldRadiusRing));
-			//List<MethodInfo> methods = typeof(StartChoosingDestinationPatch).GetDeclaredMethods();
 			MethodInfo patchedDrawRadius = AccessTools.Method(typeof(StartChoosingDestinationPatch), nameof(DrawWorldRadiusRingPatched));
-			//MethodInfo patchedDrawRadius = methods.FirstOrDefault(method => method.Name == "DrawWorldRadiusRingPatched");
 			foreach (CodeInstruction instruction in instructions)
 			{
 				if (instruction.opcode == OpCodes.Call && (MethodInfo)instruction.operand == originalDrawRadius)
@@ -53,7 +51,7 @@ namespace SaveOurShip2
 					// Extra argunment, this for launchable argument
 					List<FieldInfo> innerFields = GetInnerType().GetDeclaredFields();
 					FieldInfo this_field = innerFields.FirstOrDefault(field => field.Name == thisFieldName);
-					// Load inner class self
+					// Load reference to inner class object
 					yield return new CodeInstruction(OpCodes.Ldarg_0);
 					// Grab captured this field from inner class and load it
 					yield return new CodeInstruction(OpCodes.Ldfld, this_field);
@@ -69,40 +67,43 @@ namespace SaveOurShip2
 		public static void DrawWorldRadiusRingPatched(PlanetTile center, int radius, Material overrideMat, CompLaunchable launchable)
 		{
 			PlanetTile adjustedCenter = center;
-			if (HarmonyShuttleUtility.ShouldAdjustDistance(launchable))
+			if (HarmonyDistanceUtility.ShouldAdjustDistanceForLaunchable(launchable))
 			{
 				Map sourceMap = launchable?.parent?.Map;
 				MapParent sourceObject = sourceMap.Parent;
-				if (sourceObject is WorldObjectOrbitingShip ship)
+				if (sourceObject.IsSpaceMapParent())
 				{
 					adjustedCenter = WorldObject_FastTileGetter.GetClosesTileFor(sourceObject);
-					Log.Message("Adjusted Center");
+					if (adjustedCenter.Layer != Find.WorldSelector.SelectedLayer)
+					{
+						adjustedCenter = Find.WorldSelector.SelectedLayer.GetClosestTile_NewTemp(adjustedCenter);
+					}
 				}
 			}
 			GenDraw.DrawWorldRadiusRing(adjustedCenter, radius, overrideMat);
 		}
 	}
 
-	// Utility for adjusting shuttle range and actual fuel spent in a similaw ay in several base game functions
-	public static class HarmonyShuttleUtility
+	// Utility for adjusting shuttle range and actual fuel spent in a similar way in several base game functions
+	public static class HarmonyDistanceUtility
 	{
-		public static bool ShouldAdjustDistance(CompLaunchable launchable)
+		public static bool ShouldAdjustDistanceForLaunchable(CompLaunchable launchable)
 		{
 			Map sourceMap = launchable?.parent?.Map;
 			return sourceMap?.IsSpace() ?? false;
 		}
-		public static float AdjustedDistance(GlobalTargetInfo target, CompLaunchable launchable)
+
+		public static bool ShouldAdjustDistanceForTarget(PlanetTile targetTile)
 		{
-			Map sourceMap = launchable?.parent?.Map;
-			MapParent sourceObject = sourceMap.Parent;
-			if (target.Tile == null)
+			if (targetTile != null)
 			{
-				Log.WarningOnce("SOS 2: ChoseWorldTarget patch: no target tile", 15675728);
-				return -1f;
+				MapParent mapParent = Find.WorldObjects.MapParentAt(targetTile);
+				if (mapParent != null)
+				{
+					return mapParent?.Map?.IsSpace() ?? false;
+				}
 			}
-			Vector3 targetPos = WorldHelper.GetTilePos(target.Tile);
-			float distance = SmashTools.Ext_Math.SphericalDistance(sourceObject.DrawPos, targetPos);
-			return distance;
+			return false;
 		}
 	}
 
@@ -112,29 +113,37 @@ namespace SaveOurShip2
 		public static int TraversalDistanceBetweenPatched(this WorldGrid grid, PlanetTile start, PlanetTile end,
 			bool passImpassable, int maxDist, bool canTraverseLayers, CompLaunchable launchable)
 		{
-			Log.WarningOnce("Launchable passed: " + launchable.GetType(), 36729572);
+			// Log.WarningOnce("Launchable passed: " + launchable.GetType(), 36729572);
 			int originalDistance = grid.TraversalDistanceBetween(start, end, passImpassable, maxDist, canTraverseLayers);
-			Log.Message("Originaldistance:" + originalDistance);
-			if (HarmonyShuttleUtility.ShouldAdjustDistance(launchable))
+			// Log.Message("Originaldistance:" + originalDistance);
+
+			PlanetTile adjustedStartTile = start;
+			if (HarmonyDistanceUtility.ShouldAdjustDistanceForLaunchable(launchable))
 			{
+				// Log.Message("Adjust distance, launchable");
 				Map sourceMap = launchable?.parent?.Map;
 				MapParent sourceObject = sourceMap.Parent;
 				PlanetTile actualStartTile = PlanetTile.Invalid;
-				if (sourceObject is WorldObjectOrbitingShip ship)
+				if (sourceObject.IsSpaceMapParent())
 				{
-					actualStartTile = WorldObject_FastTileGetter.GetClosesTileFor(sourceObject);
-				}
-				else
-				{
-					return originalDistance;
-				}
-				/*GlobalTargetInfo target = new GlobalTargetInfo(end);
-				//float adjusteddistance = HarmonyShuttleUtility.AdjustedDistance(target, launchable);*/
-				int adjusteddistance = grid.TraversalDistanceBetween(actualStartTile, end, passImpassable, maxDist, canTraverseLayers);
-				Log.Message("Adjusteddistance:" + adjusteddistance);
-				return adjusteddistance;
+					adjustedStartTile = WorldObject_FastTileGetter.GetClosesTileFor(sourceObject);
+				}				
 			}
-			return originalDistance;
+
+			PlanetTile adjustedEndTile = end;
+			if (HarmonyDistanceUtility.ShouldAdjustDistanceForTarget(end))
+			{
+				// Log.Message("Adjust distance, target");
+				MapParent targetMapParent = Find.WorldObjects.MapParentAt(end);
+				if (targetMapParent != null && targetMapParent.IsSpaceMapParent()) 
+				{
+					adjustedEndTile = WorldObject_FastTileGetter.GetClosesTileFor(targetMapParent);
+				}
+			}
+
+			int adjusteddistance = grid.TraversalDistanceBetween(adjustedStartTile, adjustedEndTile, passImpassable, maxDist, canTraverseLayers);
+			// Log.Message("Adjusteddistance:" + adjusteddistance);
+			return adjusteddistance;
 		}
 	}
 
@@ -186,7 +195,7 @@ namespace SaveOurShip2
 
 	[HarmonyPatch(typeof(CompLaunchable), "ChoseWorldTarget", new Type[] { typeof(GlobalTargetInfo), typeof(PlanetTile), typeof(IEnumerable<IThingHolder>),
 		typeof(int), typeof(Action<PlanetTile, TransportersArrivalAction>),  typeof(CompLaunchable), typeof(float?)})]
-	public static class CannotLaunchToEnemyShip
+	public static class ChoseWorldTargetPatches
 	{
 		// As transpilers are hard to read already, this one is intended copy-paste of the transpiler for CompLaunchable.TryLaunch above with a slight change in extra instuction,
 		// in case of changes, obviously, both transpilers shoud be considered.
@@ -208,11 +217,7 @@ namespace SaveOurShip2
 				}
 			}
 		}
-		public static bool Prefix(GlobalTargetInfo target, PlanetTile tile, Action<PlanetTile, TransportersArrivalAction> launchAction, CompLaunchable launchable,
-			ref int maxLaunchDistance, float? overrideFuelLevel, ref bool __result)
-		{
-			return true;
-		}
+
 		public static void Postfix(GlobalTargetInfo target, PlanetTile tile, Action<PlanetTile, TransportersArrivalAction> launchAction, CompLaunchable launchable,
 			int maxLaunchDistance, float? overrideFuelLevel, ref bool __result)
 		{
@@ -231,6 +236,33 @@ namespace SaveOurShip2
 					Messages.Message(TranslatorFormattedStringExtensions.Translate("SoS.CantLaunchToEnemyMap"),
 						MessageTypeDefOf.RejectInput, historical: false);
 					__result = false;
+				}
+			}
+			// TODO: do not allow launching Odyssey shuttle to empty space with contents lost, this
+			// is a severe loss, hard to find shuttle engine + pilot pawn and most most likely not intended.
+		}
+	}
+
+	[HarmonyPatch(typeof(CaravanShuttleUtility), "LaunchShuttle")]
+	public static class FixLaunchShuttleDistance
+	{
+		public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+		{
+			MethodInfo originalTraversalDistance = AccessTools.Method(typeof(WorldGrid), nameof(WorldGrid.TraversalDistanceBetween));
+			MethodInfo patchedTraversalDistance = AccessTools.Method(typeof(WorldGridExtension), nameof(WorldGridExtension.TraversalDistanceBetweenPatched));
+			MethodInfo launchableGetter = AccessTools.Method(typeof(Building_PassengerShuttle), "get_LaunchableComp");
+			foreach (CodeInstruction instruction in instructions)
+			{
+				if (instruction.opcode == OpCodes.Callvirt && (MethodInfo)instruction.operand == originalTraversalDistance)
+				{
+					// Extra argunment, this for launchable argument
+					yield return new CodeInstruction(OpCodes.Ldloc_0);
+					yield return new CodeInstruction(OpCodes.Callvirt, launchableGetter);
+					yield return new CodeInstruction(OpCodes.Call, patchedTraversalDistance);
+				}
+				else
+				{
+					yield return instruction;
 				}
 			}
 		}

@@ -49,7 +49,16 @@ namespace SaveOurShip2
 			{
 				return ship.fastTileGetter.GetClosesTileImpl(ship.Phi, ship.Theta, ship.Radius, ship);
 			}
-			return PlanetTile.Invalid;
+			else if (worldObject is SpaceSite site)
+			{
+				return site.fastTileGetter.GetClosesTileImpl(site.phi, site.theta, site.radius, site);
+			}
+			else if (worldObject is MoonBase moon)
+			{
+				return moon.fastTileGetter.GetClosesTileImpl(moon.phi, moon.theta, moon.radius, moon);
+			}
+			// returning actual tile is more failsafe than returning Invalid
+			return worldObject.tile;
 		}
 	}
 }

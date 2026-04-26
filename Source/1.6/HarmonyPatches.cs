@@ -5856,7 +5856,7 @@ namespace SaveOurShip2
     {
 		public static void Postfix(IntVec3 cell, Map map, bool interactionSpot, ThingDef shuttleDef, ref string __result)
         {
-			Log.Message(shuttleDef.defName);
+			// Log.Message(shuttleDef.defName);
 			if (shuttleDef.defName == "PassengerShuttle")
             {
 				if (__result == null || !cell.InBounds(map))

@@ -1,4 +1,5 @@
 using RimWorld;
+using RimWorld.Planet;
 using UnityEngine;
 using Vehicles;
 using Verse;
@@ -12,6 +13,11 @@ namespace SaveOurShip2
         public static bool IsSpace(this Map map)
 		{
 			return Utility[map];
+		}
+
+		public static bool IsSpaceMapParent(this MapParent mapParent)
+		{
+			return mapParent is WorldObjectOrbitingShip || mapParent is SpaceSite || mapParent is MoonBase;
 		}
 
         // For performance optimization, normally use IsSpace
