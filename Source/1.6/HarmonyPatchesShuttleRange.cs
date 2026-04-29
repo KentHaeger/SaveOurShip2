@@ -100,7 +100,9 @@ namespace SaveOurShip2
 				MapParent mapParent = Find.WorldObjects.MapParentAt(targetTile);
 				if (mapParent != null)
 				{
-					return mapParent?.Map?.IsSpace() ?? false;
+					bool result = mapParent?.Map?.IsSpace() ?? false;
+					Log.Message("Shoulsd Adjust for target: " + result);
+					return result;
 				}
 			}
 			return false;
