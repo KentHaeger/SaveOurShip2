@@ -23,6 +23,12 @@ namespace SaveOurShip2
         private const int inactiveUpdateFactor = 16;
         public static bool Prefix(Alert __instance)
         {
+            if (ModIntegration.IsMissileGirlActive())
+            {
+                // Do not throttle alerts, as that is done in Missile Girl too and double throttled alerts are an issue
+                // as theit timings become like several dozens of seconds to apapper, waay too noticable.
+                return true;
+            }
             if (!counters.ContainsKey(__instance))
             {
                 counters.Add(__instance, 0);
@@ -66,8 +72,15 @@ namespace SaveOurShip2
 
         public static bool Prefix(Pawn p, ref FloatRange __result, out bool __state)
         {
-            // Occasionally completely clear cache to remove no longer existing enemy pawns, pawns from closed maps, etc
-            if (Find.TickManager.TicksGame % GenDate.TicksPerDay == 0)
+			if (ModIntegration.IsMissileGirlActive())
+			{
+                // Do not optimize comofrable temperature getter, as it is again duplicates with Missile Girl and could cause 
+                // too long update delays with double throttling.
+                __state = false;
+				return true;
+			}
+			// Occasionally completely clear cache to remove no longer existing enemy pawns, pawns from closed maps, etc
+			if (Find.TickManager.TicksGame % GenDate.TicksPerDay == 0)
             {
                 cachedTemperatureRanges.Clear();
             }

@@ -24,6 +24,12 @@ namespace SaveOurShip2
 			return ModLister.HasActiveModWithName(CEModName);
 		}
 
+		public const string MissileGirlModID = "vr.missilegirl";
+		public static bool IsMissileGirlActive()
+		{
+			return ModLister.GetActiveModWithIdentifier(MissileGirlModID, true) != null;
+		}
+
 		// Because of Odyssey changes, need to place world objects further from each other,
 		// as zoomin in in orbit normally results in hiding orbit, switching to syrface layer.
 		public const float NewOdyOffsetScale = 2.5f;
