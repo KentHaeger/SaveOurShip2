@@ -152,6 +152,7 @@
 	<SelectEverything>Select Everything</SelectEverything>
 	<SelectEverythingDesc>Select everything.</SelectEverythingDesc>
 	<!-- bridge -->
+	<SoS.Ship.DefaultName>Unnamed Ship</SoS.Ship.DefaultName>
 	<SoS.StatsShipName>Ship name: {0}</SoS.StatsShipName>
 	<SoS.StatsNotoriety>Notoriety: {0}</SoS.StatsNotoriety>
 	<SoS.StatsShipMass>Weight: {0}</SoS.StatsShipMass>
@@ -314,6 +315,8 @@
 	<SoS.DespawnHologramDesc>Destroy the formgel controlled by this device. Breeding a new mechanite swarm to replace it will take one day</SoS.DespawnHologramDesc>
 	<SoS.RenameAI>Rename AI</SoS.RenameAI>
 	<SoS.RenameAIDesc>Give this AI a new name</SoS.RenameAIDesc>
+	<!-- Default AI Pawn name for Archotech Spore or AI Core-->
+	<SoS.AIBuilding.UnnamedAI>Unnamed AI</SoS.AIBuilding.UnnamedAI>
 	<SoS.InstallConsciousness>Install consciousness</SoS.InstallConsciousness>
 	<SoS.InstallConsciousnessThisOne>Install consciousness: {0}</SoS.InstallConsciousnessThisOne>
 	<SoS.InstallConsciousnessDesc>Install a consciousness into this device</SoS.InstallConsciousnessDesc>
@@ -546,6 +549,19 @@
 
 	<!-- Ship buildings and hardware -->
 	<SoS.HolodeckOnline>Current program: {0}</SoS.HolodeckOnline>
+	<!-- Holodeck progarams that are illustrated with various graphichs around active holodeck -->
+	<SoS.HolodeckProgram.SpaceBattle>Space Battle</SoS.HolodeckProgram.SpaceBattle>
+	<SoS.HolodeckProgram.FightClub>Fight Club</SoS.HolodeckProgram.FightClub>
+	<SoS.HolodeckProgram.HotSpring>Hot Spring</SoS.HolodeckProgram.HotSpring>
+	<SoS.HolodeckProgram.ExoticMenagerie>Exotic Menagerie</SoS.HolodeckProgram.ExoticMenagerie>
+	<SoS.HolodeckProgram.OrganTycoon>Organ Tycoon</SoS.HolodeckProgram.OrganTycoon>
+	<SoS.HolodeckProgram.BeachCookout>Beach Cookout</SoS.HolodeckProgram.BeachCookout>
+	<SoS.HolodeckProgram.GoldenPalace>Golden Palace</SoS.HolodeckProgram.GoldenPalace>
+	<SoS.HolodeckProgram.EnchantedGarden>Enchanted Garden</SoS.HolodeckProgram.EnchantedGarden>
+	<SoS.HolodeckProgram.Caveworld>Caveworld</SoS.HolodeckProgram.Caveworld>
+	<SoS.HolodeckProgram.ArtMuseum>Art Museum</SoS.HolodeckProgram.ArtMuseum>
+	<SoS.HolodeckProgram.MechanoidHive>Mechanoid Hive</SoS.HolodeckProgram.MechanoidHive>
+	<SoS.HolodeckProgram.Psychedelia>Psychedelia</SoS.HolodeckProgram.Psychedelia>
 	<SoS.HolodeckOffline>Offline</SoS.HolodeckOffline>
 
 	<SoS.FuelInfo>{0}: {1} / {2}</SoS.FuelInfo>

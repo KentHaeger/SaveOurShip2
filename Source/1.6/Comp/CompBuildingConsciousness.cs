@@ -19,7 +19,7 @@ namespace SaveOurShip2
 		public Color HologramColor;
 		public CompProps_BuildingConsciousness Props => (CompProps_BuildingConsciousness)props;
 		public int HologramRespawnTick = 0;
-		public string AIName = "Unnamed AI";
+		public string AIName = "SoS.AIBuilding.UnnamedAI".Translate();
 		public Thing WhichPawn;
 		public Thing RezPlz;
 
@@ -520,7 +520,7 @@ namespace SaveOurShip2
 					existingHediff.consciousnessSource.GetComp<CompBuildingConsciousness>().Consciousness = null;
 					existingHediff.consciousnessSource.DirtyMapMesh(existingHediff.consciousnessSource.Map);
 					if (existingHediff.consciousnessSource is Building_ShipBridge bridge)
-						existingHediff.consciousnessSource.GetComp<CompBuildingConsciousness>().AIName = "Unnamed AI";
+						existingHediff.consciousnessSource.GetComp<CompBuildingConsciousness>().AIName = "SoS.AIBuilding.UnnamedAI".Translate();
 					((Pawn)newConsc).health.RemoveHediff(existingHediff);
 				}
 

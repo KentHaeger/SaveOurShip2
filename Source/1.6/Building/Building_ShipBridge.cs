@@ -14,7 +14,7 @@ namespace SaveOurShip2
 {
 	public class Building_ShipBridge : Building
 	{
-		public string ShipName = "Unnamed Ship"; //for saving
+		public string ShipName = "SoS.Ship.DefaultName".Translate(); //for saving
 		public string LoadedDefName; // For special/quest ship identification
 		private int shipIndex = -1; //shipindex in mapcomp cache
 		public int ShipIndex
