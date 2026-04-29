@@ -37,11 +37,13 @@ namespace SaveOurShip2
 		{
 			List<Graphic> tmp = new List<Graphic>();
 			tmp.Add(GraphicDatabase.Get<Graphic_Single>("UI/Overlays/LaunchableMouseAttachment"));
-			programs.Add(SkillDefOf.Shooting, new HolodeckProgram(GraphicDatabase.Get<Graphic_Single>("HolodeckStars"), tmp, "Space Battle", 0.2f));
+			programs.Add(SkillDefOf.Shooting, new HolodeckProgram(GraphicDatabase.Get<Graphic_Single>("HolodeckStars"), tmp,
+				"SoS.HolodeckProgram.SpaceBattle".Translate(), 0.2f));
 
 			tmp = new List<Graphic>();
 			tmp.Add(GraphicDatabase.Get<Graphic_Single>("ForPrisoners"));
-			programs.Add(SkillDefOf.Melee, new HolodeckProgram(new Graphic_256(TerrainDefOf.PavedTile.graphic), tmp, "Fight Club", 0.25f));
+			programs.Add(SkillDefOf.Melee, new HolodeckProgram(new Graphic_256(TerrainDefOf.PavedTile.graphic), tmp,
+				"SoS.HolodeckProgram.FightClub".Translate(), 0.25f));
 
 			tmp = new List<Graphic>();
 			tmp.Add(GraphicDatabase.Get<Graphic_Single>("CassandraIcon"));
@@ -49,7 +51,8 @@ namespace SaveOurShip2
 			tmp.Add(GraphicDatabase.Get<Graphic_Single>("RandyIcon"));
 			tmp.Add(GraphicDatabase.Get<Graphic_Single>("SaraIcon"));
 			tmp.Add(GraphicDatabase.Get<Graphic_Single>("KimIcon"));
-			programs.Add(SkillDefOf.Social, new HolodeckProgram(new Graphic_256(TerrainDefOf.WaterShallow.graphic), tmp, "Hot Spring", 0.2f));
+			programs.Add(SkillDefOf.Social, new HolodeckProgram(new Graphic_256(TerrainDefOf.WaterShallow.graphic), tmp,
+				"SoS.HolodeckProgram.HotSpring".Translate(), 0.2f));
 
 			tmp = new List<Graphic>();
 			foreach(PawnKindDef def in DefDatabase<PawnKindDef>.AllDefs)
@@ -57,20 +60,24 @@ namespace SaveOurShip2
 				if(def.race.race.Animal && def.lifeStages.Count>0)
 					tmp.Add(def.lifeStages.Last().bodyGraphicData.Graphic);
 			}
-			programs.Add(SkillDefOf.Animals, new HolodeckProgram(new Graphic_256(TerrainDefOf.Soil.graphic), tmp, "Exotic Menagerie", 0.25f));
+			programs.Add(SkillDefOf.Animals, new HolodeckProgram(new Graphic_256(TerrainDefOf.Soil.graphic), tmp,
+				"SoS.HolodeckProgram.ExoticMenagerie".Translate(), 0.25f));
 
 			tmp = new List<Graphic>();
 			tmp.Add(GraphicDatabase.Get<Graphic_Single>("Things/Item/Resource/Gold/Gold_c"));
 			tmp.Add(ThingDef.Named("Kidney").graphic);
-			programs.Add(SkillDefOf.Medicine, new HolodeckProgram(new Graphic_256(TerrainDefOf.MetalTile.graphic.GetColoredVersion(ShaderTypeDefOf.Cutout.Shader,Color.gray,Color.white)), tmp, "Organ Tycoon", 0.5f));
+			programs.Add(SkillDefOf.Medicine, new HolodeckProgram(new Graphic_256(TerrainDefOf.MetalTile.graphic.GetColoredVersion(ShaderTypeDefOf.Cutout.Shader,Color.gray,Color.white)), tmp,
+				"SoS.HolodeckProgram.OrganTycoon".Translate(), 0.5f));
 
 			tmp = new List<Graphic>();
 			tmp.Add(GraphicDatabase.Get<Graphic_Single>("Things/Building/Misc/Campfire_MenuIcon"));
-			programs.Add(SkillDefOf.Cooking, new HolodeckProgram(new Graphic_256(TerrainDefOf.Sand.graphic), tmp, "Beach Cookout", 0.2f));
+			programs.Add(SkillDefOf.Cooking, new HolodeckProgram(new Graphic_256(TerrainDefOf.Sand.graphic), tmp,
+				"SoS.HolodeckProgram.BeachCookout".Translate(), 0.2f));
 
 			tmp = new List<Graphic>();
 			tmp.Add(ThingDefOf.Column.graphic.GetColoredVersion(ShaderTypeDefOf.Cutout.Shader, ThingDefOf.Silver.stuffProps.color,Color.white));
-			programs.Add(SkillDefOf.Construction, new HolodeckProgram(new Graphic_256(TerrainDefOf.MetalTile.graphic.GetColoredVersion(ShaderTypeDefOf.Cutout.Shader, ThingDefOf.Gold.stuffProps.color, Color.white)), tmp, "Golden Palace", 0.25f));
+			programs.Add(SkillDefOf.Construction, new HolodeckProgram(new Graphic_256(TerrainDefOf.MetalTile.graphic.GetColoredVersion(ShaderTypeDefOf.Cutout.Shader, ThingDefOf.Gold.stuffProps.color, Color.white)), tmp,
+				"SoS.HolodeckProgram.GoldenPalace".Translate(), 0.25f));
 
 			tmp = new List<Graphic>();
 			foreach (ThingDef def in DefDatabase<ThingDef>.AllDefs)
@@ -78,7 +85,8 @@ namespace SaveOurShip2
 				if (def.plant != null)
 					tmp.Add(def.graphic);
 			}
-			programs.Add(SkillDefOf.Plants, new HolodeckProgram(new Graphic_256(TerrainDefOf.Soil.graphic), tmp, "Enchanted Garden", 1f));
+			programs.Add(SkillDefOf.Plants, new HolodeckProgram(new Graphic_256(TerrainDefOf.Soil.graphic), tmp,
+				"SoS.HolodeckProgram.EnchantedGarden".Translate(), 1f));
 
 			tmp = new List<Graphic>();
 			foreach (ThingDef def in DefDatabase<ThingDef>.AllDefs)
@@ -86,12 +94,14 @@ namespace SaveOurShip2
 				if (def.mineable)
 					tmp.Add(def.graphic);
 			}
-			programs.Add(SkillDefOf.Mining, new HolodeckProgram(new Graphic_256(TerrainDefOf.FlagstoneSandstone.graphic), tmp, "Caveworld", 0.2f));
+			programs.Add(SkillDefOf.Mining, new HolodeckProgram(new Graphic_256(TerrainDefOf.FlagstoneSandstone.graphic), tmp,
+				"SoS.HolodeckProgram.Caveworld".Translate(), 0.2f));
 
 			tmp = new List<Graphic>();
 			tmp.Add(ThingDef.Named("SculptureSmall").graphic);
 			tmp.Add(ThingDef.Named("SculptureLarge").graphic);
-			programs.Add(SkillDefOf.Artistic, new HolodeckProgram(new Graphic_256(TerrainDefOf.TileSandstone.graphic), tmp, "Art Museum", 0.25f));
+			programs.Add(SkillDefOf.Artistic, new HolodeckProgram(new Graphic_256(TerrainDefOf.TileSandstone.graphic), tmp,
+				"SoS.HolodeckProgram.ArtMuseum".Translate(), 0.25f));
 
 			tmp = new List<Graphic>();
 			foreach (PawnKindDef def in DefDatabase<PawnKindDef>.AllDefs)
@@ -99,11 +109,13 @@ namespace SaveOurShip2
 				if (def.race.race.IsMechanoid && !def.defName.Contains("Shuttle") && def.lifeStages.Count>0)
 					tmp.Add(def.lifeStages.Last().bodyGraphicData.Graphic);
 			}
-			programs.Add(SkillDefOf.Crafting, new HolodeckProgram(new Graphic_256(TerrainDefOf.MetalTile.graphic.GetColoredVersion(ShaderTypeDefOf.Cutout.Shader,ThingDefOf.Steel.stuffProps.color,Color.white)), tmp, "Mechanoid Hive", 0.2f));
+			programs.Add(SkillDefOf.Crafting, new HolodeckProgram(new Graphic_256(TerrainDefOf.MetalTile.graphic.GetColoredVersion(ShaderTypeDefOf.Cutout.Shader,ThingDefOf.Steel.stuffProps.color,Color.white)), tmp,
+				"SoS.HolodeckProgram.MechanoidHive".Translate(), 0.2f));
 
 			tmp = new List<Graphic>();
 			tmp.Add(GraphicDatabase.Get<Graphic_Single>("Things/Mote/SpeechSymbols/KindWords"));
-			programs.Add(SkillDefOf.Intellectual, new HolodeckProgram(GraphicDatabase.Get<Graphic_Single>("RoughAlphaAdd"), tmp, "Psychedelia", 0.2f));
+			programs.Add(SkillDefOf.Intellectual, new HolodeckProgram(GraphicDatabase.Get<Graphic_Single>("RoughAlphaAdd"), tmp,
+				"SoS.HolodeckProgram.Psychedelia".Translate(), 0.2f));
 		}
 
 		public void StartHolodeck(Pawn pawn)
