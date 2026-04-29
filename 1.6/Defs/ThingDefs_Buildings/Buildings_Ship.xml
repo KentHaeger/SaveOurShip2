@@ -2031,7 +2031,7 @@
 			<Flammability>0.1</Flammability>
 		</statBases>
 		<tickerType>Normal</tickerType>
-		<description>A compact, self-contained fission reactor. Burns uranium fuel pods. Vents heat into a heatsink network if available, or into the surrounding room if not.\n\nIts base power production of 10,000W can be boosted with several increasingly risky overdrive modes.</description>
+		<description>A compact, self-contained fission reactor. Burns uranium fuel pods. Vents heat into a heatsink network if available, or into the surrounding room if not.\n\nIts base power production of 10,000W can be boosted with several increasingly risky overdrive modes. Produces a lot of heat and will require proper ventilation.</description>
 		<size>(5,5)</size>
 		<designationCategory>Ship</designationCategory>
 		<costList>
@@ -2078,9 +2078,6 @@
 				<postExplosionSpawnThingCount>200</postExplosionSpawnThingCount>
 			</li>
 		</comps>
-		<placeWorkers>
-			<li>SaveOurShip2.PlaceWorker_OnShipHull</li>
-		</placeWorkers>
 		<rotatable>false</rotatable>
 		<terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
 		<staticSunShadowHeight>1.0</staticSunShadowHeight>
@@ -2127,7 +2124,7 @@
 			<Flammability>0.1</Flammability>
 		</statBases>
 		<tickerType>Normal</tickerType>
-		<description>A compact, self-contained fission reactor. Burns uranium fuel pods. Vents heat into a heatsink network if available, or into the surrounding room if not.\n\nIts base power production of 3,000W can be boosted with several increasingly risky overdrive modes.</description>
+		<description>A compact, self-contained fission reactor. Burns uranium fuel pods. Vents heat into a heatsink network if available, or into the surrounding room if not.\n\nIts base power production of 3,000W can be boosted with several increasingly risky overdrive modes. Produces a lot of heat and will require proper ventilation.</description>
 		<size>(3,3)</size>
 		<designationCategory>Ship</designationCategory>
 		<costList>
@@ -2174,9 +2171,6 @@
 				<postExplosionSpawnThingCount>50</postExplosionSpawnThingCount>
 			</li>
 		</comps>
-		<placeWorkers>
-			<li>SaveOurShip2.PlaceWorker_OnShipHull</li>
-		</placeWorkers>
 		<rotatable>false</rotatable>
 		<terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
 		<staticSunShadowHeight>1.0</staticSunShadowHeight>
