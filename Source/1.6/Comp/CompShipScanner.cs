@@ -200,7 +200,7 @@ namespace SaveOurShip2
 					if (worker != null)
 						Find.LetterStack.ReceiveLetter("SoS.FoundOrbitalSite".Translate(), DescVersion.Translate(worker), LetterDefOf.PositiveEvent);
 					else
-						Find.LetterStack.ReceiveLetter("SoS.FoundOrbitalSite".Translate(), DescVersion.Translate("SoS.FoundSiteAI".Translate()), LetterDefOf.PositiveEvent);
+						Find.LetterStack.ReceiveLetter("SoS.FoundOrbitalSite".Translate(), DescVersion.Translate(TranslatableStrings.FoundSiteAI), LetterDefOf.PositiveEvent);
 				}
 				else //asteroids, sats
 				{
@@ -245,7 +245,7 @@ namespace SaveOurShip2
 				if (worker != null)
 					Find.LetterStack.ReceiveLetter("SoS.DerelictScan".Translate(), "SoS.DerelictScanDesc".Translate(worker, ship.derelictShip), LetterDefOf.PositiveEvent);
 				else
-					Find.LetterStack.ReceiveLetter("SoS.DerelictScan".Translate(), "SoS.DerelictScanDesc".Translate("its AI", ship.derelictShip), LetterDefOf.PositiveEvent);
+					Find.LetterStack.ReceiveLetter("SoS.DerelictScan".Translate(), "SoS.DerelictScanDesc".Translate(TranslatableStrings.FoundSiteAI, ship.derelictShip), LetterDefOf.PositiveEvent);
 			}
 			else if (chance > 3 && chance < 8) //ship wreck
 			{
@@ -276,7 +276,7 @@ namespace SaveOurShip2
 				if (worker != null)
 					Find.LetterStack.ReceiveLetter("SoS.DerelictScan".Translate(), "SoS.DerelictScanDesc".Translate(worker, ship.derelictShip) + GetContentPackDescription(ship.derelictShip), LetterDefOf.PositiveEvent);
 				else
-					Find.LetterStack.ReceiveLetter("SoS.DerelictScan".Translate(), "SoS.DerelictScanDesc".Translate("its AI", ship.derelictShip) + GetContentPackDescription(ship.derelictShip), LetterDefOf.PositiveEvent);
+					Find.LetterStack.ReceiveLetter("SoS.DerelictScan".Translate(), "SoS.DerelictScanDesc".Translate(TranslatableStrings.FoundSiteAI, ship.derelictShip) + GetContentPackDescription(ship.derelictShip), LetterDefOf.PositiveEvent);
 			}
 			else if (chance > 7 && chance < 12) //tradeship, already has faction, navy resolves in SpawnEnemyShip
 			{
@@ -289,7 +289,7 @@ namespace SaveOurShip2
 					if (worker != null)
 						Find.LetterStack.ReceiveLetter(TranslatorFormattedStringExtensions.Translate("SoS.TraderScan"), TranslatorFormattedStringExtensions.Translate("SoS.TraderScanDesc", worker), LetterDefOf.PositiveEvent);
 					else
-						Find.LetterStack.ReceiveLetter(TranslatorFormattedStringExtensions.Translate("SoS.TraderScan"), TranslatorFormattedStringExtensions.Translate("SoS.TraderScanDesc", "its AI"), LetterDefOf.PositiveEvent);
+						Find.LetterStack.ReceiveLetter(TranslatorFormattedStringExtensions.Translate("SoS.TraderScan"), TranslatorFormattedStringExtensions.Translate("SoS.TraderScanDesc", TranslatableStrings.FoundSiteAI), LetterDefOf.PositiveEvent);
 				}
 			}
 			else //random ship
@@ -322,7 +322,7 @@ namespace SaveOurShip2
 				if (worker != null)
 					Find.LetterStack.ReceiveLetter("SoS.EnemyScan".Translate(), "SoS.EnemyScanDesc".Translate(worker, ship.attackableShip) + GetContentPackDescription(ship.attackableShip), LetterDefOf.PositiveEvent);
 				else
-					Find.LetterStack.ReceiveLetter("SoS.EnemyScan".Translate(), "SoS.EnemyScanDesc".Translate("its AI", ship.attackableShip) + GetContentPackDescription(ship.attackableShip), LetterDefOf.PositiveEvent);
+					Find.LetterStack.ReceiveLetter("SoS.EnemyScan".Translate(), "SoS.EnemyScanDesc".Translate(TranslatableStrings.FoundSiteAI, ship.attackableShip) + GetContentPackDescription(ship.attackableShip), LetterDefOf.PositiveEvent);
 			}
 		}
 

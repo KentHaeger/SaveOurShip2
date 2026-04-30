@@ -7,8 +7,6 @@ namespace SaveOurShip2
 {
 	public static class TranslationUtility
 	{
-		public static ShipGameComp Utility;
-
 		public static TaggedString ToStringTranslated(this bool flag)
 		{
 			return TranslatorFormattedStringExtensions.Translate(flag ? "SoS.True" : "SoS.False");
