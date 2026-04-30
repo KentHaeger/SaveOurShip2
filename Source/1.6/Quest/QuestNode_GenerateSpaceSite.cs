@@ -170,8 +170,8 @@ namespace SaveOurShip2
 			{*/
 				if (worker.GetValue(slate) == null)
 				{
-					dictionary.Add("worker_definite", "its AI");
-					list.Add(new Rule_String("worker_definite", "its AI"));
+					dictionary.Add("worker_definite", TranslatableStrings.FoundSiteAI);
+					list.Add(new Rule_String("worker_definite", TranslatableStrings.FoundSiteAI));
 				}
 				QuestGen.AddQuestDescriptionRules(list);
 				QuestGen.AddQuestNameRules(list);

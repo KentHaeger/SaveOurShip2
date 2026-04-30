@@ -155,6 +155,7 @@
     <Compile Include="SOS2MapUtility.cs" />
     <Compile Include="SoSDebugActions.cs" />
     <Compile Include="SoSSpawnOverride.cs" />
+    <Compile Include="TranslatableStrings.cs" />
     <Compile Include="TranslationUtility.cs" />
     <Compile Include="TWRMath.cs" />
     <Compile Include="Vehicles\CompHoverMode.cs" />
