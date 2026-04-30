@@ -101,8 +101,16 @@ namespace SaveOurShip2
 				if (mapParent != null)
 				{
 					bool result = mapParent?.Map?.IsSpace() ?? false;
-					Log.Message("Shoulsd Adjust for target: " + result);
-					return result;
+					// For heterogenous space objects, it is more reliable to check Map.IsSpace() if map is present
+					// In case maybe some mod add more, etc
+					if (mapParent.Map != null)
+					{
+						return mapParent.Map.IsSpace();
+					}
+					else
+					{
+						return mapParent.IsSpaceMapParent();
+					}
 				}
 			}
 			return false;
