@@ -916,7 +916,7 @@
 			<ArchotechPillarsConnected>0</ArchotechPillarsConnected>
 			<Beauty>100</Beauty>
 		</statBases>
-		<tickerType>Rare</tickerType>
+		<tickerType>Normal</tickerType>
 		<description>An incubator for a mortal mind, either humanlike or machine, that has begun upgrading itself into an archotech.\n\nThe vast majority of its computational power is focused inward, contemplating its own structure and other unknowable mysteries, but enough is left over to serve as a ship's computer core.\n\nIts mood can be improved by having colonists meditate nearby, or by sacrificing prisoners to it. Should its mood dip too low, it might decide to play "pranks."\n\nBuilding more than one archotech spore will not produce gifts more frequently, but they will develop psychic field strength independently.</description>
 		<size>(5,2)</size>
 		<building>

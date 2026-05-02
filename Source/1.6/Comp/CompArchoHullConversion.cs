@@ -38,12 +38,19 @@ namespace SaveOurShip2
 
 		public override void CompTick()
 		{
+			// Changing this interval will affect conversion speed, but it is not intended to convert several tiles per second,
+			// so performance gain should be worth it, while gameplay impact shouldn't be significant.
+			const int conversionTickInterval = 10;
+			if (Find.TickManager.TicksGame % conversionTickInterval != 0)
+			{
+				return;
+			}
 			if (!OptimizeMatter || !parent.Spawned || !OptimizationProject.IsFinished || parent.Map.IsSpace() && parent.Map.GetComponent<ShipMapComp>().ShipMapState != ShipMapState.nominal || parent.Map.mapPawns.AllPawns.Where(p => !p.IsPrisoner && !p.InContainerEnclosed && p.HostileTo(Faction.OfPlayer)).Any())
 			{
 				return;
 			}
-			age++;
-			ticksToConversion--;
+			age += conversionTickInterval;
+			ticksToConversion -= conversionTickInterval;
 			if (ticksToConversion <= 0)
 			{
 				float currentRadius = CurrentRadius;
