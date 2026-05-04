@@ -1023,7 +1023,7 @@
 		</costList>
 		<uiIconPath>Things/Building/Ship/TurretACIII_MenuIcon</uiIconPath>
 		<researchPrerequisites>
-			<li>ShipTurretLarge</li>
+			<li>ShipTurretMedium</li>
 		</researchPrerequisites>
 		<size>(5,5)</size>
 	</ThingDef>
