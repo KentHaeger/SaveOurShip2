@@ -820,7 +820,7 @@
 	</ResearchProjectDef>
 	<ResearchProjectDef ParentName="ShipResearchProjectBase">
 		<defName>ShipTurretMedium</defName>
-		<label>cruiser armaments</label>
+		<label>heavy armaments</label>
 		<description>Construct larger versions of ship turrets, suitable for a mid-sized cruiser.</description>
 		<baseCost>4000</baseCost>
 		<techLevel>Spacer</techLevel>
@@ -850,7 +850,7 @@
 	</ResearchProjectDef>
 	<ResearchProjectDef ParentName="ShipResearchProjectBase">
 		<defName>ShipTurretLarge</defName>
-		<label>capital ship armaments</label>
+		<label>spinal armaments</label>
 		<description>Construct modular spinal-mount weapons, typically seen only on capital ships.</description>
 		<baseCost>6000</baseCost>
 		<techLevel>Spacer</techLevel>
