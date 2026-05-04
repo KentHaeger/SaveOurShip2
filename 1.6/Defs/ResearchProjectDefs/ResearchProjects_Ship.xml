@@ -671,7 +671,7 @@
 	<ResearchProjectDef ParentName="ShipResearchProjectBase">
 		<defName>ShipTurretAC</defName>
 		<label>ship cannons</label>
-		<description>Construct ballistic slugthrowers for ship-to-ship combat. Unlike energy weapons, these require ammo but need almost no cooling. Can intercept torpedoes and shuttles.</description>
+		<description>Construct ballistic slugthrowers for ship-to-ship combat. Unlike energy weapons, these require ammo but produce almost no heat. Can intercept torpedoes and shuttles.</description>
 		<baseCost>800</baseCost>
 		<techLevel>Spacer</techLevel>
 		<prerequisites>
@@ -821,7 +821,7 @@
 	<ResearchProjectDef ParentName="ShipResearchProjectBase">
 		<defName>ShipTurretMedium</defName>
 		<label>heavy armaments</label>
-		<description>Construct larger versions of ship turrets. Largre turrets are not capablble of point defense against incoming shuttles and torpedoes.</description>
+		<description>Construct larger versions of ship turrets. Large turrets are not capablble of point defense against incoming shuttles and torpedoes.</description>
 		<baseCost>4000</baseCost>
 		<techLevel>Spacer</techLevel>
 		<prerequisites>
@@ -851,7 +851,7 @@
 	<ResearchProjectDef ParentName="ShipResearchProjectBase">
 		<defName>ShipTurretLarge</defName>
 		<label>spinal armaments</label>
-		<description>Construct modular spinal-mount weapons consisting of spinal barrel, optional amplifiers and spinal capacitor.</description>
+		<description>Construct modular spinal-mount weapons consisting of spinal barrel, optional amplifiers and a spinal capacitor.</description>
 		<baseCost>6000</baseCost>
 		<techLevel>Spacer</techLevel>
 		<prerequisites>
