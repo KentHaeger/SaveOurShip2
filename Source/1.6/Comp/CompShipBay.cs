@@ -11,7 +11,26 @@ using SmashTools;
 
 namespace SaveOurShip2
 {
-	//[StaticConstructorOnStartup]
+	// Actual incoming shuttle object doesn't have size, so tiles to be occupied by landing shuttle can't be easily idedntifed, so there is a need for this object.
+	class BayInomingShuttle : IExposable
+	{
+		public VehiclePawn shuttle;
+		public HashSet<IntVec3> reservedArea = new HashSet<IntVec3>(); 
+		public BayInomingShuttle()
+		{
+		}
+		public BayInomingShuttle(VehiclePawn vehicle)
+		{
+			shuttle = vehicle;
+		}
+		public void ExposeData()
+		{
+			Scribe_Collections.Look<IntVec3>(ref reservedArea, "reservedArea");
+			if (reservedArea == null)
+				reservedArea = new HashSet<IntVec3>();
+			Scribe_References.Look<VehiclePawn>(ref shuttle, "shuttle");
+		}
+	}
 	public class CompShipBay : ThingComp
 	{
 		/*private static Graphic roofedGraphic = GraphicDatabase.Get(typeof(Graphic_Single), "Things/Building/Ship/Shuttle_Bay_Roof", ShaderDatabase.Cutout, new Vector2(5f, 5f), Color.white, Color.white);
@@ -28,15 +47,17 @@ namespace SaveOurShip2
 		public override void PostExposeData()
 		{
 			base.PostExposeData();
-			Scribe_Collections.Look<IntVec3>(ref reservedArea, "reservedArea");
-			if (reservedArea == null)
-				reservedArea = new HashSet<IntVec3>();
+			Scribe_Collections.Look<BayInomingShuttle>(ref incomingShuttles, "incomingShuttles", false, LookMode.Deep);
+			if (incomingShuttles == null)
+			{
+				incomingShuttles = new List<BayInomingShuttle>();
+			}
 		}
 
 		public ShipMapComp mapComp;
 		public CellRect bayRect;
 		Matrix4x4 matrix = new Matrix4x4();
-		public HashSet<IntVec3> reservedArea = new HashSet<IntVec3>();
+		private List<BayInomingShuttle> incomingShuttles = new List<BayInomingShuttle>();
 		private bool? needDrawRoof = null;
 		HashSet<CompFueledTravel> dockedShuttles = new HashSet<CompFueledTravel>();
 		CompRefuelable compRefuelable;
@@ -50,20 +71,39 @@ namespace SaveOurShip2
 		}
 		public void ReserveArea(IntVec3 pos, VehiclePawn vehicle) //we only have square shuttles so simplified, no rot
 		{
+			BayInomingShuttle incoming = new BayInomingShuttle(vehicle);
 			CellRect rect = new CellRect(pos .x- vehicle.def.size.x / 2, pos.z - vehicle.def.Size.z / 2, vehicle.def.size.x, vehicle.def.size.z);
 			foreach (IntVec3 v in rect)
 			{
-				reservedArea.Add(v);
+				incoming.reservedArea.Add(v);
 			}
+			incomingShuttles.Add(incoming);
 		}
 		public void UnReserveArea(IntVec3 pos, VehiclePawn vehicle) //we only have square shuttles so simplified, no rot
 		{
-			CellRect rect = new CellRect(pos.x - vehicle.def.size.x / 2, pos.z - vehicle.def.Size.z / 2, vehicle.def.size.x, vehicle.def.size.z);
-			foreach (IntVec3 v in rect)
-			{
-				reservedArea.Remove(v);
-			}
+			incomingShuttles.RemoveAll(incoming => incoming.shuttle == vehicle);
 		}
+		public bool IsReservedForOtherShuttle(IntVec3 position, VehiclePawn landingShuttle)
+		{
+			foreach(BayInomingShuttle incoming in incomingShuttles)
+			{
+				if (incoming.shuttle == landingShuttle)
+				{
+					continue;
+				}
+				if(incoming.reservedArea.Contains(position))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+		private void UpdateReservedAreas()
+		{
+			// Reserved area only booked for landing sequence, so can be released for spawned shuttles.
+			incomingShuttles.RemoveAll(incoming => incoming.shuttle.Spawned || incoming.shuttle.Destroyed);
+		}
+
 		public bool CanLaunchShuttle(VehiclePawn vehicle)
 		{
 			if (vehicle.def.Size.x > Props.maxShuttleSize || vehicle.def.Size.z > Props.maxShuttleSize)
@@ -79,11 +119,14 @@ namespace SaveOurShip2
 		{
 			if (occArea.Width > Props.maxShuttleSize || occArea.Height > Props.maxShuttleSize)
 				return false;
-			foreach (IntVec3 v in occArea)
+			foreach (BayInomingShuttle incoming in incomingShuttles)
 			{
-				if (!bayRect.Contains(v) || v.Impassable(parent.Map) || reservedArea.Contains(v))
+				foreach (IntVec3 v in occArea)
 				{
-					return false;
+					if (!bayRect.Contains(v) || v.Impassable(parent.Map) || incoming.reservedArea.Contains(v))
+					{
+						return false;
+					}
 				}
 			}
 			return true;
@@ -100,7 +143,7 @@ namespace SaveOurShip2
 			{
 				foreach (IntVec3 vec in bayRect)
 				{
-					if (!vec.Impassable(parent.Map) && !reservedArea.Contains(vec))
+					if (!vec.Impassable(parent.Map) && !IsReservedForOtherShuttle(vec, vehicle))
 					{
 						return vec;
 					}
@@ -123,7 +166,7 @@ namespace SaveOurShip2
 				bool fits = true;
 				foreach (IntVec3 v in area)
 				{
-					if (invalidPos.Contains(v) || v.Impassable(parent.Map) || v.GetThingList(parent.Map).Any(t => t is VehiclePawn) || reservedArea.Contains(vec))
+					if (invalidPos.Contains(v) || v.Impassable(parent.Map) || v.GetThingList(parent.Map).Any(t => t is VehiclePawn) || IsReservedForOtherShuttle(vec, vehicle))
 					{
 						invalidPos.Add(v);
 						fits = false;
@@ -180,7 +223,10 @@ namespace SaveOurShip2
 			if (tick % 8 == 0 && parent.Spawned && compRefuelable != null && compPowerTrader != null && compPowerTrader.PowerOn) //ie, is powered and is not a salvage bay
 			{
 				if (tick % 256 == 0)
+				{
 					ReCacheDockedShuttles();
+					UpdateReservedAreas();
+				}
 				foreach (CompFueledTravel comp in dockedShuttles)
 				{
 					if (compRefuelable.fuel > 0 && comp.FuelPercentOfTarget < 1 && !comp.Vehicle.ignition.Drafted && compRefuelable.Props.fuelFilter.Allows(comp.Props.fuelType))
