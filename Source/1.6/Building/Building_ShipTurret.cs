@@ -189,6 +189,7 @@ namespace SaveOurShip2
 			Scribe_Values.Look<IntVec3>(ref SynchronizedBurstLocation, "burstLocation");
 			Scribe_Values.Look<bool>(ref PointDefenseMode, "pointDefenseMode");
 			Scribe_Values.Look<bool>(ref useOptimalRange, "useOptimalRange");
+			Scribe_TargetInfo.Look(ref shipTarget, "shipTarget");
 			BackCompatibility.PostExposeData(this);
 			if (Scribe.mode == LoadSaveMode.PostLoadInit)
 			{
