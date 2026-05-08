@@ -49,6 +49,7 @@
 	<SoS.CombatShieldBrokenEnemy>Enemy shield has broken due to lack of heat capacity!</SoS.CombatShieldBrokenEnemy>
 	<SoS.CombatPodDestroyedPlayer>Your shuttle was destroyed by enemy point defense! If any crew survived, their ejector seats will take them back to your ship.</SoS.CombatPodDestroyedPlayer>
 	<SoS.CombatPodDestroyedEnemy>Enemy shuttle was destroyed by your point defense!</SoS.CombatPodDestroyedEnemy>
+	<SoS.CombatCantDeconstructBridge>Can't deconstruct ship bridge during ship battle.</SoS.CombatCantDeconstructBridge>
 	<SoS.WithdrawShip>Withdraw ship</SoS.WithdrawShip>
 	<SoS.WithdrawShipDesc>Withdraw this ship from the battle.</SoS.WithdrawShipDesc>
 	<SoS.WithdrawShipLast>Last ship can not withdraw</SoS.WithdrawShipLast>

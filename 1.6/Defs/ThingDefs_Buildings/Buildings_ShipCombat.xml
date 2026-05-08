@@ -150,7 +150,7 @@
 		<size>(1,1)</size>
 		<receivesSignals>true</receivesSignals>
 		<statBases>
-			<MaxHitPoints>200</MaxHitPoints>
+			<MaxHitPoints>40</MaxHitPoints>
 			<Flammability>0.5</Flammability>
 			<WorkToBuild>4000</WorkToBuild>
 		</statBases>

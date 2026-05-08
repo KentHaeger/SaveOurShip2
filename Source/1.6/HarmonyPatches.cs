@@ -2577,6 +2577,27 @@ namespace SaveOurShip2
 		}
 	}
 
+	// Safely deconstructing all ship bridges in combat will remove enemy ship and put player ship into revoverable
+	// unstable orbit state. Compared to normal way of enemy ship weapons destroying bridges, deconstruct way excludes any collaterial damage,
+	// so that is defeninely an exploit.
+	[HarmonyPatch(typeof(Designator_Deconstruct), "CanDesignateThing")]
+	public static class NoBridgeDeconstructInCombat
+	{
+		public static bool Prefix(ref AcceptanceReport __result, Thing t)
+		{
+			if (t.Map != null && t is Building_ShipBridge)
+			{
+				ShipMapComp mapComp = t.Map.GetComponent<ShipMapComp>();
+				if (t.Faction == Faction.OfPlayer && mapComp.ShipMapState == ShipMapState.inCombat)
+				{
+					__result = new AcceptanceReport("SoS.CombatCantDeconstructBridge".Translate());
+					return false;
+				}
+			}
+			return true;
+		}
+	}
+
 	//weapons
 	[HarmonyPatch(typeof(BuildingProperties), "IsMortar", MethodType.Getter)]
 	public static class TorpedoesCanBeLoaded
