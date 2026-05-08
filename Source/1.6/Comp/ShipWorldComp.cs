@@ -27,6 +27,12 @@ namespace SaveOurShip2
 		public int LastStarshipBowTick = -StarhipBowTimeout;
 		public int LastFoundAmplifierTick = 0;
 
+		private WeaponGroupManager weaponGroups = new WeaponGroupManager();
+		public WeaponGroupManager WeaponGroups
+		{
+			get => weaponGroups;
+		}
+
 		public ShipWorldComp(World world) : base(world)
 		{
 			ShipInteriorMod2.PurgeSaveSpecificState();
@@ -144,6 +150,11 @@ namespace SaveOurShip2
 			Scribe_Values.Look<int>(ref LastFoundAmplifierTick, "LastFoundAmplifierTick", Find.TickManager.TicksGame);
 			Scribe_Values.Look<bool>(ref hadSpaceMap, "hadSpaceMap");
 			Scribe_Values.Look<bool>(ref difficultyLetterShown, "difficultyDialogShown");
+			Scribe_Deep.Look<WeaponGroupManager>(ref weaponGroups, "weaponGroups");
+			if (weaponGroups == null)
+			{
+				weaponGroups = new WeaponGroupManager();
+			}
 
 			if (Scribe.mode == LoadSaveMode.LoadingVars)
 			{

@@ -144,6 +144,51 @@ namespace SaveOurShip2
 			return result;
 		}
 
+		// Tactical console allows enabling/disabling weapon group system completely andf also selecting each group
+		private IEnumerable<Gizmo> GetWeaponGroupGizmos()
+		{
+			List<Gizmo> result = new List<Gizmo>();
+			try
+			{
+				Command_Toggle commandEnable = new Command_Toggle();
+				commandEnable.defaultLabel = "SoS.CommandEnableWeaponGroups".Translate();
+				commandEnable.defaultDesc = "SoS.CommandEnableWeaponGroupsDesc".Translate();
+				commandEnable.icon = ContentFinder<Texture2D>.Get("UI/WeaponGroups");
+				commandEnable.isActive = () => ShipInteriorMod2.WorldComp.WeaponGroups.Enabled;
+				commandEnable.toggleAction = delegate
+				{
+					ShipInteriorMod2.WorldComp.WeaponGroups.Enabled = !ShipInteriorMod2.WorldComp.WeaponGroups.Enabled;
+				};
+				commandEnable.activateSound = SoundDefOf.Tick_Tiny;
+				result.Add(commandEnable);
+
+				if (ShipInteriorMod2.WorldComp.WeaponGroups.Enabled)
+				{
+					for (int i = 0; i < ShipInteriorMod2.WorldComp.WeaponGroups.Count; i++)
+					{
+						int index_captured = i;
+						Command_Action commandSelectGroup = new Command_Action();
+						commandSelectGroup.defaultLabel = "SoS.CommandSelectWeaponGroup".Translate(i + 1);
+						commandSelectGroup.defaultDesc = "SoS.CommandSelectWeaponGroupDesc".Translate();
+						commandSelectGroup.icon = ContentFinder<Texture2D>.Get("UI/WeaponGroup" + (i + 1).ToString());
+						commandSelectGroup.action = delegate
+						{
+							ShipInteriorMod2.WorldComp.WeaponGroups.Select(index_captured);
+						};
+						result.Add(commandSelectGroup);
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.Error("Error creating tac con weapon group gizmos: " + ex.Message);
+			}
+			foreach(Gizmo g in result)
+			{
+				yield return g;
+			}
+		}
+
 		[DebuggerHidden]
 		public override IEnumerable<Gizmo> GetGizmos()
 		{
@@ -171,8 +216,18 @@ namespace SaveOurShip2
 			{
 				yield return c;
 			}
-			if (TacCon || heatNet == null || !powerComp.PowerOn || Ship == null)
+			bool inactiveBridge = heatNet == null || !powerComp.PowerOn || Ship == null;
+			if (TacCon || inactiveBridge)
+			{
+				if (TacCon && !inactiveBridge)
+				{
+					foreach(Gizmo g in GetWeaponGroupGizmos())
+					{
+						yield return g;
+					}
+				}
 				yield break;
+			}
 			if (!selected)
 			{
 				fail = InterstellarFailReasons();

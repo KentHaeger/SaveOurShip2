@@ -1010,6 +1010,42 @@ namespace SaveOurShip2
 				};
 				yield return command_Toggle;
 			}
+
+			List<Gizmo> weaponGroupGizmos = new List<Gizmo>();
+			try
+			{
+				if (ShipInteriorMod2.WorldComp.WeaponGroups.Enabled)
+				{
+					/*List<int> indexes = new List<int>();
+					for (int i = 0; i < ShipInteriorMod2.WorldComp.WeaponGroups.Count; i++)
+					{
+						indexes.Add(i);
+					}*/
+					for (int i = 0; i < ShipInteriorMod2.WorldComp.WeaponGroups.Count; i++)
+					{
+						int index_captured = i;
+						Command_Toggle toggleIncludeInWeaponGroup = new Command_Toggle();
+						toggleIncludeInWeaponGroup.defaultLabel = "SoS.CommandIncludeInWeaponGroup".Translate(i + 1);
+						toggleIncludeInWeaponGroup.defaultDesc = "SoS.CommandIncludeInWeaponGroupDesc".Translate();
+						toggleIncludeInWeaponGroup.icon = ContentFinder<Texture2D>.Get("UI/WeaponGroup" + (i + 1).ToString());
+						toggleIncludeInWeaponGroup.isActive = () => ShipInteriorMod2.WorldComp.WeaponGroups[index_captured].Contains(this);
+						toggleIncludeInWeaponGroup.toggleAction = delegate
+						{
+							ShipInteriorMod2.WorldComp.WeaponGroups[index_captured].ToggleTurret(this);
+						};
+						weaponGroupGizmos.Add(toggleIncludeInWeaponGroup);
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.Error("Error creating tac con weapon group gizmos: " + ex.Message);
+			}
+			foreach(Gizmo g in weaponGroupGizmos)
+			{
+				yield return g;
+			}
+
 		}
 
 		private void ExtractShells()
