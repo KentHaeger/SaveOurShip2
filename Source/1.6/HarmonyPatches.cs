@@ -498,7 +498,7 @@ namespace SaveOurShip2
 		}
 	}
 
-	// Helper class for temporarilt disabling map switching
+	// Helper class for temporarily disabling map switching
 	[HarmonyPatch(typeof(Game))]
 	[HarmonyPatch("CurrentMap", MethodType.Setter)]
 	public static class PreventCurrentMapSwitch
@@ -512,6 +512,24 @@ namespace SaveOurShip2
 		static bool Prefix() 
 		{
 			return !enabled;
+		}
+	}
+
+	// Selector will incorrectly draw selection brackets for player weapons on enemy ship map.
+	// Not always, but when weapon group selection system is used. Just needs this simple chec to fix it.
+	[HarmonyPatch(typeof(SelectionDrawer), "DrawSelectionBracketFor")]
+	public static class FixSelectionBrackets
+	{
+		public static bool Prefix(object obj)
+		{
+			if (obj is Building building)
+			{
+				if (building.Spawned && building.Map != Find.CurrentMap)
+				{
+					return false;
+				}
+			}
+			return true;
 		}
 	}
 

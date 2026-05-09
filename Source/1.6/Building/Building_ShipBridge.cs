@@ -147,6 +147,10 @@ namespace SaveOurShip2
 		// Tactical console allows enabling/disabling weapon group system completely andf also selecting each group
 		private IEnumerable<Gizmo> GetWeaponGroupGizmos()
 		{
+			if (!Spawned || Map != ShipInteriorMod2.FindPlayerShipMap())
+			{
+				yield break;
+			}
 			List<Gizmo> result = new List<Gizmo>();
 			try
 			{

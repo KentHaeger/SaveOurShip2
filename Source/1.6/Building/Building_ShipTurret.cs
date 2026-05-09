@@ -1010,17 +1010,24 @@ namespace SaveOurShip2
 				};
 				yield return command_Toggle;
 			}
+			foreach(Gizmo g in GetWeaponGroupGizmos())
+			{
+				yield return g;
+			}
 
+		}
+
+		private IEnumerable<Gizmo> GetWeaponGroupGizmos()
+		{
+			if (!Spawned || Map != ShipInteriorMod2.FindPlayerShipMap())
+			{
+				yield break;
+			}
 			List<Gizmo> weaponGroupGizmos = new List<Gizmo>();
 			try
 			{
 				if (ShipInteriorMod2.WorldComp.WeaponGroups.Enabled)
 				{
-					/*List<int> indexes = new List<int>();
-					for (int i = 0; i < ShipInteriorMod2.WorldComp.WeaponGroups.Count; i++)
-					{
-						indexes.Add(i);
-					}*/
 					for (int i = 0; i < ShipInteriorMod2.WorldComp.WeaponGroups.Count; i++)
 					{
 						int index_captured = i;
@@ -1041,11 +1048,10 @@ namespace SaveOurShip2
 			{
 				Log.Error("Error creating tac con weapon group gizmos: " + ex.Message);
 			}
-			foreach(Gizmo g in weaponGroupGizmos)
+			foreach (Gizmo g in weaponGroupGizmos)
 			{
 				yield return g;
 			}
-
 		}
 
 		private void ExtractShells()
