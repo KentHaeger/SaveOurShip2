@@ -1028,7 +1028,7 @@ namespace SaveOurShip2
 			{
 				if (ShipInteriorMod2.WorldComp.WeaponGroups.Enabled)
 				{
-					for (int i = 0; i < ShipInteriorMod2.WorldComp.WeaponGroups.Count; i++)
+					for (int i = 0; i < ShipInteriorMod2.WorldComp.WeaponGroups.CountToDisplay; i++)
 					{
 						int index_captured = i;
 						Command_Toggle toggleIncludeInWeaponGroup = new Command_Toggle();
@@ -1046,7 +1046,7 @@ namespace SaveOurShip2
 			}
 			catch (Exception ex)
 			{
-				Log.Error("Error creating tac con weapon group gizmos: " + ex.Message);
+				Log.ErrorOnce("Error creating tac con weapon group gizmos: " + ex.Message, 535271124);
 			}
 			foreach (Gizmo g in weaponGroupGizmos)
 			{

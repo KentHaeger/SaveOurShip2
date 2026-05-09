@@ -217,6 +217,15 @@
 	<SoS.CommandSelectWeaponGroupDesc>Select specific weapon group. Only works for player ship map.</SoS.CommandSelectWeaponGroupDesc>
 	<SoS.CommandIncludeInWeaponGroup>Include to weapon group {0}</SoS.CommandIncludeInWeaponGroup>
 	<SoS.CommandIncludeInWeaponGroupDesc>Check/uncheck to add/remove rurret to specific weapon group.</SoS.CommandIncludeInWeaponGroupDesc>
+	<SoS.WeaponGroup.1>1</SoS.WeaponGroup.1>
+	<SoS.WeaponGroup.2>2</SoS.WeaponGroup.2>
+	<SoS.WeaponGroup.3>3</SoS.WeaponGroup.3>
+	<SoS.WeaponGroup.4>4</SoS.WeaponGroup.4>
+	<SoS.WeaponGroup.5>5</SoS.WeaponGroup.5>
+	<SoS.WeaponGroup.6>6</SoS.WeaponGroup.6>
+	<SoS.WeaponGroup.7>7</SoS.WeaponGroup.7>
+	<SoS.WeaponGroup.8>8</SoS.WeaponGroup.8>
+	<SoS.WeaponGroup.9>9</SoS.WeaponGroup.9>
 	<!-- story -->
 	<SoS.QuestPillarA>Attack KSS Horizon</SoS.QuestPillarA>
 	<SoS.QuestPillarADesc>Attempt to engage the ancient terraforming station and recover an archotech pillar</SoS.QuestPillarADesc>

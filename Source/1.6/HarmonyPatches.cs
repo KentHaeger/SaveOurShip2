@@ -48,21 +48,38 @@ namespace SaveOurShip2
 		}
         private static void AddWeaponGroupButtons(float baseX, float BaseY)
 		{
-			if(!ShipInteriorMod2.WorldComp.WeaponGroups.Enabled)
+			try
 			{
-				return;
-			}
-			const float buttonWidth = 19;
-			const float buttonHeight = 19;
-			const float buttonSpacingX = 5;
-			const float buttonSpacingY = 5;
-			for (int i = 0; i < ShipInteriorMod2.WorldComp.WeaponGroups.Count; i++)
-			{
-				Rect rect2 = new Rect(baseX + (buttonWidth + buttonSpacingX) * i, BaseY - buttonSpacingY - buttonHeight, buttonWidth, buttonHeight); 
-				if (Widgets.ButtonText(rect2, (i + 1).ToString()))
+				if (!ShipInteriorMod2.WorldComp.WeaponGroups.Enabled)
 				{
-					ShipInteriorMod2.WorldComp.WeaponGroups[i].Select();
+					return;
 				}
+				const float buttonWidth = 19;
+				const float buttonHeight = 19;
+				const float buttonSpacingX = 5;
+				const float buttonSpacingY = 5;
+
+				const float colorBarHeight = 6;
+
+
+				for (int i = 0; i < ShipInteriorMod2.WorldComp.WeaponGroups.CountToDisplay; i++)
+				{
+					Rect colorBarRect = new Rect(baseX + (buttonWidth + buttonSpacingX) * i,
+						BaseY - buttonSpacingY - colorBarHeight, buttonWidth, colorBarHeight);
+					Widgets.DrawBoxSolidWithOutline(colorBarRect, ShipInteriorMod2.WorldComp.WeaponGroups[i].GetColor(), Color.black);
+
+					Rect buttonRect = new Rect(baseX + (buttonWidth + buttonSpacingX) * i,
+						BaseY - buttonSpacingY * 2 - buttonHeight - colorBarHeight, buttonWidth, buttonHeight);
+					string number = ("SoS.WeaponGroup." + (i + 1).ToString()).Translate();
+					if (Widgets.ButtonText(buttonRect, number))
+					{
+						ShipInteriorMod2.WorldComp.WeaponGroups[i].Select();
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.ErrorOnce("Error creating weapon group butons: " + ex.Message, 53762341);
 			}
 
 		}

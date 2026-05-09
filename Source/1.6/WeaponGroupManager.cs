@@ -11,13 +11,32 @@ namespace SaveOurShip2
 {	
 	public class WeaponGroupManager : IExposable
 	{
-		const int groupCount = 3;
+		const int groupCount = 9;
+		private List<WeaponGroup> weaponGroups;
+		private bool isEnabled = false;
+
 		public int Count
 		{
 			get => groupCount;
 		}
-		private List<WeaponGroup> weaponGroups;
-		private bool isEnabled = false;
+
+		// Display all occupied groups plus next unoccupiied. So that if weapons are assigned to groups 1 and 2,
+		// show only those group plus epty group 3, buut no mere until group 3 is actually used, reducing UI clutter.
+		public int CountToDisplay
+		{
+			get
+			{
+				int maxOccupiedGroup = -1;
+				for (int i = 0; i < weaponGroups.Count; i++)
+				{
+					if (weaponGroups[i].Count > 0)
+					{
+						maxOccupiedGroup = i;
+					}
+				}
+				return maxOccupiedGroup + 2;
+			}
+		}
 
 		public WeaponGroupManager()
 		{
@@ -26,7 +45,6 @@ namespace SaveOurShip2
 			{
 				weaponGroups.Add(new WeaponGroup());
 			}	
-			// weaponGroups = new List<WeaponGroup>(new WeaponGroup[Count]);
 		}
 
 		public WeaponGroup this [int index]
@@ -34,7 +52,7 @@ namespace SaveOurShip2
 			get 
 			{
 				Assert.IsTrue(0 <= index && index < Count && index < weaponGroups.Count);
-				Log.Message("Actual Count:" + weaponGroups.Count + " index: " + index + " Group count getter:" + Count);
+				// Log.Message("Actual Count:" + weaponGroups.Count + " index: " + index + " Group count getter:" + Count);
 				return weaponGroups[index]; 
 			}
 		}
@@ -47,6 +65,13 @@ namespace SaveOurShip2
 			{
 				weaponGroups = new List<WeaponGroup>();
 				for (int i = 0; i < Count; i++)
+				{
+					weaponGroups.Add(new WeaponGroup());
+				}
+			}
+			if (weaponGroups.Count < Count)
+			{
+				for (int i = 0; i < Count - weaponGroups.Count; i++)
 				{
 					weaponGroups.Add(new WeaponGroup());
 				}

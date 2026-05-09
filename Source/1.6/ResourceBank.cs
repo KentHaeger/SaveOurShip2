@@ -70,6 +70,10 @@ namespace SaveOurShip2
 		public static RenderTexture target = new RenderTexture(2048, 2048, 16);
 		public static Material PlanetMaterial = new Material(ShaderDatabase.Cutout);
 
+		public static Texture2D CannonColorTex = SolidColorMaterials.NewSolidColorTexture(new Color(0.9f, 0.9f, 0.0f));
+		public static Texture2D LaserColorTex = SolidColorMaterials.NewSolidColorTexture(new Color(0.9f, 0f, 0f));
+		public static Texture2D PlasmaColorTex = SolidColorMaterials.NewSolidColorTexture(new Color(0f, 0.9f, 0.1f));
+		public static Texture2D RailColorTex = SolidColorMaterials.NewSolidColorTexture(new Color(0f, 0f, 0.9f));
 
 		[DefOf]
 		public static class ThingDefOf
