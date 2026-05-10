@@ -27,6 +27,8 @@ namespace SaveOurShip2
 		public int LastStarshipBowTick = -StarhipBowTimeout;
 		public int LastFoundAmplifierTick = 0;
 
+		// Ships can move between maps back and fourth and weapon groups should be preserved in this case, therefore
+		// this belongs here, but not to specific map or ship
 		private WeaponGroupManager weaponGroups = new WeaponGroupManager();
 		public WeaponGroupManager WeaponGroups
 		{

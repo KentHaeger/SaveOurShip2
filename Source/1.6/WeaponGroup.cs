@@ -14,6 +14,7 @@ namespace SaveOurShip2
 		private HashSet<Building_ShipTurret> turrets = new HashSet<Building_ShipTurret>();
 		public virtual void ExposeData()
 		{
+			RemoveDestroyed();
 			Scribe_Collections.Look<Building_ShipTurret>(ref turrets, "turrets", LookMode.Reference);
 			if (turrets == null)
 			{
@@ -46,6 +47,7 @@ namespace SaveOurShip2
 
 		public void Select()
 		{
+			RemoveDestroyed();
 			Map playerShipMap = ShipInteriorMod2.FindPlayerShipMap();
 			if (playerShipMap == null)
 			{
@@ -85,6 +87,11 @@ namespace SaveOurShip2
 		// Just faster than every second, but nowhere neatr as fast as every tick
 		private const int ColorUpdateInterval = 20;
 
+		private void RemoveDestroyed()
+		{
+			turrets.RemoveWhere(t => t.Destroyed);
+		}
+
 		// Turret count required to be considered dominant in the group
 		private int CountToBeDominant()
 		{
@@ -104,6 +111,7 @@ namespace SaveOurShip2
 		{
 			if (Find.TickManager.TicksGame + ColorUpdateInterval > ColorUpdateTick)
 			{
+				RemoveDestroyed();
 				ColorUpdateTick = Find.TickManager.TicksGame;
 				if (turrets.NullOrEmpty())
 				{
