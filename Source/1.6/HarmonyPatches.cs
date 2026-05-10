@@ -60,20 +60,30 @@ namespace SaveOurShip2
 				const float buttonSpacingY = 5;
 
 				const float colorBarHeight = 6;
-
+				const float barHeightDelta = 2;
 
 				for (int i = 0; i < ShipInteriorMod2.WorldComp.WeaponGroups.CountToDisplay; i++)
 				{
+					WeaponGroup weaponGroup = ShipInteriorMod2.WorldComp.WeaponGroups[i];
 					Rect colorBarRect = new Rect(baseX + (buttonWidth + buttonSpacingX) * i,
 						BaseY - buttonSpacingY - colorBarHeight, buttonWidth, colorBarHeight);
-					Widgets.DrawBoxSolidWithOutline(colorBarRect, ShipInteriorMod2.WorldComp.WeaponGroups[i].GetColor(), Color.black);
+					if (weaponGroup.IsPDDominant())
+					{
+						colorBarRect.yMin += barHeightDelta; 
+						
+					}
+					else if (weaponGroup.IsSpinalDominant())
+					{
+						colorBarRect.yMin -= barHeightDelta; 					
+					}
+					Widgets.DrawBoxSolidWithOutline(colorBarRect, weaponGroup.GetColor(), Color.black);
 
 					Rect buttonRect = new Rect(baseX + (buttonWidth + buttonSpacingX) * i,
 						BaseY - buttonSpacingY * 2 - buttonHeight - colorBarHeight, buttonWidth, buttonHeight);
 					string number = ("SoS.WeaponGroup." + (i + 1).ToString()).Translate();
 					if (Widgets.ButtonText(buttonRect, number))
 					{
-						ShipInteriorMod2.WorldComp.WeaponGroups[i].Select();
+						weaponGroup.Select();
 					}
 				}
 			}

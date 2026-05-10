@@ -84,6 +84,22 @@ namespace SaveOurShip2
 		private Color cachedColor;
 		// Just faster than every second, but nowhere neatr as fast as every tick
 		private const int ColorUpdateInterval = 20;
+
+		// Turret count required to be considered dominant in the group
+		private int CountToBeDominant()
+		{
+			return Count / 2 + 1;
+		}
+		
+		public bool IsPDDominant()
+		{
+			return turrets.Where(t => t.heatComp?.Props?.pointDefense ?? false).Count() >= CountToBeDominant();
+		}
+
+		public bool IsSpinalDominant()
+		{
+			return turrets.Where(t => t.spinalComp != null).Count() >= CountToBeDominant();
+		}
 		public Color GetColor()
 		{
 			if (Find.TickManager.TicksGame + ColorUpdateInterval > ColorUpdateTick)
