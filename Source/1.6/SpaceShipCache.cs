@@ -779,6 +779,12 @@ namespace SaveOurShip2
 			PathDirty = false;
 			Log.Message("SOS2: ".Colorize(Color.cyan) + map + " Ship ".Colorize(Color.green) + Index + " Rebuilt cache, Parts: " + Parts.Count + " Buildings: " + Buildings.Count + " Bridges: " + Bridges.Count + " Area: " + Area.Count + " Core: " + Core + " Name: " + Name + " path max: " + LastSafePath);
 		}
+
+		const int buildingWeightMultiplier = 3;
+		const int platingWeightMultiplier = 1;
+		// TODO: This is quite low and subject to be increased. Effective CR of singe amplifier is about 25,
+		// because it increases 100 CR spinal weapon base damage by 1/4.
+		const int amplifierThreat = 10;
 		public void AddToCache(Building b)
 		{
 			if (Buildings.Add(b))
@@ -801,7 +807,7 @@ namespace SaveOurShip2
 						}
 						if (part.Props.isPlating)
 						{
-							Mass += 1;
+							Mass += platingWeightMultiplier;
 							return;
 						}
 						if (b.TryGetComp<CompEngineTrail>() != null)
@@ -898,11 +904,11 @@ namespace SaveOurShip2
 						Shields.Add(shield);
 				}
 				else if (b.def == ResourceBank.ThingDefOf.ShipSpinalAmplifier)
-					ThreatRaw += 10;
+					ThreatRaw += amplifierThreat;
 				// Exclude sleeping spots etc
-				if (!b.IsClearableFreeBuilding)
+				if (!b.IsClearableFreeBuilding && b.def.altitudeLayer != AltitudeLayer.Conduits)
 				{
-					Mass += b.def.Size.x * b.def.Size.z * 3;
+					Mass += b.def.Size.x * b.def.Size.z * buildingWeightMultiplier;
 				}
 				if (ResourceBank.IsGravEngine(b.def))
                 {
@@ -935,7 +941,7 @@ namespace SaveOurShip2
 						Parts.Remove(b);
 						if (part.Props.isPlating)
 						{
-							Mass -= 1;
+							Mass -= platingWeightMultiplier;
 							return;
 						}
 						if (b.TryGetComp<CompEngineTrail>() != null)
@@ -1015,10 +1021,10 @@ namespace SaveOurShip2
 						Shields.Remove(shield);
 				}
 				else if (b.def == ResourceBank.ThingDefOf.ShipSpinalAmplifier)
-					ThreatRaw -= 10;
-				if (!b.IsClearableFreeBuilding)
+					ThreatRaw -= amplifierThreat;
+				if (!b.IsClearableFreeBuilding && b.def.altitudeLayer != AltitudeLayer.Conduits)
 				{
-					Mass -= b.def.Size.x * b.def.Size.z * 3;
+					Mass -= b.def.Size.x * b.def.Size.z * buildingWeightMultiplier;
 				}
 				// Only one should exist, so removal nmeans no grav engines left
 				if (ResourceBank.IsGravEngine(b.def))
