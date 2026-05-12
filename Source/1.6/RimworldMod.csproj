@@ -107,6 +107,8 @@
     <Compile Include="ApparelHolographic.cs" />
     <Compile Include="ArrivalAction\AerialVehicleArrivalAction_ShipAssault.cs" />
     <Compile Include="ArrivalAction\PawnPublicizer.cs" />
+    <Compile Include="CompProps\CompProps_ExplosiveInstant.cs" />
+    <Compile Include="Comp\CompExplosiveInstant.cs" />
     <Compile Include="Comp\CompHyperchargingBattery.cs" />
     <Compile Include="Comp\CompShipBay.cs" />
     <Compile Include="Def\ArchoGiftDef.cs" />
