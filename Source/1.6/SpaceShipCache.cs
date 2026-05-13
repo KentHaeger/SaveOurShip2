@@ -780,8 +780,22 @@ namespace SaveOurShip2
 			Log.Message("SOS2: ".Colorize(Color.cyan) + map + " Ship ".Colorize(Color.green) + Index + " Rebuilt cache, Parts: " + Parts.Count + " Buildings: " + Buildings.Count + " Bridges: " + Bridges.Count + " Area: " + Area.Count + " Core: " + Core + " Name: " + Name + " path max: " + LastSafePath);
 		}
 
-		const int buildingWeightMultiplier = 3;
 		const int platingWeightMultiplier = 1;
+		private int GetWeight(Building b)
+		{
+			if (b.IsClearableFreeBuilding || b.def.altitudeLayer == AltitudeLayer.Conduits)
+			{
+				return 0;
+			}
+			const int normalWeightMultiplier = 3;
+			const int attachmentWeightMultiplier = 1;
+			int weightMultiplier = normalWeightMultiplier;
+			if (b.def.building.isAttachment)
+			{
+				weightMultiplier = attachmentWeightMultiplier;
+			}
+			return b.def.Size.x * b.def.Size.z * weightMultiplier;
+		}
 		// TODO: This is quite low and subject to be increased. Effective CR of singe amplifier is about 25,
 		// because it increases 100 CR spinal weapon base damage by 1/4.
 		const int amplifierThreat = 10;
@@ -906,10 +920,7 @@ namespace SaveOurShip2
 				else if (b.def == ResourceBank.ThingDefOf.ShipSpinalAmplifier)
 					ThreatRaw += amplifierThreat;
 				// Exclude sleeping spots etc
-				if (!b.IsClearableFreeBuilding && b.def.altitudeLayer != AltitudeLayer.Conduits)
-				{
-					Mass += b.def.Size.x * b.def.Size.z * buildingWeightMultiplier;
-				}
+				Mass += GetWeight(b);
 				if (ResourceBank.IsGravEngine(b.def))
                 {
 					HasGravEngine = true;
@@ -1022,10 +1033,7 @@ namespace SaveOurShip2
 				}
 				else if (b.def == ResourceBank.ThingDefOf.ShipSpinalAmplifier)
 					ThreatRaw -= amplifierThreat;
-				if (!b.IsClearableFreeBuilding && b.def.altitudeLayer != AltitudeLayer.Conduits)
-				{
-					Mass -= b.def.Size.x * b.def.Size.z * buildingWeightMultiplier;
-				}
+				Mass -= GetWeight(b);
 				// Only one should exist, so removal nmeans no grav engines left
 				if (ResourceBank.IsGravEngine(b.def))
 				{
