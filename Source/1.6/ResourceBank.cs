@@ -191,6 +191,7 @@ namespace SaveOurShip2
 			public static TerrainDef FakeFloorInsideShipArchotech;
 			public static TerrainDef ShipWreckageTerrain;
 			public static TerrainDef FakeFloorInsideShipFoam;
+			public static TerrainDef Granite_Rough;
 		}
 
 		[DefOf]
@@ -252,6 +253,7 @@ namespace SaveOurShip2
 		[DefOf]
 		public static class ResearchProjectDefOf
 		{
+			public static ResearchProjectDef ShipBasics;
 			public static ResearchProjectDef ArchotechPillarA;
 			public static ResearchProjectDef ArchotechPillarB;
 			public static ResearchProjectDef ArchotechPillarC;
@@ -346,6 +348,12 @@ namespace SaveOurShip2
 		public static class ShipDefOf
         {
 			public static ShipDef MechPsychicAmp;
+		}
+
+		[DefOf]
+		public static class QuestScriptDefOf
+		{
+			public static QuestScriptDef SoSStashedShipScript;
 		}
 
 		public static bool IsGravEngine(ThingDef def)

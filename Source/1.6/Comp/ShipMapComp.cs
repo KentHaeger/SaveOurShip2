@@ -238,6 +238,10 @@ namespace SaveOurShip2
 
 		public void RebuildRoofedPartsCache()
 		{
+			if (shipsOnMap == null)
+			{
+				return;
+			}
 			roofedPartsCache.Clear();
 			foreach (SpaceShipCache ship in shipsOnMap.Values)
 			{
