@@ -132,6 +132,7 @@
     <Compile Include="Jobs\JobUtility.cs" />
     <Compile Include="MapDodgeAbility.cs" />
     <Compile Include="MapGen\GenStep_ShipEngineImpactSiteUnfog.cs" />
+    <Compile Include="MapGen\GenStep_StashedShip.cs" />
     <Compile Include="ModIntegration.cs" />
     <Compile Include="Obs-Shuttle\TransportPodsArrivalAction_MoonBase.cs" />
     <Compile Include="Obs-Shuttle\TransportPodsArrivalAction_ShipAssault.cs" />

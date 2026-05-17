@@ -935,7 +935,7 @@ namespace SaveOurShip2
 					planters.AddRange(plantersOut);
 				}
 			}
-			PostGenerateShipDef(map, clearArea, area, planters);
+			PostGenerateShipDef(map, fac, clearArea, area, planters);
 		}
 		public static void GenerateFleet(float CR, Map map, PassingShip passingShip, Faction fac, Lord lord, out List<Building> cores, bool shipActive = true, bool clearArea = false, int wreckLevel = 0, NavyDef navyDef = null)
 		{
@@ -1061,7 +1061,7 @@ namespace SaveOurShip2
 				}
 				i++;
 			}
-			PostGenerateShipDef(map, clearArea, area, planters);
+			PostGenerateShipDef(map, fac, clearArea, area, planters);
 		}
 
 		private static Dictionary<string, string> odysseyPartsReplacements = null;
@@ -1503,12 +1503,7 @@ namespace SaveOurShip2
 						}
 						else if (thing != null)
 						{
-							if (thing.def.stackLimit > 1)
-							{
-								thing.stackCount = Math.Min(Rand.RangeInclusive(5, 30), thing.def.stackLimit);
-								if (thing.stackCount * thing.MarketValue > 500)
-									thing.stackCount = (int)Mathf.Max(500 / thing.MarketValue, 1);
-							}
+							SetStackCount(thing);
 							if (thing.def.CanHaveFaction)
 								thing.SetFactionDirect(fac);
 						}
@@ -1826,6 +1821,29 @@ namespace SaveOurShip2
 			extraShipGenOptions.RequestCustomShip = false;
 			mapComp.RebuildRoofedPartsCache();
 		}
+
+		private static void SetStackCount(Thing thing)
+		{
+			if (thing.def.stackLimit <= 1)
+			{
+				return;
+			}
+			// Basic random stack count
+			thing.stackCount = Rand.RangeInclusive(5, 30);
+			// Guard for expensive things
+			if (thing.stackCount * thing.MarketValue > 500)
+			{
+				thing.stackCount = (int)Mathf.Max(500 / thing.MarketValue, 1);
+			}
+			// Exceptions: fuel, uranium
+			if (thing.def == ThingDefOf.Chemfuel || thing.def == ResourceBank.ThingDefOf.ShuttleFuelPods ||
+				thing.def == ThingDefOf.Uranium)
+			{
+				thing.stackCount = Rand.RangeInclusive(thing.def.stackLimit * 3 / 4, thing.def.stackLimit);
+			}
+			thing.stackCount = Math.Min(thing.stackCount, thing.def.stackLimit);			
+		}
+
 		private static void ShipPawnGen(Pawn p, bool isDungeon, Lord lord) //td make proper pawngen req?
 		{
 			if (p.RaceProps.IsMechanoid)
@@ -1849,7 +1867,7 @@ namespace SaveOurShip2
 			else
 				lord?.AddPawn(p);
 		}
-		public static void PostGenerateShipDef(Map map, bool clearArea, List<IntVec3> shipArea, List<Thing> planters)
+		public static void PostGenerateShipDef(Map map, Faction fac, bool clearArea, List<IntVec3> shipArea, List<Thing> planters)
 		{
 			//HashSet<Room> validRooms = new HashSet<Room>();
 			map.regionAndRoomUpdater.RebuildAllRegionsAndRooms();
@@ -1868,10 +1886,11 @@ namespace SaveOurShip2
 				shipArea.Remove(v);
 			}
 
+			//all cells, except if outdoors+outdoors border
+			Room outdoors = new IntVec3(0, 0, 0).GetRoom(map); //td make this find first cell outside
 			if (!clearArea)
 			{
-				//all cells, except if outdoors+outdoors border
-				Room outdoors = new IntVec3(0, 0, 0).GetRoom(map); //td make this find first cell outside
+				
 				List<IntVec3> excludeCells = new List<IntVec3>();
 				foreach (IntVec3 cell in outdoors.BorderCells.Where(c => c.InBounds(map)))
 				{
@@ -1886,10 +1905,16 @@ namespace SaveOurShip2
 						}
 					}
 				}
+			}
+
+			// Do not fog ships that are spawned for player
+			bool needSetFog = fac == Faction.OfPlayer ? true : !clearArea;
+			bool fogValue = fac != Faction.OfPlayer;			
+			if (needSetFog)
+			{
 				foreach (IntVec3 cell in shipArea.Except(outdoors.Cells.Concat(outdoors.BorderCells.Where(c => c.InBounds(map)))))
 				{
-					map.fogGrid.fogGrid.Set(map.cellIndices.CellToIndex(cell), value:true);
-					//validRooms.Add(cell.GetRoom(map));
+					map.fogGrid.fogGrid.Set(map.cellIndices.CellToIndex(cell), value: fogValue);
 				}
 			}
 			/*
