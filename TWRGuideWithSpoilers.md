@@ -30,5 +30,31 @@ What should be avoided.
  
 Early game - figter stage
 
-Non-palyer figters with some firepower have TWR range of 2.74 to 3.74. 
+Non-palyer figters with some firepower have TWR range of 2.74 to 3.74. Fighters with higher TWR have ony basic armament, 2 weapons, no shield, so it is easier to otperform them in comba,t, rather than pup a lor of effort into outrunning them.
+
+These strategies should work quite well: if expanding scannin scout ship, build another ship next to it. Second ship needs to have 3x3 Hardpoint that can be used as improvised shuttle bay for 3x3 shuttle, as personal shuttle cargo capacity is small and that makes moving large amounts of resources very tedious. It would be very useful to sell some of looted resources to outlander settlements and buy some Uranium in exchange. As cannon turrets barely require any power and have high DPS, thay are super handy for early-game ships. Can save weoight on ship reactor. So the list of secons ship parts:
+1. Pilot console.
+2. Tactical console for weapon accuracy.
+3. 3x3 hardpoint used as a shuttle bay.
+4. One nuclear ehgine.
+5. Solar panels and a couple small ship capacitors for power.
+6. Coolant tanks. One large and maybe a few small ones recommended.
+7. A few small heatsinks.
+8. Miniaturized shield generator. It should be possible to cover both small ships with one shield. Maybe two, if one isn't enough. 
+9. 2-3 (small) cannon turrets. They will double as PD against bombers.
+10. After that, add Large cannon turret. It has the advantage of having higher range compred to small 2x2 cannons.
+Alternatively, lasers or other energy weapons could be used instead of cannons, but that will most likely require small ship reactor and more capacitors.
+11. Emergency purge ports are expensive to opertae, but extremely useful in combat. Optional.
+
+If extra TWR is needed, buildings like empty shelves, tables and chairs, maybe beds if they are not of remarkable high quality can be deconstructed.
+
+When seconsd ship has something like 2 small + 1 large cannons, 1 large coolant tank and a few heatsink, it's better to try keeping it speed at top real fighter TWR 3.74.
+Then can add second large cannon, second large coolant tank and a few small heatsinks, it's okay to move to TWWR of 2.9-3. Note that fastest real corvette has a TWR of 2.5 and there is corvette-like ship, Simple Scow, with a TWR of 2.74. So it is not recommended to fall to 2.7 TWR too wuickly.
+
+Mid game - Corvette and above
+
+After "2 large heatsinks, 2 large cannon turrets" stage, recommended upgrades are QOL: adding non-miniaturized shield generator, salvage bay, small ship reactor and cloaking device so that player fleet can finally be cloaked during major upgrade. And can safely make ship larger by cutting them in half, moving halves slightly apat and adding mid-section.
+
+From now on, it should be easer to keep up with enemy ships TWR, compared to early game. While faster corvettes have TWR fo 2.5, slower ones have 1.9-2.1 TWR. So plaer fleet can defeat faster corvettes or heavy fightewrs, then increase firpower while also decreasin TWR to like 2.2-2.3 to stay faster than slow corvettes and small frigate.
+
 
