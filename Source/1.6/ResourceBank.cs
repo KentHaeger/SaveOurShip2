@@ -192,6 +192,9 @@ namespace SaveOurShip2
 			public static TerrainDef ShipWreckageTerrain;
 			public static TerrainDef FakeFloorInsideShipFoam;
 			public static TerrainDef Granite_Rough;
+			public static TerrainDef Slate_Rough;
+			public static TerrainDef Sandstone_Rough;
+			public static TerrainDef Marble_Rough;
 		}
 
 		[DefOf]
