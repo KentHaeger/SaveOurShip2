@@ -48,13 +48,13 @@ Alternatively, lasers or other energy weapons could be used instead of cannons, 
 
 If extra TWR is needed, buildings like empty shelves, tables and chairs, maybe beds if they are not of remarkable high quality can be deconstructed.
 
-When second ship has something like 2 small + 1 large cannons, 1 large coolant tank and a few heatsink, it's better to try keeping it speed at top real fighter TWR 3.74.
-Then can add second large cannon, second large coolant tank and a few small heatsinks, it's okay to move to TWWR of 2.9-3. Note that fastest real corvette has a TWR of 2.5 and there is corvette-like ship, Simple Scow, with a TWR of 2.74. So it is not recommended to fall to 2.7 TWR too wuickly.
+When second ship has something like 2 small + 1 large cannons, 1 large coolant tank and a few heatsinks, it's better to try keeping it speed at top real fighter TWR 3.74.
+Then can add second large cannon, second large coolant tank and a few small heatsinks, it's okay to move to TWWR of 2.9-3. Note that fastest real corvette has a TWR of 2.5 and there is corvette-like ship, Simple Scow, with a TWR of 2.74. So it is not recommended to fall to 2.7 TWR too quickly.
 
 Mid game - Corvette and above
 
-After "2 large heatsinks, 2 large cannon turrets" stage, recommended upgrades are QOL: adding non-miniaturized shield generator, salvage bay, small ship reactor and cloaking device so that player fleet can finally be cloaked during major upgrade. And can safely make ship larger by cutting them in half, moving halves slightly apart and adding mid-section.
+After "2 large heatsinks, 2 large cannon turrets" stage, recommended upgrades are QOL: adding non-miniaturized shield generator, salvage bay, small ship reactor and cloaking device so that player fleet can finally be cloaked during major upgrade. And can safely make ship larger by cutting them in half, moving halves slightly apart with salvage bay and adding mid-section.
 
-From now on, it should be easer to keep up with enemy ships TWR, compared to early game. While faster corvettes have TWR of 2.5, slower ones have 1.9-2.1 TWR. So player fleet can defeat faster corvettes or heavy fighters, then increase firepower while also decrease in TWR to like 2.2-2.3 to stay faster than slow corvettes and small frigate.
+From now on, it should be easer to keep up with enemy ships TWR, compared to early game. While faster corvettes have TWR of 2.5, slower ones have 1.9-2.1 TWR. So player fleet can defeat faster corvettes or heavy fighters, then increase firepower and heat capacity while also decrease in TWR to like 2.2-2.3 to stay faster than slow corvettes and small frigate.
 
 
