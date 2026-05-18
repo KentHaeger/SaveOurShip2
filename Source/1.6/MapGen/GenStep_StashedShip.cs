@@ -55,12 +55,12 @@ namespace SaveOurShip2
 			}
 		}
 
-		private bool IsCloseToCorner(IntVec3 cell, CellRect rect)
+		private bool IsCloseToCornerRandomized(IntVec3 cell, CellRect rect)
 		{
+			const int maxOrthogonalDistance = 6;
 			foreach (IntVec3 corner in rect.Corners)
 			{
-				// hypotenuse of a right triangle with 4 and 2 sides is considered close  
-				if (cell.DistanceToSquared(corner) <= 4*4 + 2*2)
+				if (Math.Abs(cell.x - corner.x) + Math.Abs(cell.z - corner.z) + Rand.RangeInclusive(-1, 1) <= maxOrthogonalDistance)
 				{
 					return true;
 				}
@@ -119,7 +119,7 @@ namespace SaveOurShip2
 				}
 				foreach (IntVec3 cell in cleanRect.Cells)
 				{
-					if (IsCloseToCorner(cell, cleanRect))
+					if (IsCloseToCornerRandomized(cell, cleanRect))
 					{
 						continue;
 					}
@@ -139,7 +139,7 @@ namespace SaveOurShip2
 				cleanRect.ClipInsideMap(map);
 				foreach (IntVec3 cell in cleanRect.EdgeCells)
 				{
-					if (IsCloseToCorner(cell, cleanRect))
+					if (IsCloseToCornerRandomized(cell, cleanRect))
 					{
 						continue;
 					}
