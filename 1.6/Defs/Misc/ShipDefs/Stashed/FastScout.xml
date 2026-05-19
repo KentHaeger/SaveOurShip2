@@ -7,12 +7,12 @@
 		<offsetZ>180</offsetZ>
 		<sizeX>10</sizeX>
 		<sizeZ>8</sizeZ>
-		<label>FastScout</label>
+		<label>Fast Scout</label>
 		<combatPoints>23</combatPoints>
 		<rarityLevel>0</rarityLevel>
 		<neverRandom>True</neverRandom>
 		<neverAttacks>True</neverAttacks>
-		<neverWreck>False</neverWreck>
+		<neverWreck>True</neverWreck>
 		<startingShip>False</startingShip>
 		<startingDungeon>False</startingDungeon>
 		<spaceSite>False</spaceSite>

@@ -46,6 +46,29 @@ namespace SaveOurShip2
 				}
 			}
 		}
+
+		private void CleanChunks(Map map, IntVec3 cell)
+		{
+			foreach (Thing thing in cell.GetThingList(map).ToList())
+			{
+				if ((thing.def.thingCategories?.Contains(ThingCategoryDefOf.StoneChunks) ?? false) ||
+					(thing.def.thingCategories?.Contains(ThingCategoryDefOf.Chunks) ?? false))
+				{
+					thing.Destroy();
+				}
+			}
+		}
+
+		private void CleanFilth(Map map, IntVec3 cell)
+		{
+			foreach (Thing thing in cell.GetThingList(map).ToList())
+			{
+				if (thing.def.category == ThingCategory.Filth)
+				{
+					thing.Destroy();
+				}
+			}
+		}
 		private void CleanThingsAt(Map map, IntVec3 cell)
 		{
 			foreach (Thing thing in cell.GetThingList(map).ToList())
@@ -144,17 +167,19 @@ namespace SaveOurShip2
 			CellRect cleanRect = new CellRect(offsetX, offsetZ, ship.sizeX, ship.sizeZ);
 			cleanRect = cleanRect.ExpandedBy(9);
 			cleanRect.ClipInsideMap(map);
-			bool foundImpassable = false;
+			bool needFixPassabilityAndTerrain = false;
 			foreach(IntVec3 cell in cleanRect.Cells)
 			{
 				if(!cell.Walkable(map))
 				{
-					foundImpassable = true;
+					needFixPassabilityAndTerrain = true;
 				}
 				CleanGeysers(map, cell);
+				CleanChunks(map, cell);
+				CleanFilth(map, cell);
 			}
 			
-			if (foundImpassable)
+			if (needFixPassabilityAndTerrain)
 			{
 				TerrainDef fillerTerrain = ResourceBank.TerrainDefOf.Granite_Rough;
 				foreach (IntVec3 cell in cleanRect.Cells)

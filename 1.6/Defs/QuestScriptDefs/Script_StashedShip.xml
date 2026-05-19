@@ -13,7 +13,7 @@
     </questNameRules>
     <questDescriptionRules>
       <rulesStrings>
-		<li>questDescription->A starship is stashed here</li>
+		<li>questDescription->A starship is stashed here. It may be guarded by hostiles.</li>
       </rulesStrings>
     </questDescriptionRules>
     <root Class="QuestNode_Sequence">
