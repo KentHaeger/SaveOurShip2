@@ -6239,104 +6239,21 @@ namespace SaveOurShip2
 	{
 		public static void Postfix(Pawn negotiator, Faction faction, ref DiaNode __result)
 		{
+			// Add options before "Disconnect" option which goes last
 			DiaOption lastOption = null;
 			if (__result.options.Count > 0)
 			{
 				lastOption = __result.options.Last();
 				__result.options.RemoveLast();
 			}
-			Map map = negotiator.Map;
-			DiaOption unavailableOption;
-			if (AreAllOptionsUnvailable(map, faction, out unavailableOption))
-			{
-				__result.options.Add(unavailableOption);
-				if (lastOption != null)
-				{
-					__result.options.Add(lastOption);
-				}
-				return;
-			}
 
-			var shipList = new List<(string ShipDefName, int SilverCost)> { ("FastScout", 3000), ("SmallScienceVessel", 8000) };
-			foreach (var (ShipDefName, SilverCost) in shipList)
-			{
-				if (IsSpecificOptionUnvailable(map, SilverCost, out unavailableOption))
-				{
-					__result.options.Add(unavailableOption);
-				}
-				else
-				{
-					__result.options.Add(RequestStashedShipOption(map, faction, negotiator, ShipDefName, SilverCost));
-				}
-			}
+			DialogOptionGetter_StashedShip.Init(negotiator, faction);
+			DialogOptionGetter_StashedShip.AddOptionsToNode(ref __result);
+
 			if (lastOption != null)
 			{
 				__result.options.Add(lastOption);
 			}
-		}
-		
-		static readonly string dummyOptionName = "SoS.StashedShip.RequestOptionDummy".Translate();
-		private static bool IsSpecificOptionUnvailable(Map map, int shipSilverCost, out DiaOption unavailableOption)
-		{
-			if (FactionDialogMaker.AmountSendableSilver(map) < shipSilverCost)
-			{
-				DiaOption optionNeedSilver = new DiaOption(dummyOptionName);
-				// Base game sting key used
-				optionNeedSilver.Disable("NeedSilverLaunchable".Translate(shipSilverCost));
-				unavailableOption = optionNeedSilver;
-				return true;
-			}
-			unavailableOption = null;
-			return false;
-		}
-
-		private static bool AreAllOptionsUnvailable(Map map, Faction faction, out DiaOption unavailableOption)
-		{
-			if (!ResourceBank.ResearchProjectDefOf.ShipBasics.IsFinished)
-			{
-				DiaOption optionNeedsResearch = new DiaOption(dummyOptionName);
-				optionNeedsResearch.Disable("SoS.StashedShip.RequiresTech".Translate());
-				unavailableOption = optionNeedsResearch;
-				return true;
-			}
-			const int goodwillNeeded = 40;
-			if (faction.PlayerGoodwill < goodwillNeeded)
-			{
-				DiaOption optionNeedGoodwill = new DiaOption(dummyOptionName);
-				// Base game sting key used
-				optionNeedGoodwill.Disable("NeedGoodwill".Translate(goodwillNeeded.ToString("F0")));
-				unavailableOption = optionNeedGoodwill;
-				return true;
-			}
-			int timeoutLeft = ShipInteriorMod2.WorldComp.LastStashedShipRequestTick + ShipWorldComp.StashedShipRequestInterval - Find.TickManager.TicksGame;
-			if (timeoutLeft > 0)
-			{
-				DiaOption optionOnCooldown = new DiaOption(dummyOptionName);
-				optionOnCooldown.Disable("SoS.StashedShip.OnCooldown".Translate(GenDate.TicksToDays(timeoutLeft)));
-				unavailableOption = optionOnCooldown;
-				return true;
-			}
-			unavailableOption = null;
-			return false;
-		}
-		private static DiaOption RequestStashedShipOption(Map map, Faction faction, Pawn negotiator, string shipDefName,int shipSilverCost)
-		{
-			string optionName = "SoS.StashedShip.RequestOption".Translate(shipDefName);
-			DiaOption requestOption = new DiaOption(optionName)
-			{
-				action = delegate
-				{
-					Slate slate = new Slate();
-					slate.Set<string>("shipDefName", shipDefName);
-					Quest quest = QuestUtility.GenerateQuestAndMakeAvailable(ResourceBank.QuestScriptDefOf.SoSStashedShipScript, slate);
-					quest.tags.Add(shipDefName);
-					QuestUtility.SendLetterQuestAvailable(quest);
-					TradeUtility.LaunchThingsOfType(ThingDefOf.Silver, shipSilverCost, map, null);
-					ShipInteriorMod2.WorldComp.LastStashedShipRequestTick = Find.TickManager.TicksGame;
-				}
-			};
-			requestOption.resolveTree = true;
-			return requestOption;
 		}
 	}
 }

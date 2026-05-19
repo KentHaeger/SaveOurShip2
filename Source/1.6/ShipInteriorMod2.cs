@@ -1908,8 +1908,8 @@ namespace SaveOurShip2
 			}
 
 			// Do not fog ships that are spawned for player
-			bool needSetFog = fac == Faction.OfPlayer ? true : !clearArea;
-			bool fogValue = fac != Faction.OfPlayer;			
+			bool needSetFog = map.IsSpace() ? !clearArea : true;
+			bool fogValue = fac != null;			
 			if (needSetFog)
 			{
 				foreach (IntVec3 cell in shipArea.Except(outdoors.Cells.Concat(outdoors.BorderCells.Where(c => c.InBounds(map)))))
