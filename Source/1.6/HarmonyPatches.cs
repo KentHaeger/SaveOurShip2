@@ -6257,8 +6257,8 @@ namespace SaveOurShip2
 				return;
 			}
 
-			var shipList = new List<(string ShipDefName, int SilverCost)> { ("FastScout", 3000), ("SmallScienceVessel", 8000) };
-			foreach (var (ShipDefName, SilverCost) in shipList)
+			var shipList = new List<(string ShipDefName, int SilverCost, int ThreatPoints)> { ("FastScout", 3000, 0), ("SmallScienceVessel", 8000, 250) };
+			foreach (var (ShipDefName, SilverCost, ThreatPoints) in shipList)
 			{
 				if (IsSpecificOptionUnvailable(map, SilverCost, out unavailableOption))
 				{
@@ -6266,7 +6266,7 @@ namespace SaveOurShip2
 				}
 				else
 				{
-					__result.options.Add(RequestStashedShipOption(map, faction, negotiator, ShipDefName, SilverCost));
+					__result.options.Add(RequestStashedShipOption(map, faction, negotiator, ShipDefName, SilverCost, ThreatPoints));
 				}
 			}
 			if (lastOption != null)
@@ -6319,17 +6319,46 @@ namespace SaveOurShip2
 			unavailableOption = null;
 			return false;
 		}
-		private static DiaOption RequestStashedShipOption(Map map, Faction faction, Pawn negotiator, string shipDefName,int shipSilverCost)
+		private static DiaOption RequestStashedShipOption(Map map, Faction faction, Pawn negotiator, string shipDefName, int shipSilverCost, int threatPoints)
 		{
-			string optionName = "SoS.StashedShip.RequestOption".Translate(shipDefName);
+			string threatString = "";
+			if (threatPoints == 0)
+			{
+				threatString = "SoS.StashedShip.NoSecuroity".Translate();
+			}
+			else if (threatPoints < 300)
+			{
+				threatString = "SoS.StashedShip.MinorSceurity".Translate();
+			}
+			else if (threatPoints < 900)
+			{
+				threatString = "SoS.StashedShip.AverageSceurity".Translate();
+			}
+			else
+			{
+				threatString = "SoS.StashedShip.HighSceurity".Translate();
+			}
+
+			string shipLablel = shipDefName;
+			ShipDef shipDef = DefDatabase<ShipDef>.GetNamedSilentFail(shipDefName);
+			if (shipDef != null)
+			{
+				shipLablel = shipDef.LabelCap;
+			}
+			else
+			{
+				Log.Warning($"SOS 2: can't find ship def name {shipDef} when generating stashed ship quest options");
+			}
+
+			string optionName = "SoS.StashedShip.RequestOption".Translate(shipLablel, shipSilverCost, threatString);
 			DiaOption requestOption = new DiaOption(optionName)
 			{
 				action = delegate
 				{
 					Slate slate = new Slate();
-					slate.Set<string>("shipDefName", shipDefName);
 					Quest quest = QuestUtility.GenerateQuestAndMakeAvailable(ResourceBank.QuestScriptDefOf.SoSStashedShipScript, slate);
-					quest.tags.Add(shipDefName);
+					quest.tags.Add(GenStep_StashedShip.ShipDefTagName + ":" + shipDefName);
+					quest.tags.Add(GenStep_StashedShip.ThreatTagName + ":" + threatPoints);
 					QuestUtility.SendLetterQuestAvailable(quest);
 					TradeUtility.LaunchThingsOfType(ThingDefOf.Silver, shipSilverCost, map, null);
 					ShipInteriorMod2.WorldComp.LastStashedShipRequestTick = Find.TickManager.TicksGame;

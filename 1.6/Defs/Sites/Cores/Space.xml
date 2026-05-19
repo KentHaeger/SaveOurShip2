@@ -138,13 +138,14 @@
   
   <SitePartDef>
     <defName>SoSStashedShipSitePart</defName>
-    <label>stashed ship</label>
+    <label>stashed ship, may be guarded</label>
     <description>A hidden starship.</description>
     <siteTexture>World/WorldObjects/Sites/GenericSite</siteTexture>
     <expandingIconTexture>World/WorldObjects/Expanding/Sites/ItemStash</expandingIconTexture>
     <handlesWorldObjectTimeoutInspectString>true</handlesWorldObjectTimeoutInspectString>
     <tags>
       <li>SoSStashedShip</li>
+      <li>QuestActiveThreat</li>
     </tags>
   </SitePartDef>
   
