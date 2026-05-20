@@ -1919,9 +1919,14 @@ namespace SaveOurShip2
 			// Do not fog ships that are spawned for player
 			bool needSetFog = map.IsSpace() ? !clearArea : true;
 			bool fogValue = fac != null;			
-			if (needSetFog && outdoors != null)
+			if (needSetFog)
 			{
-				foreach (IntVec3 cell in shipArea.Except(outdoors.Cells.Concat(outdoors.BorderCells.Where(c => c.InBounds(map)))))
+				List<IntVec3> fogSetArea = shipArea;
+				if (outdoors != null)
+				{
+					fogSetArea = fogSetArea.Except(outdoors.Cells.Concat(outdoors.BorderCells.Where(c => c.InBounds(map)))).ToList();
+				}
+				foreach (IntVec3 cell in fogSetArea)
 				{
 					map.fogGrid.fogGrid.Set(map.cellIndices.CellToIndex(cell), value: fogValue);
 				}
