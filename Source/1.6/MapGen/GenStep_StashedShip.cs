@@ -59,6 +59,17 @@ namespace SaveOurShip2
 			}
 		}
 
+		private void CleanBuildings(Map map, IntVec3 cell)
+		{
+			foreach (Thing thing in cell.GetThingList(map).ToList())
+			{
+				if (thing is Building)
+				{
+					thing.Destroy();
+				}
+			}
+		}
+
 		private void CleanFilth(Map map, IntVec3 cell)
 		{
 			foreach (Thing thing in cell.GetThingList(map).ToList())
@@ -176,6 +187,7 @@ namespace SaveOurShip2
 				}
 				CleanGeysers(map, cell);
 				CleanChunks(map, cell);
+				CleanBuildings(map, cell);
 				CleanFilth(map, cell);
 			}
 			
@@ -230,12 +242,29 @@ namespace SaveOurShip2
 
 			}
 
-			ShipInteriorMod2.GenerateShip(ship, map, null, null, null, out cores, false, true,
-				wreckLevel: 0, offsetX: offsetX, offsetZ: offsetZ);
+			try
+			{
+				ShipInteriorMod2.GenerateShip(ship, map, null, null, null, out cores, false, true,
+					wreckLevel: 0, offsetX: offsetX, offsetZ: offsetZ);
+			}
+			catch (Exception ex)
+			{
+				Log.Error("SOS 2: Error during stashed ship generation:" + ex.Message);
+			}
+
+			// Turrets can be claimed by Vanilla rules, so prevent them from firing soon after arrival,
+			// not allowing stashed ship to defeat defenders on it's own.
+			foreach (Building b in map.listerBuildings.allBuildingsColonist.ToList().Concat(map.listerBuildings.allBuildingsNonColonist))
+			{
+				if (b is Building_ShipTurret turret)
+				{
+					turret.burstCooldownTicksLeft = GenDate.TicksPerHour * 3;
+				}
+			}
 
 			// Ship is set to null faction so that defenders actually fight player party, nut not start destroying ship.
-			// But vehicles have to be set to player owned because there is no easy and standard way to claim them yet.
-			foreach(Pawn p in map.mapPawns.AllPawns)
+			// But vehicles have to be set to player owned because there is no standard way to claim them yet.
+			foreach (Pawn p in map.mapPawns.AllPawns)
 			{
 				if(p is VehiclePawn vehicle)
 				{
