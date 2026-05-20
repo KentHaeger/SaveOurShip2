@@ -1393,7 +1393,7 @@ namespace SaveOurShip2
 							var powerComp = b.TryGetComp<CompPowerTrader>();
 							if (powerComp != null)
 								powerComp.PowerOn = true;
-							if (ideoActive && b.def.CanBeStyled() && fac.ideos?.PrimaryIdeo?.style.StyleForThingDef(thing.def) != null)
+							if (fac != null && ideoActive && b.def.CanBeStyled() && fac.ideos?.PrimaryIdeo?.style.StyleForThingDef(thing.def) != null)
 							{
 								b.SetStyleDef(fac.ideos.PrimaryIdeo.GetStyleFor(thing.def));
 							}
@@ -1878,7 +1878,7 @@ namespace SaveOurShip2
 			List<IntVec3> removeCells = new List<IntVec3>();
 			foreach (IntVec3 v in shipArea)
 			{
-				if (v.GetThingList(map).Any(t => (t.TryGetComp<CompShipBay>() != null && t.TryGetComp<CompShipBay>().bayRect.Contains(v)) || (t.TryGetComp<CompShipHeat>()?.Props.showOnRoof ?? false)))
+				if (v.GetThingList(map).Any(t => (t.TryGetComp<CompShipBay>() != null && t.TryGetComp<CompShipBay>().bayRect.Contains(v)) || (t.TryGetComp<CompShipHeat>()?.Props?.showOnRoof ?? false)))
 					removeCells.Add(v);
 			}
 			foreach (IntVec3 v in removeCells)
@@ -1887,10 +1887,19 @@ namespace SaveOurShip2
 			}
 
 			//all cells, except if outdoors+outdoors border
-			Room outdoors = new IntVec3(0, 0, 0).GetRoom(map); //td make this find first cell outside
-			if (!clearArea)
+			CellRect mapRect = map.BoundsRect();
+			Room outdoors = null;
+			foreach (IntVec3 cell in mapRect.EdgeCells)
 			{
-				
+				if (cell.GetRoom(map) != null)
+				{
+					outdoors = cell.GetRoom(map);
+					break;
+				}
+			}
+
+			if (!clearArea && outdoors != null)
+			{				
 				List<IntVec3> excludeCells = new List<IntVec3>();
 				foreach (IntVec3 cell in outdoors.BorderCells.Where(c => c.InBounds(map)))
 				{
@@ -1910,29 +1919,14 @@ namespace SaveOurShip2
 			// Do not fog ships that are spawned for player
 			bool needSetFog = map.IsSpace() ? !clearArea : true;
 			bool fogValue = fac != null;			
-			if (needSetFog)
+			if (needSetFog && outdoors != null)
 			{
 				foreach (IntVec3 cell in shipArea.Except(outdoors.Cells.Concat(outdoors.BorderCells.Where(c => c.InBounds(map)))))
 				{
 					map.fogGrid.fogGrid.Set(map.cellIndices.CellToIndex(cell), value: fogValue);
 				}
 			}
-			/*
-			HashSet<Room> validRooms = new HashSet<Room>();
-			foreach (IntVec3 v in shipArea)
-			{
-				Room r = v.GetRoom(map);
-				if (r != null)
-					validRooms.Add(r);
-			}
-			if (validRooms.Any())
-			{
-				Log.Message("set temp in rooms: " + validRooms.Count);
-				foreach (Room r in validRooms.Where(r => r != null))
-				{
-					r.Temperature = 21;
-				}
-			}*/
+
 			foreach (Room r in map.regionGrid.allRooms.Where(r => !r.TouchesMapEdge))
 				r.Temperature = 21;
 
