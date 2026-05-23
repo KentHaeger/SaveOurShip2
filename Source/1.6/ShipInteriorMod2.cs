@@ -148,7 +148,7 @@ namespace SaveOurShip2
 		{
 			base.GetSettings<ModSettings_SoS>();
 		}
-		public const string SOS2version = "GithubV2.8.117";
+		public const string SOS2version = "GithubV2.8.118";
 		public const int SOS2ReqCurrentMinor = 5;
 		// 1.5.4063 public build (4062 constant) was not enough as there is no AnomalyUtility.TryDuplicatePawn_NewTemp method to harmony patch it.
 		// Historical builds are not available, so for sure can be increased just to next build, 4066
@@ -3699,7 +3699,7 @@ namespace SaveOurShip2
 							vehicle.CompUpgradeTree.FinishUnlock(vehicle.CompUpgradeTree.Props.def.GetNode("TurretTorpedoC"));
 						foreach (VehicleTurret torp in vehicle.CompVehicleTurrets.turrets)
 							torp.Reload(ResourceBank.ThingDefOf.ShipTorpedo_HighExplosive, true);
-						int torps = Rand.Range(2, 3) * Mathf.RoundToInt(vehicle.statHandler.GetStatValue(ResourceBank.VehicleStatDefOf.Hardpoints));
+						int torps = Rand.RangeInclusive(2, 3) * Mathf.RoundToInt(vehicle.statHandler.GetStatValue(ResourceBank.VehicleStatDefOf.Hardpoints));
 						for (int i = 0; i < torps; i++)
 						{
 							vehicle.inventory.GetDirectlyHeldThings().TryAdd(ThingMaker.MakeThing(ResourceBank.ThingDefOf.ShipTorpedo_HighExplosive));
