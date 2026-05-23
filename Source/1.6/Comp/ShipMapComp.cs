@@ -2970,6 +2970,9 @@ namespace SaveOurShip2
 				shuttle.DeSpawn();
 			}
 			ShuttlesOnMissions.TryAddOrTransfer(shuttle);
+			// List of shuttles on mission conflicts with shuttle launch mechanocs because of being IThingHolder.
+			// Setting holdingOwner for departing shuttles solves the conflict.
+			shuttle.holdingOwner = null;
 			ShuttleMissionData data = new ShuttleMissionData();
 			data.shuttle = shuttle;
 			data.mission = mission;
