@@ -46,7 +46,19 @@ namespace SaveOurShip2
 		{
 
 		}
-        public static void Postfix(ColonistBar __instance)
+		public static void Postfix(ColonistBar __instance)
+		{
+			try
+			{
+				PostfixImpl(__instance);
+			}
+			catch (Exception ex)
+			{
+				Log.ErrorOnce($"Error displauing ship UI. Trace: {ex.StackTrace}", 82421772);
+			}
+		}
+
+		public static void PostfixImpl(ColonistBar __instance)
 		{
 			if (Event.current.type == EventType.Layout)
 			{
