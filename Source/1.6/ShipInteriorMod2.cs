@@ -2318,6 +2318,17 @@ namespace SaveOurShip2
 			CameraJumper.TryJump(map.Center, map);
 		}
 
+		// Transforms vector from initial position to final according to desired movement/rotation.
+		public static IntVec3 TransformForShipMove(Map targetMap, IntVec3 pos, IntVec3 adjustment, int rotb)
+		{
+			Func<IntVec3, IntVec3> Transform;
+			if (rotb == 2)
+				return new IntVec3(targetMap.Size.x - pos.x, 0, targetMap.Size.z - pos.z) + adjustment;
+			else if (rotb == 3)
+				return new IntVec3(targetMap.Size.x - pos.z, 0, pos.x) + adjustment;
+			else
+				return pos + adjustment;
+		}
 		//td change or make new for call on ship direct
 		public static void MoveShip(Building core, Map targetMap, IntVec3 adjustment, Faction fac = null, byte rotNum = 0, bool includeRock = false, bool clearArea = false)
 		{
@@ -2350,14 +2361,6 @@ namespace SaveOurShip2
 			List<Plant> plants = new List<Plant>();
 			int rotb = 4 - rotNum;
 
-			// Transforms vector from initial position to final according to desired movement/rotation.
-			Func<IntVec3, IntVec3> Transform;
-			if (rotb == 2)
-				Transform = (IntVec3 from) => new IntVec3(targetMap.Size.x - from.x, 0, targetMap.Size.z - from.z) + adjustment;
-			else if (rotb == 3)
-				Transform = (IntVec3 from) => new IntVec3(targetMap.Size.x - from.z, 0, from.x) + adjustment;
-			else
-				Transform = (IntVec3 from) => from + adjustment;
 			if (devMode)
 				watch.Record("prepare");
 
@@ -2442,7 +2445,7 @@ namespace SaveOurShip2
 			}
 			foreach (IntVec3 pos in sourceArea)
 			{
-				IntVec3 adjustedPos = Transform(pos);
+				IntVec3 adjustedPos = TransformForShipMove(targetMap, pos, adjustment, rotb);
 				//ship cache: move ShipCells
 				targetMapComp.MapShipCells.Add(adjustedPos, new Tuple<int, int>(sourceMapComp.MapShipCells[pos].Item1, sourceMapComp.MapShipCells[pos].Item2));
 				sourceMapComp.MapShipCells.Remove(pos);
@@ -2848,7 +2851,8 @@ namespace SaveOurShip2
 					ship.BuildingsDestroyed.Clear();
 					foreach (var sh in buildingsDestroyed)
 					{
-						ship.BuildingsDestroyed.Add(new Tuple<ThingDef, IntVec3, Rot4>(sh.Item1, Transform(sh.Item2), sh.Item3));
+						IntVec3 transformedBuildingPos = TransformForShipMove(targetMap, sh.Item2, adjustment, rotb);
+						ship.BuildingsDestroyed.Add(new Tuple<ThingDef, IntVec3, Rot4>(sh.Item1, transformedBuildingPos, sh.Item3));
 					}
 					buildingsDestroyed.Clear();
 				}
@@ -2859,7 +2863,7 @@ namespace SaveOurShip2
 				ship.Area.Clear();
 				foreach (IntVec3 pos in sourceArea)
 				{
-					ship.Area.Add(Transform(pos));
+					ship.Area.Add(TransformForShipMove(targetMap, pos, adjustment, rotb));
 				}
 			}
 			MoveShipFlag = false;
@@ -2937,7 +2941,9 @@ namespace SaveOurShip2
 						zone.zoneManager = targetMap.zoneManager;
 						List<IntVec3> newCells = new List<IntVec3>();
 						foreach (IntVec3 cell in zone.cells)
-							newCells.Add(Transform(cell));
+						{
+							newCells.Add(TransformForShipMove(targetMap, cell, adjustment, rotb));
+						}
 						zone.cells = newCells;
 						targetMap.zoneManager.RegisterZone(zone);
 					}
