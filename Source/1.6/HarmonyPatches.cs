@@ -46,6 +46,55 @@ namespace SaveOurShip2
 		{
 
 		}
+    
+    private static void AddWeaponGroupButtons(float baseX, float BaseY)
+		{
+			try
+			{
+				if (!ShipInteriorMod2.WorldComp.WeaponGroups.Enabled)
+				{
+					return;
+				}
+				const float buttonWidth = 19;
+				const float buttonHeight = 19;
+				const float buttonSpacingX = 5;
+				const float buttonSpacingY = 5;
+
+				const float colorBarHeight = 6;
+				const float barHeightDelta = 2;
+
+				for (int i = 0; i < ShipInteriorMod2.WorldComp.WeaponGroups.CountToDisplay; i++)
+				{
+					WeaponGroup weaponGroup = ShipInteriorMod2.WorldComp.WeaponGroups[i];
+					Rect colorBarRect = new Rect(baseX + (buttonWidth + buttonSpacingX) * i,
+						BaseY - buttonSpacingY - colorBarHeight, buttonWidth, colorBarHeight);
+					if (weaponGroup.IsPDDominant())
+					{
+						colorBarRect.yMin += barHeightDelta; 
+						
+					}
+					else if (weaponGroup.IsSpinalDominant())
+					{
+						colorBarRect.yMin -= barHeightDelta; 					
+					}
+					Widgets.DrawBoxSolidWithOutline(colorBarRect, weaponGroup.GetColor(), Color.black);
+
+					Rect buttonRect = new Rect(baseX + (buttonWidth + buttonSpacingX) * i,
+						BaseY - buttonSpacingY * 2 - buttonHeight - colorBarHeight, buttonWidth, buttonHeight);
+					string number = ("SoS.WeaponGroup." + (i + 1).ToString()).Translate();
+					if (Widgets.ButtonText(buttonRect, number))
+					{
+						weaponGroup.Select();
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.ErrorOnce("Error creating weapon group butons: " + ex.Message, 53762341);
+			}
+
+		}
+
 		public static void Postfix(ColonistBar __instance)
 		{
 			try
@@ -152,7 +201,9 @@ namespace SaveOurShip2
 					playerShipCount += 1;
 				}
             }
-            foreach (int i in playerMapComp.ShipsOnMap.Keys)
+
+			AddWeaponGroupButtons(screenHalf - 430, baseY);
+			foreach (int i in playerMapComp.ShipsOnMap.Keys)
 			{
 				SpaceShipCache ship = playerMapComp.ShipsOnMap[i];
                 var bridge = ship.Core;
@@ -469,6 +520,57 @@ namespace SaveOurShip2
 			depletionRect.x = rect.x + rect.width * (1 - fillDepletion);
 			GUI.DrawTexture(depletionRect, depletionTex);
 			return rect;
+		}
+	}
+
+	// Helper class for temporarilt disabling camera jumps
+	[HarmonyPatch(typeof(CameraDriver), "JumpToCurrentMapLoc", new Type[] { typeof(IntVec3) })]
+	public static class PreventCameraJump
+	{
+		private static bool enabled = false;
+		public static bool Enabled
+		{
+			get => enabled; 
+			set => enabled = value;
+		}
+		static bool Prefix()
+		{
+			return !enabled;
+		}
+	}
+
+	// Helper class for temporarily disabling map switching
+	[HarmonyPatch(typeof(Game))]
+	[HarmonyPatch("CurrentMap", MethodType.Setter)]
+	public static class PreventCurrentMapSwitch
+	{
+		private static bool enabled = false;
+		public static bool Enabled
+		{
+			get => enabled;
+			set => enabled = value;
+		}
+		static bool Prefix() 
+		{
+			return !enabled;
+		}
+	}
+
+	// Selector will incorrectly draw selection brackets for player weapons on enemy ship map.
+	// Not always, but when weapon group selection system is used. Just needs this simple chec to fix it.
+	[HarmonyPatch(typeof(SelectionDrawer), "DrawSelectionBracketFor")]
+	public static class FixSelectionBrackets
+	{
+		public static bool Prefix(object obj)
+		{
+			if (obj is Building building)
+			{
+				if (building.Spawned && building.Map != Find.CurrentMap)
+				{
+					return false;
+				}
+			}
+			return true;
 		}
 	}
 

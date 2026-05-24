@@ -30,6 +30,14 @@ namespace SaveOurShip2
 		public const int StashedShipRequestInterval = GenDate.TicksPerDay * 15;
 		public int LastStashedShipRequestTick = -GenDate.TicksPerYear;
 
+		// Ships can move between maps back and fourth and weapon groups should be preserved in this case, therefore
+		// this belongs here, but not to specific map or ship
+		private WeaponGroupManager weaponGroups = new WeaponGroupManager();
+		public WeaponGroupManager WeaponGroups
+		{
+			get => weaponGroups;
+		}
+
 		public ShipWorldComp(World world) : base(world)
 		{
 			ShipInteriorMod2.PurgeSaveSpecificState();
@@ -148,6 +156,11 @@ namespace SaveOurShip2
 			Scribe_Values.Look<int>(ref LastStashedShipRequestTick, "LastStashedShipRequestTick", -GenDate.TicksPerYear);
 			Scribe_Values.Look<bool>(ref hadSpaceMap, "hadSpaceMap");
 			Scribe_Values.Look<bool>(ref difficultyLetterShown, "difficultyDialogShown");
+			Scribe_Deep.Look<WeaponGroupManager>(ref weaponGroups, "weaponGroups");
+			if (weaponGroups == null)
+			{
+				weaponGroups = new WeaponGroupManager();
+			}
 
 
 
