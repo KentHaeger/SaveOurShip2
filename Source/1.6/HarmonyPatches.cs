@@ -4823,31 +4823,6 @@ namespace SaveOurShip2
 		}
 	}
 
-	[HarmonyPatch(typeof(CompLaunchable), "ChoseWorldTarget", new Type[] { typeof(GlobalTargetInfo), typeof(PlanetTile), typeof(IEnumerable<IThingHolder>),
-		typeof(int), typeof(Action<PlanetTile, TransportersArrivalAction>),  typeof(CompLaunchable), typeof(float?)})]
-	public static class CannotLaunchToEnemyShip
-	{
-		public static void Postfix(CompLaunchable __instance, PlanetTile tile, ref bool __result)
-		{
-			if (!__result)
-			{
-				return;
-			}
-			MapParent worldObject;
-			if (Find.WorldObjects.TryGetWorldObjectAt<MapParent>(tile, out worldObject))
-			{
-				if (worldObject is WorldObjectOrbitingShip ship &&
-					ship.Map.GetComponent<ShipMapComp>().ShipMapState == ShipMapState.inCombat &&
-					worldObject.Map != ShipInteriorMod2.FindPlayerShipMap())
-				{
-					Messages.Message(TranslatorFormattedStringExtensions.Translate("SoS.CantLaunchToEnemyMap"),
-						MessageTypeDefOf.RejectInput, historical: false);
-					__result = false;
-				}
-			}
-		}
-	}
-
 	[HarmonyPatch(typeof(CompRefuelable), "CompGetGizmosExtra")]
 	public static class CannotControlEnemyFuel
 	{
@@ -6023,7 +5998,7 @@ namespace SaveOurShip2
     {
 		public static void Postfix(IntVec3 cell, Map map, bool interactionSpot, ThingDef shuttleDef, ref string __result)
         {
-			Log.Message(shuttleDef.defName);
+			// Log.Message(shuttleDef.defName);
 			if (shuttleDef.defName == "PassengerShuttle")
             {
 				if (__result == null || !cell.InBounds(map))

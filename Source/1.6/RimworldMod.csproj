@@ -128,6 +128,7 @@
     <Compile Include="HarmonyCustomPatches.cs" />
     <Compile Include="HarmonyPatchesInactive.cs" />
     <Compile Include="HarmonyPatchesPerformance.cs" />
+    <Compile Include="HarmonyPatchesShuttleRange.cs" />
     <Compile Include="HediffCompProperties_GearRepair.cs" />
     <Compile Include="HediffComp_GearRepair.cs" />
     <Compile Include="Jobs\JobUtility.cs" />
@@ -503,6 +504,7 @@
     <Compile Include="WorldDrawLayer\WorldDrawLayer_DevSelectedTile.cs" />
     <Compile Include="WorldObject\WorldObjectMath.cs" />
     <Compile Include="WorldObject\WorldObjectOrbitingShip.cs" />
+    <Compile Include="WorldObject\WorldObject_FastTileGetter.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Krafs.Publicizer">
