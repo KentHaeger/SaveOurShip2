@@ -146,7 +146,7 @@
 		<defName>ShipCombatShieldGeneratorMini</defName>
 		<label>miniaturized shield generator</label>
 		<designatorDropdown>Ship_Shields</designatorDropdown>
-		<description>A small shielding device which projects a momentum repulsor field. Shots can go out, but not in.\n\nDue to its small size, generates 125% of a standard shield generator's heat when it blocks attacks. If no heatsink capacity is available, the shield will be damaged and require repairs.\n\nCaptains are advised to drop shields once coolant reaches very high temperature, or risk heatsink damage.</description>
+		<description>A small shielding device which projects a momentum repulsor field. Shots can go out, but not in.\n\nDue to its small size, generates 125% of a standard shield generator's heat when it blocks attacks. If no heatsink capacity is available, the shield will be damaged and require repairs.\n\nCaptains are advised to drop shields once coolant reaches very high temperature, or risk heatsink damage. This shield generator is unstable when damaged, so you should not build these in close proximity to each other.</description>
 		<size>(1,1)</size>
 		<receivesSignals>true</receivesSignals>
 		<statBases>

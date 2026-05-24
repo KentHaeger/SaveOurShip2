@@ -26,6 +26,9 @@ namespace SaveOurShip2
 		public const int StarhipBowTimeout = 720000; // 12 days
 		public int LastStarshipBowTick = -StarhipBowTimeout;
 		public int LastFoundAmplifierTick = 0;
+		// 
+		public const int StashedShipRequestInterval = GenDate.TicksPerDay * 15;
+		public int LastStashedShipRequestTick = -GenDate.TicksPerYear;
 
 		// Ships can move between maps back and fourth and weapon groups should be preserved in this case, therefore
 		// this belongs here, but not to specific map or ship
@@ -150,6 +153,7 @@ namespace SaveOurShip2
 			// Finding amplifier is forced so for old saves last found apmplifier tick should be set to current tick
 			// In this case it won't be found immediately, only after find interval is passed
 			Scribe_Values.Look<int>(ref LastFoundAmplifierTick, "LastFoundAmplifierTick", Find.TickManager.TicksGame);
+			Scribe_Values.Look<int>(ref LastStashedShipRequestTick, "LastStashedShipRequestTick", -GenDate.TicksPerYear);
 			Scribe_Values.Look<bool>(ref hadSpaceMap, "hadSpaceMap");
 			Scribe_Values.Look<bool>(ref difficultyLetterShown, "difficultyDialogShown");
 			Scribe_Deep.Look<WeaponGroupManager>(ref weaponGroups, "weaponGroups");
@@ -157,6 +161,8 @@ namespace SaveOurShip2
 			{
 				weaponGroups = new WeaponGroupManager();
 			}
+
+
 
 			if (Scribe.mode == LoadSaveMode.LoadingVars)
 			{

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <ThingDef ParentName="TrapIEDBase">
+    <defName>TrapIED_Instant</defName>
+    <label>ship decoupler explosive</label>
+    <description>Allows building wings of fighters as single conected ship. Instantly explodes when unpaused, destroying hull plating in 3x3 area and splitting wing into separate ships.</description>
+    <graphicData>
+      <texPath>Things/Building/Security/IEDHighExplosive</texPath>
+    </graphicData>
+    <costList>
+      <Shell_HighExplosive>2</Shell_HighExplosive>
+    </costList>
+	<minifiedDef IsNull="True" />
+	<designationCategory Inherit = "False"></designationCategory>
+	<thingCategories Inherit = "False">
+    </thingCategories>
+	<researchPrerequisites Inherit = "False">
+    </researchPrerequisites>
+    <comps>
+      <li Class="SaveOurShip2.CompProperties_ExplosiveInstant">
+        <explosiveRadius>1.5</explosiveRadius>
+        <explosiveDamageType>Bomb</explosiveDamageType>
+        <startWickHitPointsPercent>0.2</startWickHitPointsPercent>
+		<damageAmountBase>300</damageAmountBase>
+        <preExplosionSpawnSingleThingDef>Filth_BlastMark</preExplosionSpawnSingleThingDef>
+        <wickTicks>15</wickTicks>
+        <startWickOnDamageTaken>
+          <li>Bullet</li>
+          <li>Arrow</li>
+          <li>ArrowHighVelocity</li>
+        </startWickOnDamageTaken>
+      </li>
+    </comps>
+    <specialDisplayRadius>1.5</specialDisplayRadius>
+	<placeWorkers Inherit = "False">
+	</placeWorkers>
+  </ThingDef>
+  
+  <ThingDef ParentName="TrapIEDBase">
+    <defName>TrapIED_InstantWithCR</defName>
+	<label>ship decoupler with Combat Rating</label>
+    <description>Same as ship decoupler, but adds 50 Combat rating. Because fighter wings have unusually high firepower for their TWR, it is expected that they need adjusted CR</description>
+	<graphicData>
+      <texPath>Things/Building/Security/IEDIncendiary</texPath>
+    </graphicData>
+	    <costList>
+      <Shell_HighExplosive>2</Shell_HighExplosive>
+    </costList>
+	<minifiedDef IsNull="True" />
+	<designationCategory Inherit = "False"></designationCategory>
+	<thingCategories Inherit = "False">
+    </thingCategories>
+	<researchPrerequisites Inherit = "False">
+    </researchPrerequisites>
+    <comps>
+      <li Class="SaveOurShip2.CompProperties_ExplosiveInstant">
+        <explosiveRadius>1.5</explosiveRadius>
+        <explosiveDamageType>Bomb</explosiveDamageType>
+        <startWickHitPointsPercent>0.2</startWickHitPointsPercent>
+		<damageAmountBase>300</damageAmountBase>
+        <preExplosionSpawnSingleThingDef>Filth_BlastMark</preExplosionSpawnSingleThingDef>
+        <wickTicks>15</wickTicks>
+        <startWickOnDamageTaken>
+          <li>Bullet</li>
+          <li>Arrow</li>
+          <li>ArrowHighVelocity</li>
+        </startWickOnDamageTaken>
+      </li>
+	  <li Class="SaveOurShip2.CompProps_ShipHeat">
+				<compClass>SaveOurShip2.CompShipHeat</compClass>
+				<threat>50</threat>
+		</li>
+    </comps>
+    <specialDisplayRadius>1.5</specialDisplayRadius>
+	<placeWorkers Inherit = "False">
+	</placeWorkers>
+  </ThingDef>
+</Defs>
+

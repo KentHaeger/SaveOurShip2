@@ -691,6 +691,7 @@ Long-range weapons are railguns, plasma has medum range, lasers and cannons have
 Dodge chance is based on target ship Thrust To Weight ratio, so only fast ships dodge very well. Pilot Intellectual skill increases dodge chance. Tactician with high shooting skill on attacking ship decreases enemy dodge chance.
 For Thrust to weight ratio, slowest ship on the map is taken into account.
 Successful dodge means miss by a lot, projectile doesn't even enter target map.</SoS.DodgeChanceExplanation>
+
 	<!-- Dodge mechanics -->
 	<SoS.DodgeNoEnginePower>Can't dodge because of no working engines or wrecks present. Remove wrecks to dodge.</SoS.DodgeNoEnginePower>
 	<SoS.DodgeNoRCSOnShip>Ship {0} needs RCS thrusters to perform dodge.</SoS.DodgeNoRCSOnShip>
@@ -699,5 +700,20 @@ Successful dodge means miss by a lot, projectile doesn't even enter target map.<
 	<SoS.DodgeLeftDesc>Dodge incoming shots, engaging right side RCS thrusters and moving ship to the left.</SoS.DodgeLeftDesc>
 	<SoS.DodgeRight>Dodge right</SoS.DodgeRight>
 	<SoS.DodgeRightDesc>Dodge incoming shots, engaging left side RCS thrusters and moving ship to the right.</SoS.DodgeRightDesc>
+	
+	<!-- Stashed ship quest -->
+	
+	<SoS.StashedShip.RequestOptionParent>Request stashed ship location</SoS.StashedShip.RequestOptionParent>
+	<SoS.StashedShip.RequestOption>{0} (cost: {1} silver) ({2})</SoS.StashedShip.RequestOption>
+	<!-- Top-level option when unavailable -->
+	<SoS.StashedShip.RequestOptionDummy>Request stashed ship location</SoS.StashedShip.RequestOptionDummy>
+	<!-- Specific ship  option when unavailable -->
+	<SoS.StashedShip.RequestOptionDummySpecific>{0}</SoS.StashedShip.RequestOptionDummySpecific>
+	<SoS.StashedShip.OnCooldown>Next request for stashed ship will be available in {0} days.</SoS.StashedShip.OnCooldown>
+	<SoS.StashedShip.RequiresTech>Research Starflight Basics technology before requesting.</SoS.StashedShip.RequiresTech>
+	<SoS.StashedShip.NoSecuroity>Not guarded</SoS.StashedShip.NoSecuroity>
+	<SoS.StashedShip.MinorSceurity>Lightly guarded</SoS.StashedShip.MinorSceurity>
+	<SoS.StashedShip.AverageSceurity>Average security</SoS.StashedShip.AverageSceurity>
+	<SoS.StashedShip.HighSceurity>Heavily guarded</SoS.StashedShip.HighSceurity>
 	
 </LanguageData>

@@ -50,8 +50,7 @@ namespace SaveOurShip2.Vehicles
 					}
 					yield return board;
 				}
-                else
-                    yield return CommandGoHome(vehicle);
+				// TODO: fix and add CommandGoHome back here if map is non-player. Although this command duplicates normal launch.
 				//samey in ShuttleTakeoff.FloatMenuMissions
 				if (vehicle.CompUpgradeTree != null)
 				{
@@ -103,6 +102,7 @@ namespace SaveOurShip2.Vehicles
             };
         }
 
+        // TODO: This command now needs fixing as of 1.6 and Vehicle Framework 1.6.2144
         Command_Action CommandGoHome(VehiclePawn vehicle)
         {
             return new Command_Action

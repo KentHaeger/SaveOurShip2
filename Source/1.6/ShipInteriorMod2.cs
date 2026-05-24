@@ -148,7 +148,7 @@ namespace SaveOurShip2
 		{
 			base.GetSettings<ModSettings_SoS>();
 		}
-		public const string SOS2version = "GithubV2.8.107";
+		public const string SOS2version = "GithubV2.8.119";
 		public const int SOS2ReqCurrentMinor = 5;
 		// 1.5.4063 public build (4062 constant) was not enough as there is no AnomalyUtility.TryDuplicatePawn_NewTemp method to harmony patch it.
 		// Historical builds are not available, so for sure can be increased just to next build, 4066
@@ -935,7 +935,7 @@ namespace SaveOurShip2
 					planters.AddRange(plantersOut);
 				}
 			}
-			PostGenerateShipDef(map, clearArea, area, planters);
+			PostGenerateShipDef(map, fac, clearArea, area, planters);
 		}
 		public static void GenerateFleet(float CR, Map map, PassingShip passingShip, Faction fac, Lord lord, out List<Building> cores, bool shipActive = true, bool clearArea = false, int wreckLevel = 0, NavyDef navyDef = null)
 		{
@@ -1061,7 +1061,7 @@ namespace SaveOurShip2
 				}
 				i++;
 			}
-			PostGenerateShipDef(map, clearArea, area, planters);
+			PostGenerateShipDef(map, fac, clearArea, area, planters);
 		}
 
 		private static Dictionary<string, string> odysseyPartsReplacements = null;
@@ -1393,7 +1393,7 @@ namespace SaveOurShip2
 							var powerComp = b.TryGetComp<CompPowerTrader>();
 							if (powerComp != null)
 								powerComp.PowerOn = true;
-							if (ideoActive && b.def.CanBeStyled() && fac.ideos?.PrimaryIdeo?.style.StyleForThingDef(thing.def) != null)
+							if (fac != null && ideoActive && b.def.CanBeStyled() && fac.ideos?.PrimaryIdeo?.style.StyleForThingDef(thing.def) != null)
 							{
 								b.SetStyleDef(fac.ideos.PrimaryIdeo.GetStyleFor(thing.def));
 							}
@@ -1503,12 +1503,7 @@ namespace SaveOurShip2
 						}
 						else if (thing != null)
 						{
-							if (thing.def.stackLimit > 1)
-							{
-								thing.stackCount = Math.Min(Rand.RangeInclusive(5, 30), thing.def.stackLimit);
-								if (thing.stackCount * thing.MarketValue > 500)
-									thing.stackCount = (int)Mathf.Max(500 / thing.MarketValue, 1);
-							}
+							SetStackCount(thing);
 							if (thing.def.CanHaveFaction)
 								thing.SetFactionDirect(fac);
 						}
@@ -1826,6 +1821,29 @@ namespace SaveOurShip2
 			extraShipGenOptions.RequestCustomShip = false;
 			mapComp.RebuildRoofedPartsCache();
 		}
+
+		private static void SetStackCount(Thing thing)
+		{
+			if (thing.def.stackLimit <= 1)
+			{
+				return;
+			}
+			// Basic random stack count
+			thing.stackCount = Rand.RangeInclusive(5, 30);
+			// Guard for expensive things
+			if (thing.stackCount * thing.MarketValue > 500)
+			{
+				thing.stackCount = (int)Mathf.Max(500 / thing.MarketValue, 1);
+			}
+			// Exceptions: fuel, uranium
+			if (thing.def == ThingDefOf.Chemfuel || thing.def == ResourceBank.ThingDefOf.ShuttleFuelPods ||
+				thing.def == ThingDefOf.Uranium)
+			{
+				thing.stackCount = Rand.RangeInclusive(thing.def.stackLimit * 3 / 4, thing.def.stackLimit);
+			}
+			thing.stackCount = Math.Min(thing.stackCount, thing.def.stackLimit);			
+		}
+
 		private static void ShipPawnGen(Pawn p, bool isDungeon, Lord lord) //td make proper pawngen req?
 		{
 			if (p.RaceProps.IsMechanoid)
@@ -1849,7 +1867,7 @@ namespace SaveOurShip2
 			else
 				lord?.AddPawn(p);
 		}
-		public static void PostGenerateShipDef(Map map, bool clearArea, List<IntVec3> shipArea, List<Thing> planters)
+		public static void PostGenerateShipDef(Map map, Faction fac, bool clearArea, List<IntVec3> shipArea, List<Thing> planters)
 		{
 			//HashSet<Room> validRooms = new HashSet<Room>();
 			map.regionAndRoomUpdater.RebuildAllRegionsAndRooms();
@@ -1860,7 +1878,7 @@ namespace SaveOurShip2
 			List<IntVec3> removeCells = new List<IntVec3>();
 			foreach (IntVec3 v in shipArea)
 			{
-				if (v.GetThingList(map).Any(t => (t.TryGetComp<CompShipBay>() != null && t.TryGetComp<CompShipBay>().bayRect.Contains(v)) || (t.TryGetComp<CompShipHeat>()?.Props.showOnRoof ?? false)))
+				if (v.GetThingList(map).Any(t => (t.TryGetComp<CompShipBay>() != null && t.TryGetComp<CompShipBay>().bayRect.Contains(v)) || (t.TryGetComp<CompShipHeat>()?.Props?.showOnRoof ?? false)))
 					removeCells.Add(v);
 			}
 			foreach (IntVec3 v in removeCells)
@@ -1868,10 +1886,20 @@ namespace SaveOurShip2
 				shipArea.Remove(v);
 			}
 
-			if (!clearArea)
+			//all cells, except if outdoors+outdoors border
+			CellRect mapRect = map.BoundsRect();
+			Room outdoors = null;
+			foreach (IntVec3 cell in mapRect.EdgeCells)
 			{
-				//all cells, except if outdoors+outdoors border
-				Room outdoors = new IntVec3(0, 0, 0).GetRoom(map); //td make this find first cell outside
+				if (cell.GetRoom(map) != null)
+				{
+					outdoors = cell.GetRoom(map);
+					break;
+				}
+			}
+
+			if (!clearArea && outdoors != null)
+			{
 				List<IntVec3> excludeCells = new List<IntVec3>();
 				foreach (IntVec3 cell in outdoors.BorderCells.Where(c => c.InBounds(map)))
 				{
@@ -1886,28 +1914,24 @@ namespace SaveOurShip2
 						}
 					}
 				}
-				foreach (IntVec3 cell in shipArea.Except(outdoors.Cells.Concat(outdoors.BorderCells.Where(c => c.InBounds(map)))))
+			}
+
+			// Do not fog ships that are spawned for player
+			bool needSetFog = map.IsSpace() ? !clearArea : true;
+			bool fogValue = fac != null;			
+			if (needSetFog)
+			{
+				List<IntVec3> fogSetArea = shipArea;
+				if (outdoors != null)
 				{
-					map.fogGrid.fogGrid.Set(map.cellIndices.CellToIndex(cell), value:true);
-					//validRooms.Add(cell.GetRoom(map));
+					fogSetArea = fogSetArea.Except(outdoors.Cells.Concat(outdoors.BorderCells.Where(c => c.InBounds(map)))).ToList();
+				}
+				foreach (IntVec3 cell in fogSetArea)
+				{
+					map.fogGrid.fogGrid.Set(map.cellIndices.CellToIndex(cell), value: fogValue);
 				}
 			}
-			/*
-			HashSet<Room> validRooms = new HashSet<Room>();
-			foreach (IntVec3 v in shipArea)
-			{
-				Room r = v.GetRoom(map);
-				if (r != null)
-					validRooms.Add(r);
-			}
-			if (validRooms.Any())
-			{
-				Log.Message("set temp in rooms: " + validRooms.Count);
-				foreach (Room r in validRooms.Where(r => r != null))
-				{
-					r.Temperature = 21;
-				}
-			}*/
+
 			foreach (Room r in map.regionGrid.allRooms.Where(r => !r.TouchesMapEdge))
 				r.Temperature = 21;
 
@@ -3675,9 +3699,11 @@ namespace SaveOurShip2
 							vehicle.CompUpgradeTree.FinishUnlock(vehicle.CompUpgradeTree.Props.def.GetNode("TurretTorpedoC"));
 						foreach (VehicleTurret torp in vehicle.CompVehicleTurrets.turrets)
 							torp.Reload(ResourceBank.ThingDefOf.ShipTorpedo_HighExplosive, true);
-						int torps = Rand.Range(3, 6);
+						int torps = Rand.RangeInclusive(2, 3) * Mathf.RoundToInt(vehicle.statHandler.GetStatValue(ResourceBank.VehicleStatDefOf.Hardpoints));
 						for (int i = 0; i < torps; i++)
-							vehicle.GetDirectlyHeldThings().AddItem(ThingMaker.MakeThing(ResourceBank.ThingDefOf.ShipTorpedo_HighExplosive));
+						{
+							vehicle.inventory.GetDirectlyHeldThings().TryAdd(ThingMaker.MakeThing(ResourceBank.ThingDefOf.ShipTorpedo_HighExplosive));
+						}
 					}
 					else if (weapon > 2) //interceptor
 					{

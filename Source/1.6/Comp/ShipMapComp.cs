@@ -238,6 +238,10 @@ namespace SaveOurShip2
 
 		public void RebuildRoofedPartsCache()
 		{
+			if (shipsOnMap == null)
+			{
+				return;
+			}
 			roofedPartsCache.Clear();
 			foreach (SpaceShipCache ship in shipsOnMap.Values)
 			{
@@ -2966,6 +2970,9 @@ namespace SaveOurShip2
 				shuttle.DeSpawn();
 			}
 			ShuttlesOnMissions.TryAddOrTransfer(shuttle);
+			// List of shuttles on mission conflicts with shuttle launch mechanocs because of being IThingHolder.
+			// Setting holdingOwner for departing shuttles solves the conflict.
+			shuttle.holdingOwner = null;
 			ShuttleMissionData data = new ShuttleMissionData();
 			data.shuttle = shuttle;
 			data.mission = mission;
