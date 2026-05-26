@@ -156,9 +156,9 @@ namespace SaveOurShip2
 			Faction bugs = Faction.OfInsects;
 			float random = Rand.Value;
 			// It is assumed that mech faction shouldn't be removed in order to not break SOS 2
-			float mechanoidChance = 0.3f;
-			float ancientsChance = ancients != null ? 0.3f : 0f;
-			float bugsCahnce = bugs != null ? 0.3f : 0f;
+			float mechanoidChance = 0.15f;
+			float ancientsChance = ancients != null ? 0.15f : 0f;
+			float bugsCahnce = bugs != null ? 0.1f : 0f;
 			// Limit to to pre-set factions if no specific faction is given
 			Log.Message($"random : {random}");
 			if (shipFaction == null)
@@ -222,7 +222,7 @@ namespace SaveOurShip2
 			shipDefName = fallbackShipDefName;
 
 			List<Building> cores = new List<Building>();
-			ShipDef ship = DefDatabase<ShipDef>.GetNamed(/*shipDefName*/"CruiserCrab", errorOnFail: false);
+			ShipDef ship = DefDatabase<ShipDef>.GetNamed(shipDefName, errorOnFail: false);
 			int offsetX = (map.Size.x - ship.sizeX) / 2;
 			int offsetZ = (map.Size.z - ship.sizeZ) / 2;
 			CellRect cleanRect = new CellRect(offsetX, offsetZ, ship.sizeX, ship.sizeZ);
@@ -330,7 +330,7 @@ namespace SaveOurShip2
 
 			Log.Message($"SoS 2: Ship defenders faction: {defendersFaction.Name}");
 
-			SpawnDefendingForces(map, defendersFaction, /*threatPoints*/5000, new CellRect(offsetX, offsetZ, ship.sizeX, ship.sizeZ));
+			SpawnDefendingForces(map, defendersFaction, threatPoints, new CellRect(offsetX, offsetZ, ship.sizeX, ship.sizeZ));
 		}
 	}
 }
