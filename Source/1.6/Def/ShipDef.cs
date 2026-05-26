@@ -5,6 +5,7 @@ using System.Text;
 using System.Xml;
 using UnityEngine;
 using Verse;
+using RimWorld;
 
 namespace SaveOurShip2
 {
@@ -237,5 +238,55 @@ namespace SaveOurShip2
 				ShipStructure.Add(shape);
 			}
 		}*/
+
+		public Faction GetHostileFactionFromCrew()
+		{
+			try
+			{
+				List<string> factionDefs = new List<string>();
+				foreach (ShipShape shape in parts)
+				{					
+					if (shape.shapeOrDef.Equals("PawnSpawnerGeneric"))
+					{
+						if (shape.faction != null) //faction override
+						{
+							Faction existingFaction = Find.FactionManager.FirstFactionOfDef(DefDatabase<FactionDef>.GetNamedSilentFail(shape.faction));
+							if (existingFaction != null && existingFaction.HostileTo(Faction.OfPlayer))
+							{
+								factionDefs.Add(shape.faction);
+							}
+						}
+					}
+					else if (DefDatabase<PawnKindDef>.GetNamedSilentFail(shape.shapeOrDef) != null)
+					{
+						PawnKindDef pawnKind = DefDatabase<PawnKindDef>.GetNamedSilentFail(shape.shapeOrDef);
+						FactionDef defaultFactionDef = pawnKind.defaultFactionDef;
+						if (defaultFactionDef != null)
+						{
+							Faction existingFaction = Find.FactionManager.FirstFactionOfDef(defaultFactionDef);
+							if (existingFaction != null && existingFaction.HostileTo(Faction.OfPlayer))
+							{
+								factionDefs.Add(defaultFactionDef.defName);
+							}
+						}
+					}
+				}
+				if (factionDefs.Count == 0)
+				{
+					return null;
+				}
+				var result = factionDefs
+					.Where(s => s != null)
+					.GroupBy(s => s)
+					.OrderByDescending(g => g.Count())
+					.First();
+				return Find.FactionManager.FirstFactionOfDef(FactionDef.Named(result.Key)); 
+			}
+			catch (Exception ex)
+			{
+				Log.Error($"SoS 2: error determining ship faction crew: {ex.StackTrace}");
+				return null;
+			}
+		}
 	}
 }

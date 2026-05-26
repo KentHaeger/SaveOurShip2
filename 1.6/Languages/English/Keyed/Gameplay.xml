@@ -702,7 +702,6 @@ Successful dodge means miss by a lot, projectile doesn't even enter target map.<
 	<SoS.DodgeRightDesc>Dodge incoming shots, engaging left side RCS thrusters and moving ship to the right.</SoS.DodgeRightDesc>
 	
 	<!-- Stashed ship quest -->
-	
 	<SoS.StashedShip.RequestOptionParent>Request stashed ship location</SoS.StashedShip.RequestOptionParent>
 	<SoS.StashedShip.RequestOption>{0} (cost: {1} silver) ({2})</SoS.StashedShip.RequestOption>
 	<!-- Top-level option when unavailable -->

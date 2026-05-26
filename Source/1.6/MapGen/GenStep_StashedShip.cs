@@ -16,6 +16,7 @@ namespace SaveOurShip2
 	{
 		public const string ShipDefTagName = "shipDefName";
 		public const string ThreatTagName = "threatPoints";
+		private const string fallbackShipDefName = "FastScout";
 		public override int SeedPart
 		{
 			get
@@ -38,12 +39,20 @@ namespace SaveOurShip2
 
 		private void CleanGeysers(Map map, IntVec3 cell)
 		{
-			foreach (Thing thing in cell.GetThingList(map).ToList())
+			Thing.allowDestroyNonDestroyable = true;
+			try
 			{
-				if (thing.def == ThingDefOf.SteamGeyser)
+				foreach (Thing thing in cell.GetThingList(map).ToList())
 				{
-					thing.Destroy();
+					if (thing.def == ThingDefOf.SteamGeyser)
+					{
+						thing.Destroy();
+					}
 				}
+			}
+			finally
+			{
+				Thing.allowDestroyNonDestroyable = false;
 			}
 		}
 
@@ -104,10 +113,15 @@ namespace SaveOurShip2
 			return false;
 		}
 
-		private void SpawnDefendingMechanoids(Map map, int threatPoints, CellRect shipRect)
+		private void SpawnDefendingForces(Map map, Faction faction, int threatPoints, CellRect shipRect)
 		{
 			PawnGroupMakerParms parms = new PawnGroupMakerParms();
-			parms.faction = Faction.OfMechanoids;
+			parms.faction = faction != null ? faction : Faction.OfMechanoids;
+			if (parms.faction == null)
+			{
+				Log.Error("SoS 2: No suitable faction found for ship defender forces. Mechanod faction shoul be in game in order to not harm SoS 2 experience");
+				return;
+			}
 			parms.points = threatPoints;
 			parms.tile = map.Tile;
 			parms.groupKind = PawnGroupKindDefOf.Combat;
@@ -132,7 +146,41 @@ namespace SaveOurShip2
 				GenSpawn.Spawn(pawn, spawnCell, map);
 				spawnedPawns.Add(pawn);
 			}
-			LordMaker.MakeNewLord(Faction.OfMechanoids, new LordJob_AssaultColony(Faction.OfMechanoids), map, spawnedPawns);
+			LordMaker.MakeNewLord(parms.faction, new LordJob_AssaultColony(Faction.OfMechanoids), map, spawnedPawns);
+		}
+
+		// May return null, error will be handlled later
+		private Faction GetDefendersFaction(Faction shipFaction)
+		{
+			Faction ancients = Faction.OfAncientsHostile;
+			Faction bugs = Faction.OfInsects;
+			float random = Rand.Value;
+			// It is assumed that mech faction shouldn't be removed in order to not break SOS 2
+			float mechanoidChance = 0.3f;
+			float ancientsChance = ancients != null ? 0.3f : 0f;
+			float bugsCahnce = bugs != null ? 0.3f : 0f;
+			// Limit to to pre-set factions if no specific faction is given
+			Log.Message($"random : {random}");
+			if (shipFaction == null)
+			{
+				random *= mechanoidChance + ancientsChance + bugsCahnce;
+			}
+			if (random <= mechanoidChance)
+			{
+				return Find.FactionManager.FirstFactionOfDef(FactionDefOf.Mechanoid);
+			}
+			else if (random <= mechanoidChance + ancientsChance)
+			{
+				return ancients;
+			}
+			else if (random <= mechanoidChance + ancientsChance + bugsCahnce)
+			{
+				return bugs;
+			}
+			else
+			{
+				return shipFaction; 
+			}
 		}
 		protected override void ScatterAt(IntVec3 c, Map map, GenStepParams stepparams, int stackCount = 1)
 		{
@@ -150,7 +198,7 @@ namespace SaveOurShip2
 					if (shipDefTag == null || threatTag == null)
 					{
 						// Fallback for quest version that was released without proper tags
-						shipDefName = "FastScout";
+						shipDefName = fallbackShipDefName;
 					}
 					else
 					{
@@ -168,11 +216,13 @@ namespace SaveOurShip2
 			if (DefDatabase<ShipDef>.GetNamedSilentFail(shipDefName) == null)
 			{
 				Log.Error($"SOS 2: Ship def name {shipDefName} not found for stashed ship quest. Default ship will be used");
-				shipDefName = "FastScout";
+				shipDefName = fallbackShipDefName;
 			}
 
+			shipDefName = fallbackShipDefName;
+
 			List<Building> cores = new List<Building>();
-			ShipDef ship = DefDatabase<ShipDef>.GetNamed(shipDefName, errorOnFail: false);
+			ShipDef ship = DefDatabase<ShipDef>.GetNamed(/*shipDefName*/"CruiserCrab", errorOnFail: false);
 			int offsetX = (map.Size.x - ship.sizeX) / 2;
 			int offsetZ = (map.Size.z - ship.sizeZ) / 2;
 			CellRect cleanRect = new CellRect(offsetX, offsetZ, ship.sizeX, ship.sizeZ);
@@ -245,7 +295,7 @@ namespace SaveOurShip2
 			try
 			{
 				ShipInteriorMod2.GenerateShip(ship, map, null, null, null, out cores, false, true,
-					wreckLevel: 0, offsetX: offsetX, offsetZ: offsetZ);
+					wreckLevel: 0, offsetX: offsetX, offsetZ: offsetZ, flipShip: true, preventPawnSpawn: true);
 			}
 			catch (Exception ex)
 			{
@@ -275,7 +325,12 @@ namespace SaveOurShip2
 				}				
 			}
 
-			SpawnDefendingMechanoids(map, threatPoints, new CellRect(offsetX, offsetZ, ship.sizeX, ship.sizeZ));
+			Faction shipFaction = ship.GetHostileFactionFromCrew();
+			Faction defendersFaction = GetDefendersFaction(shipFaction);
+
+			Log.Message($"SoS 2: Ship defenders faction: {defendersFaction.Name}");
+
+			SpawnDefendingForces(map, defendersFaction, /*threatPoints*/5000, new CellRect(offsetX, offsetZ, ship.sizeX, ship.sizeZ));
 		}
 	}
 }
