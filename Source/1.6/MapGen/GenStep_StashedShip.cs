@@ -154,7 +154,12 @@ namespace SaveOurShip2
 		{
 			Faction ancients = Faction.OfAncientsHostile;
 			Faction bugs = Faction.OfInsects;
+			// Intended to be truly random for testing purposes, not that much needed to lock players to specific
+			// defender faction if they use save/load.
+			Rand.PushState();
+			Rand.Seed = Find.TickManager.TicksGame;
 			float random = Rand.Value;
+			Rand.PopState();
 			// It is assumed that mech faction shouldn't be removed in order to not break SOS 2
 			float mechanoidChance = 0.15f;
 			float ancientsChance = ancients != null ? 0.15f : 0f;
@@ -206,7 +211,7 @@ namespace SaveOurShip2
 						string tagValue = threatTag.Split(':').Last() ?? threatPoints.ToString();
 						if (!int.TryParse(tagValue, out threatPoints))
 						{
-							Log.Error("SOS 2: error parding threat tag for stashed ship:" + threatTag);
+							Log.Error("SoS 2: error parsing threat tag for stashed ship:" + threatTag);
 						}
 					}
 				}
@@ -215,11 +220,14 @@ namespace SaveOurShip2
 			// Fallback for ship def name not found
 			if (DefDatabase<ShipDef>.GetNamedSilentFail(shipDefName) == null)
 			{
-				Log.Error($"SOS 2: Ship def name {shipDefName} not found for stashed ship quest. Default ship will be used");
+				Log.Error($"SoS 2: Ship def name {shipDefName} not found for stashed ship quest. Default ship will be used");
 				shipDefName = fallbackShipDefName;
+				if( DefDatabase<ShipDef>.GetNamedSilentFail(shipDefName) == null)
+				{
+					Log.Error("SoS 2: coulnd't find default ship def for stashed ship in def database");
+					return;
+				}
 			}
-
-			shipDefName = fallbackShipDefName;
 
 			List<Building> cores = new List<Building>();
 			ShipDef ship = DefDatabase<ShipDef>.GetNamed(shipDefName, errorOnFail: false);
