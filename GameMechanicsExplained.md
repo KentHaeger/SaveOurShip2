@@ -1,7 +1,9 @@
 Explanations of several SOS 2 mechanics:
 
-[Ship mass](ShipMass.md)
+[Ship mass](Docs/ShipMass.md)
 
-[TWR Guide with spoilers](TWRGuideWithSpoilers.md)
+[TWR Guide with spoilers](Docs/TWRGuideWithSpoilers.md)
 
-[Glossary](Glossary.md)
+[Formgels](Docs/Formgels.md)
+
+[Glossary](Docs/Glossary.md)
