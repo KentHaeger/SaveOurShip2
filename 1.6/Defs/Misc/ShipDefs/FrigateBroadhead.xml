@@ -8,7 +8,7 @@
 		<sizeX>52</sizeX>
 		<sizeZ>92</sizeZ>
 		<label>Broadhead class frigate</label>
-		<combatPoints>1027</combatPoints>
+		<combatPoints>967</combatPoints>
 		<core>
 			<shapeOrDef>Ship_DroneCore</shapeOrDef>
 			<x>18</x>
