@@ -8,7 +8,7 @@
 		<sizeX>125</sizeX>
 		<sizeZ>128</sizeZ>
 		<label>Crescent class battlecruiser</label>
-		<combatPoints>2884</combatPoints>
+		<combatPoints>2484</combatPoints>
 		<core>
 			<shapeOrDef>Ship_ComputerCore</shapeOrDef>
 			<x>89</x>
