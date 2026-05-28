@@ -8,7 +8,7 @@
 		<sizeX>96</sizeX>
 		<sizeZ>62</sizeZ>
 		<label>Scorpion class frigate</label>
-		<combatPoints>947</combatPoints>
+		<combatPoints>887</combatPoints>
 		<rarityLevel>2</rarityLevel>
 		<core>
 			<shapeOrDef>Ship_DroneCore</shapeOrDef>
