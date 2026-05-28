@@ -8,7 +8,7 @@
 		<sizeX>77</sizeX>
 		<sizeZ>60</sizeZ>
 		<label>Heavy frigate</label>
-		<combatPoints>1115</combatPoints>
+		<combatPoints>1055</combatPoints>
 		<core>
 			<shapeOrDef>ShipConsoleTactical</shapeOrDef>
 			<x>26</x>
