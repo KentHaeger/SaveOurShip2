@@ -8,7 +8,7 @@
 		<sizeX>136</sizeX>
 		<sizeZ>96</sizeZ>
 		<label>Aurora class battlecruiser</label>
-		<combatPoints>2952</combatPoints>
+		<combatPoints>2472</combatPoints>
 		<core>
 			<shapeOrDef>Ship_ComputerCore</shapeOrDef>
 			<x>94</x>
