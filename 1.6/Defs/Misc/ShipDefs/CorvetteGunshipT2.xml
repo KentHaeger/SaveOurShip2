@@ -8,7 +8,7 @@
 		<sizeX>69</sizeX>
 		<sizeZ>26</sizeZ>
 		<label>Corvette gunship</label>
-		<combatPoints>303</combatPoints>
+		<combatPoints>263</combatPoints>
 		<randomTurretPoints>120</randomTurretPoints>
 		<core>
 			<shapeOrDef>ShipPilotSeatMini</shapeOrDef>
