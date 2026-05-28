@@ -8,7 +8,7 @@
 		<sizeX>65</sizeX>
 		<sizeZ>26</sizeZ>
 		<label>Advanced corvette gunship</label>
-		<combatPoints>363</combatPoints>
+		<combatPoints>323</combatPoints>
 		<randomTurretPoints>140</randomTurretPoints>
 		<core>
 			<shapeOrDef>Ship_DroneCore</shapeOrDef>
