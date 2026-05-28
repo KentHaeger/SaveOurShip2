@@ -8,7 +8,7 @@
 		<sizeX>95</sizeX>
 		<sizeZ>70</sizeZ>
 		<label>Crab class cruiser</label>
-		<combatPoints>2087</combatPoints>
+		<combatPoints>1887</combatPoints>
 		<core>
 			<shapeOrDef>Ship_ComputerCore</shapeOrDef>
 			<x>53</x>
