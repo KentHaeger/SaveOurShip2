@@ -8,7 +8,7 @@
 		<sizeX>119</sizeX>
 		<sizeZ>72</sizeZ>
 		<label>Trident class battlecruiser</label>
-		<combatPoints>2863</combatPoints>
+		<combatPoints>2623</combatPoints>
 		<cargoValue>250</cargoValue>
 		<core>
 			<shapeOrDef>Ship_ComputerCore</shapeOrDef>
