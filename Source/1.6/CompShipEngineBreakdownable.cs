@@ -41,4 +41,44 @@ namespace SaveOurShip2
 				__result = "";
 		}
 	}
+
+	// Boundary safety: a SOS2 engine that's part of a SOS2 ship structure must not also pose as a
+	// gravship thruster - the SOS2 ship would tear it off on move, the gravship would tear it off on
+	// launch, and both systems would double-claim its fuel. Refuse to link/be-active in that case;
+	// the dual role activates only when the engine is standalone (no SOS2 ship cache on its cell).
+	[HarmonyPatch(typeof(CompGravshipThruster), nameof(CompGravshipThruster.CanLink))]
+	public static class CompGravshipThruster_CanLink_NotOnShip
+	{
+		public static void Postfix(CompGravshipThruster __instance, ref bool __result)
+		{
+			if (__result && IsOnSos2Ship(__instance.parent))
+				__result = false;
+		}
+
+		public static bool IsOnSos2Ship(Thing engine)
+		{
+			if (engine == null || !engine.Spawned)
+				return false;
+			//SOS2 engine has CompShipCachePart by def - the meaningful question is whether its cell
+			//is currently registered to a ship in the map's ShipMapComp
+			if (engine.TryGetComp<CompShipCachePart>() == null)
+				return false;
+			ShipMapComp mapComp = engine.Map?.GetComponent<ShipMapComp>();
+			if (mapComp == null)
+				return false;
+			return mapComp.ShipIndexOnVec(engine.Position) != -1;
+		}
+	}
+
+	// Symmetric guard on CanBeActive: even if a stale link slipped past CanLink (e.g. the engine
+	// joined a SOS2 ship cache after linking), don't let the thruster contribute during launch.
+	[HarmonyPatch(typeof(CompGravshipThruster), nameof(CompGravshipThruster.CanBeActive), MethodType.Getter)]
+	public static class CompGravshipThruster_CanBeActive_NotOnShip
+	{
+		public static void Postfix(CompGravshipThruster __instance, ref bool __result)
+		{
+			if (__result && CompGravshipThruster_CanLink_NotOnShip.IsOnSos2Ship(__instance.parent))
+				__result = false;
+		}
+	}
 }
