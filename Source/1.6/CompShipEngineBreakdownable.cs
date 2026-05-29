@@ -35,33 +35,53 @@ namespace SaveOurShip2
 		}
 	}
 
-	// A SOS2 ship part on gravship substructure must not be registered in SOS2's MapShipCells / spin
-	// up a SpaceShipCache. Skip the CompShipCachePart spawn logic entirely - the part still ticks
-	// normally (its other comps are unaffected), it just doesn't pretend to be part of a SOS2 ship.
-	[HarmonyPatch(typeof(CompShipCachePart), nameof(CompShipCachePart.PostSpawnSetup))]
-	public static class CompShipCachePart_PostSpawnSetup_OnSubstructure
+	// Shared detach: pull a SOS2 ship part out of its SpaceShipCache and scrub every cell it occupies
+	// from MapShipCells. If the cache is left empty, drop it entirely. Used at two trigger points:
+	// part spawned on substructure, and substructure laid under an already-registered part.
+	static class GravshipDetach
 	{
-		public static bool Prefix(CompShipCachePart __instance)
+		public static void DetachFromSos2(Building b)
 		{
-			return !GravshipSubstructureCheck.OnSubstructure(__instance.parent);
+			if (b == null || !b.Spawned)
+				return;
+			Map map = b.Map;
+			if (map == null)
+				return;
+			ShipMapComp mapComp = map.GetComponent<ShipMapComp>();
+			if (mapComp == null)
+				return;
+			int idx = mapComp.ShipIndexOnVec(b.Position);
+			SpaceShipCache ship = null;
+			if (idx != -1 && mapComp.ShipsOnMap.TryGetValue(idx, out ship))
+				ship.RemoveFromCache(b, DestroyMode.Vanish);
+			//clear every cell this building occupies from MapShipCells - it is no longer a SOS2 ship part
+			foreach (IntVec3 cell in b.OccupiedRect())
+			{
+				if (mapComp.MapShipCells.ContainsKey(cell))
+					mapComp.MapShipCells.Remove(cell);
+			}
+			//if the ship is now empty drop it from ShipsOnMap (otherwise it lingers as a zombie cache)
+			if (ship != null && ship.BuildingCount <= 0 && idx != -1)
+				mapComp.RemoveShipFromCache(idx);
 		}
 	}
 
-	// Symmetric guard on despawn - if we skipped registration, skip deregistration too.
-	[HarmonyPatch(typeof(CompShipCachePart), nameof(CompShipCachePart.PreDeSpawn))]
-	public static class CompShipCachePart_PreDeSpawn_OnSubstructure
+	// A SOS2 ship part on gravship substructure must not be a SOS2 ship part. Let vanilla PostSpawnSetup
+	// run normally (so all internal fields - map/mapComp/cellsUnder/fac - are initialized; otherwise
+	// CompInspectStringExtra and PostDeSpawn NRE), then immediately detach the part if on substructure.
+	[HarmonyPatch(typeof(CompShipCachePart), nameof(CompShipCachePart.PostSpawnSetup))]
+	public static class CompShipCachePart_PostSpawnSetup_OnSubstructure
 	{
-		public static bool Prefix(CompShipCachePart __instance)
+		public static void Postfix(CompShipCachePart __instance)
 		{
-			return !GravshipSubstructureCheck.OnSubstructure(__instance.parent);
+			if (GravshipSubstructureCheck.OnSubstructure(__instance.parent))
+				GravshipDetach.DetachFromSos2(__instance.parent as Building);
 		}
 	}
 
 	// Retroactive case: SOS2 ship part already spawned + registered, then substructure laid under it.
 	// PostSpawnSetup ran before substructure existed, so the part stayed in the SOS2 cache. When
-	// substructure is set, scan the cell for any SOS2 ship parts and force-detach them: remove from
-	// the SpaceShipCache and clear their cells from MapShipCells. The next gravship launch then sees
-	// the part as a gravship facility, not a SOS2 wreck.
+	// substructure is set, scan the cell for any SOS2 ship parts and force-detach them.
 	[HarmonyPatch(typeof(TerrainGrid), nameof(TerrainGrid.SetFoundation))]
 	public static class TerrainGrid_SetFoundation_DetachOnSubstructure
 	{
@@ -72,24 +92,11 @@ namespace SaveOurShip2
 			Map map = __instance.map; //publicized via Krafs.Publicizer
 			if (map == null || !c.InBounds(map))
 				return;
-			ShipMapComp mapComp = map.GetComponent<ShipMapComp>();
-			if (mapComp == null)
-				return;
-			//snapshot - RemoveFromCache mutates collections we might be iterating
-			List<Thing> things = c.GetThingList(map).ToList();
-			foreach (Thing t in things)
+			//snapshot - DetachFromSos2 mutates the cell's MapShipCells while we iterate
+			foreach (Thing t in c.GetThingList(map).ToList())
 			{
-				if (!(t is Building b) || b.TryGetComp<CompShipCachePart>() == null)
-					continue;
-				int idx = mapComp.ShipIndexOnVec(b.Position);
-				if (idx != -1 && mapComp.ShipsOnMap.ContainsKey(idx))
-					mapComp.ShipsOnMap[idx].RemoveFromCache(b, DestroyMode.Vanish);
-				//clear every cell this building occupies from MapShipCells - it is no longer a SOS2 ship part
-				foreach (IntVec3 cell in b.OccupiedRect())
-				{
-					if (mapComp.MapShipCells.ContainsKey(cell))
-						mapComp.MapShipCells.Remove(cell);
-				}
+				if (t is Building b && b.TryGetComp<CompShipCachePart>() != null)
+					GravshipDetach.DetachFromSos2(b);
 			}
 		}
 	}
