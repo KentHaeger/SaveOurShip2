@@ -87,6 +87,22 @@ namespace SaveOurShip2
 		}
 	}
 
+	// CompGravshipThruster hard-requires a CompBreakdownable - its CanBeActive (and inspect string)
+	// dereference Breakdownable and NRE without one. SOS2 engines should never actually break down,
+	// so this variant satisfies that requirement but immediately drops out of the BreakdownManager's
+	// roster, and DoBreakdown is patched out for it (see below).
+	public class CompShipEngineBreakdownable : CompBreakdownable
+	{
+		public override void PostSpawnSetup(bool respawningAfterLoad)
+		{
+			base.PostSpawnSetup(respawningAfterLoad); //base registers with the BreakdownManager
+			parent.Map?.GetComponent<BreakdownManager>()?.Deregister(this); //...drop straight back out
+		}
+	}
+
+
+	// ===== Harmony patches =====
+
 	// Sweep empty SpaceShipCache entries on map FinalizeInit - catches zombie ships persisted from
 	// pre-fix saves (engine-on-substructure left an empty cache) or any other source of 0-part ships.
 	[HarmonyPatch(typeof(Map), nameof(Map.FinalizeInit))]
@@ -131,20 +147,6 @@ namespace SaveOurShip2
 				if (t is Building b && b.TryGetComp<CompShipCachePart>() != null)
 					GravshipDetach.DetachFromSos2(b);
 			}
-		}
-	}
-
-
-	// CompGravshipThruster hard-requires a CompBreakdownable - its CanBeActive (and inspect string)
-	// dereference Breakdownable and NRE without one. SOS2 engines should never actually break down,
-	// so this variant satisfies that requirement but immediately drops out of the BreakdownManager's
-	// roster, and DoBreakdown is patched out for it (see below).
-	public class CompShipEngineBreakdownable : CompBreakdownable
-	{
-		public override void PostSpawnSetup(bool respawningAfterLoad)
-		{
-			base.PostSpawnSetup(respawningAfterLoad); //base registers with the BreakdownManager
-			parent.Map?.GetComponent<BreakdownManager>()?.Deregister(this); //...drop straight back out
 		}
 	}
 
