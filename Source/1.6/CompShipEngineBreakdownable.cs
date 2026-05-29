@@ -4,6 +4,59 @@ using Verse;
 
 namespace SaveOurShip2
 {
+	// Helper: SOS2 engine sits on Odyssey gravship substructure (any cell under the engine has a
+	// substructure foundation). Used to gate the SOS2 ship-cache so a lone engine bolted to a
+	// gravship isn't pulled into SOS2's caching system and treated as a wreck.
+	static class ShipEngineSubstructureCheck
+	{
+		public static bool EngineOnGravship(Thing thing)
+		{
+			if (!ModsConfig.OdysseyActive)
+				return false;
+			if (thing == null || !thing.Spawned)
+				return false;
+			if (thing.TryGetComp<CompEngineTrail>() == null)
+				return false;
+			Map map = thing.Map;
+			if (map == null)
+				return false;
+			foreach (IntVec3 c in thing.OccupiedRect())
+			{
+				if (!c.InBounds(map))
+					continue;
+				TerrainDef foundation = map.terrainGrid.FoundationAt(c);
+				if (foundation != null && foundation.IsSubstructure)
+					return true;
+			}
+			return false;
+		}
+	}
+
+	// A SOS2 engine on gravship substructure must not be treated as a SOS2 ship part: skip the
+	// CompShipCachePart spawn logic that would register it in MapShipCells / spin up a new
+	// SpaceShipCache for it (would otherwise produce a one-engine wreck on the gravship). The
+	// engine still works (CompEngineTrail and its other comps are unaffected).
+	[HarmonyPatch(typeof(CompShipCachePart), nameof(CompShipCachePart.PostSpawnSetup))]
+	public static class CompShipCachePart_PostSpawnSetup_GravshipEngine
+	{
+		public static bool Prefix(CompShipCachePart __instance)
+		{
+			return !ShipEngineSubstructureCheck.EngineOnGravship(__instance.parent);
+		}
+	}
+
+	// Symmetric guard on despawn - we never registered, so don't try to deregister either (the
+	// SOS2 despawn path NREs in some places when given a part it never tracked).
+	[HarmonyPatch(typeof(CompShipCachePart), nameof(CompShipCachePart.PreDeSpawn))]
+	public static class CompShipCachePart_PreDeSpawn_GravshipEngine
+	{
+		public static bool Prefix(CompShipCachePart __instance)
+		{
+			return !ShipEngineSubstructureCheck.EngineOnGravship(__instance.parent);
+		}
+	}
+
+
 	// CompGravshipThruster hard-requires a CompBreakdownable - its CanBeActive (and inspect string)
 	// dereference Breakdownable and NRE without one. SOS2 engines should never actually break down,
 	// so this variant satisfies that requirement but immediately drops out of the BreakdownManager's
