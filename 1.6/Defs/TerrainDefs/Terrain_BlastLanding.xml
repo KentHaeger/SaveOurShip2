@@ -6,7 +6,7 @@
 	<TerrainDef ParentName="FloorBase">
 		<defName>ShipVolcanicGlass</defName>
 		<label>volcanic glass</label>
-		<designationCategory>None</designationCategory>
+		<!-- inherits Floors from FloorBase, but no costList/costStuffCount = no build option auto-generated -->
 		<description>A sheet of dark, glossy glass - ground fused solid by a plasma bombardment. Hard enough to bear the weight of a starship.</description>
 		<texturePath>Terrain/Surfaces/Concrete</texturePath>
 		<!-- with Odyssey, reuse its cooled-lava texture; the later element wins when both load -->
