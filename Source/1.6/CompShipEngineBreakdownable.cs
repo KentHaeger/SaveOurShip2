@@ -60,9 +60,42 @@ namespace SaveOurShip2
 				if (mapComp.MapShipCells.ContainsKey(cell))
 					mapComp.MapShipCells.Remove(cell);
 			}
-			//if the ship is now empty drop it from ShipsOnMap (otherwise it lingers as a zombie cache)
-			if (ship != null && ship.BuildingCount <= 0 && idx != -1)
-				mapComp.RemoveShipFromCache(idx);
+			//catch any empty ships - the one this part was just removed from, and any others (e.g.
+			//pre-existing zombies left by the prior prefix-skip implementation, or odd loads).
+			//Use Buildings.Count as the source of truth (BuildingCount field can drift).
+			PruneEmptyShips(mapComp);
+		}
+
+		public static void PruneEmptyShips(ShipMapComp mapComp)
+		{
+			if (mapComp == null) return;
+			List<int> empties = null;
+			foreach (var kv in mapComp.ShipsOnMap)
+			{
+				SpaceShipCache s = kv.Value;
+				if (s == null || s.Buildings == null || s.Buildings.Count == 0)
+				{
+					if (empties == null) empties = new List<int>();
+					empties.Add(kv.Key);
+				}
+			}
+			if (empties != null)
+			{
+				foreach (int idx in empties)
+					mapComp.RemoveShipFromCache(idx);
+			}
+		}
+	}
+
+	// Sweep empty SpaceShipCache entries on map FinalizeInit - catches zombie ships persisted from
+	// pre-fix saves (engine-on-substructure left an empty cache) or any other source of 0-part ships.
+	[HarmonyPatch(typeof(Map), nameof(Map.FinalizeInit))]
+	public static class Map_FinalizeInit_PruneEmptyShipCaches
+	{
+		public static void Postfix(Map __instance)
+		{
+			ShipMapComp mapComp = __instance.GetComponent<ShipMapComp>();
+			GravshipDetach.PruneEmptyShips(mapComp);
 		}
 	}
 
