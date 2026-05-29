@@ -79,8 +79,11 @@ namespace SaveOurShip2
 		{
 			if (map.roofGrid.RoofAt(c) == RoofDefOf.RoofRockThick) //overhead mountain - indestructible
 				return true;
-			//scripted no-landing zones (Odyssey quest sites use these; field exists in Core, list empty otherwise)
-			if (map.landingBlockers != null)
+			//Odyssey-specific landing gates: scripted no-landing zones (quest sites populate map.landingBlockers)
+			//and the per-def preventGravshipLandingOn flag. Both fields live in Core but only carry meaning when
+			//Odyssey is loaded - skip them otherwise so we don't waste cycles on always-empty/false checks.
+			bool odyssey = ModsConfig.OdysseyActive;
+			if (odyssey && map.landingBlockers != null)
 			{
 				foreach (CellRect rect in map.landingBlockers)
 				{
@@ -98,7 +101,7 @@ namespace SaveOurShip2
 					return true;
 				//things flagged as never-land-on (e.g. monoliths, special items) - respect even if destroyable,
 				//to match vanilla gravship-landing intent
-				if (t.def.preventGravshipLandingOn)
+				if (odyssey && t.def.preventGravshipLandingOn)
 					return true;
 			}
 			return false;
