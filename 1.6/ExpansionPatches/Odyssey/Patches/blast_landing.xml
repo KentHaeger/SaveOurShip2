@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+	<!-- With Odyssey loaded, reuse its cooled-lava texture for blast-landing glass.
+	     This file only loads when Odyssey is active (the whole folder is DLC-gated by LoadFolders.xml),
+	     so the texture is never referenced without its DLC and won't trigger a missing-texture warning. -->
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/TerrainDef[defName="ShipVolcanicGlass"]/texturePath</xpath>
+		<value>
+			<texturePath>Terrain/Surfaces/CooledLava</texturePath>
+		</value>
+	</Operation>
+</Patch>

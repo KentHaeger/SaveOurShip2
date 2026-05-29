@@ -8,9 +8,9 @@
 		<label>volcanic glass</label>
 		<!-- inherits Floors from FloorBase, but no costList/costStuffCount = no build option auto-generated -->
 		<description>A sheet of dark, glossy glass - ground fused solid by a plasma bombardment. Hard enough to bear the weight of a starship.</description>
+		<!-- base texture: Concrete (always available). Odyssey overrides to CooledLava via
+		     ExpansionPatches/Odyssey/Patches/blast_landing.xml so the texture only loads when its DLC does. -->
 		<texturePath>Terrain/Surfaces/Concrete</texturePath>
-		<!-- with Odyssey, reuse its cooled-lava texture; the later element wins when both load -->
-		<texturePath MayRequire="Ludeon.RimWorld.Odyssey">Terrain/Surfaces/CooledLava</texturePath>
 		<color>(0.16, 0.15, 0.20)</color>
 		<edgeType>FadeRough</edgeType>
 		<layerable>false</layerable>
