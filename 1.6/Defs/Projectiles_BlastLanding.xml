@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+	<!-- Glassing plasma round for blast landing. Styled on Bullet_Ground_Plasma - same plasma graphic
+	     and ShipPlasmaSmall blast, so it reads as recognizable plasma - but its custom thingClass fuses
+	     the ground it strikes into volcanic glass on impact. -->
+	<ThingDef ParentName="BaseGrenadeProjectile">
+		<defName>Proj_BlastLandingGlass</defName>
+		<label>plasma toroid</label>
+		<thingClass>SaveOurShip2.Projectile_BlastLandingGlass</thingClass>
+		<graphicData>
+			<texPath>Things/Projectile/ShipTurretPlasma</texPath>
+			<graphicClass>Graphic_Single</graphicClass>
+			<shaderType>TransparentPostLight</shaderType>
+			<drawSize>(4,4)</drawSize>
+		</graphicData>
+		<projectile>
+			<damageDef>ShipPlasmaSmall</damageDef>
+			<speed>60</speed>
+			<explosionRadius>3.3</explosionRadius>
+			<flyOverhead>true</flyOverhead>
+			<soundHitThickRoof>Artillery_HitThickRoof</soundHitThickRoof>
+		</projectile>
+		<altitudeLayer>MetaOverlays</altitudeLayer>
+		<seeThroughFog>true</seeThroughFog>
+	</ThingDef>
+
+	<!-- Cosmetic muzzle bolt for the ship-side cannon fire. A plain (non-flyOverhead) bullet so it
+	     visibly streaks off the ship; harmless (0 damage) - it just despawns at the map edge. -->
+	<ThingDef ParentName="BaseBullet">
+		<defName>Proj_BlastLandingMuzzle</defName>
+		<label>plasma bolt</label>
+		<graphicData>
+			<texPath>Things/Projectile/ShipTurretPlasma</texPath>
+			<graphicClass>Graphic_Single</graphicClass>
+			<shaderType>TransparentPostLight</shaderType>
+			<drawSize>(2,2)</drawSize>
+		</graphicData>
+		<projectile>
+			<damageDef>Bullet</damageDef>
+			<damageAmountBase>0</damageAmountBase>
+			<speed>52</speed>
+		</projectile>
+		<altitudeLayer>MetaOverlays</altitudeLayer>
+	</ThingDef>
+
+	<!-- Heat haze rising off freshly-fused volcanic glass. Long-lived so it lingers through the descent;
+	     the ones still glowing under the ship at touchdown are cleared by BlastLanding.ClearLandingZone. -->
+	<ThingDef ParentName="MoteBase">
+		<defName>Mote_BlastLandingHeat</defName>
+		<label>heat haze</label>
+		<thingClass>MoteThrown</thingClass>
+		<graphicData>
+			<texPath>Things/Mote/PlasmaBlast</texPath>
+			<graphicClass>Graphic_Mote</graphicClass>
+			<shaderType>MoteGlow</shaderType>
+			<color>(1, 0.55, 0.25, 1)</color>
+		</graphicData>
+		<altitudeLayer>MoteOverhead</altitudeLayer>
+		<mote>
+			<fadeInTime>1.5</fadeInTime>
+			<solidTime>14</solidTime>
+			<fadeOutTime>7</fadeOutTime>
+		</mote>
+	</ThingDef>
+
+</Defs>

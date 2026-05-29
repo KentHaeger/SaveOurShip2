@@ -28,6 +28,7 @@ namespace SaveOurShip2
 				{
 					targetMapLarger = true;
 				}
+				bool blastCapable = ship.canBlastLand;
 				AcceptanceReport result = true;
 				IEnumerable<SketchEntity> entities;
 				if (ship.extenderSketch != null)
@@ -42,11 +43,32 @@ namespace SaveOurShip2
 						result = false;
 						break;
 					}
-					bool isSpawnBlocked = current.IsSpawningBlocked(vec, map) && map.terrainGrid.TerrainAt(vec) != TerrainDefOf.Space;
-					if (GenGrid.InNoBuildEdgeArea(vec, map) || isSpawnBlocked || map.roofGrid.Roofed(vec) || (targetMapLarger && (vec.x > originMap.Size.x || vec.z > originMap.Size.z)))
+					if (GenGrid.InNoBuildEdgeArea(vec, map) || (targetMapLarger && (vec.x > originMap.Size.x || vec.z > originMap.Size.z)))
 					{
-						current.DrawGhost(vec, new Color(0.8f, 0.2f, 0.2f, 0.3f));
+						current.DrawGhost(vec, ShipMoveBlueprint.BlockedColor);
 						result = false;
+						continue;
+					}
+					if (blastCapable)
+					{
+						//a plasma-armed ship bombards its own landing site clear - obstructed cells are allowed,
+						//but overhead mountain and steam geysers can never be breached
+						if (BlastLanding.CellIsHardBlocked(vec, map))
+						{
+							current.DrawGhost(vec, ShipMoveBlueprint.BlockedColor);
+							result = false;
+							continue;
+						}
+						if (BlastLanding.CellNeedsBlast(vec, map))
+							current.DrawGhost(vec, ShipMoveBlueprint.BlastColor);
+						continue;
+					}
+					bool isSpawnBlocked = current.IsSpawningBlocked(vec, map) && map.terrainGrid.TerrainAt(vec) != TerrainDefOf.Space;
+					if (isSpawnBlocked || map.roofGrid.Roofed(vec))
+					{
+						current.DrawGhost(vec, ShipMoveBlueprint.BlockedColor);
+						//tell the player the obstruction could be cleared by a plasma-armed ship
+						result = new AcceptanceReport(TranslatorFormattedStringExtensions.Translate("SoS.BlastLandingUnavailable"));
 						continue;
 					}
 					foreach (Thing t in vec.GetThingList(map))
@@ -55,8 +77,8 @@ namespace SaveOurShip2
 						{
 							if (b.def.passability == Traversability.Impassable || b is Building_SteamGeyser)
 							{
-								current.DrawGhost(vec, new Color(0.8f, 0.2f, 0.2f, 0.3f));
-								result = false;
+								current.DrawGhost(vec, ShipMoveBlueprint.BlockedColor);
+								result = new AcceptanceReport(TranslatorFormattedStringExtensions.Translate("SoS.BlastLandingUnavailable"));
 								break;
 							}
 						}
