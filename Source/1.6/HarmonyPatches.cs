@@ -6130,6 +6130,20 @@ namespace SaveOurShip2
 		}
 	}
 
+	// SOS2 fuel-burning engines double as gravship thrusters that hold their own fuel: they carry a
+	// CompGravshipFacility with componentTypeDef Thruster + providesFuel. That covers the Thruster
+	// component and donates fuel (via their CompRefuelable), but does not register as a FuelStorage
+	// component. Drop the FuelStorage launch requirement when the gravship actually has fuel capacity.
+	[HarmonyPatch(typeof(Building_GravEngine), nameof(Building_GravEngine.MissingComponents), MethodType.Getter)]
+	public static class GravshipFuelStorageFromShipEngines
+	{
+		public static void Postfix(Building_GravEngine __instance, ref List<GravshipComponentTypeDef> __result)
+		{
+			if (__result.Count > 0 && __instance.MaxFuel > 0f && __result.Any(d => d.defName == "FuelStorage"))
+				__result = __result.Where(d => d.defName != "FuelStorage").ToList();
+		}
+	}
+
 	[HarmonyPatch(typeof(PlanetLayer), "ApproxDistanceInTiles", new Type[] { typeof(PlanetTile), typeof(PlanetTile) })]
 	public static class DistanceBetweendifferentLayersFix
 	{
