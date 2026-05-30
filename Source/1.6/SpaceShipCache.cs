@@ -564,6 +564,12 @@ namespace SaveOurShip2
 			Log.Message("Ship size: " + size);
 			return size;
 		}
+
+		public IntVec3 Center()
+		{
+			return MaximumCorner() - Size(out var minCorner)/2;
+		}
+
 		public IntVec3 CenterShipOnMap()
 		{
 			IntVec3 min;

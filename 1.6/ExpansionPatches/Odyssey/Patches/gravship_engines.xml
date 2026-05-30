@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+	<!-- Register SOS2 engines as linkable facilities on the grav engine. CompAffectedByFacilities uses
+	     a whitelist; without this the engines never link, so their CompGravshipFacility (thruster range,
+	     fuel, componentTypeDef) is never applied. This is what makes them count as gravship thrusters. -->
+	<Operation Class="PatchOperationAdd">
+		<xpath>Defs/ThingDef[defName="GravEngine"]/comps/li[@Class="CompProperties_AffectedByFacilities"]/linkableFacilities</xpath>
+		<value>
+			<li>Ship_Engine_Small</li>
+			<li>Ship_Engine</li>
+			<li>Ship_Engine_Large</li>
+		</value>
+	</Operation>
+
+	<!-- SOS2 nuclear engine: its raw power makes gravship controls fiddly - launch-quality penalty.
+	     Vanilla quality offsets for reference: SmallThruster +0.01, LargeThruster +0.03, PilotSubpersonaCore +0.15. -->
+	<Operation Class="PatchOperationAdd">
+		<xpath>Defs/RitualOutcomeEffectDef[defName="GravshipLaunch"]/comps</xpath>
+		<value>
+			<li Class="RitualOutcomeComp_GravshipFacilities">
+				<label>oversized engines</label>
+				<facilityQualityOffsets>
+					<li>
+						<key>Ship_Engine_Large</key>
+						<value>-0.15</value>
+					</li>
+				</facilityQualityOffsets>
+			</li>
+		</value>
+	</Operation>
+</Patch>
