@@ -1940,13 +1940,21 @@ namespace SaveOurShip2
 			{
 				if (t.GetRoom() == null || ExposedToOutside(t.GetRoom()))
 					continue;
-				ThingDef def = Rand.Element(ThingDef.Named("Plant_Rice"), ThingDefOf.Plant_Potato, ThingDef.Named("Plant_Strawberry"));
+				ThingDef plantDef = null;
+				if (t.def == ResourceBank.ThingDefOf.PlantPot_Bonsai || t.def == ResourceBank.ThingDefOf.PlantPot)
+				{
+					plantDef = t.def.building.defaultPlantToGrow;
+				}
+				else
+				{
+					plantDef = Rand.Element(ThingDef.Named("Plant_Rice"), ThingDefOf.Plant_Potato, ThingDef.Named("Plant_Strawberry"));
+				}
 				//randomPlants.Where(d => d.plant.sowTags.Contains("Hydroponic") && !d.plant.cavePlant && d.plant.sowResearchPrerequisites == null).RandomElement();
-				if (def != null)
+				if (plantDef != null)
 				{
 					foreach (IntVec3 pos in t.OccupiedRect())
 					{
-						Plant plant = ThingMaker.MakeThing(def) as Plant;
+						Plant plant = ThingMaker.MakeThing(plantDef) as Plant;
 						plant.Growth = Rand.Range(0.5f, 1f);
 						plant.Position = pos;
 						plant.SpawnSetup(map, false);

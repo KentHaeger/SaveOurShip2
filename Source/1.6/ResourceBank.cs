@@ -153,6 +153,8 @@ namespace SaveOurShip2
 			public static ThingDef Turret_Sniper;
 			public static ThingDef MechSerumResurrector;
 			public static ThingDef Mote_Bubble;
+			public static ThingDef PlantPot_Bonsai;
+			public static ThingDef PlantPot;
 			[MayRequireOdyssey]
 			public static ThingDef GravcorePowerCell;
 			[MayRequireOdyssey]
