@@ -99,7 +99,8 @@ namespace SaveOurShip2
 				}
 			}
 		}
-
+		// Special function for clearing ship landing ares, some tiles near corners will be excluiede, so that
+		// cleared area looks more natural.
 		private bool IsCloseToCornerRandomized(IntVec3 cell, CellRect rect)
 		{
 			const int maxOrthogonalDistance = 6;
@@ -115,6 +116,10 @@ namespace SaveOurShip2
 
 		private void SpawnDefendingForces(Map map, Faction faction, int threatPoints, CellRect shipRect)
 		{
+			if (threatPoints == 0)
+			{
+				return;
+			}
 			PawnGroupMakerParms parms = new PawnGroupMakerParms();
 			parms.faction = faction != null ? faction : Faction.OfMechanoids;
 			if (parms.faction == null)
@@ -212,6 +217,7 @@ namespace SaveOurShip2
 						if (!int.TryParse(tagValue, out threatPoints))
 						{
 							Log.Error("SoS 2: error parsing threat tag for stashed ship:" + threatTag);
+							threatPoints = 0;
 						}
 					}
 				}
@@ -251,7 +257,7 @@ namespace SaveOurShip2
 			
 			if (needFixPassabilityAndTerrain)
 			{
-				TerrainDef fillerTerrain = ResourceBank.TerrainDefOf.Granite_Rough;
+				TerrainDef fillerTerrain = null;
 				foreach (IntVec3 cell in cleanRect.Cells)
 				{
 					TerrainDef terrain = map.terrainGrid.TerrainAt(cell);
@@ -262,6 +268,17 @@ namespace SaveOurShip2
 						break;
 					}
 				}
+				if (fillerTerrain == null)
+				{
+					ThingDef rockType = Find.World.NaturalRockTypesIn(map.Tile).RandomElementWithFallback();
+					fillerTerrain = ResourceBank.GetTerrainFromRockType(rockType);
+				}
+				// Final fallback for terrain
+				if (fillerTerrain == null)
+				{
+					fillerTerrain = ResourceBank.TerrainDefOf.Granite_Rough;
+				}
+
 				foreach (IntVec3 cell in cleanRect.Cells)
 				{
 					if (IsCloseToCornerRandomized(cell, cleanRect))

@@ -153,6 +153,9 @@ namespace SaveOurShip2
 			public static ThingDef Turret_Sniper;
 			public static ThingDef MechSerumResurrector;
 			public static ThingDef Mote_Bubble;
+
+			public static ThingDef Limestone;
+			public static ThingDef Marble;
 			[MayRequireOdyssey]
 			public static ThingDef GravcorePowerCell;
 			[MayRequireOdyssey]
@@ -385,5 +388,30 @@ namespace SaveOurShip2
 				def == ThingDefOf.Ship_Beam_Wrecked;
 		}
 
+		public static TerrainDef GetTerrainFromRockType(ThingDef rockType)
+		{
+			if (rockType == RimWorld.ThingDefOf.Granite)
+			{
+				return TerrainDefOf.Granite_Rough;
+			}
+			else if (rockType == RimWorld.ThingDefOf.Sandstone)
+			{
+				return TerrainDefOf.Sandstone_Rough;
+			}
+			else if (rockType == RimWorld.ThingDefOf.Slate)
+			{
+				return TerrainDefOf.Slate_Rough;
+			}
+			else if (rockType == ThingDefOf.Limestone)
+			{
+				return DefDatabase<TerrainDef>.GetNamedSilentFail("Limestone_Rough");
+			}
+			else if (rockType == ThingDefOf.Marble)
+			{
+				return TerrainDefOf.Marble_Rough;
+			}
+			return null;
+
+		}
 	}
 }
