@@ -360,6 +360,12 @@ namespace SaveOurShip2
 			public static ShipDef MechPsychicAmp;
 		}
 
+		public static class ShipDefNames
+		{
+			// Special def for random srating ship, needs to be excluded from being directly used
+			public const string Random = "0";
+		}
+
 		[DefOf]
 		public static class QuestScriptDefOf
 		{

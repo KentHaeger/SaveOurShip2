@@ -288,5 +288,14 @@ namespace SaveOurShip2
 				return null;
 			}
 		}
+		// Non-strictly-correct check for blueprint based on blueprint def names starting with BP
+		public bool IsBlueprintByName()
+		{
+			if (defName.Length < 2)
+			{
+				return false;
+			}
+			return defName.Substring(0, 2) == "BP";
+		}
 	}
 }

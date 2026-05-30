@@ -716,7 +716,7 @@ Successful dodge means miss by a lot, projectile doesn't even enter target map.<
 	<SoS.StashedShip.HighSceurity>Heavily guarded</SoS.StashedShip.HighSceurity>
 	<!-- Ship category and class names -->
 	<SoS.StashedShip.RecommendedStarterShips>Recommended starter ships</SoS.StashedShip.RecommendedStarterShips>
-	<SoS.StashedShip.StandardStarterShips>Standard starter ships</SoS.StashedShip.StandardStarterShips>
+	<SoS.StashedShip.StarterShips>Starter ships</SoS.StashedShip.StarterShips>
 	<SoS.StashedShip.Traders>Trade ships</SoS.StashedShip.Traders>
 	<SoS.StashedShip.Fighters>Fighters</SoS.StashedShip.Fighters>
 	<SoS.StashedShip.Bombers>Bombers</SoS.StashedShip.Bombers>
@@ -728,7 +728,8 @@ Successful dodge means miss by a lot, projectile doesn't even enter target map.<
 	<SoS.StashedShip.Battlecruisers>Battlecruisers</SoS.StashedShip.Battlecruisers>
 	<SoS.StashedShip.Dreadnoughts>Dreadnoughts</SoS.StashedShip.Dreadnoughts>
 	<SoS.StashedShip.Carriers>Carriers</SoS.StashedShip.Carriers>
-	
+	<SoS.StashedShip.DevAllShips>Dev: All ships (use with caution)</SoS.StashedShip.DevAllShips>
+	<SoS.StashedShip.DevAllShipsFlipped>Dev: All ships flipped (use with caution)</SoS.StashedShip.DevAllShipsFlipped>
 	
 	<SoS.StashedShip.Destroyers>Destroyers</SoS.StashedShip.Destroyers>
 	

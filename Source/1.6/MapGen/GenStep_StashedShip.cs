@@ -16,6 +16,7 @@ namespace SaveOurShip2
 	{
 		public const string ShipDefTagName = "shipDefName";
 		public const string ThreatTagName = "threatPoints";
+		public const string FlipTagName = "flipShip";
 		private const string fallbackShipDefName = "FastScout";
 		public override int SeedPart
 		{
