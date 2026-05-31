@@ -6359,4 +6359,18 @@ namespace SaveOurShip2
 			}
 		}
 	}
+
+	// Fix ship move blueprint shown red in Odyssey space whne landing there
+	[HarmonyPatch(typeof(SketchThing), "IsSpawningBlocked")]
+	public static class FixSketchInOdysseySpace
+	{
+		public static void Postfix(SketchThing __instance, IntVec3 at, Map map, ref bool __result)
+		{
+			if (__instance.def == ResourceBank.ThingDefOf.Ship_FakeBeam && at.InBounds(map) && map.terrainGrid.TerrainAt(at) == TerrainDefOf.Space)
+			{
+				__result = false;
+			}
+		}
+	}
+	
 }
