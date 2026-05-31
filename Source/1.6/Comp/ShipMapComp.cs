@@ -1037,7 +1037,11 @@ namespace SaveOurShip2
 				shipDef = derelictShip.derelictShip;
 				navyDef = derelictShip.spaceNavyDef;
 				faction = derelictShip.shipFaction;
-				if (derelictShip.wreckLevel == 2 && !derelictShip.derelictShip.neverRandom && (derelictShip.derelictShip.neverAttacks && Rand.Chance(0.05f) || Rand.Chance(0.2f))) //fake wreck chance
+				if (derelictShip.wreckLevel == 2 &&
+					!derelictShip.derelictShip.neverRandom &&
+					!derelictShip.derelictShip.spaceSite &&
+					derelictShip.derelictShip.combatPoints >= ShipCatalog.FighterBomberCR &&
+					(derelictShip.derelictShip.neverAttacks && Rand.Chance(0.05f) || Rand.Chance(0.2f))) //fake wreck chance
 				{
 					fakeWreck = true;
 					if (Rand.Chance(0.1f))
