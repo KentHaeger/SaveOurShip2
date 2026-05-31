@@ -8,20 +8,6 @@ using UnityEngine;
 
 namespace SaveOurShip2
 {
-	struct ShipClass
-	{
-		public string NameKey;
-		public int MinCRInclusive;
-		public int MaxCRExclusive;
-		public Func<ShipDef, bool> Predicate;
-		public ShipClass(string name, int minCRInclusive, int maxCRExclusive, Func<ShipDef, bool> predicate = null)
-		{
-			this.NameKey = name;
-			this.MinCRInclusive = minCRInclusive;
-			this.MaxCRExclusive = maxCRExclusive;
-			this.Predicate = predicate;
-		}
-	}
 	// Quite complicated getter for stashed ship quest dialog option
 	[StaticConstructorOnStartup]
 	public static class DialogOptionGetter_StashedShip
@@ -31,32 +17,8 @@ namespace SaveOurShip2
 		private static Faction faction;
 		private static readonly string dummyOptionName = "SoS.StashedShip.RequestOptionDummy".Translate();
 
-		private static List<ShipClass> shipClasses = null;
-
-		private const int fighterBomberCR = 40;
-		private const int corvetteCR = 131;
-		private const int frigateCR = 398;
-		private const int destroyerCR = 790;
-		private const int cruiserCR = 1100;
-		private const int battleshipCR = 1900;
-		private const int battlecruiserCR = 2400;
-		private const int dreadnoughtCR = 4000;
 		static DialogOptionGetter_StashedShip()
 		{
-			
-
-			shipClasses = new List<ShipClass>()
-			{
-				new ShipClass("SoS.StashedShip.Fighters", fighterBomberCR, corvetteCR, x => !x.IsBomber()),
-				new ShipClass("SoS.StashedShip.Bombers", fighterBomberCR, corvetteCR, x => x.IsBomber()),
-				new ShipClass("SoS.StashedShip.Corvettes", corvetteCR, frigateCR),
-				new ShipClass("SoS.StashedShip.Frigates", frigateCR, destroyerCR),
-				new ShipClass("SoS.StashedShip.Destroyers", destroyerCR, cruiserCR),
-				new ShipClass("SoS.StashedShip.Cruisers", cruiserCR, battlecruiserCR),
-				new ShipClass("SoS.StashedShip.Battleships", battlecruiserCR, battleshipCR),
-				new ShipClass("SoS.StashedShip.Battlecruisers", battleshipCR, dreadnoughtCR),
-				new ShipClass("SoS.StashedShip.Dreadnoughts", dreadnoughtCR, int.MaxValue),
-			};
 		}
 		public static void Init(Pawn negotiator, Faction faction)
 		{
@@ -192,10 +154,10 @@ namespace SaveOurShip2
 			AddGroup(parentNode, "SoS.StashedShip.Traders", tradeShips, flipShip: true);
 
 			List<ShipDef> lowCRShips = DefDatabase<ShipDef>.AllDefs.Where(
-					x => x.combatPoints < fighterBomberCR && IsPickableNormalShip(x)).ToList();
+					x => x.combatPoints < ShipCatalog.FighterBomberCR && IsPickableNormalShip(x)).ToList();
 				AddGroup(parentNode, "SoS.StashedShip.LowCR", lowCRShips, true);
 
-			foreach (ShipClass shipClass in shipClasses)
+			foreach (ShipClass shipClass in ShipCatalog.ShipClasses)
 			{
 				List<ShipDef> shipList = DefDatabase<ShipDef>.AllDefs.Where(
 					x => shipClass.MinCRInclusive  <= x.combatPoints && x.combatPoints < shipClass.MaxCRExclusive && IsPickableNormalShip(x) &&
