@@ -290,7 +290,7 @@
     <researchViewX>5</researchViewX>
     <researchViewY>1</researchViewY>
 	<discoveredLetterTitle>Archotech pillar detected</discoveredLetterTitle>
-    <discoveredLetterText>You have managed to discern the location of an archotech pillar! This specimen resides aboard the KSS Horizon, an ancient terraforming station.\n\nScans indicate the station's dome section has maintained a functioning ecosystem for thousands of years. However, it is currently occupied by a clan of space pirates - and, given the number of heavy armaments they have mounted on the station's hull, they intend to discourage visitors.\n\nYou will need to engage the Horizon in ship combat from your ship's pilot console or AI/Drone core.</discoveredLetterText>
+    <discoveredLetterText>You have managed to discern the location of an archotech pillar! This specimen resides aboard the KSS Horizon, an ancient terraforming station.\n\nScans indicate the station's dome section has maintained a functioning ecosystem for thousands of years. However, it is currently occupied by a mechanoids - and, given the number of heavy armaments mounted on the station's hull, attacking them won't go easy.\n\nYou will need to engage the Horizon in ship combat from your ship's pilot console or AI/Drone core.</discoveredLetterText>
   </ResearchProjectDef>
   
   <ResearchProjectDef ParentName="ArchotechResearchProjectBase">
