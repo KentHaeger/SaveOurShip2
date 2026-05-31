@@ -41,6 +41,8 @@ namespace SaveOurShip2
 					}
 					else if (!blockingShip.Buildings.NullOrEmpty())
 					{
+						// This is mainly for identifying where a small 10-tiles wrek or so on a large map is,
+						// so picking just any part is ok.
 						culprits.Add(blockingShip.Buildings.First());
 					}
 				}

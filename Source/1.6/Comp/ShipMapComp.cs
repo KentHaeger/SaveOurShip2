@@ -2855,8 +2855,8 @@ namespace SaveOurShip2
 			{
 				// AI lost. Reset all their shuttles faction, so that thaey don't prevent buildings capture,
 				// becuse of being enemy pawns, which is totally not evident for the player.
-				IEnumerable<Pawn> mapPawns = loser.mapPawns.AllPawnsSpawned.ToList().ListFullCopy();
-				foreach (Pawn p in mapPawns)
+				IEnumerable<Pawn> loserMapPawns = loser.mapPawns.AllPawnsSpawned.ToList().ListFullCopy();
+				foreach (Pawn p in loserMapPawns)
 				{
 					if (!(p is VehiclePawn) && p.CurJobDef == JobDefOf_Vehicles.Board)
 					{
@@ -2864,7 +2864,7 @@ namespace SaveOurShip2
 						p.jobs.StopAll();
 					}
 				}
-				IEnumerable<Pawn> vehiclesToDisembark = mapPawns.Where(pawn => pawn is VehiclePawn veh);
+				IEnumerable<Pawn> vehiclesToDisembark = loserMapPawns.Where(pawn => pawn is VehiclePawn veh);
 				foreach (VehiclePawn veh in vehiclesToDisembark)
 				{
 					if (veh.Faction.HostileTo(Faction.OfPlayer))
@@ -2874,6 +2874,28 @@ namespace SaveOurShip2
 						veh.SetFaction(null);
 					}
 				}
+				Map playerMap = ShipInteriorMod2.FindPlayerShipMap();
+				if (playerMap != null)
+				{
+					int claimedVehicles = 0;
+					IEnumerable<Pawn> playerMapVehicles = playerMap.mapPawns.AllPawnsSpawned.Where(pawn => pawn is VehiclePawn).ToList().ListFullCopy();
+					foreach (VehiclePawn vehicle in playerMapVehicles)
+					{
+						if(SoS2VehicleUtility.IsSOS2Shuttle(vehicle))
+						{
+							if (vehicle.Faction == null || vehicle.Faction.HostileTo(Faction.OfPlayer))
+							{
+								vehicle.SetFaction(Faction.OfPlayer);
+								claimedVehicles++;
+							}
+						}
+					}
+					if (claimedVehicles > 0)
+					{
+						Messages.Message("SoS.AutoClaimedShuttles".Translate(claimedVehicles), MessageTypeDefOf.NeutralEvent);
+					}
+				}
+				
 			}
 			//td temp
 			tgtMapComp.ShipCombatTargetMap = null;
