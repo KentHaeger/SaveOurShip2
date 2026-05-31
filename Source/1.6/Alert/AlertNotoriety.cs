@@ -9,8 +9,6 @@ using RimWorld.Planet;
 
 namespace SaveOurShip2
 {
-	// Becase base game creates one instannce of all lert leaf subclasses, 
-	// got to make 2 different classes for player dodge chance and enemy dodge chance
 	public class AlertNotoriety : Alert
 	{
         public AlertNotoriety()
