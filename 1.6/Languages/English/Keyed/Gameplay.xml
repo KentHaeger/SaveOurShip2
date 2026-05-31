@@ -558,6 +558,7 @@
 
 	<!-- Starship bow quest -->
 	<SoS.AIPersuade>Persuade to live</SoS.AIPersuade>
+	<SoS.AIPersuadeConfirmation>Persuading insane AI is dangerous and can cause permanent health issues if failed. Continue?</SoS.AIPersuadeConfirmation>
 	<SoS.BlackBoxHack>Hack</SoS.BlackBoxHack>
 	<SoS.ReactorDisableSuccess>Reactors successfully disabled!</SoS.ReactorDisableSuccess>
 	<SoS.DoorOpenSuccess>Doors successfully opened!</SoS.DoorOpenSuccess>
