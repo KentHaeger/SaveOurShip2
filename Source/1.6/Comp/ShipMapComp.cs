@@ -2602,8 +2602,9 @@ namespace SaveOurShip2
 		}
 
         //find worst t/w ship, getting final value, same as T/W shown in UI. 
-        public float SlowestThrustRatio()
+        public float SlowestThrustRatio(out SpaceShipCache blockingShip)
 		{
+			blockingShip = null;
 			if (ShipsOnMap.NullOrEmpty())
 				return 0f;
 
@@ -2613,10 +2614,16 @@ namespace SaveOurShip2
 				if (ship.BuildingCount < 5 && ship.ThrustRatio == 0)
 					continue;
 				if (!ship.CanMove())
+				{
+					blockingShip = ship;
 					return 0;
+				}
 				float currenThrustRatio = ship.ThrustRatio;
 				if (currenThrustRatio == 0)
+				{
+					blockingShip = ship;
 					return 0;
+				}
 				if (currenThrustRatio < minThrustRatio)
 					minThrustRatio = currenThrustRatio;
 			}
