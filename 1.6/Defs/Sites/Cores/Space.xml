@@ -143,6 +143,7 @@
     <siteTexture>World/WorldObjects/Sites/GenericSite</siteTexture>
     <expandingIconTexture>World/WorldObjects/Expanding/Sites/ItemStash</expandingIconTexture>
     <handlesWorldObjectTimeoutInspectString>true</handlesWorldObjectTimeoutInspectString>
+	<minMapSize>(250, 0, 250)</minMapSize>
     <tags>
       <li>SoSStashedShip</li>
       <li>QuestActiveThreat</li>
