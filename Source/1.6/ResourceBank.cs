@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Verse;
 using RimWorld;
 using UnityEngine;
@@ -365,6 +366,15 @@ namespace SaveOurShip2
 			// Special def for random srating ship, needs to be excluded from being directly used
 			public const string Random = "0";
 		}
+
+		public static class ShipHardwareNames
+		{
+			public static readonly List<string> TorpedoTurrets = new List<string>
+			{
+				"ShipTorpedoOne", "ShipTorpedoTwo", "ShipTorpedoSix",
+			};
+		}
+
 
 		[DefOf]
 		public static class QuestScriptDefOf

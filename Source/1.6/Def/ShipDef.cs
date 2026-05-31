@@ -297,5 +297,9 @@ namespace SaveOurShip2
 			}
 			return defName.Substring(0, 2) == "BP";
 		}
+		public bool IsBomber()
+		{
+			return parts.Any(p => ResourceBank.ShipHardwareNames.TorpedoTurrets.Contains(p.shapeOrDef));
+		}
 	}
 }

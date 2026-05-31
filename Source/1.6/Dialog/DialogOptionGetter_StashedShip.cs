@@ -13,11 +13,13 @@ namespace SaveOurShip2
 		public string NameKey;
 		public int MinCRInclusive;
 		public int MaxCRExclusive;
-		public ShipClass(string name, int minCRInclusive, int maxCRExclusive)
+		public Func<ShipDef, bool> Predicate;
+		public ShipClass(string name, int minCRInclusive, int maxCRExclusive, Func<ShipDef, bool> predicate = null)
 		{
 			this.NameKey = name;
 			this.MinCRInclusive = minCRInclusive;
 			this.MaxCRExclusive = maxCRExclusive;
+			this.Predicate = predicate;
 		}
 	}
 	// Quite complicated getter for stashed ship quest dialog option
@@ -31,22 +33,22 @@ namespace SaveOurShip2
 
 		private static List<ShipClass> shipClasses = null;
 
+		private const int fighterBomberCR = 40;
+		private const int corvetteCR = 131;
+		private const int frigateCR = 398;
+		private const int destroyerCR = 790;
+		private const int cruiserCR = 1100;
+		private const int battleshipCR = 1900;
+		private const int battlecruiserCR = 2400;
+		private const int dreadnoughtCR = 4000;
 		static DialogOptionGetter_StashedShip()
 		{
-			const int fighterCR = 50;
-			const int bomberCR = 100;
-			const int corvetteCR = 131;
-			const int frigateCR = 398;
-			const int destroyerCR = 790;
-			const int cruiserCR = 1100;
-			const int battleshipCR = 1900;
-			const int battlecruiserCR = 2400;
-			const int dreadnoughtCR = 4000;
+			
 
 			shipClasses = new List<ShipClass>()
 			{
-				new ShipClass("SoS.StashedShip.Fighters", fighterCR, bomberCR),
-				new ShipClass("SoS.StashedShip.Bombers", bomberCR, corvetteCR),
+				new ShipClass("SoS.StashedShip.Fighters", fighterBomberCR, corvetteCR, x => !x.IsBomber()),
+				new ShipClass("SoS.StashedShip.Bombers", fighterBomberCR, corvetteCR, x => x.IsBomber()),
 				new ShipClass("SoS.StashedShip.Corvettes", corvetteCR, frigateCR),
 				new ShipClass("SoS.StashedShip.Frigates", frigateCR, destroyerCR),
 				new ShipClass("SoS.StashedShip.Destroyers", destroyerCR, cruiserCR),
@@ -189,10 +191,15 @@ namespace SaveOurShip2
 					x => IsPickableTradeShip(x)).ToList();
 			AddGroup(parentNode, "SoS.StashedShip.Traders", tradeShips, flipShip: true);
 
+			List<ShipDef> lowCRShips = DefDatabase<ShipDef>.AllDefs.Where(
+					x => x.combatPoints < fighterBomberCR && IsPickableNormalShip(x)).ToList();
+				AddGroup(parentNode, "SoS.StashedShip.LowCR", lowCRShips, true);
+
 			foreach (ShipClass shipClass in shipClasses)
 			{
 				List<ShipDef> shipList = DefDatabase<ShipDef>.AllDefs.Where(
-					x => shipClass.MinCRInclusive  <= x.combatPoints && x.combatPoints < shipClass.MaxCRExclusive && IsPickableNormalShip(x)).ToList();
+					x => shipClass.MinCRInclusive  <= x.combatPoints && x.combatPoints < shipClass.MaxCRExclusive && IsPickableNormalShip(x) &&
+					(shipClass.Predicate != null ? shipClass.Predicate(x) : true)).ToList();
 				AddGroup(parentNode, shipClass.NameKey, shipList, true);
 			}
 
