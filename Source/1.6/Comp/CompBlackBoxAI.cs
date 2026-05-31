@@ -68,7 +68,13 @@ namespace SaveOurShip2
 			foreach (FloatMenuOption op in base.CompFloatMenuOptions(selPawn))
 				options.Add(op);
 			if(!AlreadyFailedPersuasion)
-				options.Add(new FloatMenuOption(TranslatorFormattedStringExtensions.Translate("SoS.AIPersuade"), delegate { Job persuadeAI = new Job(DefDatabase<JobDef>.GetNamed("PersuadeAI"), this.parent); selPawn.jobs.TryTakeOrderedJob(persuadeAI); }));
+				options.Add(new FloatMenuOption(TranslatorFormattedStringExtensions.Translate("SoS.AIPersuade"), delegate {
+					Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation("SoS.AIPersuadeConfirmation".Translate(), delegate
+					{
+						Job persuadeAI = new Job(DefDatabase<JobDef>.GetNamed("PersuadeAI"), this.parent);
+						selPawn.jobs.TryTakeOrderedJob(persuadeAI);
+					}));
+				}));
 			return options;
 		}
 
