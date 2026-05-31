@@ -69,7 +69,7 @@ namespace SaveOurShip2
 			}
 		}
 
-		private void CleanBuildings(Map map, IntVec3 cell)
+		private void CleanBuildingsAndUnfog(Map map, IntVec3 cell)
 		{
 			foreach (Thing thing in cell.GetThingList(map).ToList())
 			{
@@ -78,6 +78,7 @@ namespace SaveOurShip2
 					thing.Destroy();
 				}
 			}
+			map.fogGrid.FloodUnfogAdjacent(cell);
 		}
 
 		private void CleanFilth(Map map, IntVec3 cell)
@@ -90,7 +91,7 @@ namespace SaveOurShip2
 				}
 			}
 		}
-		private void CleanThingsAt(Map map, IntVec3 cell)
+		private void CleanThingsAtAndUfog(Map map, IntVec3 cell)
 		{
 			foreach (Thing thing in cell.GetThingList(map).ToList())
 			{
@@ -99,6 +100,7 @@ namespace SaveOurShip2
 					thing.Destroy();
 				}
 			}
+			map.fogGrid.FloodUnfogAdjacent(cell);
 		}
 		// Special function for clearing ship landing ares, some tiles near corners will be excluiede, so that
 		// cleared area looks more natural.
@@ -252,7 +254,7 @@ namespace SaveOurShip2
 				}
 				CleanGeysers(map, cell);
 				CleanChunks(map, cell);
-				CleanBuildings(map, cell);
+				CleanBuildingsAndUnfog(map, cell);
 				CleanFilth(map, cell);
 			}
 			
@@ -288,7 +290,7 @@ namespace SaveOurShip2
 					}
 					if (!cell.Walkable(map)) 
 					{
-						CleanThingsAt(map, cell);
+						CleanThingsAtAndUfog(map, cell);
 						map.fogGrid.FloodUnfogAdjacent(cell);
 					}
 					if(map.terrainGrid.TerrainAt(cell).passability != Traversability.Standable)
@@ -310,7 +312,7 @@ namespace SaveOurShip2
 					{
 						if (!cell.Walkable(map))
 						{
-							CleanThingsAt(map, cell);
+							CleanThingsAtAndUfog(map, cell);
 							map.fogGrid.FloodUnfogAdjacent(cell);
 						}
 					}
