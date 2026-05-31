@@ -149,7 +149,7 @@ namespace SaveOurShip2
 		{
 			base.GetSettings<ModSettings_SoS>();
 		}
-		public const string SOS2version = "GithubV2.8.120";
+		public const string SOS2version = "GithubV2.8.122";
 		public const int SOS2ReqCurrentMinor = 5;
 		// 1.5.4063 public build (4062 constant) was not enough as there is no AnomalyUtility.TryDuplicatePawn_NewTemp method to harmony patch it.
 		// Historical builds are not available, so for sure can be increased just to next build, 4066
@@ -2011,13 +2011,21 @@ namespace SaveOurShip2
 			{
 				if (t.GetRoom() == null || ExposedToOutside(t.GetRoom()))
 					continue;
-				ThingDef def = Rand.Element(ThingDef.Named("Plant_Rice"), ThingDefOf.Plant_Potato, ThingDef.Named("Plant_Strawberry"));
+				ThingDef plantDef = null;
+				if (t.def == ResourceBank.ThingDefOf.PlantPot_Bonsai || t.def == ResourceBank.ThingDefOf.PlantPot)
+				{
+					plantDef = t.def.building.defaultPlantToGrow;
+				}
+				else
+				{
+					plantDef = Rand.Element(ThingDef.Named("Plant_Rice"), ThingDefOf.Plant_Potato, ThingDef.Named("Plant_Strawberry"));
+				}
 				//randomPlants.Where(d => d.plant.sowTags.Contains("Hydroponic") && !d.plant.cavePlant && d.plant.sowResearchPrerequisites == null).RandomElement();
-				if (def != null)
+				if (plantDef != null)
 				{
 					foreach (IntVec3 pos in t.OccupiedRect())
 					{
-						Plant plant = ThingMaker.MakeThing(def) as Plant;
+						Plant plant = ThingMaker.MakeThing(plantDef) as Plant;
 						plant.Growth = Rand.Range(0.5f, 1f);
 						plant.Position = pos;
 						plant.SpawnSetup(map, false);

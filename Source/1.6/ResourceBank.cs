@@ -157,6 +157,10 @@ namespace SaveOurShip2
 
 			public static ThingDef Limestone;
 			public static ThingDef Marble;
+
+			public static ThingDef PlantPot_Bonsai;
+			public static ThingDef PlantPot;
+
 			[MayRequireOdyssey]
 			public static ThingDef GravcorePowerCell;
 			[MayRequireOdyssey]

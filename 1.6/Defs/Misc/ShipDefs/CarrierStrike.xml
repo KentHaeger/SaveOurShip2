@@ -10,6 +10,7 @@
 		<label>Strike Carrier</label>
 		<combatPoints>1104</combatPoints>
 		<rarityLevel>2</rarityLevel>
+		<carrier>True</carrier>
 		<core>
 			<shapeOrDef>ShipPilotSeatMini</shapeOrDef>
 			<x>68</x>

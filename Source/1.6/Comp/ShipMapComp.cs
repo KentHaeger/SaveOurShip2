@@ -3207,36 +3207,38 @@ namespace SaveOurShip2
 				ShipMapComp mapComp = targetMap.GetComponent<ShipMapComp>();
 				SpaceShipCache mainShip = mapComp.ShipsOnMap.Values.OrderByDescending(x => x.Threat).First();
 				// Center is for rare case when player was bridgekilled while emeny boarding party was on the way.
-				IntVec3 location = mainShip?.Core?.Position ?? targetMap.Center;
+				IntVec3 location = mainShip?.Center() ?? targetMap.Center;
+				float locationX = location.x;
+				float locationZ = location.z;
 				Rot4 moveRot = mainShip.Engines.Any() ? mainShip.Engines.First().parent.Rotation : mainShip.Core.Rotation;
-				IntVec3 moveDirection = moveRot.AsVector2.ToVector3().ToIntVec3();
+				float enginesAngle = mainShip.Engines.Any() ?
+					mainShip.Engines.First().parent.Rotation.AsAngle :
+					Rot4.East.AsAngle;
+				// Divegring 180 degre from ship rotation is likely to find suicidal landing spot ins ship engines exhaust, so use limited angle
+				int angleDelta = 120;
+				float searchAngleDeg = enginesAngle + Rand.RangeInclusive(-angleDelta, angleDelta);
+				float searchAngleRad = (searchAngleDeg - 90f) * Mathf.Deg2Rad;
 
-				// To spread out boarding partym, randomize search start point.
-				// 3-way random: no shift and perpendicular shift in either of possible directions.
-				IntVec3 randomShift = moveDirection.RotatedBy(RotationDirection.Clockwise) * 10;
-				float random = Rand.Value;
-				if (random < 0.33)
+				// Decent delta to move along tiles grid in arbitrary direction and not skip tiles too often;
+				float delta = 0.1f;
+				float deltaX = delta * Mathf.Cos(searchAngleRad);
+				float deltaZ = delta * Mathf.Sin(searchAngleRad);
+				// Failsafe
+				int maxIterations = (int)(Mathf.Sqrt(targetMap.Size.x * targetMap.Size.x + targetMap.Size.z * targetMap.Size.z) / delta);
+				int iterationCount = 0;
+				while (location.InBounds(map) && iterationCount <= maxIterations)
 				{
-					randomShift = IntVec3.Zero;
-				}
-				else if (random < 0.67)
-				{
-					randomShift *= -1;
-				}
-				location += randomShift;
-
-				// Engenes rot is opposite to engine exhaust, so moving in that direction likely helps boardrs to avoid engine-death on arrival.
-				while (location.InBounds(map))
-				{
-					// Move in intended direction at 2 speed and drift randomly by 1 tile to produce somewhat random result
-					location += moveDirection * 2;
-					location += Rot4.Random.AsVector2.ToVector3().ToIntVec3();
+					iterationCount++;
+					locationX += deltaX;
+					locationZ += deltaZ;
+					location.x = Mathf.RoundToInt(locationX);
+					location.z = Mathf.RoundToInt(locationZ);
 					if (location.InBounds(targetMap) && GenGridVehicles.Walkable(location, mission.shuttle.VehicleDef, targetMap) && mapComp.ShipIndexOnVec(location) == -1 &&
 						!AnyObstacleOrSkyfallersAtVehicleLocation(targetMap, location, mission.shuttle.VehicleDef))
 					{
 						if (mission.shuttle.VehicleDef.size.x > 1)
 						{
-							Log.Warning("- Found shuttle location:" + location);
+							Log.Warning("Found shuttle landing location:" + location);
 						}
 						return location;
 					}
