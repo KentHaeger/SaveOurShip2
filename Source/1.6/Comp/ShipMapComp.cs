@@ -990,6 +990,24 @@ namespace SaveOurShip2
 				DetermineInitialRange(passingShip != null);
 			Log.Message("SOS2: ".Colorize(Color.cyan) + map + " Enemy range at start: " + Range);
 
+			float MapShipBuildingsWealth(ShipMapComp mapComp)
+			{
+				float result = 0;
+				foreach(SpaceShipCache ship in mapComp.ShipsOnMap.Values)
+				{
+					foreach(Building b in ship.Buildings)
+					{
+						result += b.MarketValue;
+					}
+				}
+				return result;
+			}
+			if (Prefs.DevMode)
+			{
+				Log.Message($"Player buildings wealth at battle strt: {MapShipBuildingsWealth(this)}");
+				Log.Message($"Enemy buildings wealth at battle strt: {MapShipBuildingsWealth(TargetMapComp)}");
+			}
+
 			//callSlowTick = true;
 		}
 
@@ -2859,8 +2877,8 @@ namespace SaveOurShip2
 			{
 				// AI lost. Reset all their shuttles faction, so that thaey don't prevent buildings capture,
 				// becuse of being enemy pawns, which is totally not evident for the player.
-				IEnumerable<Pawn> mapPawns = loser.mapPawns.AllPawnsSpawned.ToList().ListFullCopy();
-				foreach (Pawn p in mapPawns)
+				IEnumerable<Pawn> loserMapPawns = loser.mapPawns.AllPawnsSpawned.ToList().ListFullCopy();
+				foreach (Pawn p in loserMapPawns)
 				{
 					if (!(p is VehiclePawn) && p.CurJobDef == JobDefOf_Vehicles.Board)
 					{
@@ -2868,7 +2886,7 @@ namespace SaveOurShip2
 						p.jobs.StopAll();
 					}
 				}
-				IEnumerable<Pawn> vehiclesToDisembark = mapPawns.Where(pawn => pawn is VehiclePawn veh);
+				IEnumerable<Pawn> vehiclesToDisembark = loserMapPawns.Where(pawn => pawn is VehiclePawn veh);
 				foreach (VehiclePawn veh in vehiclesToDisembark)
 				{
 					if (veh.Faction.HostileTo(Faction.OfPlayer))
@@ -2876,6 +2894,27 @@ namespace SaveOurShip2
 						veh.DisembarkAll();
 						veh.ignition.Drafted = false;
 						veh.SetFaction(null);
+					}
+				}
+				Map playerMap = ShipInteriorMod2.FindPlayerShipMap();
+				if (playerMap != null)
+				{
+					int claimedVehicles = 0;
+					IEnumerable<Pawn> playerMapVehicles = playerMap.mapPawns.AllPawnsSpawned.Where(pawn => pawn is VehiclePawn).ToList().ListFullCopy();
+					foreach (VehiclePawn vehicle in playerMapVehicles)
+					{
+						if(SoS2VehicleUtility.IsSOS2Shuttle(vehicle))
+						{
+							if (vehicle.Faction == null || vehicle.Faction.HostileTo(Faction.OfPlayer))
+							{
+								vehicle.SetFaction(Faction.OfPlayer);
+								claimedVehicles++;
+							}
+						}
+					}
+					if (claimedVehicles > 0)
+					{
+						Messages.Message("SoS.AutoClaimedShuttles".Translate(claimedVehicles), MessageTypeDefOf.NeutralEvent);
 					}
 				}
 			}

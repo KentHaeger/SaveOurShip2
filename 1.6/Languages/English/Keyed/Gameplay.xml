@@ -112,6 +112,7 @@
 	<SoS.ClaimWrecksCommandDesc>Claim all wrecks on this map</SoS.ClaimWrecksCommandDesc>
 	<SoS.ClaimWrecksSuccess>Claimed {0} buildings!</SoS.ClaimWrecksSuccess>
 	<SoS.ClaimWrecksDisabled>Enemy forces present!</SoS.ClaimWrecksDisabled>
+	<SoS.AutoClaimedShuttles>Automatically claimed {0} shuttles after battle</SoS.AutoClaimedShuttles>
 	<SoS.RemoveWrecksCommand>Remove wreck</SoS.RemoveWrecksCommand>
 	<SoS.RemoveWrecksCommandDesc>Remove target wreck from this map</SoS.RemoveWrecksCommandDesc>
 	<!-- placeworkers -->
