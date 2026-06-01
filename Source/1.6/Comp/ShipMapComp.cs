@@ -990,6 +990,24 @@ namespace SaveOurShip2
 				DetermineInitialRange(passingShip != null);
 			Log.Message("SOS2: ".Colorize(Color.cyan) + map + " Enemy range at start: " + Range);
 
+			float MapShipBuildingsWealth(ShipMapComp mapComp)
+			{
+				float result = 0;
+				foreach(SpaceShipCache ship in mapComp.ShipsOnMap.Values)
+				{
+					foreach(Building b in ship.Buildings)
+					{
+						result += b.MarketValue;
+					}
+				}
+				return result;
+			}
+			if (Prefs.DevMode)
+			{
+				Log.Message($"Player buildings wealth at battle strt: {MapShipBuildingsWealth(this)}");
+				Log.Message($"Enemy buildings wealth at battle strt: {MapShipBuildingsWealth(TargetMapComp)}");
+			}
+
 			//callSlowTick = true;
 		}
 
