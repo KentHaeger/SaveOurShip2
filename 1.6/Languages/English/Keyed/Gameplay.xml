@@ -153,6 +153,8 @@
 	<SelectEverything>Select Everything</SelectEverything>
 	<SelectEverythingDesc>Select everything.</SelectEverythingDesc>
 	<!-- bridge -->
+	<!-- Ship name in case there is no bridge -->
+	<SoS.Ship.WreckName>Wreck</SoS.Ship.WreckName>
 	<SoS.Ship.DefaultName>Unnamed Ship</SoS.Ship.DefaultName>
 	<SoS.StatsShipName>Ship name: {0}</SoS.StatsShipName>
 	<SoS.StatsNotoriety>Notoriety: {0}</SoS.StatsNotoriety>
@@ -492,9 +494,14 @@
 	<SoS.Alert.NotoriertyLowDesc>Because of pirating trade ships and/or because of using Orbital Bombardment (submod), player ship got notorious. Not too much yet, but continued piracy or bombardment will make it higher and attract bounty hunters.</SoS.Alert.NotoriertyLowDesc>
 	<SoS.Alert.NotoriertyHighDesc>Because of pirating trade ships and/or because of using Orbital Bombardment (submod), player ship got very notorious and is chased by bounty hunters. Attacks will happen roughly evey {0} days.</SoS.Alert.NotoriertyHighDesc>
 
-	<!-- Movement vlocked alert -->
-	<SoS.Alert.MovemenyBlocked>Ship movement is blocked</SoS.Alert.MovemenyBlocked>
-	<SoS.Alert.MovemenyBlockedDesc>Ship movement in battle is blocked because of wrecks or immobile ships on map.</SoS.Alert.MovemenyBlockedDesc>	
+	<!-- TWR / Movement blocked alert -->
+	<SoS.Alert.MovemenyBlocked>Player ship movement is blocked!</SoS.Alert.MovemenyBlocked>
+	<SoS.Alert.MovemenyBlockedDesc>Player ship movement in battle is blocked because of wrecks or immobile ships on map.</SoS.Alert.MovemenyBlockedDesc>
+	<SoS.Alert.TWR>TWR: Player {0}, Enemy: {1}</SoS.Alert.TWR>	
+	<SoS.Alert.TWRDesc>Final thrust to weight ratios (TWRs) for player and enemy maps in ship battle. When there are multiple ships on one map, this is equal to TWR of the slowest ship.
+Slowest player ship: {0}, click to jump to it.
+Slowest enemy ship: {1}.
+	</SoS.Alert.TWRDesc>	
 	
 	<!-- This scetion and lower were added during major translation upgrade -->
 	<!-- Archotech and endgame stuff -->
