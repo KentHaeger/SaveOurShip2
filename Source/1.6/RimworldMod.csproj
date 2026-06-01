@@ -98,7 +98,7 @@
   <ItemGroup>
     <Compile Include="AccuracyCalculator.cs" />
     <Compile Include="AISettings.cs" />
-    <Compile Include="Alert\AlertMovementBlocked.cs" />
+    <Compile Include="Alert\AlertTWR.cs" />
     <Compile Include="CompShipEngineBreakdownable.cs" />
     <Compile Include="Alert\AlertDodgeChanceBase.cs" />
     <Compile Include="Alert\AlertDodgeChanceEnemy.cs" />

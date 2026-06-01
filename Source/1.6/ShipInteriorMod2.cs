@@ -782,6 +782,22 @@ namespace SaveOurShip2
 			}
 			return ((MapParent)(orbitingShips.First()))?.Map;
 		}
+		public static Map FindEnemyShipMap()
+		{
+			Map playerShipMap = FindPlayerShipMap();
+			foreach (Map map in Find.Maps)
+			{
+				ShipMapComp mapComp = map.GetComponent<ShipMapComp>();
+				if (mapComp != null)
+				{
+					if (mapComp.ShipMapState == ShipMapState.inCombat && map != playerShipMap)
+					{
+						return map;
+					}
+				}
+			}
+			return null;
+		}
 		public static WorldObject GenerateSite(string defName)
 		{
 			WorldObject site = WorldObjectMaker.MakeWorldObject(DefDatabase<WorldObjectDef>.GetNamed(defName));
