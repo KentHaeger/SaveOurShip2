@@ -2,6 +2,12 @@ TWR Guide with spoilers
 
 [Ship mass guide contains very basics. Be sure to check it out befor reading this guide](ShipMass.md) 
 
+Engines
+
+Using small rocket engines is not recommended.
+Rocket engine is much better.
+Nuclear engine is even better. There is no big need to use them on very small ships, but if ship size is like 15x20 or larger, cuclear engines are recommended for best TWR.
+
 Ealry game - unarmed ship stage
 
 The cheapest vuiable ship design is ship with science console and a shuttle that can scan for sites, then visit sites using thaat shuttle and mine/deconsrutc stuff for resources.That is actually quite hard to begin with. But that is doable.
