@@ -2040,16 +2040,12 @@ namespace SaveOurShip2
 					{
 						retreatByThreat = false;
 					}
-					if (Retreating || retreatByThreat || powerRemaining / powerCapacity < 0.2f || totalThreat == 1 || BuildingsCount / (float)BuildingCountAtStart < 0.7f || tick > BattleStartTick + 90000 || (ShipMapAI == ShipAI.avoidant && MapEnginePower > targetMapComp.MapEnginePower) || (ShipMapAI == ShipAI.carrier && tick > BattleStartTick + 9000 && !ShuttleMissions.Any()))
+					if (Retreating || retreatByThreat || powerRemaining / powerCapacity < 0.2f || totalThreat == 1 ||
+						BuildingsCount / (float)BuildingCountAtStart < 0.7f || tick > BattleStartTick + 90000 || 
+						(ShipMapAI == ShipAI.avoidant && MapEnginePower > targetMapComp.MapEnginePower) || 
+						(ShipMapAI == ShipAI.carrier && tick > BattleStartTick + 9000 && !ShuttleMissions.Any()))
 					{
-						Heading = -1;
-						Retreating = true;
-						if (!warnedAboutRetreat)
-						{
-							Log.Message("SOS2: ".Colorize(Color.cyan) + map + " AI retreating:".Colorize(Color.red) + ", totalThreat:" + totalThreat + ", TargetMapComp.totalThreat:" + TargetMapComp.totalThreat + ", powerRemaining:" + powerRemaining + ", powerCapacity:" + powerCapacity + ", BuildingsCount:" + BuildingsCount + ", BuildingCountAtStart:" + BuildingCountAtStart);
-							Messages.Message("SoS.EnemyShipRetreating".Translate(), MessageTypeDefOf.ThreatBig);
-							warnedAboutRetreat = true;
-						}
+						TriggerAIRetreat(powerCapacity, powerRemaining);
 					}
 					else //move to range
 					{
@@ -2271,6 +2267,18 @@ namespace SaveOurShip2
 			if (tick % 360 == 0 && ModSettings_SoS.shipMapPhysics && MapEnginePower > 0.02f)
 			{
 				MoveAllOffShip();
+			}
+		}
+
+		private void TriggerAIRetreat(float powerCapacity, float powerRemaining)
+		{
+			Heading = -1;
+			Retreating = true;
+			if (!warnedAboutRetreat)
+			{
+				Log.Message("SOS2: ".Colorize(Color.cyan) + map + " AI retreating:".Colorize(Color.red) + ", totalThreat:" + totalThreat + ", TargetMapComp.totalThreat:" + TargetMapComp.totalThreat + ", powerRemaining:" + powerRemaining + ", powerCapacity:" + powerCapacity + ", BuildingsCount:" + BuildingsCount + ", BuildingCountAtStart:" + BuildingCountAtStart);
+				Messages.Message("SoS.EnemyShipRetreating".Translate(), MessageTypeDefOf.ThreatBig);
+				warnedAboutRetreat = true;
 			}
 		}
 
@@ -3037,7 +3045,7 @@ namespace SaveOurShip2
 		}
 		public void DeRegisterShuttleMission(ShuttleMissionData mission, bool destroyed=false)
         {
-			Log.Message("De-registering shuttle mission " + mission.mission);
+			Log.Message($"De-registering shuttle mission on { GetMapIDForLog() } map: { mission.mission }");
 			ShuttlesOnMissions.Remove(mission.shuttle);
 			ShuttleMissions.Remove(mission);
 			if (!destroyed)
@@ -3049,8 +3057,21 @@ namespace SaveOurShip2
 				{
 					if (mission.mission == ShuttleMission.BOARD)
 						mapToSpawnIn = ShipCombatTargetMap;
-					else //Return mission
-						mapToSpawnIn = map;
+					else // Return mission
+					{
+						// Enemy shuttles on non-boarding mission shouldn't arrive to player map as boarders, because they launch early,
+						// while normal boarding op is delayed. Re-qualifying into boarders could be too difficult for players sometimes.
+						if (map == ShipInteriorMod2.FindPlayerShipMap() &&
+							mission.shuttle.Faction != Faction.OfPlayer &&
+							new [] { ShuttleMission.STRAFE, ShuttleMission.BOMB, ShuttleMission.INTERCEPT }.Contains(mission.mission))
+						{
+							return;
+						}
+						else
+						{
+							mapToSpawnIn = map;
+						}
+					}
 				}
 				var mapToSpawnInComp = mapToSpawnIn.GetComponent<ShipMapComp>();
 				if (mission.shuttle.Faction == Faction.OfPlayer)
@@ -3382,5 +3403,15 @@ namespace SaveOurShip2
             }
             return null;
         }
+
+		public string GetMapIDForLog()
+		{
+			if (map == ShipInteriorMod2.FindPlayerShipMap())
+				return "player";
+			else if (map == ShipInteriorMod2.FindEnemyShipMap())
+				return "enemy";
+			else
+				return "";
+		}
     }
 }
