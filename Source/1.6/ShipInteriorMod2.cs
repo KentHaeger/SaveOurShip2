@@ -98,6 +98,7 @@ namespace SaveOurShip2
 			Scribe_Values.Look(ref persistShipUI, "persistShipUI", false);
 			Scribe_Values.Look(ref archoRemove, "archoRemove", false);
 			Scribe_Values.Look(ref archoKill, "archoKill", false);
+			Scribe_Values.Look(ref neverRetreat, "neverRetreat", false);
 			Scribe_Values.Look(ref newAccuracySystem, "newAccuracySystem", true);
 			Scribe_Values.Look(ref debugMode, "debugMode", false);
 
@@ -126,6 +127,7 @@ namespace SaveOurShip2
 			persistShipUI = false,
 			archoRemove = false,
 			archoKill = false,
+			neverRetreat = false,
 			debugMode = false;
 		public static int
 			minTravelTime = 5,
@@ -272,8 +274,8 @@ namespace SaveOurShip2
 			options.CheckboxLabeled("SoS.Settings.NewAccuiracySystem".Translate(), ref newAccuracySystem,"SoS.Settings.NewAccuiracySystem.Desc".Translate());
 			options.CheckboxLabeled("SoS.Settings.ArchoRemove".Translate(), ref archoRemove, "SoS.Settings.ArchoRemove.Desc".Translate());
 			options.CheckboxLabeled("SoS.Settings.ArchoKill".Translate(), ref archoKill, "SoS.Settings.ArchoKill.Desc".Translate());
+			options.CheckboxLabeled("SoS.Settings.NeverRetreat".Translate(), ref neverRetreat, "SoS.Settings.NeverRetreat.Desc".Translate());
 			options.CheckboxLabeled("SoS.Settings.Debug".Translate(), ref debugMode, "SoS.Settings.Debug.Desc".Translate());
-			//options.CheckboxLabeled("SoS.Settings.UseVacuumPathfinding".Translate(), ref useVacuumPathfinding, "SoS.Settings.UseVacuumPathfinding.Desc".Translate());
 
 			//large column
 			options.NewColumn();

@@ -2272,6 +2272,10 @@ namespace SaveOurShip2
 
 		private void TriggerAIRetreat(float powerCapacity, float powerRemaining)
 		{
+			if (ModSettings_SoS.neverRetreat)
+			{
+				return;
+			}
 			Heading = -1;
 			Retreating = true;
 			if (!warnedAboutRetreat)
