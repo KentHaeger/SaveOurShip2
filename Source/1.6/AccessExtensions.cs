@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using RimWorld;
 using RimWorld.Planet;
 using UnityEngine;
@@ -29,6 +31,22 @@ namespace SaveOurShip2
 		public static bool IsKnownMapInSpace(this Map map)
 		{
 			return Utility.IsKnownMapInSpace(map);
+		}
+
+		public static Thing GetThingOfDefAt(this Map map, IntVec3 cell, IEnumerable<ThingDef> thingDefs)
+		{
+			foreach (Thing t in map.thingGrid.ThingsAt(cell))
+			{
+				if (thingDefs.Contains(t.def))
+				{
+					return t;
+				}
+			}
+			return null;
+		}
+		public static Thing GetThingOfDefAt(this Map map, IntVec3 cell, ThingDef thingDef)
+		{
+			return GetThingOfDefAt(map, cell, new List<ThingDef>() { thingDef });
 		}
 
 		public static float DecompressionResistance(this Pawn pawn)

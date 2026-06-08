@@ -29,7 +29,8 @@
 	<SoS.Settings.ArchoKill.Desc>If the archotech spore is destroyed, all archolife creatures will die. Default: off</SoS.Settings.ArchoKill.Desc>
 	<SoS.Settings.NeverRetreat>Enemies never retreat</SoS.Settings.NeverRetreat>
 	<SoS.Settings.NeverRetreat.Desc>Turning off enemies tereating could make game easier if player ship is not very fast. Also usable for testing.</SoS.Settings.NeverRetreat.Desc>
-	
+	<SoS.Settings.AddAntiBoardingDefense>Add anti-boarding defense</SoS.Settings.AddAntiBoardingDefense>
+	<SoS.Settings.AddAntiBoardingDefense.Desc>Enemy ships will have turrets automatically added near outer airlocks for extra protection against boarding. Shredder turrets will be randomly used too if Shredder Tech addon mod is enabled. Can be turned off if boarding looks too hard.</SoS.Settings.AddAntiBoardingDefense.Desc>	
 	<SoS.Settings.Debug>Debug mode</SoS.Settings.Debug>
 	<SoS.Settings.Debug.Desc>Will draw ship area and list all ships/wrecks on map on screen with mouse over for details and add more info to the log. Default: off</SoS.Settings.Debug.Desc>
 	
