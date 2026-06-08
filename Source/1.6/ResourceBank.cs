@@ -100,6 +100,7 @@ namespace SaveOurShip2
 			public static ThingDef ShipHullTileArchotech;
 			public static ThingDef ShipHullfoamTile;
 			public static ThingDef ShipAirlock;
+			public static ThingDef ShipAirlockBeam;
 			public static ThingDef ShipAirlockBeamWall;
 			public static ThingDef ShipAirlockBeamWallInert;
 			public static ThingDef ShipAirlockBeamTile;
@@ -149,6 +150,7 @@ namespace SaveOurShip2
 			public static ThingDef Apparel_SpaceSuitBody;
 			public static ThingDef JTDriveSalvage;
 			public static ThingDef ShipCombatShieldGeneratorMini;
+			public static ThingDef ShipHardpointSmall;
 			//vanilla defs
 			public static ThingDef Turret_Autocannon;
 			public static ThingDef Turret_Sniper;
@@ -431,7 +433,18 @@ namespace SaveOurShip2
 				return TerrainDefOf.Marble_Rough;
 			}
 			return null;
+		}
 
+		public static IEnumerable<ThingDef> GetHullDefs()
+		{
+			return new List<ThingDef>() {
+				ThingDefOf.Ship_Beam,
+				ThingDefOf.Ship_Beam_Unpowered,
+				ThingDefOf.Ship_BeamMech,
+				ThingDefOf.Ship_BeamMech_Unpowered,
+				ThingDefOf.Ship_BeamArchotech,
+				ThingDefOf.Ship_BeamArchotech_Unpowered,
+				ThingDefOf.Ship_Beam_Wrecked};
 		}
 	}
 }
