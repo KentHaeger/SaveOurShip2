@@ -100,6 +100,8 @@ namespace SaveOurShip2
 			public static ThingDef ShipHullTileArchotech;
 			public static ThingDef ShipHullfoamTile;
 			public static ThingDef ShipAirlock;
+			public static ThingDef ShipAirlockArchotech;
+			public static ThingDef ShipAirlockMech;
 			public static ThingDef ShipAirlockBeam;
 			public static ThingDef ShipAirlockBeamWall;
 			public static ThingDef ShipAirlockBeamWallInert;
@@ -435,16 +437,14 @@ namespace SaveOurShip2
 			return null;
 		}
 
-		public static IEnumerable<ThingDef> GetHullDefs()
-		{
-			return new List<ThingDef>() {
+		public static readonly List<ThingDef> HullDefs = new List<ThingDef>() {
 				ThingDefOf.Ship_Beam,
 				ThingDefOf.Ship_Beam_Unpowered,
 				ThingDefOf.Ship_BeamMech,
 				ThingDefOf.Ship_BeamMech_Unpowered,
 				ThingDefOf.Ship_BeamArchotech,
 				ThingDefOf.Ship_BeamArchotech_Unpowered,
-				ThingDefOf.Ship_Beam_Wrecked};
-		}
+				ThingDefOf.Ship_Beam_Wrecked
+		};
 	}
 }

@@ -1963,71 +1963,6 @@ namespace SaveOurShip2
 			else
 				lord?.AddPawn(p);
 		}
-
-		private static bool TryAddturretNearOuterdoor(Map map, ShipMapComp mapComp, Faction fac, SpaceShipCache ship, Building_ShipAirlock airlock)
-		{
-			// Adjacent to walls ajacent to outerdoors.
-			// Or if docking clamps are adjacent to outerdoor, try skipping to next wall.
-			List<IntVec3> rootTiles = new List<IntVec3>() { airlock.Position };
-			List<IntVec3> adjacent = GenAdj.CellsAdjacentCardinal(airlock).ToList();
-			foreach (IntVec3 tile in adjacent)
-			{
-				Thing clamp = map.GetThingOfDefAt(tile, ResourceBank.ThingDefOf.ShipAirlockBeam);
-				if (clamp != null)
-				{
-					rootTiles.Add(tile);
-				}
-			}
-
-			List<IntVec3> wallCandidates = new List<IntVec3>();
-			foreach (IntVec3 tile in rootTiles)
-			{
-				wallCandidates.AddRange(GenAdj.CellsAdjacentCardinal(tile, Rot4.North, new IntVec2(1, 1)).ToList());
-			}
-			wallCandidates = wallCandidates.Where(t => null != map.GetThingOfDefAt(t, ResourceBank.GetHullDefs())).ToList();
-			foreach (IntVec3 tile in wallCandidates)
-			{
-				IEnumerable<IntVec3> adjacentToWall = GenAdj.CellsAdjacentCardinal(tile, Rot4.North, new IntVec2(1, 1));
-				foreach (IntVec3 turretTile in adjacentToWall)
-				{
-					if (mapComp.ShipIndexOnVec(turretTile) == -1)
-					{
-						SpawnTurretOnHardpoint(map, turretTile);
-						Log.Message("SoS 2: Procgen turret spawned");
-						return true;
-					}
-				}
-			}
-			Log.Message("SoS 2: Procgen turret location not found");
-			return false;
-		}
-
-		private static void SpawnTurretOnHardpoint(Map map, IntVec3 turretTile)
-		{
-			List<ThingDef> turretDefs = new List<ThingDef>() { ThingDefOf.Turret_MiniTurret };
-			// Sheredder tech submod
-			ThingDef shredderTurretDef = DefDatabase<ThingDef>.GetNamedSilentFail("EVA_Shredder_Turret_MiniTurret");
-			if (shredderTurretDef != null)
-			{
-				turretDefs.Add(shredderTurretDef);
-			}
-
-			Thing hardpoint = ThingMaker.MakeThing(ResourceBank.ThingDefOf.ShipHardpointSmall);
-			GenSpawn.Spawn(hardpoint, turretTile, map);
-
-			ThingDef turretDef = turretDefs.RandomElement();
-			Thing turret;
-			if (turretDef.MadeFromStuff)
-			{
-				turret = ThingMaker.MakeThing(turretDef, GenStuff.DefaultStuffFor(ThingDefOf.Turret_MiniTurret));
-			}
-			else
-			{
-				turret = ThingMaker.MakeThing(turretDef);
-			}
-				GenSpawn.Spawn(turret, turretTile, map);
-		}
-
 		private static void PostProcessShip(ShipDef shipDef, Map map,  Faction fac, List<IntVec3> shipArea, int wreckLevel)
 		{
 			ShipMapComp mapComp = map.GetComponent<ShipMapComp>();
@@ -2062,7 +1997,9 @@ namespace SaveOurShip2
 				bool addedForAllAirlocks = true;
 				foreach (Building_ShipAirlock airlock in outerdoors)
 				{
-					bool added = TryAddturretNearOuterdoor(map, mapComp, fac, ship, airlock);
+					TurretGenerator generator = new TurretGenerator(map, fac, ship);
+					// bool added = TryAddturretNearOuterdoor(map, mapComp, fac, ship, airlock);
+					bool added = generator.TryAddturretNearOuterdoor(airlock);
 					addedForAnyAirlock |= added;
 					addedForAllAirlocks &= added;
 				}
