@@ -957,6 +957,14 @@ namespace SaveOurShip2
 			{
 				Log.Message("Active cloak at ship battle start: " + activeCloak.ThingID);
 			}
+			if (passingShip != null && passingShip is AttackableShip attackable)
+			{
+				if (attackable.attackableShip == ResourceBank.ShipDefOf.MechPsychicAmp)
+				{
+					Find.LetterStack.ReceiveLetter("SoS.PsychicAmplifierStartBattle".Translate(),
+						"SoS.PsychicAmplifierStartBattleDesc".Translate(), LetterDefOf.ThreatSmall);
+				}
+			}
             //origin vars
             ShipFaction = map.Parent.Faction;
 			attackedTradeship = false;
