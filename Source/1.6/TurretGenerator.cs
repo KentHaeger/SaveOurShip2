@@ -57,7 +57,7 @@ namespace SaveOurShip2
 					}
 				}
 			}
-			// Fallback vawe alghorithm
+			// Fallback wave alghorithm
 			IEnumerable<IntVec3> adjacentToAirlock = GenAdj.CellsAdjacentCardinal(airlock);
 			foreach(IntVec3 fallbackRoot in adjacentToAirlock)
 			{
@@ -77,6 +77,7 @@ namespace SaveOurShip2
 		}
 		private IntVec3 TryFindTurretTileNearWave(IntVec3 root)
 		{
+			// Decent nuber of steps to place turret near airlock
 			const int steps = 18;
 			HashSet<IntVec3> front = new HashSet<IntVec3>();
 			front.Add(root);
