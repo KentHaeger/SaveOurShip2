@@ -146,7 +146,9 @@ namespace SaveOurShip2
 			Thing turret;
 			if (turretDef.MadeFromStuff)
 			{
-				turret = ThingMaker.MakeThing(turretDef, GenStuff.DefaultStuffFor(ThingDefOf.Turret_MiniTurret));
+				ThingDef stuff = ship.Threat < ShipCatalog.CruiserCR ? GenStuff.DefaultStuffFor(ThingDefOf.Turret_MiniTurret)
+					: ThingDefOf.Plasteel;
+				turret = ThingMaker.MakeThing(turretDef, stuff);
 			}
 			else
 			{
