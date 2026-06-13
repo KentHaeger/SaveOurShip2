@@ -182,6 +182,13 @@ namespace SaveOurShip2
 		}
 		private static bool AreAllOptionsUnvailable(out DiaOption unavailableOption)
 		{
+			if (map.IsSpace())
+			{
+				DiaOption optionNotInSpace = new DiaOption(dummyOptionName);
+				optionNotInSpace.Disable("SoS.StashedShip.NotInSpace".Translate());
+				unavailableOption = optionNotInSpace;
+				return true;
+			}
 			if (!ResourceBank.ResearchProjectDefOf.ShipBasics.IsFinished)
 			{
 				DiaOption optionNeedsResearch = new DiaOption(dummyOptionName);

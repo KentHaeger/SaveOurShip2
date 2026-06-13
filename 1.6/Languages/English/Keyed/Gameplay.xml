@@ -723,6 +723,7 @@ Successful dodge means miss by a lot, projectile doesn't even enter target map.<
 	<SoS.StashedShip.RequestOptionDummySpecific>{0}</SoS.StashedShip.RequestOptionDummySpecific>
 	<SoS.StashedShip.OnCooldown>Next request for stashed ship will be available in {0} days.</SoS.StashedShip.OnCooldown>
 	<SoS.StashedShip.RequiresTech>Research Starflight Basics technology before requesting.</SoS.StashedShip.RequiresTech>
+	<SoS.StashedShip.NotInSpace>Ships stashed on planet aren't availaable from space.</SoS.StashedShip.NotInSpace>
 	<SoS.StashedShip.NoSecuroity>Not guarded</SoS.StashedShip.NoSecuroity>
 	<SoS.StashedShip.MinorSceurity>Lightly guarded</SoS.StashedShip.MinorSceurity>
 	<SoS.StashedShip.AverageSceurity>Average security</SoS.StashedShip.AverageSceurity>
