@@ -22,7 +22,6 @@ namespace SaveOurShip2
 			this.shipFaction = shipFaction;
 			this.ship = ship;
 		}
-
 		public bool TryAddturretNearOuterdoor(Building_ShipAirlock airlock)
 		{
 			// Adjacent to walls ajacent to outerdoors.
@@ -128,7 +127,6 @@ namespace SaveOurShip2
 			}
 			return hasAdjacentHull;
 		}
-
 		private void SpawnTurretOnHardpoint(IntVec3 turretTile)
 		{
 			List<ThingDef> turretDefs = new List<ThingDef>() { ThingDefOf.Turret_MiniTurret };
@@ -156,8 +154,6 @@ namespace SaveOurShip2
 			}
 			GenSpawn.Spawn(turret, turretTile, map);
 		}
-
-
 		private bool ContainsAirlock(IntVec3 tile)
 		{
 			return ConatinsAny(tile, new List<ThingDef>()
