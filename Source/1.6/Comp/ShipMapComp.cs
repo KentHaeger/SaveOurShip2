@@ -963,6 +963,14 @@ namespace SaveOurShip2
 			{
 				Log.Message("Active cloak at ship battle start: " + activeCloak.ThingID);
 			}
+			if (passingShip != null && passingShip is AttackableShip attackable)
+			{
+				if (attackable.attackableShip == ResourceBank.ShipDefOf.MechPsychicAmp)
+				{
+					Find.LetterStack.ReceiveLetter("SoS.PsychicAmplifierStartBattle".Translate(),
+						"SoS.PsychicAmplifierStartBattleDesc".Translate(), LetterDefOf.ThreatSmall);
+				}
+			}
             //origin vars
             ShipFaction = map.Parent.Faction;
 			attackedTradeship = false;
@@ -995,6 +1003,24 @@ namespace SaveOurShip2
 			if (range == 0) //set range DL:1-9
 				DetermineInitialRange(passingShip != null);
 			Log.Message("SOS2: ".Colorize(Color.cyan) + map + " Enemy range at start: " + Range);
+
+			float MapShipBuildingsWealth(ShipMapComp mapComp)
+			{
+				float result = 0;
+				foreach(SpaceShipCache ship in mapComp.ShipsOnMap.Values)
+				{
+					foreach(Building b in ship.Buildings)
+					{
+						result += b.MarketValue;
+					}
+				}
+				return result;
+			}
+			if (Prefs.DevMode)
+			{
+				Log.Message($"Player buildings wealth at battle strt: {MapShipBuildingsWealth(this)}");
+				Log.Message($"Enemy buildings wealth at battle strt: {MapShipBuildingsWealth(TargetMapComp)}");
+			}
 
 			//callSlowTick = true;
 		}
@@ -1043,7 +1069,11 @@ namespace SaveOurShip2
 				shipDef = derelictShip.derelictShip;
 				navyDef = derelictShip.spaceNavyDef;
 				faction = derelictShip.shipFaction;
-				if (derelictShip.wreckLevel == 2 && !derelictShip.derelictShip.neverRandom && (derelictShip.derelictShip.neverAttacks && Rand.Chance(0.05f) || Rand.Chance(0.2f))) //fake wreck chance
+				if (derelictShip.wreckLevel == 2 &&
+					!derelictShip.derelictShip.neverRandom &&
+					!derelictShip.derelictShip.spaceSite &&
+					derelictShip.derelictShip.combatPoints >= ShipCatalog.FighterBomberCR &&
+					(derelictShip.derelictShip.neverAttacks && Rand.Chance(0.05f) || Rand.Chance(0.2f))) //fake wreck chance
 				{
 					fakeWreck = true;
 					if (Rand.Chance(0.1f))
@@ -2051,16 +2081,12 @@ namespace SaveOurShip2
 					{
 						retreatByThreat = false;
 					}
-					if (Retreating || retreatByThreat || powerRemaining / powerCapacity < 0.2f || totalThreat == 1 || BuildingsCount / (float)BuildingCountAtStart < 0.7f || tick > BattleStartTick + 90000 || (ShipMapAI == ShipAI.avoidant && MapEnginePower > targetMapComp.MapEnginePower) || (ShipMapAI == ShipAI.carrier && tick > BattleStartTick + 9000 && !ShuttleMissions.Any()))
+					if (Retreating || retreatByThreat || powerRemaining / powerCapacity < 0.2f || totalThreat == 1 ||
+						BuildingsCount / (float)BuildingCountAtStart < 0.7f || tick > BattleStartTick + 90000 || 
+						(ShipMapAI == ShipAI.avoidant && MapEnginePower > targetMapComp.MapEnginePower) || 
+						(ShipMapAI == ShipAI.carrier && tick > BattleStartTick + 9000 && !ShuttleMissions.Any()))
 					{
-						Heading = -1;
-						Retreating = true;
-						if (!warnedAboutRetreat)
-						{
-							Log.Message("SOS2: ".Colorize(Color.cyan) + map + " AI retreating:".Colorize(Color.red) + ", totalThreat:" + totalThreat + ", TargetMapComp.totalThreat:" + TargetMapComp.totalThreat + ", powerRemaining:" + powerRemaining + ", powerCapacity:" + powerCapacity + ", BuildingsCount:" + BuildingsCount + ", BuildingCountAtStart:" + BuildingCountAtStart);
-							Messages.Message("SoS.EnemyShipRetreating".Translate(), MessageTypeDefOf.ThreatBig);
-							warnedAboutRetreat = true;
-						}
+						TriggerAIRetreat(powerCapacity, powerRemaining);
 					}
 					else //move to range
 					{
@@ -2282,6 +2308,22 @@ namespace SaveOurShip2
 			if (tick % 360 == 0 && ModSettings_SoS.shipMapPhysics && MapEnginePower > 0.02f)
 			{
 				MoveAllOffShip();
+			}
+		}
+
+		private void TriggerAIRetreat(float powerCapacity, float powerRemaining)
+		{
+			if (ModSettings_SoS.neverRetreat)
+			{
+				return;
+			}
+			Heading = -1;
+			Retreating = true;
+			if (!warnedAboutRetreat)
+			{
+				Log.Message("SOS2: ".Colorize(Color.cyan) + map + " AI retreating:".Colorize(Color.red) + ", totalThreat:" + totalThreat + ", TargetMapComp.totalThreat:" + TargetMapComp.totalThreat + ", powerRemaining:" + powerRemaining + ", powerCapacity:" + powerCapacity + ", BuildingsCount:" + BuildingsCount + ", BuildingCountAtStart:" + BuildingCountAtStart);
+				Messages.Message("SoS.EnemyShipRetreating".Translate(), MessageTypeDefOf.ThreatBig);
+				warnedAboutRetreat = true;
 			}
 		}
 
@@ -2639,8 +2681,10 @@ namespace SaveOurShip2
 		}
 
         //find worst t/w ship, getting final value, same as T/W shown in UI. 
-        public float SlowestThrustRatio()
+        public float SlowestThrustRatio(out SpaceShipCache blockingShip, out SpaceShipCache slowestShip)
 		{
+			blockingShip = null;
+			slowestShip = null;
 			if (ShipsOnMap.NullOrEmpty())
 				return 0f;
 
@@ -2650,12 +2694,21 @@ namespace SaveOurShip2
 				if (ship.BuildingCount < 5 && ship.ThrustRatio == 0)
 					continue;
 				if (!ship.CanMove())
+				{
+					blockingShip = ship;
 					return 0;
+				}
 				float currenThrustRatio = ship.ThrustRatio;
 				if (currenThrustRatio == 0)
+				{
+					blockingShip = ship;
 					return 0;
+				}
 				if (currenThrustRatio < minThrustRatio)
+				{
+					slowestShip = ship;
 					minThrustRatio = currenThrustRatio;
+				}
 			}
 			return minThrustRatio;
 		}
@@ -2885,8 +2938,8 @@ namespace SaveOurShip2
 			{
 				// AI lost. Reset all their shuttles faction, so that thaey don't prevent buildings capture,
 				// becuse of being enemy pawns, which is totally not evident for the player.
-				IEnumerable<Pawn> mapPawns = loser.mapPawns.AllPawnsSpawned.ToList().ListFullCopy();
-				foreach (Pawn p in mapPawns)
+				IEnumerable<Pawn> loserMapPawns = loser.mapPawns.AllPawnsSpawned.ToList().ListFullCopy();
+				foreach (Pawn p in loserMapPawns)
 				{
 					if (!(p is VehiclePawn) && p.CurJobDef == JobDefOf_Vehicles.Board)
 					{
@@ -2894,7 +2947,7 @@ namespace SaveOurShip2
 						p.jobs.StopAll();
 					}
 				}
-				IEnumerable<Pawn> vehiclesToDisembark = mapPawns.Where(pawn => pawn is VehiclePawn veh);
+				IEnumerable<Pawn> vehiclesToDisembark = loserMapPawns.Where(pawn => pawn is VehiclePawn veh);
 				foreach (VehiclePawn veh in vehiclesToDisembark)
 				{
 					if (veh.Faction.HostileTo(Faction.OfPlayer))
@@ -2902,6 +2955,27 @@ namespace SaveOurShip2
 						veh.DisembarkAll();
 						veh.ignition.Drafted = false;
 						veh.SetFaction(null);
+					}
+				}
+				Map playerMap = ShipInteriorMod2.FindPlayerShipMap();
+				if (playerMap != null)
+				{
+					int claimedVehicles = 0;
+					IEnumerable<Pawn> playerMapVehicles = playerMap.mapPawns.AllPawnsSpawned.Where(pawn => pawn is VehiclePawn).ToList().ListFullCopy();
+					foreach (VehiclePawn vehicle in playerMapVehicles)
+					{
+						if(SoS2VehicleUtility.IsSOS2Shuttle(vehicle))
+						{
+							if (vehicle.Faction == null || vehicle.Faction.HostileTo(Faction.OfPlayer))
+							{
+								vehicle.SetFaction(Faction.OfPlayer);
+								claimedVehicles++;
+							}
+						}
+					}
+					if (claimedVehicles > 0)
+					{
+						Messages.Message("SoS.AutoClaimedShuttles".Translate(claimedVehicles), MessageTypeDefOf.NeutralEvent);
 					}
 				}
 			}
@@ -3024,7 +3098,7 @@ namespace SaveOurShip2
 		}
 		public void DeRegisterShuttleMission(ShuttleMissionData mission, bool destroyed=false)
         {
-			Log.Message("De-registering shuttle mission " + mission.mission);
+			Log.Message($"De-registering shuttle mission on { GetMapIDForLog() } map: { mission.mission }");
 			ShuttlesOnMissions.Remove(mission.shuttle);
 			ShuttleMissions.Remove(mission);
 			if (!destroyed)
@@ -3036,8 +3110,21 @@ namespace SaveOurShip2
 				{
 					if (mission.mission == ShuttleMission.BOARD)
 						mapToSpawnIn = ShipCombatTargetMap;
-					else //Return mission
-						mapToSpawnIn = map;
+					else // Return mission
+					{
+						// Enemy shuttles on non-boarding mission shouldn't arrive to player map as boarders, because they launch early,
+						// while normal boarding op is delayed. Re-qualifying into boarders could be too difficult for players sometimes.
+						if (map == ShipInteriorMod2.FindPlayerShipMap() &&
+							mission.shuttle.Faction != Faction.OfPlayer &&
+							new [] { ShuttleMission.STRAFE, ShuttleMission.BOMB, ShuttleMission.INTERCEPT }.Contains(mission.mission))
+						{
+							return;
+						}
+						else
+						{
+							mapToSpawnIn = map;
+						}
+					}
 				}
 				var mapToSpawnInComp = mapToSpawnIn.GetComponent<ShipMapComp>();
 				if (mission.shuttle.Faction == Faction.OfPlayer)
@@ -3369,5 +3456,15 @@ namespace SaveOurShip2
             }
             return null;
         }
+
+		public string GetMapIDForLog()
+		{
+			if (map == ShipInteriorMod2.FindPlayerShipMap())
+				return "player";
+			else if (map == ShipInteriorMod2.FindEnemyShipMap())
+				return "enemy";
+			else
+				return "";
+		}
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Verse;
 using RimWorld;
 using RimWorld.QuestGen;
@@ -8,6 +9,7 @@ using UnityEngine;
 namespace SaveOurShip2
 {
 	// Quite complicated getter for stashed ship quest dialog option
+	[StaticConstructorOnStartup]
 	public static class DialogOptionGetter_StashedShip
 	{
 		private static Pawn negotiator;
@@ -15,13 +17,113 @@ namespace SaveOurShip2
 		private static Faction faction;
 		private static readonly string dummyOptionName = "SoS.StashedShip.RequestOptionDummy".Translate();
 
-		public static void Init(Pawn negotiator_a, Faction faction_a)
+		static DialogOptionGetter_StashedShip()
 		{
-			negotiator = negotiator_a;
+		}
+		public static void Init(Pawn negotiator, Faction faction)
+		{
+			DialogOptionGetter_StashedShip.negotiator = negotiator;
 			map = negotiator.Map;
-			faction = faction_a;
+			DialogOptionGetter_StashedShip.faction = faction;
 		}
 
+		public static void AddGroup(DiaNode parentNode, string groupKey, IEnumerable<ShipDef> ships, bool flipShip, bool devDetails = false)
+		{
+			DiaNode listNode = new DiaNode(groupKey.Translate());
+			DiaOption listOption = new DiaOption(groupKey.Translate());
+			listOption.link = listNode;
+			parentNode.options.Add(listOption);
+
+			SimpleCurve valueFromShapeCount = new SimpleCurve()
+			{
+				new CurvePoint(0f, 2000f ),
+				new CurvePoint(120f, 3000f),       // Small starter ship
+				new CurvePoint(500f, 5000f),
+				new CurvePoint(1000f, 7000f),
+				new CurvePoint(5000f, 12000f),
+				new CurvePoint(20000f, 25000f),    // Largest dreadnoughtrs have over 20000 shapes
+				new CurvePoint(1000000f, 25000f),  // Cap
+			};
+
+			SimpleCurve threatFromCR = new SimpleCurve()
+			{
+				new CurvePoint(0f, 0f ),
+				new CurvePoint(23f, 0f ),          // Fast Scout - unguarded
+				new CurvePoint(27f, 150f ),        // Small Science vessel - small thereat. This CR represents unarmed ship that is larger than small scout in size
+				new CurvePoint(150f, 400f),        // Fighter     
+				new CurvePoint(300f, 700f),        // Corvette
+				new CurvePoint(1800f, 2000f),      // Destroyer
+				new CurvePoint(1800f, 3000f),      // Cruiser
+				new CurvePoint(4000f, 5000f),      // reach cap at Small Dreadnougnts
+				new CurvePoint(1000000f, 5000f),   // The cap is 5000, as it is considered not conenient to fight full size 10000 points threat on some away map, not 
+		              							   // on player map with defenses
+			};
+
+			foreach (ShipDef ship in ships)
+			{
+				if (ship == null)
+				{
+					Log.Message("SoS 2: skipping null ship in stashed ships menu");
+					continue;
+				}
+				DiaOption unavailableOption;
+				float silverCost = valueFromShapeCount.Evaluate(ship.parts.Count);
+				int roundedCost = (int)silverCost / 100 * 100;
+				int threatPoints = (int)threatFromCR.Evaluate(ship.combatPoints);
+				if (IsSpecificOptionUnvailable(ship.defName, roundedCost, out unavailableOption))
+				{
+					listNode.options.Add(unavailableOption);
+				}
+				else
+				{
+					listNode.options.Add(RequestStashedShipOption(ship.defName, roundedCost, threatPoints, flipShip, devDetails));
+				}
+			}
+
+			DiaOption optionBack = new DiaOption("GoBack".Translate());
+			optionBack.linkLateBind = delegate () { return parentNode; }; // FactionDialogMaker.ResetToRoot(faction, negotiator);
+			listNode.options.Add(optionBack);
+		}
+
+		private static bool IsPickableNormalShip(ShipDef ship)
+		{
+			return !ship.startingDungeon &&
+				!ship.startingShip &&          // Starting ships, traders and cerriers are a separate categoried
+				!ship.tradeShip &&
+				!ship.carrier &&
+				!ship.neverWreck &&
+				!ship.neverRandom &&           // No rare, strange, special ships like Mysterius Archotech Sphere
+				!ship.neverAttacks &&
+				!ship.spaceSite &&
+				ship.defName.Substring(0, 2) != "BP" &&         // Exclude blueprints
+				ship != ResourceBank.ShipDefOf.MechPsychicAmp;
+		}
+		private static bool IsPickableTradeShip(ShipDef ship)
+		{
+			return !ship.startingDungeon &&
+				!ship.startingShip &&
+				ship.tradeShip &&
+				!ship.carrier &&
+				!ship.neverWreck &&
+				!ship.neverRandom &&
+				!ship.neverAttacks &&
+				!ship.spaceSite &&
+				!ship.IsBlueprintByName() &&
+				ship != ResourceBank.ShipDefOf.MechPsychicAmp;
+		}
+		private static bool IsPickableCarrier(ShipDef ship)
+		{
+			// Ignoring trade ship flag here so that trade carriers, if someone makes them, are shown in this category
+			return !ship.startingDungeon &&
+				!ship.startingShip &&
+				ship.carrier &&
+				!ship.neverWreck &&
+				!ship.neverRandom &&
+				!ship.neverAttacks &&
+				!ship.spaceSite &&
+				!ship.IsBlueprintByName() &&
+				ship != ResourceBank.ShipDefOf.MechPsychicAmp;
+		}
 		public static void AddOptionsToNode(ref DiaNode dialogNode)
 		{
 			DiaOption unavailableOption;
@@ -31,41 +133,62 @@ namespace SaveOurShip2
 				return;
 			}
 
-			var shipList = new List<(string ShipDefName, int SilverCost, int ThreatPoints)> {
-				("FastScout", 3000, 0),
-				("SmallScienceVessel", 7000, 250),
-				("StartShipD", 9000, 250),           // Small Trade ship
-				("StartShipC", 9000, 400),           // Exploration vessel
-				("StartShipTachinante", 9000, 400),  // Old Martian Corvette
-				("StartShipL", 12000, 500),          // Ardent Class Corvette
-				("StartShipF", 20000, 2000)          // Heavy frigate
-			};
-
 			DiaNode parentNode = new DiaNode("SoS.StashedShip.RequestOptionParent".Translate());
 			DiaOption parentOption = new DiaOption("SoS.StashedShip.RequestOptionParent".Translate());
 			parentOption.link = parentNode;
 			dialogNode.options.Add(parentOption);
 
-			foreach (var (ShipDefName, SilverCost, ThreatPoints) in shipList)
+			List<ShipDef> recommandedShips = new List<ShipDef>()
 			{
-				if (IsSpecificOptionUnvailable(ShipDefName, SilverCost, out unavailableOption))
-				{
-					//dialogNode.options.Add(unavailableOption);
-					parentNode.options.Add(unavailableOption);
-				}
-				else
-				{
-					//dialogNode.options.Add(RequestStashedShipOption(ShipDefName, SilverCost, ThreatPoints));
-					parentNode.options.Add(RequestStashedShipOption(ShipDefName, SilverCost, ThreatPoints));
-				}
+				DefDatabase<ShipDef>.GetNamedSilentFail("FastScout"),
+				DefDatabase<ShipDef>.GetNamedSilentFail("SmallScienceVessel"),
+			};
+			AddGroup(parentNode, "SoS.StashedShip.RecommendedStarterShips", recommandedShips, flipShip: false);
+
+			List<ShipDef> starterShips = DefDatabase<ShipDef>.AllDefs.Where(
+					x => x.startingShip && !x.startingDungeon && x.defName != ResourceBank.ShipDefNames.Random).ToList();
+			AddGroup(parentNode, "SoS.StashedShip.StarterShips", starterShips, flipShip: false);
+
+			List<ShipDef> tradeShips = DefDatabase<ShipDef>.AllDefs.Where(
+					x => IsPickableTradeShip(x)).ToList();
+			AddGroup(parentNode, "SoS.StashedShip.Traders", tradeShips, flipShip: true);
+
+			List<ShipDef> lowCRShips = DefDatabase<ShipDef>.AllDefs.Where(
+					x => x.combatPoints < ShipCatalog.FighterBomberCR && IsPickableNormalShip(x)).ToList();
+				AddGroup(parentNode, "SoS.StashedShip.LowCR", lowCRShips, true);
+
+			foreach (ShipClass shipClass in ShipCatalog.ShipClasses)
+			{
+				List<ShipDef> shipList = DefDatabase<ShipDef>.AllDefs.Where(
+					x => shipClass.MinCRInclusive  <= x.combatPoints && x.combatPoints < shipClass.MaxCRExclusive && IsPickableNormalShip(x) &&
+					(shipClass.Predicate != null ? shipClass.Predicate(x) : true)).ToList();
+				AddGroup(parentNode, shipClass.NameKey, shipList, true);
 			}
+
+			List<ShipDef> carriers = DefDatabase<ShipDef>.AllDefs.Where(
+					x => IsPickableCarrier(x)).ToList();
+			AddGroup(parentNode, "SoS.StashedShip.Carriers", carriers, flipShip: true);
+
+			if(Prefs.DevMode)
+			{
+				List<ShipDef> allships = DefDatabase<ShipDef>.AllDefs.ToList();
+				AddGroup(parentNode, "SoS.StashedShip.DevAllShips", allships, flipShip: false, devDetails: true);
+				AddGroup(parentNode, "SoS.StashedShip.DevAllShipsFlipped", allships, flipShip: true, devDetails: true);
+			}
+
 			DiaOption optionBack = new DiaOption("GoBack".Translate());
 			optionBack.linkLateBind = FactionDialogMaker.ResetToRoot(faction, negotiator);
 			parentNode.options.Add(optionBack);
 		}
-
 		private static bool AreAllOptionsUnvailable(out DiaOption unavailableOption)
 		{
+			if (map.IsSpace())
+			{
+				DiaOption optionNotInSpace = new DiaOption(dummyOptionName);
+				optionNotInSpace.Disable("SoS.StashedShip.NotInSpace".Translate());
+				unavailableOption = optionNotInSpace;
+				return true;
+			}
 			if (!ResourceBank.ResearchProjectDefOf.ShipBasics.IsFinished)
 			{
 				DiaOption optionNeedsResearch = new DiaOption(dummyOptionName);
@@ -123,7 +246,7 @@ namespace SaveOurShip2
 			return shipLablel;
 		}
 
-		private static DiaOption RequestStashedShipOption(string shipDefName, int shipSilverCost, int threatPoints)
+		private static DiaOption RequestStashedShipOption(string shipDefName, int shipSilverCost, int threatPoints, bool flip, bool devDetails = false)
 		{
 			string threatString = "";
 			if (threatPoints == 0)
@@ -144,6 +267,10 @@ namespace SaveOurShip2
 			}
 
 			string optionName = "SoS.StashedShip.RequestOption".Translate(GetLabel(shipDefName), shipSilverCost, threatString);
+			if (devDetails)
+			{
+				optionName += " (" + shipDefName + ")";
+			}
 			DiaOption requestOption = new DiaOption(optionName)
 			{
 				action = delegate
@@ -152,6 +279,7 @@ namespace SaveOurShip2
 					Quest quest = QuestUtility.GenerateQuestAndMakeAvailable(ResourceBank.QuestScriptDefOf.SoSStashedShipScript, slate);
 					quest.tags.Add(GenStep_StashedShip.ShipDefTagName + ":" + shipDefName);
 					quest.tags.Add(GenStep_StashedShip.ThreatTagName + ":" + threatPoints);
+					quest.tags.Add(GenStep_StashedShip.FlipTagName + ":" + flip.ToString());
 					QuestUtility.SendLetterQuestAvailable(quest);
 					TradeUtility.LaunchThingsOfType(ThingDefOf.Silver, shipSilverCost, map, null);
 					ShipInteriorMod2.WorldComp.LastStashedShipRequestTick = Find.TickManager.TicksGame;

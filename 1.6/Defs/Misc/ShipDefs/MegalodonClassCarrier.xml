@@ -10,6 +10,7 @@
 		<label>Megalodon Class Carrier</label>
 		<combatPoints>3374</combatPoints>
 		<rarityLevel>0</rarityLevel>
+		<carrier>True</carrier>
 		<neverRandom>False</neverRandom>
 		<neverAttacks>False</neverAttacks>
 		<neverWreck>False</neverWreck>

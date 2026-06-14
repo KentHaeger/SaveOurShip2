@@ -40,7 +40,7 @@
     <DefineConstants>DEBUG;</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
+    <LangVersion>8.0</LangVersion>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
@@ -48,7 +48,7 @@
     <Optimize>true</Optimize>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
+    <LangVersion>8.0</LangVersion>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -98,6 +98,7 @@
   <ItemGroup>
     <Compile Include="AccuracyCalculator.cs" />
     <Compile Include="AISettings.cs" />
+    <Compile Include="Alert\AlertTWR.cs" />
     <Compile Include="BlastLanding.cs" />
     <Compile Include="CompShipEngineBreakdownable.cs" />
     <Compile Include="Alert\AlertDodgeChanceBase.cs" />
@@ -159,12 +160,15 @@
     <Compile Include="CompProps\CompProps_Archolife.cs" />
     <Compile Include="CompProps\CompProps_ArcholifeCosmetics.cs" />
     <Compile Include="CloakThresholdGizmo.cs" />
+    <Compile Include="LogInterop.cs" />
+    <Compile Include="ShipCatalog.cs" />
     <Compile Include="ShipImorter.cs" />
     <Compile Include="SOS2MapUtility.cs" />
     <Compile Include="SoSDebugActions.cs" />
     <Compile Include="SoSSpawnOverride.cs" />
     <Compile Include="TranslatableStrings.cs" />
     <Compile Include="TranslationUtility.cs" />
+    <Compile Include="TurretGenerator.cs" />
     <Compile Include="TWRMath.cs" />
     <Compile Include="Vehicles\CompHoverMode.cs" />
     <Compile Include="Vehicles\CompProperties_HoverMode.cs" />

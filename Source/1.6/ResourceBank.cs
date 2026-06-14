@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Verse;
 using RimWorld;
 using UnityEngine;
@@ -99,6 +100,9 @@ namespace SaveOurShip2
 			public static ThingDef ShipHullTileArchotech;
 			public static ThingDef ShipHullfoamTile;
 			public static ThingDef ShipAirlock;
+			public static ThingDef ShipAirlockArchotech;
+			public static ThingDef ShipAirlockMech;
+			public static ThingDef ShipAirlockBeam;
 			public static ThingDef ShipAirlockBeamWall;
 			public static ThingDef ShipAirlockBeamWallInert;
 			public static ThingDef ShipAirlockBeamTile;
@@ -148,11 +152,19 @@ namespace SaveOurShip2
 			public static ThingDef Apparel_SpaceSuitBody;
 			public static ThingDef JTDriveSalvage;
 			public static ThingDef ShipCombatShieldGeneratorMini;
+			public static ThingDef ShipHardpointSmall;
 			//vanilla defs
 			public static ThingDef Turret_Autocannon;
 			public static ThingDef Turret_Sniper;
 			public static ThingDef MechSerumResurrector;
 			public static ThingDef Mote_Bubble;
+
+			public static ThingDef Limestone;
+			public static ThingDef Marble;
+
+			public static ThingDef PlantPot_Bonsai;
+			public static ThingDef PlantPot;
+
 			[MayRequireOdyssey]
 			public static ThingDef GravcorePowerCell;
 			[MayRequireOdyssey]
@@ -357,6 +369,21 @@ namespace SaveOurShip2
 			public static ShipDef MechPsychicAmp;
 		}
 
+		public static class ShipDefNames
+		{
+			// Special def for random srating ship, needs to be excluded from being directly used
+			public const string Random = "0";
+		}
+
+		public static class ShipHardwareNames
+		{
+			public static readonly List<string> TorpedoTurrets = new List<string>
+			{
+				"ShipTorpedoOne", "ShipTorpedoTwo", "ShipTorpedoSix",
+			};
+		}
+
+
 		[DefOf]
 		public static class QuestScriptDefOf
 		{
@@ -385,5 +412,39 @@ namespace SaveOurShip2
 				def == ThingDefOf.Ship_Beam_Wrecked;
 		}
 
+		public static TerrainDef GetTerrainFromRockType(ThingDef rockType)
+		{
+			if (rockType == RimWorld.ThingDefOf.Granite)
+			{
+				return TerrainDefOf.Granite_Rough;
+			}
+			else if (rockType == RimWorld.ThingDefOf.Sandstone)
+			{
+				return TerrainDefOf.Sandstone_Rough;
+			}
+			else if (rockType == RimWorld.ThingDefOf.Slate)
+			{
+				return TerrainDefOf.Slate_Rough;
+			}
+			else if (rockType == ThingDefOf.Limestone)
+			{
+				return DefDatabase<TerrainDef>.GetNamedSilentFail("Limestone_Rough");
+			}
+			else if (rockType == ThingDefOf.Marble)
+			{
+				return TerrainDefOf.Marble_Rough;
+			}
+			return null;
+		}
+
+		public static readonly List<ThingDef> HullDefs = new List<ThingDef>() {
+				ThingDefOf.Ship_Beam,
+				ThingDefOf.Ship_Beam_Unpowered,
+				ThingDefOf.Ship_BeamMech,
+				ThingDefOf.Ship_BeamMech_Unpowered,
+				ThingDefOf.Ship_BeamArchotech,
+				ThingDefOf.Ship_BeamArchotech_Unpowered,
+				ThingDefOf.Ship_Beam_Wrecked
+		};
 	}
 }

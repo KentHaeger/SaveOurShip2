@@ -112,6 +112,7 @@
 	<SoS.ClaimWrecksCommandDesc>Claim all wrecks on this map</SoS.ClaimWrecksCommandDesc>
 	<SoS.ClaimWrecksSuccess>Claimed {0} buildings!</SoS.ClaimWrecksSuccess>
 	<SoS.ClaimWrecksDisabled>Enemy forces present!</SoS.ClaimWrecksDisabled>
+	<SoS.AutoClaimedShuttles>Automatically claimed {0} shuttles after battle</SoS.AutoClaimedShuttles>
 	<SoS.RemoveWrecksCommand>Remove wreck</SoS.RemoveWrecksCommand>
 	<SoS.RemoveWrecksCommandDesc>Remove target wreck from this map</SoS.RemoveWrecksCommandDesc>
 	<!-- placeworkers -->
@@ -153,6 +154,8 @@
 	<SelectEverything>Select Everything</SelectEverything>
 	<SelectEverythingDesc>Select everything.</SelectEverythingDesc>
 	<!-- bridge -->
+	<!-- Ship name in case there is no bridge -->
+	<SoS.Ship.WreckName>Wreck</SoS.Ship.WreckName>
 	<SoS.Ship.DefaultName>Unnamed Ship</SoS.Ship.DefaultName>
 	<SoS.StatsShipName>Ship name: {0}</SoS.StatsShipName>
 	<SoS.StatsNotoriety>Notoriety: {0}</SoS.StatsNotoriety>
@@ -487,15 +490,24 @@
 	<SoSAIName>AI name: {0}</SoSAIName>
 	<SoSNoMapObserve>This type of map cannot be observed from orbit. Its owners have likely deployed sensor scrambling technology.</SoSNoMapObserve>
 	<SoS.Breathable>Breathable</SoS.Breathable>
-	<!-- satellite -->
+	<!-- Satellite -->
 	<SoS.SatelliteRepair>Repair</SoS.SatelliteRepair>
 	<SoS.SatelliteHack>Hack</SoS.SatelliteHack>
 
-	<!-- notorietuy alert -->
+	<!-- Notorietuy alert -->
 	<SoS.Alert.NotoriertyLabel>Notoriety: {0}</SoS.Alert.NotoriertyLabel>
 	<SoS.Alert.NotoriertyLowDesc>Because of pirating trade ships and/or because of using Orbital Bombardment (submod), player ship got notorious. Not too much yet, but continued piracy or bombardment will make it higher and attract bounty hunters.</SoS.Alert.NotoriertyLowDesc>
 	<SoS.Alert.NotoriertyHighDesc>Because of pirating trade ships and/or because of using Orbital Bombardment (submod), player ship got very notorious and is chased by bounty hunters. Attacks will happen roughly evey {0} days.</SoS.Alert.NotoriertyHighDesc>
 
+	<!-- TWR / Movement blocked alert -->
+	<SoS.Alert.MovemenyBlocked>Player ship movement is blocked!</SoS.Alert.MovemenyBlocked>
+	<SoS.Alert.MovemenyBlockedDesc>Player ship movement in battle is blocked because of wrecks or immobile ships on map.</SoS.Alert.MovemenyBlockedDesc>
+	<SoS.Alert.TWR>TWR: Player {0}, Enemy: {1}</SoS.Alert.TWR>	
+	<SoS.Alert.TWRDesc>Final thrust to weight ratios (TWRs) for player and enemy maps in ship battle. When there are multiple ships on one map, this is equal to TWR of the slowest ship.
+Slowest player ship: {0}, click to jump to it.
+Slowest enemy ship: {1}.
+	</SoS.Alert.TWRDesc>	
+	
 	<!-- This scetion and lower were added during major translation upgrade -->
 	<!-- Archotech and endgame stuff -->
 	<SoS.ArchotechIdeoKeep>Discover the truth of {0}</SoS.ArchotechIdeoKeep>
@@ -562,6 +574,7 @@
 
 	<!-- Starship bow quest -->
 	<SoS.AIPersuade>Persuade to live</SoS.AIPersuade>
+	<SoS.AIPersuadeConfirmation>Persuading insane AI is dangerous and can cause permanent health issues if failed. Continue?</SoS.AIPersuadeConfirmation>
 	<SoS.BlackBoxHack>Hack</SoS.BlackBoxHack>
 	<SoS.ReactorDisableSuccess>Reactors successfully disabled!</SoS.ReactorDisableSuccess>
 	<SoS.DoorOpenSuccess>Doors successfully opened!</SoS.DoorOpenSuccess>
@@ -706,7 +719,6 @@ Successful dodge means miss by a lot, projectile doesn't even enter target map.<
 	<SoS.DodgeRightDesc>Dodge incoming shots, engaging left side RCS thrusters and moving ship to the right.</SoS.DodgeRightDesc>
 	
 	<!-- Stashed ship quest -->
-	
 	<SoS.StashedShip.RequestOptionParent>Request stashed ship location</SoS.StashedShip.RequestOptionParent>
 	<SoS.StashedShip.RequestOption>{0} (cost: {1} silver) ({2})</SoS.StashedShip.RequestOption>
 	<!-- Top-level option when unavailable -->
@@ -715,9 +727,29 @@ Successful dodge means miss by a lot, projectile doesn't even enter target map.<
 	<SoS.StashedShip.RequestOptionDummySpecific>{0}</SoS.StashedShip.RequestOptionDummySpecific>
 	<SoS.StashedShip.OnCooldown>Next request for stashed ship will be available in {0} days.</SoS.StashedShip.OnCooldown>
 	<SoS.StashedShip.RequiresTech>Research Starflight Basics technology before requesting.</SoS.StashedShip.RequiresTech>
+	<SoS.StashedShip.NotInSpace>Ships stashed on planet aren't availaable from space.</SoS.StashedShip.NotInSpace>
 	<SoS.StashedShip.NoSecuroity>Not guarded</SoS.StashedShip.NoSecuroity>
 	<SoS.StashedShip.MinorSceurity>Lightly guarded</SoS.StashedShip.MinorSceurity>
 	<SoS.StashedShip.AverageSceurity>Average security</SoS.StashedShip.AverageSceurity>
 	<SoS.StashedShip.HighSceurity>Heavily guarded</SoS.StashedShip.HighSceurity>
+	<!-- Ship category and class names -->
+	<SoS.StashedShip.RecommendedStarterShips>Recommended starter ships</SoS.StashedShip.RecommendedStarterShips>
+	<SoS.StashedShip.StarterShips>Starter ships</SoS.StashedShip.StarterShips>
+	<SoS.StashedShip.Traders>Trade ships</SoS.StashedShip.Traders>
+	<SoS.StashedShip.LowCR>Low combat rating/non-combat ships</SoS.StashedShip.LowCR>
+	<SoS.StashedShip.Fighters>Fighters</SoS.StashedShip.Fighters>
+	<SoS.StashedShip.Bombers>Bombers</SoS.StashedShip.Bombers>
+	<SoS.StashedShip.Corvettes>Corvettes</SoS.StashedShip.Corvettes>
+	<SoS.StashedShip.Frigates>Frigates</SoS.StashedShip.Frigates>
+	<SoS.StashedShip.Destroyers>Destroyers</SoS.StashedShip.Destroyers>
+	<SoS.StashedShip.Cruisers>Cruisers</SoS.StashedShip.Cruisers>
+	<SoS.StashedShip.Battleships>Battleships</SoS.StashedShip.Battleships>
+	<SoS.StashedShip.Battlecruisers>Battlecruisers</SoS.StashedShip.Battlecruisers>
+	<SoS.StashedShip.Dreadnoughts>Dreadnoughts</SoS.StashedShip.Dreadnoughts>
+	<SoS.StashedShip.Carriers>Carriers</SoS.StashedShip.Carriers>
+	<SoS.StashedShip.DevAllShips>Dev: All ships (use with caution)</SoS.StashedShip.DevAllShips>
+	<SoS.StashedShip.DevAllShipsFlipped>Dev: All ships flipped (use with caution)</SoS.StashedShip.DevAllShipsFlipped>
+	
+	<SoS.StashedShip.Destroyers>Destroyers</SoS.StashedShip.Destroyers>
 	
 </LanguageData>

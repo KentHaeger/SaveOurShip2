@@ -7,7 +7,7 @@ using RimWorld;
 
 namespace SaveOurShip2
 {
-	class AttackableShip : PassingShip
+	public class AttackableShip : PassingShip
 	{
 		public ShipDef attackableShip;
 		public Faction shipFaction;
