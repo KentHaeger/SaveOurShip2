@@ -138,6 +138,7 @@ namespace SaveOurShip2
 			}
 
 			Thing hardpoint = ThingMaker.MakeThing(ResourceBank.ThingDefOf.ShipHardpointSmall);
+			hardpoint.SetFactionDirect(shipFaction);
 			GenSpawn.Spawn(hardpoint, turretTile, map);
 
 			ThingDef turretDef = turretDefs.RandomElement();
@@ -152,7 +153,9 @@ namespace SaveOurShip2
 			{
 				turret = ThingMaker.MakeThing(turretDef);
 			}
+			turret.SetFactionDirect(shipFaction);
 			GenSpawn.Spawn(turret, turretTile, map);
+			
 		}
 		private bool ContainsAirlock(IntVec3 tile)
 		{
