@@ -153,6 +153,27 @@ namespace SaveOurShip2
 			public static ThingDef JTDriveSalvage;
 			public static ThingDef ShipCombatShieldGeneratorMini;
 			public static ThingDef ShipHardpointSmall;
+
+			//Corners
+			public static ThingDef Ship_Corner_OneOne;
+			public static ThingDef Ship_Corner_OneOneFlip;
+			public static ThingDef Ship_Corner_OneTwo;
+			public static ThingDef Ship_Corner_OneTwoFlip;
+			public static ThingDef Ship_Corner_OneThree;
+			public static ThingDef Ship_Corner_OneThreeFlip;
+			public static ThingDef Ship_Corner_OneOne_Mech;
+			public static ThingDef Ship_Corner_OneOne_MechFlip;
+			public static ThingDef Ship_Corner_OneTwo_Mech;
+			public static ThingDef Ship_Corner_OneTwoFlip_Mech;
+			public static ThingDef Ship_Corner_OneThree_Mech;
+			public static ThingDef Ship_Corner_OneThreeFlip_Mech;
+			public static ThingDef Ship_Corner_Archo_OneOne;
+			public static ThingDef Ship_Corner_Archo_OneOneFlip;
+			public static ThingDef Ship_Corner_Archo_OneTwo;
+			public static ThingDef Ship_Corner_Archo_OneTwoFlip;
+			public static ThingDef Ship_Corner_Archo_OneThree;
+			public static ThingDef Ship_Corner_Archo_OneThreeFlip;
+
 			//vanilla defs
 			public static ThingDef Turret_Autocannon;
 			public static ThingDef Turret_Sniper;
@@ -446,5 +467,28 @@ namespace SaveOurShip2
 				ThingDefOf.Ship_BeamArchotech_Unpowered,
 				ThingDefOf.Ship_Beam_Wrecked
 		};
+
+		public static readonly List<ThingDef> CornerDefs = new List<ThingDef>()
+		{
+			ThingDefOf.Ship_Corner_OneOne,
+			ThingDefOf.Ship_Corner_OneOneFlip,
+			ThingDefOf.Ship_Corner_OneTwo,
+			ThingDefOf.Ship_Corner_OneTwoFlip,
+			ThingDefOf.Ship_Corner_OneThree,
+			ThingDefOf.Ship_Corner_OneThreeFlip,
+			ThingDefOf.Ship_Corner_OneOne_Mech,
+			ThingDefOf.Ship_Corner_OneOne_MechFlip,
+			ThingDefOf.Ship_Corner_OneTwo_Mech,
+			ThingDefOf.Ship_Corner_OneTwoFlip_Mech,
+			ThingDefOf.Ship_Corner_OneThree_Mech,
+			ThingDefOf.Ship_Corner_OneThreeFlip_Mech,
+			ThingDefOf.Ship_Corner_Archo_OneOne,
+			ThingDefOf.Ship_Corner_Archo_OneOneFlip,
+			ThingDefOf.Ship_Corner_Archo_OneTwo,
+			ThingDefOf.Ship_Corner_Archo_OneTwoFlip,
+			ThingDefOf.Ship_Corner_Archo_OneThree,
+			ThingDefOf.Ship_Corner_Archo_OneThreeFlip,
+		};
+
 	}
 }
