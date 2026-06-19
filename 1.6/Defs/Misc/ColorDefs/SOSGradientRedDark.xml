@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<ColorDef ParentName="StructureColorBase">
+		<defName>SOS_ColorGradientRedDarkA</defName>
+		<label>Color gradient red dark A</label>
+		<color>(115, 71, 70)</color>
+		<displayOrder>812</displayOrder>
+	</ColorDef>
+	<ColorDef ParentName="StructureColorBase">
+		<defName>SOS_ColorGradientRedDarkB</defName>
+		<label>Color gradient red dark B</label>
+		<color>(111, 71, 70)</color>
+		<displayOrder>813</displayOrder>
+	</ColorDef>
+	<ColorDef ParentName="StructureColorBase">
+		<defName>SOS_ColorGradientRedDarkC</defName>
+		<label>Color gradient red dark C</label>
+		<color>(107, 71, 70)</color>
+		<displayOrder>814</displayOrder>
+	</ColorDef>
+	<ColorDef ParentName="StructureColorBase">
+		<defName>SOS_ColorGradientRedDarkD</defName>
+		<label>Color gradient red dark D</label>
+		<color>(103, 72, 70)</color>
+		<displayOrder>815</displayOrder>
+	</ColorDef>
+	<ColorDef ParentName="StructureColorBase">
+		<defName>SOS_ColorGradientRedDarkE</defName>
+		<label>Color gradient red dark E</label>
+		<color>(99, 72, 70)</color>
+		<displayOrder>816</displayOrder>
+	</ColorDef>
+	<ColorDef ParentName="StructureColorBase">
+		<defName>SOS_ColorGradientRedDarkF</defName>
+		<label>Color gradient red dark F</label>
+		<color>(95, 72, 70)</color>
+		<displayOrder>817</displayOrder>
+	</ColorDef>
+	<ColorDef ParentName="StructureColorBase">
+		<defName>SOS_ColorGradientRedDarkG</defName>
+		<label>Color gradient red dark G</label>
+		<color>(91, 72, 71)</color>
+		<displayOrder>818</displayOrder>
+	</ColorDef>
+	<ColorDef ParentName="StructureColorBase">
+		<defName>SOS_ColorGradientRedDarkH</defName>
+		<label>Color gradient red dark H</label>
+		<color>(87, 72, 71)</color>
+		<displayOrder>819</displayOrder>
+	</ColorDef>
+	<ColorDef ParentName="StructureColorBase">
+		<defName>SOS_ColorGradientRedDarkI</defName>
+		<label>Color gradient red dark I</label>
+		<color>(83, 72, 71)</color>
+		<displayOrder>820</displayOrder>
+	</ColorDef>
+	<ColorDef ParentName="StructureColorBase">
+		<defName>SOS_ColorGradientRedDarkJ</defName>
+		<label>Color gradient red dark J</label>
+		<color>(79, 73, 71)</color>
+		<displayOrder>821</displayOrder>
+	</ColorDef>
+	<ColorDef ParentName="StructureColorBase">
+		<defName>SOS_ColorGradientRedDarkK</defName>
+		<label>Color gradient red dark K</label>
+		<color>(75, 73, 71)</color>
+		<displayOrder>822</displayOrder>
+	</ColorDef>
+	<ColorDef ParentName="StructureColorBase">
+		<defName>SOS_ColorGradientRedDarkL</defName>
+		<label>Color gradient red dark L</label>
+		<color>(71, 73, 71)</color>
+		<displayOrder>823</displayOrder>
+	</ColorDef>
+</Defs>

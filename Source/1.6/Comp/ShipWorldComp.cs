@@ -33,26 +33,6 @@ namespace SaveOurShip2
 		// Ships can move between maps back and fourth and weapon groups should be preserved in this case, therefore
 		// this belongs here, but not to specific map or ship
 		private WeaponGroupManager weaponGroups = new WeaponGroupManager();
-		
-		// Extra colors used to paint ships
-		private HashSet<Color> extraColors = new HashSet<Color>();
-		
-		public bool ColorCapReached()
-		{
-			const int cap = 100;
-			return extraColors.Count >= cap;
-		}
-		public bool AddColor(Color color)
-        {
-			// limit number of colors used
-			if (!ColorCapReached())
-			{
-				Log.Message("Added color");
-				extraColors.Add(color);
-				return true;
-			}
-			return false;			
-        }
 		public WeaponGroupManager WeaponGroups
 		{
 			get => weaponGroups;
@@ -181,34 +161,11 @@ namespace SaveOurShip2
 			{
 				weaponGroups = new WeaponGroupManager();
 			}
-			Scribe_Collections.Look<Color>(ref extraColors, "ExtraColors", LookMode.Value);
-			if (Scribe.mode == LoadSaveMode.LoadingVars)
-            {
-				if (extraColors == null)
-                {
-					extraColors = new HashSet<Color>();
-				}
-				int addedColorCount = 0;
-				foreach(Color color in extraColors)
-                {
-					ColorDef colorDef = ShipImporter.MakeColorDef(color);
-					if (DefDatabase<ColorDef>.GetNamedSilentFail(colorDef.defName) == null)
-					{
-						addedColorCount++;
-						DefDatabase<ColorDef>.Add(colorDef);
-					}					
-                }
-				Log.Message($"Added colors on world comp load: {addedColorCount}");
-            }
 
-
-			//if (Scribe.mode != LoadSaveMode.PostLoadInit
 			if (weaponGroups == null)
 			{
 				weaponGroups = new WeaponGroupManager();
 			}
-
-
 
 			if (Scribe.mode == LoadSaveMode.LoadingVars)
 			{

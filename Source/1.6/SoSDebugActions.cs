@@ -90,7 +90,7 @@ namespace SaveOurShip2
 		private static void AddColoredFloor()
 		{
 			Map map = Find.CurrentMap;
-			ShipImporter.ImportFloorAndColor(map);
+			ShipPainter.PaintFloorAndBuildings(map, useBuiltInTexture:false);
 		}
 	}
 }
