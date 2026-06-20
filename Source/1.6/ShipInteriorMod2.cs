@@ -931,7 +931,7 @@ namespace SaveOurShip2
 			{
 				return;
 			}
-			if (wreckLevel > 0)
+			if (shipDef.customPaintjob || wreckLevel > 0 )
 			{
 				return;
 			}
