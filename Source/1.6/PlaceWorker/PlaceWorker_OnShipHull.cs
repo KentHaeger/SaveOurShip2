@@ -31,7 +31,8 @@ namespace SaveOurShip2
 				if (t is Building b && b.Faction == Faction.OfPlayer)
 				{
 					var shipPart = b.TryGetComp<CompShipCachePart>();
-					if (shipPart != null && (shipPart.Props.isPlating || (shipPart.Props.isHardpoint && def.defName.Contains("Turret"))))
+					bool isTurret = def?.defName?.Contains("Turret") ?? false;
+					if (shipPart != null && (shipPart.Props.isPlating || (shipPart.Props.isHardpoint && isTurret)))
 					{
 						hasPlating = true;
 						if (hasPlating && hasRestrictedBay)

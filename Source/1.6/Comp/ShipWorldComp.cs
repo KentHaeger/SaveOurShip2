@@ -162,7 +162,10 @@ namespace SaveOurShip2
 				weaponGroups = new WeaponGroupManager();
 			}
 
-
+			if (weaponGroups == null)
+			{
+				weaponGroups = new WeaponGroupManager();
+			}
 
 			if (Scribe.mode == LoadSaveMode.LoadingVars)
 			{

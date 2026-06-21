@@ -50,6 +50,7 @@
 			<isAirtight>true</isAirtight>
 			<!-- When not enough energy to fire, Vanilla sound logic would cause enemy turrets to beep continually and annoyingly, so disabled -->
 			<playTargetAcquiredSound>false</playTargetAcquiredSound>
+			<paintable>true</paintable>
 		</building>
 		<uiIconScale>1.0</uiIconScale>
 		<seeThroughFog>true</seeThroughFog>
@@ -334,6 +335,7 @@
 			<texPath>Things/Building/Ship/Heatsink</texPath>
 			<graphicClass>Graphic_Single</graphicClass>
 			<drawSize>(2,2)</drawSize>
+			<shaderType>CutoutComplex</shaderType>
 		</graphicData>
 		<statBases>
 			<MaxHitPoints>800</MaxHitPoints>
@@ -384,6 +386,7 @@
 			<texPath>Things/Building/Ship/HeatsinkLarge</texPath>
 			<graphicClass>Graphic_Single</graphicClass>
 			<drawSize>(4,4)</drawSize>
+			<shaderType>CutoutComplex</shaderType>
 		</graphicData>
 		<statBases>
 			<MaxHitPoints>1600</MaxHitPoints>

@@ -10,6 +10,9 @@
 		<canOverlapZones>false</canOverlapZones>
 		<terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
 		<staticSunShadowHeight>1.0</staticSunShadowHeight>
+		<building>
+			<paintable>true</paintable>
+		</building>
 	</ThingDef>
 	<ThingDef ParentName="BuildingShipBase" Name="BuildingShipHullBase" Abstract="True">
 		<holdsRoof>true</holdsRoof>
@@ -2009,6 +2012,9 @@
 			<Mass>20</Mass>
 			<Flammability>0</Flammability>
 		</statBases>
+		<building>
+			<paintable>true</paintable>
+		</building>
 		<description>Efficiently stores up to 1,000Wd of energy.</description>
 		<size>(1,2)</size>
 		<costList>
@@ -2068,6 +2074,9 @@
 			<Mass>200</Mass>
 			<Flammability>0</Flammability>
 		</statBases>
+		<building>
+			<paintable>true</paintable>
+		</building>
 		<description>Efficiently stores up to 10,000Wd of energy.</description>
 		<size>(3,5)</size>
 		<costList>
@@ -2138,6 +2147,9 @@
 			<MaxHitPoints>500</MaxHitPoints>
 			<Flammability>0.1</Flammability>
 		</statBases>
+		<building>
+			<paintable>true</paintable>
+		</building>
 		<tickerType>Normal</tickerType>
 		<description>A compact, self-contained fission reactor. Burns uranium fuel pods. Vents heat into a heatsink network if available, or into the surrounding room if not.\n\nIts base power production of 10,000W can be boosted with several increasingly risky overdrive modes. Produces a lot of heat and will require proper ventilation.</description>
 		<size>(5,5)</size>
@@ -2231,6 +2243,9 @@
 			<MaxHitPoints>200</MaxHitPoints>
 			<Flammability>0.1</Flammability>
 		</statBases>
+		<building>
+			<paintable>true</paintable>
+		</building>
 		<tickerType>Normal</tickerType>
 		<description>A compact, self-contained fission reactor. Burns uranium fuel pods. Vents heat into a heatsink network if available, or into the surrounding room if not.\n\nIts base power production of 3,000W can be boosted with several increasingly risky overdrive modes. Produces a lot of heat and will require proper ventilation.</description>
 		<size>(3,3)</size>
@@ -2943,6 +2958,9 @@
 			<Flammability>0</Flammability>
 			<Mass>200</Mass>
 		</statBases>
+		<building>
+			<paintable>true</paintable>
+		</building>
 		<tickerType>Normal</tickerType>
 		<size>(2,2)</size>
 		<designationCategory>Ship</designationCategory>

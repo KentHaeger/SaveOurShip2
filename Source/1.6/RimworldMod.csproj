@@ -100,6 +100,7 @@
     <Compile Include="AISettings.cs" />
     <Compile Include="Alert\AlertTWR.cs" />
     <Compile Include="AssetPreprocessor.cs" />
+    <Compile Include="ColorDefMatcher.cs" />
     <Compile Include="CompShipEngineBreakdownable.cs" />
     <Compile Include="Alert\AlertDodgeChanceBase.cs" />
     <Compile Include="Alert\AlertDodgeChanceEnemy.cs" />
@@ -163,9 +164,11 @@
     <Compile Include="LogInterop.cs" />
     <Compile Include="ShipCatalog.cs" />
     <Compile Include="ShipImorter.cs" />
+    <Compile Include="ShipPainter.cs" />
     <Compile Include="SOS2MapUtility.cs" />
     <Compile Include="SoSDebugActions.cs" />
     <Compile Include="SoSSpawnOverride.cs" />
+    <Compile Include="TextureUtility.cs" />
     <Compile Include="TranslatableStrings.cs" />
     <Compile Include="TranslationUtility.cs" />
     <Compile Include="TurretGenerator.cs" />

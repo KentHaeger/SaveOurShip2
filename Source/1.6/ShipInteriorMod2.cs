@@ -923,6 +923,30 @@ namespace SaveOurShip2
 				return false;
 			return true;
 		}
+		// Randomly paint some eligible ships
+		private static void PaintSingleShipMap(Map map, ShipDef shipDef, Faction fac, int wreckLewvel)
+		{
+			
+			if (fac == Faction.OfMechanoids || fac == null || !fac.HostileTo(Faction.OfPlayer))
+			{
+				return;
+			}
+			if (wreckLewvel > 0)
+			{
+				return;
+			}
+			// Do not touch submod ships
+			ModContentPack sosContentPack = LoadedModManager.GetMod<ShipInteriorMod2>().Content;
+			if (shipDef.modContentPack != sosContentPack)
+			{
+				return;
+			}
+			const float paintChance = 0.25f;
+			if (Rand.Chance(paintChance))
+			{
+				ShipPainter.PaintFloorAndBuildings(map, useBuiltInTexture: true);
+			}
+		}
 		public static void GenerateShip(ShipDef shipDef, Map map, PassingShip passingShip, Faction fac, Lord lord, out List<Building> cores, bool shipActive = true,
 			bool clearArea = false, int wreckLevel = 0, int offsetX = -1, int offsetZ = -1, NavyDef navyDef = null, bool flipShip = false, bool preventPawnSpawn = false)
 		{
@@ -961,6 +985,7 @@ namespace SaveOurShip2
 					PostProcessShip(shipDef, map, fac, area, wreckLevel);
 				}
 			}
+			PaintSingleShipMap(map, shipDef, fac, wreckLevel);
 			PostGenerateShipDef(map, fac, clearArea, area, planters);
 		}
 		public static void GenerateFleet(float CR, Map map, PassingShip passingShip, Faction fac, Lord lord, out List<Building> cores, bool shipActive = true, bool clearArea = false, int wreckLevel = 0, NavyDef navyDef = null)

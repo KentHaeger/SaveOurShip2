@@ -490,5 +490,46 @@ namespace SaveOurShip2
 			ThingDefOf.Ship_Corner_Archo_OneThreeFlip,
 		};
 
+		//These buildings were manually chosen to be auto-paintable
+		public static readonly List<ThingDef> AutoPaintableBuildingDefs = new List<ThingDef>
+		{
+			// ResourceBank.ThingDefOf
+			ResourceBank.ThingDefOf.ShipAirlock,
+			ResourceBank.ThingDefOf.ShipAirlockBeam,
+			ResourceBank.ThingDefOf.ShipInside_SolarGenerator,
+			ResourceBank.ThingDefOf.Ship_Engine,
+			ResourceBank.ThingDefOf.Ship_Engine_Interplanetary,
+			ResourceBank.ThingDefOf.Ship_Engine_Interplanetary_Large,
+			ResourceBank.ThingDefOf.Ship_Engine_Large,
+			ResourceBank.ThingDefOf.ShipSpinalAmplifier,
+			// DefDatabase lookups
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipCapacitor"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipCapacitorSmall"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipInside_PassiveVent"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipHeatsink"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipHeatsinkLarge"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("Ship_Reactor"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("Ship_Reactor_Small"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("Ship_Engine_Small"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("Ship_Thruster"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipSpinalBarrelKinetic"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipSpinalBarrelLaser"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipSpinalBarrelPlasma"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipSpinalEmitter"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipTorpedoOne"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipTorpedoSix"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipTorpedoTwo"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipTurret_ACI"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipTurret_ACII"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipTurret_ACIII"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipTurret_Kinetic"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipTurret_Kinetic_Large"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipTurret_Laser"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipTurret_Laser_Large"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipTurret_Plasma"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipTurret_Plasma_Large"),
+		};
+
+		public const string noMapMessage = "To import ship blueprint, switch from world view to loacl map view";
 	}
 }
