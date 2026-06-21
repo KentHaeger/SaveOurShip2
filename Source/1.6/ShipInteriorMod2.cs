@@ -924,14 +924,14 @@ namespace SaveOurShip2
 			return true;
 		}
 		// Randomly paint some eligible ships
-		private static void PaintSingleShipMap(Map map, ShipDef shipDef, Faction fac, int wreckLewvel)
+		private static void PaintSingleShipMap(Map map, ShipDef shipDef, Faction fac, int wreckLevel)
 		{
 			
 			if (fac == Faction.OfMechanoids || fac == null || !fac.HostileTo(Faction.OfPlayer))
 			{
 				return;
 			}
-			if (wreckLewvel > 0)
+			if (shipDef.customPaintjob || wreckLevel > 0 )
 			{
 				return;
 			}
