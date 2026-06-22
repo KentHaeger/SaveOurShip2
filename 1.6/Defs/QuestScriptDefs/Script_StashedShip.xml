@@ -3,7 +3,8 @@
   <QuestScriptDef>
     <defName>SoSStashedShipScript</defName>
 	<!-- Intende to be manually triggered via coms console, for payment -->
-    <rootSelectionWeight>0.0</rootSelectionWeight>
+    <rootSelectionWeight>0</rootSelectionWeight>
+	<randomlySelectable>false</randomlySelectable>
     <rootMinPoints>100</rootMinPoints>
     <autoAccept>true</autoAccept>
     <questNameRules>
