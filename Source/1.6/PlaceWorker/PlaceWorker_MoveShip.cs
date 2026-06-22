@@ -20,65 +20,73 @@ namespace SaveOurShip2
 
 		public override AcceptanceReport AllowsPlacing(BuildableDef def, IntVec3 loc, Rot4 rot, Map map, Thing thingToIgnore = null, Thing thing = null)
 		{
-			if (thing is ShipMoveBlueprint ship)
+			try
 			{
-				bool targetMapLarger = false; //if target map is larger, allow only up to origin map size
-				Map originMap = ShipInteriorMod2.shipOriginMap;
-				if (originMap != null && (originMap.Size.x < map.Size.x || originMap.Size.z < map.Size.z))
+				if (thing is ShipMoveBlueprint ship)
 				{
-					targetMapLarger = true;
-				}
-				AcceptanceReport result = true;
-				IEnumerable<SketchEntity> entities;
-				if (ship.extenderSketch != null)
-					entities = ship.shipSketch.Entities.Concat(ship.extenderSketch?.Entities);
-				else
-					entities = ship.shipSketch.Entities;
-				foreach (SketchEntity current in entities)
-				{
-					IntVec3 vec = loc + current.pos;
-					if (!vec.InBounds(map))
+					bool targetMapLarger = false; //if target map is larger, allow only up to origin map size
+					Map originMap = ShipInteriorMod2.shipOriginMap;
+					if (originMap != null && (originMap.Size.x < map.Size.x || originMap.Size.z < map.Size.z))
 					{
-						result = false;
-						break;
+						targetMapLarger = true;
 					}
-					bool isSpawnBlocked = current.IsSpawningBlocked(vec, map) && map.terrainGrid.TerrainAt(vec) != TerrainDefOf.Space;
-					if (GenGrid.InNoBuildEdgeArea(vec, map) || isSpawnBlocked || map.roofGrid.Roofed(vec) || (targetMapLarger && (vec.x > originMap.Size.x || vec.z > originMap.Size.z)))
+					AcceptanceReport result = true;
+					IEnumerable<SketchEntity> entities;
+					if (ship.extenderSketch != null)
+						entities = ship.shipSketch.Entities.Concat(ship.extenderSketch?.Entities);
+					else
+						entities = ship.shipSketch.Entities;
+					foreach (SketchEntity current in entities)
 					{
-						current.DrawGhost(vec, new Color(0.8f, 0.2f, 0.2f, 0.3f));
-						result = false;
-						continue;
-					}
-					foreach (Thing t in vec.GetThingList(map))
-					{
-						if (t is Building b)
+						IntVec3 vec = loc + current.pos;
+						if (!vec.InBounds(map))
 						{
-							if (b.def.passability == Traversability.Impassable || b is Building_SteamGeyser)
+							result = false;
+							break;
+						}
+						bool isSpawnBlocked = current.IsSpawningBlocked(vec, map) && map.terrainGrid.TerrainAt(vec) != TerrainDefOf.Space;
+						if (GenGrid.InNoBuildEdgeArea(vec, map) || isSpawnBlocked || map.roofGrid.Roofed(vec) || (targetMapLarger && (vec.x > originMap.Size.x || vec.z > originMap.Size.z)))
+						{
+							current.DrawGhost(vec, new Color(0.8f, 0.2f, 0.2f, 0.3f));
+							result = false;
+							continue;
+						}
+						foreach (Thing t in vec.GetThingList(map))
+						{
+							if (t is Building b)
 							{
-								current.DrawGhost(vec, new Color(0.8f, 0.2f, 0.2f, 0.3f));
-								result = false;
-								break;
+								if (b.def.passability == Traversability.Impassable || b is Building_SteamGeyser)
+								{
+									current.DrawGhost(vec, new Color(0.8f, 0.2f, 0.2f, 0.3f));
+									result = false;
+									break;
+								}
 							}
 						}
 					}
-				}
-				foreach (SketchEntity current in ship.conflictSketch?.Entities) //no buildings allowed in this
-				{
-					IntVec3 vec = loc + current.pos;
-					if (!vec.InBounds(map))
+					foreach (SketchEntity current in ship.conflictSketch?.Entities) //no buildings allowed in this
 					{
-						result = false;
-						break;
+						IntVec3 vec = loc + current.pos;
+						if (!vec.InBounds(map))
+						{
+							result = false;
+							break;
+						}
+						if (vec.GetFirstBuilding(map) != null)
+						{
+							result = false;
+							break;
+						}
 					}
-					if (vec.GetFirstBuilding(map) != null)
-					{
-						result = false;
-						break;
-					}
+					return result;
 				}
-				return result;
+				return true;
 			}
-			return true;
+			catch (Exception ex)
+			{
+				Log.ErrorOnce($"SoS 2: error placing ship move blueprint. Trace: { ex.StackTrace }", 42171823);
+				return false;
+			}
 		}
 	}
 }
