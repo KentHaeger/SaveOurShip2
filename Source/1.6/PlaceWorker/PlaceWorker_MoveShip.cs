@@ -20,9 +20,10 @@ namespace SaveOurShip2
 
 		public override AcceptanceReport AllowsPlacing(BuildableDef def, IntVec3 loc, Rot4 rot, Map map, Thing thingToIgnore = null, Thing thing = null)
 		{
-			try
+			
+			if (thing is ShipMoveBlueprint ship)
 			{
-				if (thing is ShipMoveBlueprint ship)
+				try
 				{
 					bool targetMapLarger = false; //if target map is larger, allow only up to origin map size
 					Map originMap = ShipInteriorMod2.shipOriginMap;
@@ -64,29 +65,32 @@ namespace SaveOurShip2
 							}
 						}
 					}
-					foreach (SketchEntity current in ship.conflictSketch?.Entities) //no buildings allowed in this
+					if (ship.conflictSketch != null && !ship.conflictSketch.Entities.NullOrEmpty())
 					{
-						IntVec3 vec = loc + current.pos;
-						if (!vec.InBounds(map))
+						foreach (SketchEntity current in ship.conflictSketch?.Entities) //no buildings allowed in this
 						{
-							result = false;
-							break;
-						}
-						if (vec.GetFirstBuilding(map) != null)
-						{
-							result = false;
-							break;
+							IntVec3 vec = loc + current.pos;
+							if (!vec.InBounds(map))
+							{
+								result = false;
+								break;
+							}
+							if (vec.GetFirstBuilding(map) != null)
+							{
+								result = false;
+								break;
+							}
 						}
 					}
 					return result;
 				}
-				return true;
+				catch (Exception ex)
+				{
+					Log.ErrorOnce($"SoS 2: error placing ship move blueprint. Exception: { ex.Message } Trace: {ex.StackTrace}", 42171823);
+					return false;
+				}
 			}
-			catch (Exception ex)
-			{
-				Log.ErrorOnce($"SoS 2: error placing ship move blueprint. Trace: { ex.StackTrace }", 42171823);
-				return false;
-			}
+			return true;
 		}
 	}
 }
