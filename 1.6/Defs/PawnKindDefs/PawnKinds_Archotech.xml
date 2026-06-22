@@ -898,7 +898,7 @@
 			<li Class="CompProperties_Milkable">
 				<milkDef>ArchotechExoticParticles</milkDef>
 				<milkIntervalDays>3</milkIntervalDays>
-				<milkAmount>1</milkAmount>
+				<milkAmount>4</milkAmount>
 				<milkFemaleOnly>false</milkFemaleOnly>
 			</li>
 			<li Class="SaveOurShip2.CompProps_Archolife">

@@ -824,10 +824,12 @@ namespace SaveOurShip2
 
 		private void MakeGift(int numUnlock)
 		{
+			// Main focus is to give more exotic particles, but as they are in the rewards pool, there will be more of other rewards too
+			const float bonusScale = 1.5f;
 			if (GiftParticles) //spawn particles
 			{
 				Thing thing = ThingMaker.MakeThing(ResourceBank.ThingDefOf.ArchotechExoticParticles);
-				thing.stackCount = Math.Min(numUnlock * Rand.RangeInclusive(7, 10), thing.def.stackLimit);
+				thing.stackCount = Math.Min((int)(numUnlock * Rand.RangeInclusive(7, 10) * bonusScale), thing.def.stackLimit);
 				GenSpawn.Spawn(thing, Position, Map);
 			}
 			else //quest
@@ -836,7 +838,7 @@ namespace SaveOurShip2
 				slate.Set<string>("quest_name", TranslatorFormattedStringExtensions.Translate("SoS.ArchotechGiftQuestDesc",Consciousness.Name.ToStringFull));
 				slate.Set<string>("archotech_name", Consciousness.Name.ToStringShort);
 				slate.Set<Map>("map", Map);
-				slate.Set<int>("value", numUnlock * 1000);
+				slate.Set<int>("value", (int)(numUnlock * 1000 * bonusScale));
 				Quest quest = QuestUtility.GenerateQuestAndMakeAvailable(DefDatabase<QuestScriptDef>.GetNamed("ArchotechGiftQuest"), slate);
 				Find.LetterStack.ReceiveLetter(quest.name, quest.description, LetterDefOf.PositiveEvent, null, null, quest, null, null);
 			}
