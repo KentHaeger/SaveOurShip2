@@ -67,7 +67,7 @@ namespace SaveOurShip2
 					}
 					if (ship.conflictSketch != null && !ship.conflictSketch.Entities.NullOrEmpty())
 					{
-						foreach (SketchEntity current in ship.conflictSketch?.Entities) //no buildings allowed in this
+						foreach (SketchEntity current in ship.conflictSketch.Entities) //no buildings allowed in this
 						{
 							IntVec3 vec = loc + current.pos;
 							if (!vec.InBounds(map))
