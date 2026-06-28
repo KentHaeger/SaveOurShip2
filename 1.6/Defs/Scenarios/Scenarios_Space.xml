@@ -3,7 +3,7 @@
 	<ScenarioDef Name="SoSDerelict" ParentName="ScenarioBase">
 		<defName>SoSDerelict</defName>
 		<label>Derelict Ship</label>
-		<description>The three of you awake in your cryptosleep sarcophagi, stirred from slumber by an automated warning. A storm of micrometeorites has torn several breaches in your ship's hull and destroyed its Johnson-Tanaka drive. Trapped in orbit above an unknown rimworld, you must patch up your damaged ship and make long-term survival plans.</description>
+		<description>*Use scenario editor, edit mode to select specific ship instead of random one.* The three of you awake in your cryptosleep sarcophagi, stirred from slumber by an automated warning. A storm of micrometeorites has torn several breaches in your ship's hull and destroyed its Johnson-Tanaka drive. Trapped in orbit above an unknown rimworld, you must patch up your damaged ship and make long-term survival plans.</description>
 		<scenario>
 			<summary>Three survivors aboard a damaged starship.</summary>
 			<parts>
@@ -99,7 +99,7 @@
 	<ScenarioDef Name="SoSDungeon" ParentName="ScenarioBase">
 		<defName>SoSDungeon</defName>
 		<label>Space Station</label>
-		<description>You left home to join a crew bound for the stars, signed up for a long-duration operation out on the Rim.\n\nAt least, that's what you thought you were getting into.\n\nUpon awakening in your cryptosleep casket to the sound of warning klaxons, you find yourself on a space station. Likely abandoned, the life support and artificial ecosystem have run amok, filling the habitation spheres with wild plant life. How long have you been buried in here?</description>
+		<description>*Use scenario editor, edit mode to select specific station/location instead of random one. Difficulty varies between then a lot.*You left home to join a crew bound for the stars, signed up for a long-duration operation out on the Rim.\n\nAt least, that's what you thought you were getting into.\n\nUpon awakening in your cryptosleep casket to the sound of warning klaxons, you find yourself on a space station. Likely abandoned, the life support and artificial ecosystem have run amok, filling the habitation spheres with wild plant life. How long have you been buried in here?</description>
 		<scenario>
 			<summary>Three survivors aboard a space station.</summary>
 			<parts>
