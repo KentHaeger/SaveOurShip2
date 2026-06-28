@@ -1814,9 +1814,9 @@ namespace SaveOurShip2
 				{
 					SlowTick(tick);
 				}
-				// Value is to be picked manually. Too long maintain tick would result in ship doing maintaint command staying in engines on/off statre for too long
+				// Value is to be picked manually. Too long maintain tick would result in ship doing maintain command staying in engines on/off statre for too long
 				// and therefore letting actual distance to diverge a lot from desired distance.
-				// Too short maintain tick would men that shi[p engines will work in a "multiple super-short flashes per second" mode
+				// Too short maintain tick would mean that ship engines will work in a "multiple super-short flashes per second" mode
 				// which is really bad visually.
 				const int maintainTickInterval = 30;
 				if (tick % maintainTickInterval == 0)
