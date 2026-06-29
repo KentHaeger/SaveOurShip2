@@ -355,6 +355,7 @@ namespace SaveOurShip2
 				Scribe_Values.Look<float>(ref Range, "Range");
 				Scribe_Values.Look<bool>(ref attackedTradeship, "attackedTradeship");
 				Scribe_Values.Look<bool>(ref callSlowTick, "callSlowTick");
+				Scribe_Deep.Look<ShipCollisionManager>(ref collisionManager, "collisionManager");
 
 				//SC only - target only
 				Scribe_Values.Look<ShipAI>(ref ShipMapAI, "ShipMapAI", 0);
@@ -433,10 +434,17 @@ namespace SaveOurShip2
 		//SC only - origin only
 		public float Difficulty; //current battle difficulty factor taken from settings
 		public float Range; //400 is furthest away, 0 is up close and personal
+		public const float MaxBattleRange = 400;
+		public const float PDWeaponRange = 50;
 		public bool attackedTradeship; //target was AI tradeship - notoriety gain
 		public bool callSlowTick = false; //call both slow ticks
 		public int LastAttackTick;
 		public int LastBountyRaidTick;
+		private ShipCollisionManager collisionManager;
+		public ShipCollisionManager CollisionManager
+		{
+			get => collisionManager;
+		}
 		private bool shipCombatOrigin = false;
 		public bool ShipCombatOrigin //reset after battle
 		{
@@ -1327,6 +1335,11 @@ namespace SaveOurShip2
 			ShuttlesInRange = new List<VehiclePawn>();
 			ShuttlesOnMissions = new ThingOwner<VehiclePawn>();
 			ShuttleMissions = new List<ShuttleMissionData>();
+			if (ShipCombatOrigin)
+			{
+				collisionManager = new ShipCollisionManager();
+				collisionManager.OriginMapcomp = this;
+			}
 			//ship AI
 			if (HasShipMapAI)
 			{
@@ -1396,6 +1409,12 @@ namespace SaveOurShip2
 				else if (Heading == -1)
 				{
 					OriginMapComp.Range += MapEnginePower; //inrease distance
+				}
+
+				// only  origin map has it
+				if (collisionManager != null)
+				{
+					collisionManager.RangeUpdated();
 				}
 
 				OriginMapComp.Range = Mathf.Clamp(OriginMapComp.Range, 0f, 400f);

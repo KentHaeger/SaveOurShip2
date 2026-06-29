@@ -100,6 +100,7 @@ namespace SaveOurShip2
 			Scribe_Values.Look(ref archoKill, "archoKill", false);
 			Scribe_Values.Look(ref neverRetreat, "neverRetreat", false);
 			Scribe_Values.Look(ref addAntiBoardingDefense, "addAntiBoardingDefense", true);
+			Scribe_Values.Look(ref enableCollisions, "enableCollisions", true);
 			Scribe_Values.Look(ref newAccuracySystem, "newAccuracySystem", true);
 			Scribe_Values.Look(ref debugMode, "debugMode", false);
 
@@ -130,6 +131,7 @@ namespace SaveOurShip2
 			archoKill = false,
 			neverRetreat = false,
 			addAntiBoardingDefense = true,
+			enableCollisions = true,
 			debugMode = false;
 		public static int
 			minTravelTime = 5,
@@ -278,6 +280,10 @@ namespace SaveOurShip2
 			options.CheckboxLabeled("SoS.Settings.ArchoKill".Translate(), ref archoKill, "SoS.Settings.ArchoKill.Desc".Translate());
 			options.CheckboxLabeled("SoS.Settings.NeverRetreat".Translate(), ref neverRetreat, "SoS.Settings.NeverRetreat.Desc".Translate());
 			options.CheckboxLabeled("SoS.Settings.AddAntiBoardingDefense".Translate(), ref addAntiBoardingDefense, "SoS.Settings.AddAntiBoardingDefense.Desc".Translate());
+			if (ModsConfig.OdysseyActive)
+			{
+				options.CheckboxLabeled("SoS.Settings.EnableCollisions".Translate(), ref enableCollisions, "SoS.Settings.EnableCollisions.Desc".Translate());
+			}
 			options.CheckboxLabeled("SoS.Settings.Debug".Translate(), ref debugMode, "SoS.Settings.Debug.Desc".Translate());
 
 			//large column
