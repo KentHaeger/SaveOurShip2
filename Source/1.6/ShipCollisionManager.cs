@@ -55,7 +55,10 @@ namespace SaveOurShip2
 		}
 		private void checkAndHandleCollision()
 		{
-			// Sadly, Odyssey has very different ship impact feature. So this got to be locked behind DLC, just in case.
+			// Sadly, Odyssey already has very differently implemented ship impact/damage feature. So this got to be locked behind DLC, just in case.
+			// This coomant must not be interpreted as a confirmation of similarity between Odyssey ship damahe on landing and this feature.
+			// In fact, it states the contrary, features are absolutely different: Odyssey feature is ship-ground impact, SOS 2 feature is ship-ship impact,
+			// determined damage with parts destruction vs random, mostly cosmetic area damage. Only very general and broad idea is simialr.
 			if (!ModsConfig.OdysseyActive)
 			{
 				return;
@@ -146,33 +149,39 @@ namespace SaveOurShip2
 				impactRot = Rot4.Random;
 			}
 
-			/*int impactX, impactZ;
-			if (impactRot == Rot4.North || impactRot == Rot4.South)
-			{
-				impactX = targetShip.Center().x;
-			}
-			if (impactRot == Rot4.East || impactRot == Rot4.West)
-			{
-				impactZ = targetShip.Center().z;
-			}*/
-
 			IntVec3 impactPoint;
+
+			// Hullfoam is intended to be soft and not intended to be exploitable in repeating collisions, so ignore it
+			// for impacct point detection.
+			HashSet<IntVec3> nonFoamArea = new HashSet<IntVec3>();
+			foreach (IntVec3 tile in targetShip.Area)
+			{
+				if(targetMapComp.map.listerBuildings.allBuildingsColonist.Any(b => ResourceBank.IsFoamBuilding(b.def)))
+				{
+					continue;
+				}
+				if (targetMapComp.map.listerBuildings.allBuildingsNonColonist.Any(b => ResourceBank.IsFoamBuilding(b.def)))
+				{
+					continue;
+				}
+				nonFoamArea.Add(tile);
+			}
 
 			if (impactRot == Rot4.North)
 			{
-				impactPoint = targetShip.Area.MaxBy(cell => cell.z);
+				impactPoint = nonFoamArea.MaxBy(cell => cell.z);
 			}
 			else if (impactRot == Rot4.South)
 			{
-				impactPoint = targetShip.Area.MinBy(cell => cell.z);
+				impactPoint = nonFoamArea.MinBy(cell => cell.z);
 			}
 			else if (impactRot == Rot4.East)
 			{
-				impactPoint = targetShip.Area.MaxBy(cell => cell.x);
+				impactPoint = nonFoamArea.MaxBy(cell => cell.x);
 			}
 			else // if (impactRot == Rot4.West)
 			{
-				impactPoint = targetShip.Area.MinBy(cell => cell.x);
+				impactPoint = nonFoamArea.MinBy(cell => cell.x);
 			}
 			doImpactDamage(targetMapComp, impactPoint, damage);
 
