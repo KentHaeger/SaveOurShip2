@@ -29,11 +29,33 @@ namespace SaveOurShip2
 			Scribe_Values.Look<bool>(ref showedWarningMessage, "showedWarningMessage", false);
 			Scribe_Values.Look<float>(ref previusRange, "previusRange", ShipMapComp.MaxBattleRange);
 		}
-
 		public ShipCollisionManager()
 		{
 		}
 
+		// Tunable parameters
+		private const float pirateFactionRammingCahnce = 0.35f;
+		private const float maxDamage = 7000;
+		// Ramming ships with a frequence of some power tool is not considered reasonable,
+		// so there is a cooldown between collisions.
+		private const int collisionTickInterval = 600;
+		private static readonly SimpleCurve radiusFromDamage = new SimpleCurve
+		{
+			new CurvePoint(300f, 1.4f ),
+			new CurvePoint(500f, 1.8f), // this is more than sqrt(2), so 3x3 tiles affected
+			new CurvePoint(900f, 4f),   // subject to manual tuning
+			new CurvePoint(2000f, 7f),
+			new CurvePoint(7000f, 10f),
+		};
+		// Damage decrease multiplir from distance from distance, 0 distance means impact point, 1 is at max distance
+		private static readonly SimpleCurve damageFromDistance = new SimpleCurve
+		{
+			new CurvePoint(0f, 1f),          // full damage at center
+			new CurvePoint(0.25f, 0.56f),    // rapid falloff if close to the center, (1-0.25)^2 = 0.5625
+			new CurvePoint(0.5f, 0.25f),     // fallof gradually sloweres further from center, still according to square funtion at this point
+			new CurvePoint(0.75f, 0.07f),    // manually tuned to be a little hinger than square funtion in above entries.
+			new CurvePoint(1f, 0.04f),     			
+		};
 		public void RangeUpdated()
 		{
 			Assert.IsNotNull(originMapComp);
@@ -56,16 +78,13 @@ namespace SaveOurShip2
 		private void checkAndHandleCollision()
 		{
 			// Sadly, Odyssey already has very differently implemented ship impact/damage feature. So this got to be locked behind DLC, just in case.
-			// This coomant must not be interpreted as a confirmation of similarity between Odyssey ship damahe on landing and this feature.
+			// This comment must not be interpreted as a confirmation of similarity between Odyssey ship damahe on landing and this feature.
 			// In fact, it states the contrary, features are absolutely different: Odyssey feature is ship-ground impact, SOS 2 feature is ship-ship impact,
 			// determined damage with parts destruction vs random, mostly cosmetic area damage. Only very general and broad idea is simialr.
 			if (!ModsConfig.OdysseyActive)
 			{
 				return;
 			}
-			// Ramming ships with a frequence of some power tool is not considered reasonable,
-			// so there is a cooldown between collisions.
-			const int collisionTickInterval = 600;
 			if (Find.TickManager.TicksGame - lastCollisionTick < collisionTickInterval)
 			{
 				return;
@@ -103,14 +122,6 @@ namespace SaveOurShip2
 
 			inflictDamage(playerShip, originMapComp, enemyShip, targetMapComp, collisionSpeed);
 		}
-		// For balancing reasons, the initial iddea is to not let fast and heavy ships absolutely smash very small ships.
-		private static readonly SimpleCurve damageMultiplerFromTargetWeight = new SimpleCurve
-		{
-			new CurvePoint(10f, 0.1f ),
-			new CurvePoint(100f, 0.3f),
-			new CurvePoint(300f, 0.6f),
-			new CurvePoint(900f, 1f),
-		};
 		private void inflictDamage(SpaceShipCache rammingShip, ShipMapComp rammingMapComp, SpaceShipCache targetShip, ShipMapComp targetMapComp, float collisionSpeed)
 		{
 			// Initial damage scale, value is expected to be lower than mass.
@@ -122,15 +133,13 @@ namespace SaveOurShip2
 			// Speed factor is good for the player, so allow squared speed here
 			float speedFactor = collisionSpeed * collisionSpeed;
 
-			const float maxDamage = 10000;
-
 			float damage = Mathf.Clamp(baseDamage * speedFactor, 0, maxDamage);
 
-			doImpactDamage(rammingShip, rammingMapComp, damage);
-			doImpactDamage(targetShip, targetMapComp, damage);
+			doImpactDamageToShip(rammingShip, rammingMapComp, damage);
+			doImpactDamageToShip(targetShip, targetMapComp, damage);
 
 		}
-		private void doImpactDamage(SpaceShipCache targetShip, ShipMapComp targetMapComp, float damage)
+		private void doImpactDamageToShip(SpaceShipCache targetShip, ShipMapComp targetMapComp, float damage)
 		{
 			Rot4 impactRot = Rot4.Invalid; 
 			int engineRot = targetMapComp.engineRot;
@@ -185,26 +194,13 @@ namespace SaveOurShip2
 			{
 				impactPoint = durableArea.MinBy(cell => cell.x);
 			}
-			doImpactDamage(targetMapComp, impactPoint, damage);
-
+			doImpactExplosion(targetMapComp, impactPoint, damage);
 		}
-		private static readonly SimpleCurve radiusCurve = new SimpleCurve
+		private void doImpactExplosion(ShipMapComp mapComp, IntVec3 impactPoint, float damage)
 		{
-			new CurvePoint(400f, 1.4f ),
-			new CurvePoint(600f, 1.8f), // this is more than sqrt(2), so 3x3 tiles affected
-			new CurvePoint(900f, 2f),
-			new CurvePoint(2500f, 4f),
-			new CurvePoint(10000f, 8f),
-		};
-		private void doImpactDamage(ShipMapComp mapComp, IntVec3 impactPoint, float damage)
-		{
-			float radius = radiusCurve.Evaluate(damage);
-			SimpleCurve damageCurve = new SimpleCurve
-			{
-				new CurvePoint(0f, 0.25f),  // 0.25 damage multipler at max radius 
-				new CurvePoint(1f, 1f)      // full damage at center
-			};
+			float radius = radiusFromDamage.Evaluate(damage);
 			CellRect explosionArea = CellRect.CenteredOn(impactPoint, Mathf.FloorToInt(radius));
+			explosionArea.ClipInsideMap(mapComp.map);
 			int radiusSquared = (int)(radius * radius);
 
 			// Simple damage model for now
@@ -214,7 +210,7 @@ namespace SaveOurShip2
 			foreach (IntVec3 cell in explosionArea.Where(x => x.DistanceToSquared(impactPoint) <= radiusSquared))
 			{
 				float distance = cell.DistanceTo(impactPoint);
-				float currentDamage = damageCurve.Evaluate((radius - distance)/radius);
+				float currentDamage = damageFromDistance.Evaluate(distance/radius) * damage;
 				foreach (Thing t in cell.GetThingList(mapComp.map))
 				{
 					if (!thingsDamage.ContainsKey(t))
@@ -223,21 +219,28 @@ namespace SaveOurShip2
 					}
 					else
 					{
-						// using closest tile rather than center for damage calculation. So that direct impact into engine = max damage,
+						// Using closest tile rather than center for damage calculation. So that direct impact into engine = max damage,
 						// not damage reduced based on engine size.
 						thingsDamage[t] = Mathf.Max(thingsDamage[t], currentDamage); 
 					}
 				}
 			}
-			applyDamage(thingsDamage);
+			int destroyedBuildings = 0;
+			applyDamage(thingsDamage, out destroyedBuildings);
+			
 		}
-		private void applyDamage(Dictionary<Thing, float> thingsDamage)
+		private void applyDamage(Dictionary<Thing, float> thingsDamage, out int destroyedBuildings)
 		{
+			destroyedBuildings = 0;
 			foreach (Thing t in thingsDamage.Keys)
 			{
 				if (!t.Destroyed)
 				{
 					t.TakeDamage(new DamageInfo(DamageDefOf.Crush, thingsDamage[t]));
+					if (t is Building && t.Destroyed)
+					{
+						++destroyedBuildings;
+					}
 				}
 			}
 		}
@@ -252,6 +255,29 @@ namespace SaveOurShip2
 				ship = shipsAndWrecks.MaxBy(s => s.MassActual);
 			}
 			return ship;
+		}
+		public static bool PirateFactionWantsRamming(Faction faction)
+		{
+			return IsPirateFactionForRamming(faction) && Rand.Chance(pirateFactionRammingCahnce);
+		}
+		private static bool IsPirateFactionForRamming(Faction faction)
+		{
+			if (faction == Faction.OfPirates)
+			{
+				return true;
+			}
+			// Hav to dig up pirate-specific details here due to def inheritance not known at runtime
+			if (!faction.def.backstoryFilters.NullOrEmpty())
+			{
+				foreach(BackstoryCategoryFilter filter in faction.def.backstoryFilters)
+				{
+					if (filter.categories?.Contains("Pirate") ?? false)
+					{
+						return true;
+					}
+				}
+			}
+			return false;
 		}
 	}
 }

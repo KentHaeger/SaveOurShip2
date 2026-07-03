@@ -14,22 +14,25 @@ using Verse.AI;
 
 namespace SaveOurShip2
 {
-	//ship map state, only use on space maps
+	// ship map state, only use on space maps
 	public enum ShipMapState : byte
 	{
-		nominal, //stable, maintained orbit - player home ship only
-		inCombat, //fighting another ship - player or enemy ship
-		isGraveyard, //will fall to the ground
-		inTransit, //moving from/to planet surface
-		inEvent, //events that have movement - meteors
-		burnUpSet //force terminate map+WO if no player pawns or pods present or in flight to
+		nominal, // stable, maintained orbit - player home ship only
+		inCombat, // fighting another ship - player or enemy ship
+		isGraveyard, // will fall to the ground
+		inTransit, // moving from/to planet surface
+		inEvent, // events that have movement - meteors
+		burnUpSet // force terminate map+WO if no player pawns or pods present or in flight to
 	}
 	public enum ShipAI : byte
 	{
 		none,
-		normal, //aggressive, consider weapons vs enemy
-		carrier, //try to stay just out of torp range
-		avoidant //flee is possible, else fight - traders, etc.
+		normal,   // aggressive, consider weapons vs enemy
+		carrier,  // try to stay just out of torp range
+		avoidant, // flee is possible, else fight - traders, etc.
+		ramming   // will try to advamce and ram player ship. For players preferring long range weapons
+			      // asnd having faster ship, that won't be nuch ifferent from normal strategy.
+				  // Obviously, will need to be faster than player to succeed if plyer doesn't want collisoion
 	}
 
 	public class ShipMapComp : MapComponent, IThingHolder //It's an IThingHolder because it holds shuttles while they're on missions
@@ -1257,9 +1260,17 @@ namespace SaveOurShip2
 			else if (shipDef != null)
 			{
 				if (shipDef.carrier)
+				{
 					newMapComp.ShipMapAI = ShipAI.carrier;
+				}
 				else if (shipDef.tradeShip)
+				{
 					newMapComp.ShipMapAI = ShipAI.avoidant;
+				}
+				else if (ShipCollisionManager.PirateFactionWantsRamming(faction))
+				{
+					newMapComp.ShipMapAI = ShipAI.ramming;
+				}
 			}
 			newMapComp.ShipFaction = faction;
 			if (wreckLevel != 3)
@@ -2120,11 +2131,11 @@ namespace SaveOurShip2
 						}
 						int prevHeading = Heading;
 						//Log.Message(str);
-						if (OriginMapComp.Range > maxRange[best]) //forward
+						if (ShipMapAI == ShipAI.ramming || OriginMapComp.Range > maxRange[best]) // forward
 							Heading = 1;
-						else if (OriginMapComp.Range <= minRange[best]) //back
+						else if (OriginMapComp.Range <= minRange[best]) // back
 							Heading = -1;
-						else //chill
+						else // chill
 							Heading = 0;
 
 						if (Prefs.DevMode && prevHeading != Heading)
