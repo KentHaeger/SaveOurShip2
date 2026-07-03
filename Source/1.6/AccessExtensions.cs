@@ -49,6 +49,27 @@ namespace SaveOurShip2
 			return GetThingOfDefAt(map, cell, new List<ThingDef>() { thingDef });
 		}
 
+		public static string GetNameForLogs(this Map map)
+		{
+			ShipMapComp mapComp = map.GetComponent<ShipMapComp>(); 
+			if (map == ShipInteriorMod2.FindPlayerShipMap())
+			{
+				return "player map";
+			}
+			else if (map == ShipInteriorMod2.FindEnemyShipMap())
+			{
+				return "enemy map";
+			}
+			else if (mapComp.ShipMapState == ShipMapState.isGraveyard)
+			{
+				return "graveyard map";
+			}
+			else
+			{
+				return "other map";
+			}
+
+		}
 		public static float DecompressionResistance(this Pawn pawn)
 		{
 			float resistance = pawn.GetStatValue(ResourceBank.StatDefOf.DecompressionResistance);

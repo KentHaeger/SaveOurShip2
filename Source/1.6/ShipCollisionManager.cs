@@ -226,8 +226,10 @@ namespace SaveOurShip2
 				}
 			}
 			int destroyedBuildings = 0;
+			// Have to cache this as actually apllying damage could end battle and enemy map could become graveyard 
+			string mapName = mapComp.map.GetNameForLogs();
 			applyDamage(thingsDamage, out destroyedBuildings);
-			
+			Log.Message($"Destroyed buildings on {mapName}: {destroyedBuildings}");			
 		}
 		private void applyDamage(Dictionary<Thing, float> thingsDamage, out int destroyedBuildings)
 		{
