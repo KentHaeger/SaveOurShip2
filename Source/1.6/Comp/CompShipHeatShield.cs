@@ -102,6 +102,8 @@ namespace SaveOurShip2
 			{ThingDef.Named("Bullet_Torpedo_HighExplosive"), 0.33f},
 			{ThingDef.Named("Bullet_Torpedo_EMP"), 10f},
 			{ThingDef.Named("Bullet_Torpedo_Antimatter"), 0.33f},
+			{ThingDef.Named("Proj_ShipTurretACI"), 0.4f},           // small/PD Laser and Cannon get 0.4 shield damage multiplier
+			{ThingDef.Named("Proj_ShipTurretLaser"), 0.4f},         // to make getting through PD damge zone for rammoing viable
 		};
 
 		public virtual float CalcHeatGenerated(Projectile proj)
