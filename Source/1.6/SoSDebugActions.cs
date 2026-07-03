@@ -85,5 +85,12 @@ namespace SaveOurShip2
 		{
 			ShipImporter.ImportShipDesign(placeActualBuildings: true, useNanameWalls:true);
 		}
+
+		[DebugAction(sos2Category, null, false, false, false, false, false, 0, false, actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
+		private static void AddColoredFloor()
+		{
+			Map map = Find.CurrentMap;
+			ShipPainter.PaintFloorAndBuildings(map, useBuiltInTexture:false);
+		}
 	}
 }

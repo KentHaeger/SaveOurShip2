@@ -22,83 +22,94 @@ namespace SaveOurShip2
 		{
 			if (thing is ShipMoveBlueprint ship)
 			{
-				bool targetMapLarger = false; //if target map is larger, allow only up to origin map size
-				Map originMap = ShipInteriorMod2.shipOriginMap;
-				if (originMap != null && (originMap.Size.x < map.Size.x || originMap.Size.z < map.Size.z))
+				try
 				{
-					targetMapLarger = true;
-				}
-				bool blastCapable = ship.canBlastLand;
-				AcceptanceReport result = true;
-				IEnumerable<SketchEntity> entities;
-				if (ship.extenderSketch != null)
-					entities = ship.shipSketch.Entities.Concat(ship.extenderSketch?.Entities);
-				else
-					entities = ship.shipSketch.Entities;
-				foreach (SketchEntity current in entities)
-				{
-					IntVec3 vec = loc + current.pos;
-					if (!vec.InBounds(map))
+					bool targetMapLarger = false; //if target map is larger, allow only up to origin map size
+					Map originMap = ShipInteriorMod2.shipOriginMap;
+					if (originMap != null && (originMap.Size.x < map.Size.x || originMap.Size.z < map.Size.z))
 					{
-						result = false;
-						break;
+						targetMapLarger = true;
 					}
-					if (GenGrid.InNoBuildEdgeArea(vec, map) || (targetMapLarger && (vec.x > originMap.Size.x || vec.z > originMap.Size.z)))
+					bool blastCapable = ship.canBlastLand;
+					AcceptanceReport result = true;
+					IEnumerable<SketchEntity> entities;
+					if (ship.extenderSketch != null)
+						entities = ship.shipSketch.Entities.Concat(ship.extenderSketch?.Entities);
+					else
+						entities = ship.shipSketch.Entities;
+					foreach (SketchEntity current in entities)
 					{
-						current.DrawGhost(vec, ShipMoveBlueprint.BlockedColor);
-						result = false;
-						continue;
-					}
-					if (blastCapable)
-					{
-						//a plasma-armed ship bombards its own landing site clear - obstructed cells are allowed,
-						//but overhead mountain and steam geysers can never be breached
-						if (BlastLanding.CellIsHardBlocked(vec, map))
+						IntVec3 vec = loc + current.pos;
+						if (!vec.InBounds(map))
+						{
+							result = false;
+							break;
+						}
+						if (GenGrid.InNoBuildEdgeArea(vec, map) || (targetMapLarger && (vec.x > originMap.Size.x || vec.z > originMap.Size.z)))
 						{
 							current.DrawGhost(vec, ShipMoveBlueprint.BlockedColor);
 							result = false;
 							continue;
 						}
-						if (BlastLanding.CellNeedsBlast(vec, map))
-							current.DrawGhost(vec, ShipMoveBlueprint.BlastColor);
-						continue;
-					}
-					bool isSpawnBlocked = current.IsSpawningBlocked(vec, map) && map.terrainGrid.TerrainAt(vec) != TerrainDefOf.Space;
-					if (isSpawnBlocked || map.roofGrid.Roofed(vec))
-					{
-						current.DrawGhost(vec, ShipMoveBlueprint.BlockedColor);
-						//tell the player the obstruction could be cleared by a plasma-armed ship
-						result = new AcceptanceReport(TranslatorFormattedStringExtensions.Translate("SoS.BlastLandingUnavailable"));
-						continue;
-					}
-					foreach (Thing t in vec.GetThingList(map))
-					{
-						if (t is Building b)
+						if (blastCapable)
 						{
-							if (b.def.passability == Traversability.Impassable || b is Building_SteamGeyser)
+							//a plasma-armed ship bombards its own landing site clear - obstructed cells are allowed,
+							//but overhead mountain and steam geysers can never be breached
+							if (BlastLanding.CellIsHardBlocked(vec, map))
 							{
 								current.DrawGhost(vec, ShipMoveBlueprint.BlockedColor);
-								result = new AcceptanceReport(TranslatorFormattedStringExtensions.Translate("SoS.BlastLandingUnavailable"));
+								result = false;
+								continue;
+							}
+							if (BlastLanding.CellNeedsBlast(vec, map))
+								current.DrawGhost(vec, ShipMoveBlueprint.BlastColor);
+							continue;
+						}
+						bool isSpawnBlocked = current.IsSpawningBlocked(vec, map) && map.terrainGrid.TerrainAt(vec) != TerrainDefOf.Space;
+						if (isSpawnBlocked || map.roofGrid.Roofed(vec))
+						{
+							current.DrawGhost(vec, ShipMoveBlueprint.BlockedColor);
+							//tell the player the obstruction could be cleared by a plasma-armed ship
+							result = new AcceptanceReport(TranslatorFormattedStringExtensions.Translate("SoS.BlastLandingUnavailable"));
+							continue;
+						}
+						foreach (Thing t in vec.GetThingList(map))
+						{
+							if (t is Building b)
+							{
+								if (b.def.passability == Traversability.Impassable || b is Building_SteamGeyser)
+								{
+									current.DrawGhost(vec, ShipMoveBlueprint.BlockedColor);
+									result = new AcceptanceReport(TranslatorFormattedStringExtensions.Translate("SoS.BlastLandingUnavailable"));
+									break;
+								}
+							}
+						}
+					}
+					if (ship.conflictSketch != null && !ship.conflictSketch.Entities.NullOrEmpty())
+					{
+						foreach (SketchEntity current in ship.conflictSketch.Entities) //no buildings allowed in this
+						{
+							IntVec3 vec = loc + current.pos;
+							if (!vec.InBounds(map))
+							{
+								result = false;
+								break;
+							}
+							if (vec.GetFirstBuilding(map) != null)
+							{
+								result = false;
 								break;
 							}
 						}
 					}
+					return result;
 				}
-				foreach (SketchEntity current in ship.conflictSketch?.Entities) //no buildings allowed in this
+				catch (Exception ex)
 				{
-					IntVec3 vec = loc + current.pos;
-					if (!vec.InBounds(map))
-					{
-						result = false;
-						break;
-					}
-					if (vec.GetFirstBuilding(map) != null)
-					{
-						result = false;
-						break;
-					}
+					Log.ErrorOnce($"SoS 2: error placing ship move blueprint. Exception: { ex.Message } Trace: {ex.StackTrace}", 42171823);
+					return false;
 				}
-				return result;
 			}
 			return true;
 		}

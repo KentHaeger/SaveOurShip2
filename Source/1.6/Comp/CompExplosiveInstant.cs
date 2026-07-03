@@ -7,7 +7,8 @@ namespace SaveOurShip2
 	{
 		public override void CompTick()
 		{
-			if (parent.Spawned)
+			// This means fighter wings won't split into separate fighters with CK active, for editing convenience.
+			if (parent.Spawned && !ShipInteriorMod2.HasSoS2CK)
 			{
 				Detonate(parent.MapHeld);
 			}

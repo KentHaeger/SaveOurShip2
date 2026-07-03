@@ -6,4 +6,7 @@ Explanations of several SOS 2 mechanics:
 
 [Formgels](Docs/Formgels.md)
 
+[Torpedoes and point defense](Docs/TorpedoesAndPD.md)
+
 [Glossary](Docs/Glossary.md)
+

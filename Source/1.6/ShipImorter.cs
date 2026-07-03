@@ -96,39 +96,25 @@ namespace SaveOurShip2
 			}
 			return origin + finalRot.AsIntVec3 * (Mathf.Max(0, length - 1) / 2) + offset;
 		}
-		// Naname is actual mod name, means diagonal in Japanese 
 		public static void ImportShipDesign(bool placeActualBuildings, bool useNanameWalls = false)
 		{
 			Map map = Find.CurrentMap;
 			if (map == null)
 			{
-				Messages.Message("To import ship blueprint, switch from world view to loacl map view", null, MessageTypeDefOf.NeutralEvent);
+				Messages.Message(ResourceBank.noMapMessage, null, MessageTypeDefOf.NeutralEvent);
 				return;
 			}
-			string path = Path.Combine(GenFilePaths.SaveDataFolderPath, "SoS2\\Blueprint.png");
-			if (!File.Exists(path))
-            {
-				Messages.Message("Blueprint file doesn't exist", null, MessageTypeDefOf.NeutralEvent);
-				return;
-			}
-			byte[] fileData = File.ReadAllBytes(path);
-			Texture2D tex = new Texture2D(2, 2, TextureFormat.RGBA32, false);
-			if (!tex.LoadImage(fileData))
-            {
-				tex = new Texture2D(2, 2, TextureFormat.RGB24, false);
-				if (!tex.LoadImage(fileData))
-				{
-					Messages.Message("Error loading blueprint image", null, MessageTypeDefOf.NeutralEvent);
-					return;
-				}
-			}
+
 			if (useNanameWalls && DefDatabase<ThingDef>.GetNamedSilentFail("Ship_Beam_NAWDiagonal") == null)
             {
 				Messages.Message("Naname ship hull def not found", null, MessageTypeDefOf.NeutralEvent);
 				return;
 			}
-			tex.filterMode = FilterMode.Bilinear;
-			tex.wrapMode = TextureWrapMode.Clamp;
+			Texture2D tex = TextureUtility.LoadTextureFromSos2Folder("Blueprint.png", useBuiltInTexture:false);
+			if (tex == null)
+            {
+				return;
+            }
 			cellsToDesignate = new HashSet<IntVec3>();
 			floorCells = new HashSet<IntVec3>();
 

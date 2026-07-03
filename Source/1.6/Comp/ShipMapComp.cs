@@ -1841,9 +1841,21 @@ namespace SaveOurShip2
 				TargetMapComp.SlowTick(tick);
 				callSlowTick = false;
 			}
-			else if (tick % 60 == 0)
+			else
 			{
-				SlowTick(tick);
+				if (tick % 60 == 0)
+				{
+					SlowTick(tick);
+				}
+				// Value is to be picked manually. Too long maintain tick would result in ship doing maintain command staying in engines on/off statre for too long
+				// and therefore letting actual distance to diverge a lot from desired distance.
+				// Too short maintain tick would mean that ship engines will work in a "multiple super-short flashes per second" mode
+				// which is really bad visually.
+				const int maintainTickInterval = 30;
+				if (tick % maintainTickInterval == 0)
+				{
+					MaintainTick();
+				}
 			}
 		}
 
@@ -1996,10 +2008,9 @@ namespace SaveOurShip2
 			}
 			InvalidateHeadgearCache(tick);
 		}
-
-		// Ship battle psrt of slow tick work
-		private void ShipBattleSlowTick(int tick)
-        {
+		// Maintain command which should be checked more often than every so clled "slow tick" = 60 ticks
+		private void MaintainTick()
+		{
 			if (Maintain) //distance maintain
 			{
 				if (TargetMapComp.Heading == 1) //target moving to origin
@@ -2021,6 +2032,13 @@ namespace SaveOurShip2
 					Heading = 0;
 				}
 			}
+		}
+
+		// Ship battle psrt of slow tick work
+		private void ShipBattleSlowTick(int tick)
+        {
+			// Failsafe: call maintain tick (cheap) from here
+			MaintainTick();
 			//engine power calcs
 			bool anyShipCanMove = AnyShipCanMove();
 			if (AnyShipCanMove() && Heading != 0) //can we move and should we move
