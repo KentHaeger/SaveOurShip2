@@ -153,35 +153,37 @@ namespace SaveOurShip2
 
 			// Hullfoam is intended to be soft and not intended to be exploitable in repeating collisions, so ignore it
 			// for impacct point detection.
-			HashSet<IntVec3> nonFoamArea = new HashSet<IntVec3>();
+			HashSet<IntVec3> durableArea = new HashSet<IntVec3>();
+			// Buildings with current HP below this threshold are ignored for the purpose of impact point clculation (too soft)
+			// This will exclude standalone hull plating and hullfoam plating/wall, but 1x1 corners will be included.
+			const int durableThreshold = 400;
 			foreach (IntVec3 tile in targetShip.Area)
 			{
-				if(targetMapComp.map.listerBuildings.allBuildingsColonist.Any(b => ResourceBank.IsFoamBuilding(b.def)))
+				if(targetMapComp.map.listerBuildings.allBuildingsColonist.Any(b => b.HitPoints >= durableThreshold))
 				{
-					continue;
+					durableArea.Add(tile);
 				}
-				if (targetMapComp.map.listerBuildings.allBuildingsNonColonist.Any(b => ResourceBank.IsFoamBuilding(b.def)))
+				else if (targetMapComp.map.listerBuildings.allBuildingsNonColonist.Any(b => b.HitPoints >= durableThreshold))
 				{
-					continue;
+					durableArea.Add(tile);
 				}
-				nonFoamArea.Add(tile);
 			}
 
 			if (impactRot == Rot4.North)
 			{
-				impactPoint = nonFoamArea.MaxBy(cell => cell.z);
+				impactPoint = durableArea.MaxBy(cell => cell.z);
 			}
 			else if (impactRot == Rot4.South)
 			{
-				impactPoint = nonFoamArea.MinBy(cell => cell.z);
+				impactPoint = durableArea.MinBy(cell => cell.z);
 			}
 			else if (impactRot == Rot4.East)
 			{
-				impactPoint = nonFoamArea.MaxBy(cell => cell.x);
+				impactPoint = durableArea.MaxBy(cell => cell.x);
 			}
 			else // if (impactRot == Rot4.West)
 			{
-				impactPoint = nonFoamArea.MinBy(cell => cell.x);
+				impactPoint = durableArea.MinBy(cell => cell.x);
 			}
 			doImpactDamage(targetMapComp, impactPoint, damage);
 
@@ -197,39 +199,48 @@ namespace SaveOurShip2
 		private void doImpactDamage(ShipMapComp mapComp, IntVec3 impactPoint, float damage)
 		{
 			float radius = radiusCurve.Evaluate(damage);
+			SimpleCurve damageCurve = new SimpleCurve
+			{
+				new CurvePoint(0f, 0.25f),  // 0.25 damage multipler at max radius 
+				new CurvePoint(1f, 1f)      // full damage at center
+			};
 			CellRect explosionArea = CellRect.CenteredOn(impactPoint, Mathf.FloorToInt(radius));
 			int radiusSquared = (int)(radius * radius);
 
 			// Simple damage model for now
+			Dictionary<Thing, float> thingsDamage = new Dictionary<Thing, float>();
 			List<Thing> halfDamageList = new List<Thing>();
 			List<Thing> fullDamageList = new List<Thing>();
-			foreach (IntVec3 cell in explosionArea.Where(x => x.DistanceToSquared(impactPoint) <= radiusSquared / 4))
+			foreach (IntVec3 cell in explosionArea.Where(x => x.DistanceToSquared(impactPoint) <= radiusSquared))
 			{
-				fullDamageList.AddRange(cell.GetThingList(mapComp.map));
-			}
-			foreach (IntVec3 cell in explosionArea.Where(x => x.DistanceToSquared(impactPoint) <= radiusSquared && 
-														      x.DistanceToSquared(impactPoint) > radiusSquared / 4))
-			{
-				halfDamageList.AddRange(cell.GetThingList(mapComp.map));
-			}
-			halfDamageList.RemoveAll(x => fullDamageList.Contains(x));
-			doDamageToThingList(mapComp.map, fullDamageList, damage);
-			doDamageToThingList(mapComp.map, halfDamageList, damage / 2f);
-
-		}
-
-		private void doDamageToThingList(Map map, IEnumerable<Thing> things, float damage)
-		{
-			foreach (Thing thing in things)
-			{
-				if (!thing.Destroyed)
+				float distance = cell.DistanceTo(impactPoint);
+				float currentDamage = damageCurve.Evaluate((radius - distance)/radius);
+				foreach (Thing t in cell.GetThingList(mapComp.map))
 				{
-					thing.TakeDamage(new DamageInfo(DamageDefOf.Crush, damage));
-					FleckMaker.ThrowDustPuff(thing.Position, map, 2f);
+					if (!thingsDamage.ContainsKey(t))
+					{
+						thingsDamage.Add(t, currentDamage);
+					}
+					else
+					{
+						// using closest tile rather than center for damage calculation. So that direct impact into engine = max damage,
+						// not damage reduced based on engine size.
+						thingsDamage[t] = Mathf.Max(thingsDamage[t], currentDamage); 
+					}
+				}
+			}
+			applyDamage(thingsDamage);
+		}
+		private void applyDamage(Dictionary<Thing, float> thingsDamage)
+		{
+			foreach (Thing t in thingsDamage.Keys)
+			{
+				if (!t.Destroyed)
+				{
+					t.TakeDamage(new DamageInfo(DamageDefOf.Crush, thingsDamage[t]));
 				}
 			}
 		}
-
 		private SpaceShipCache getCollidingShipOnMap(ShipMapComp mapComp)
 		{
 			IEnumerable<SpaceShipCache> ships = mapComp.ShipsOnMap.Values.Where(s => !s.IsWreck);
