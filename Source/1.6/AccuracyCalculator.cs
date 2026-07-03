@@ -187,10 +187,11 @@ namespace SaveOurShip2
 
 		private bool ShouldLogDataNow
 		{
-			// Sort of arbitrary seetting preventing excess log spam
+			// Check preventing excess log spam. 
+			// Could be set to fisrst few projectiles or every X projectiles base on projectileCount
 			get
 			{
-				return projectileCount < 5;
+				return false;
 			}
 		}
 
@@ -198,7 +199,7 @@ namespace SaveOurShip2
 		{
 			if(ShouldLogDataNow)
 			{
-				Log.Warning("Doddging, chance: " + DodgeCance(proj));
+				Log.Warning("Dodging, chance: " + DodgeCance(proj));
 			}
 			return Rand.Chance(DodgeCance(proj));
 		}
