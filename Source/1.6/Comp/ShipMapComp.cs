@@ -1811,7 +1811,11 @@ namespace SaveOurShip2
 			//blast landing: the turrets fire now; the target map receives that salvo 600 ticks (10s)
 			//later, simulating the plasma's flight. Gated on Altitude, NOT Heading - Heading goes to 0
 			//at "first burn done", which would silence the rest of the descent's barrage.
-			if (ShipMapState == ShipMapState.inTransit && BlastLandingPending && MoveToMap != null
+			//OdysseyActive enforces the legal gate (see BlastLanding.CanBlastLand) against a
+			//BlastLandingPending flag scribed with the DLC but loaded without it. Also a soft technical
+			//need in that state: the blast projectile/terrain defs don't load without Odyssey, so the
+			//salvo would fall back to bare direct glassing with no visuals.
+			if (ModsConfig.OdysseyActive && ShipMapState == ShipMapState.inTransit && BlastLandingPending && MoveToMap != null
 				&& Find.Maps.Contains(MoveToMap) && ShipsOnMap.Count > 0
 				&& Altitude > ShipInteriorMod2.altitudeLand + (ShipInteriorMod2.altitudeNominal - ShipInteriorMod2.altitudeLand) * 0.05f)
 			{

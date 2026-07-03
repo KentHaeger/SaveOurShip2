@@ -69,8 +69,12 @@ namespace SaveOurShip2
 						if (isSpawnBlocked || map.roofGrid.Roofed(vec))
 						{
 							current.DrawGhost(vec, ShipMoveBlueprint.BlockedColor);
-							//tell the player the obstruction could be cleared by a plasma-armed ship
-							result = new AcceptanceReport(TranslatorFormattedStringExtensions.Translate("SoS.BlastLandingUnavailable"));
+							//follow-through on the legal gate in BlastLanding.CanBlastLand, not a technical need:
+							//only advertise "a plasma-armed ship could clear this" to players who can have one
+							if (ModsConfig.OdysseyActive)
+								result = new AcceptanceReport(TranslatorFormattedStringExtensions.Translate("SoS.BlastLandingUnavailable"));
+							else
+								result = false;
 							continue;
 						}
 						foreach (Thing t in vec.GetThingList(map))
@@ -80,7 +84,11 @@ namespace SaveOurShip2
 								if (b.def.passability == Traversability.Impassable || b is Building_SteamGeyser)
 								{
 									current.DrawGhost(vec, ShipMoveBlueprint.BlockedColor);
-									result = new AcceptanceReport(TranslatorFormattedStringExtensions.Translate("SoS.BlastLandingUnavailable"));
+									//same legal-gate follow-through as the roofed/blocked case above
+									if (ModsConfig.OdysseyActive)
+										result = new AcceptanceReport(TranslatorFormattedStringExtensions.Translate("SoS.BlastLandingUnavailable"));
+									else
+										result = false;
 									break;
 								}
 							}

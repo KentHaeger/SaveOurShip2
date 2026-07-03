@@ -9,7 +9,8 @@ namespace SaveOurShip2
 {
 	// Plasma "blast landing": a SOS2 ship carrying enough plasma firepower can land on an obstructed
 	// spot - bombarding it on approach to destroy obstacles, blast off roofs, and fuse the ground to
-	// volcanic glass. An original SOS2 mechanic - uses no Odyssey code and adds no Odyssey dependency.
+	// volcanic glass. The whole system is gated behind the Odyssey DLC: without it CanBlastLand is
+	// always false, so ships never gain the capability and landings behave as before.
 	public static class BlastLanding
 	{
 		static TerrainDef glassTerrainCached;
@@ -35,6 +36,8 @@ namespace SaveOurShip2
 				return false;
 			if (map.IsSpace())
 				return true;
+			//hard requirement, not DLC gating: the Space/Orbit biomes ARE Odyssey content, so this
+			//test is only meaningful (and only worth the defName lookups) when the DLC is loaded
 			if (ModsConfig.OdysseyActive && map.Biome != null
 				&& (map.Biome.defName == "Space" || map.Biome.defName == "Orbit"))
 				return true;
@@ -44,6 +47,13 @@ namespace SaveOurShip2
 		// --- capability: does the ship pack enough plasma firepower and energy capacity ---
 		public static bool CanBlastLand(SpaceShipCache ship)
 		{
+			//LEGAL gate, not a technical one: the bombardment mechanic itself calls no Odyssey code and
+			//would run without the DLC. It is kept Odyssey-exclusive because it mirrors Odyssey's
+			//gravship-landing feature. This is THE master switch - everything downstream keys off the
+			//canBlastLand flag this feeds. (Since the gate exists, the blast content defs also sit in the
+			//Odyssey-gated folder, so without the DLC the visuals/terrain would be missing regardless.)
+			if (!ModsConfig.OdysseyActive)
+				return false;
 			if (ship == null)
 				return false;
 			int firepower = 0;
@@ -82,6 +92,7 @@ namespace SaveOurShip2
 			//Odyssey-specific landing gates: scripted no-landing zones (quest sites populate map.landingBlockers)
 			//and the per-def preventGravshipLandingOn flag. Both fields live in Core but only carry meaning when
 			//Odyssey is loaded - skip them otherwise so we don't waste cycles on always-empty/false checks.
+			//Perf shortcut only, NOT the legal gate: without the DLC these checks would merely always be false.
 			bool odyssey = ModsConfig.OdysseyActive;
 			if (odyssey && map.landingBlockers != null)
 			{
