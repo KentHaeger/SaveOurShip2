@@ -16,29 +16,37 @@ namespace SaveOurShip2
 		private int lastCollisionTick = -GenDate.TicksPerDay;
 		private bool showedWarningMessage = false;
 		private float previusRange = ShipMapComp.MaxBattleRange;
-		private ShipMapComp originMapComp;
-		private const float warningRange = ShipMapComp.PDWeaponRange / 2f;
-		public ShipMapComp OriginMapcomp
+		private Map originMap;
+		public ShipMapComp OriginMapComp
 		{
-			get => originMapComp;
-			set => originMapComp = value;
+			get
+			{
+				Assert.IsNotNull(originMap);
+				return originMap.GetComponent<ShipMapComp>();
+			}
+			set
+			{
+				originMap = value.map;
+			}
 		}
 		public void ExposeData()
 		{
 			Scribe_Values.Look<int>(ref lastCollisionTick, "lastCollisionTick", -GenDate.TicksPerDay);
 			Scribe_Values.Look<bool>(ref showedWarningMessage, "showedWarningMessage", false);
 			Scribe_Values.Look<float>(ref previusRange, "previusRange", ShipMapComp.MaxBattleRange);
+			Scribe_References.Look<Map>(ref originMap, "originMap");
 		}
 		public ShipCollisionManager()
 		{
 		}
 
 		// Tunable parameters
+		private const float warningRange = ShipMapComp.PDWeaponRange / 2f;
 		private const float pirateFactionRammingCahnce = 0.35f;
 		private const float maxDamage = 7000;
 		// Ramming ships with a frequence of some power tool is not considered reasonable,
 		// so there is a cooldown between collisions.
-		private const int collisionTickInterval = 600;
+		private const int collisionTickInterval = 720;
 		private static readonly SimpleCurve radiusFromDamage = new SimpleCurve
 		{
 			new CurvePoint(300f, 1.4f ),
@@ -58,7 +66,7 @@ namespace SaveOurShip2
 		};
 		public void RangeUpdated()
 		{
-			Assert.IsNotNull(originMapComp);
+			Assert.IsNotNull(OriginMapComp);
 			checkAndShowWarning();
 			checkAndHandleCollision();
 		}
@@ -69,7 +77,7 @@ namespace SaveOurShip2
 			{
 				return;
 			}
-			if (previusRange > warningRange && originMapComp.Range < warningRange)
+			if (previusRange > warningRange && OriginMapComp.Range < warningRange)
 			{
 				showedWarningMessage = true;
 				Messages.Message("SoS.Collision.WarningMessage".Translate(), null, MessageTypeDefOf.CautionInput);
@@ -91,7 +99,7 @@ namespace SaveOurShip2
 			}
 			lastCollisionTick = Find.TickManager.TicksGame;
 			const float collisionEpsion = 10;
-			if (Mathf.Abs(originMapComp.Range) < collisionEpsion)
+			if (Mathf.Abs(OriginMapComp.Range) < collisionEpsion)
 			{
 				doCollision();
 			}
@@ -101,10 +109,10 @@ namespace SaveOurShip2
 			// For now, collsion isn't something that persists or has state
 			// but rather insta-damage and insta-bounce off and that's it.
 			Messages.Message("SoS.Collision.Message".Translate(), null, MessageTypeDefOf.CautionInput);
-			originMapComp.Range = warningRange;
+			OriginMapComp.Range = warningRange;
 
-			ShipMapComp targetMapComp = originMapComp.TargetMapComp;
-			SpaceShipCache playerShip = getCollidingShipOnMap(originMapComp);
+			ShipMapComp targetMapComp = OriginMapComp.TargetMapComp;
+			SpaceShipCache playerShip = getCollidingShipOnMap(OriginMapComp);
 			SpaceShipCache enemyShip = getCollidingShipOnMap(targetMapComp);
 
 			// Extremeny unlikely to happen
@@ -114,13 +122,13 @@ namespace SaveOurShip2
 				return;
 			}
 
-			float playerTWR = originMapComp.SlowestThrustToWeightCached() * TWRMath.TWRLargeMultiplier;
+			float playerTWR = OriginMapComp.SlowestThrustToWeightCached() * TWRMath.TWRLargeMultiplier;
 			float enemyTWR = targetMapComp.SlowestThrustToWeightCached() * TWRMath.TWRLargeMultiplier;
 
 			// As 1 means advance and -1 means retreat in heading, this is the relative speed
-			float collisionSpeed = Mathf.Abs(playerTWR * originMapComp.Heading + enemyTWR * targetMapComp.Heading);
+			float collisionSpeed = Mathf.Abs(playerTWR * OriginMapComp.Heading + enemyTWR * targetMapComp.Heading);
 
-			inflictDamage(playerShip, originMapComp, enemyShip, targetMapComp, collisionSpeed);
+			inflictDamage(playerShip, OriginMapComp, enemyShip, targetMapComp, collisionSpeed);
 		}
 		private void inflictDamage(SpaceShipCache rammingShip, ShipMapComp rammingMapComp, SpaceShipCache targetShip, ShipMapComp targetMapComp, float collisionSpeed)
 		{

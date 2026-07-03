@@ -1349,7 +1349,7 @@ namespace SaveOurShip2
 			if (ShipCombatOrigin)
 			{
 				collisionManager = new ShipCollisionManager();
-				collisionManager.OriginMapcomp = this;
+				collisionManager.OriginMapComp = this;
 			}
 			//ship AI
 			if (HasShipMapAI)
@@ -3473,5 +3473,5 @@ namespace SaveOurShip2
 			else
 				return "";
 		}
-    }
+	}
 }
