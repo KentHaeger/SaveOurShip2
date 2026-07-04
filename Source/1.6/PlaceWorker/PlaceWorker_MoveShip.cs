@@ -70,8 +70,10 @@ namespace SaveOurShip2
 						{
 							current.DrawGhost(vec, ShipMoveBlueprint.BlockedColor);
 							//follow-through on the legal gate in BlastLanding.CanBlastLand, not a technical need:
-							//only advertise "a plasma-armed ship could clear this" to players who can have one
-							if (ModsConfig.OdysseyActive)
+							//only advertise "a plasma-armed ship could clear this" to players who can have one -
+							//and only for cells a blast could actually clear, or the advice is a lie (e.g.
+							//overhead mountain is roofed AND hard-blocked; no plasma refit will ever land there)
+							if (ModsConfig.OdysseyActive && !BlastLanding.CellIsHardBlocked(vec, map))
 								result = new AcceptanceReport(TranslatorFormattedStringExtensions.Translate("SoS.BlastLandingUnavailable"));
 							else
 								result = false;
@@ -84,8 +86,8 @@ namespace SaveOurShip2
 								if (b.def.passability == Traversability.Impassable || b is Building_SteamGeyser)
 								{
 									current.DrawGhost(vec, ShipMoveBlueprint.BlockedColor);
-									//same legal-gate follow-through as the roofed/blocked case above
-									if (ModsConfig.OdysseyActive)
+									//same legal-gate + hard-block follow-through as the roofed/blocked case above
+									if (ModsConfig.OdysseyActive && !BlastLanding.CellIsHardBlocked(vec, map))
 										result = new AcceptanceReport(TranslatorFormattedStringExtensions.Translate("SoS.BlastLandingUnavailable"));
 									else
 										result = false;

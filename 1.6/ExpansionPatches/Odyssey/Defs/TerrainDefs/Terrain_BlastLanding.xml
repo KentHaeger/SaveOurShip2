@@ -6,7 +6,10 @@
 	<TerrainDef ParentName="FloorBase">
 		<defName>ShipVolcanicGlass</defName>
 		<label>volcanic glass</label>
-		<!-- inherits Floors from FloorBase, but no costList/costStuffCount = no build option auto-generated -->
+		<!-- FloorBase carries designationCategory Floors, and the game generates a build designator for
+		     every def in a designation category even with no costList - null it out or a free buildable
+		     "volcanic glass" floor appears in the Architect menu -->
+		<designationCategory IsNull="True" />
 		<description>A sheet of dark, glossy glass - ground fused solid by a plasma bombardment. Hard enough to bear the weight of a starship.</description>
 		<!-- Odyssey's cooled-lava texture - safe to reference directly: this def only loads when
 		     Odyssey is active (the whole folder is DLC-gated by LoadFolders.xml). -->

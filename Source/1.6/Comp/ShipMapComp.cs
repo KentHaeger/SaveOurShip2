@@ -2411,17 +2411,23 @@ namespace SaveOurShip2
 						MoveToMap = PrevMap;
 				}
 
+				//transit is over - drop all bombardment state now, whichever branch lands the ship.
+				//BlastLandingPending and undelivered blastTargetSalvoTicks are scribed; anything left
+				//behind here (target map closed, salvo stranded past the altitude cutoff) would replay
+				//as an instant barrage at the start of this map comp's next blast landing.
+				bool wasBlastLanding = BlastLandingPending;
+				BlastLandingPending = false;
+				blastTargetSalvoTicks.Clear();
+
 				if (MoveToMap != null) //ground map exists
 				{
 					SpaceShipCache landed = ShipsOnMap.Values.First();
-					bool wasBlastLanding = BlastLandingPending;
 					HashSet<IntVec3> landCells = wasBlastLanding ? landed.Area.Select(c => c + MoveToVec).ToHashSet() : null;
+					if (wasBlastLanding)
+						BlastLanding.FinalizeLandingZone(MoveToMap, landCells); //clear cells the random salvos missed
 					ShipInteriorMod2.MoveShip(landed.Core, MoveToMap, MoveToVec);
 					if (wasBlastLanding)
-					{
 						BlastLanding.ClearLandingZone(MoveToMap, landCells); //no heat motes or fires under the hull
-						BlastLandingPending = false;
-					}
 				}
 				else //moveto map was closed or no room
 				{

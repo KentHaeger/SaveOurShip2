@@ -89,6 +89,12 @@ namespace SaveOurShip2
 		{
 			if (map.roofGrid.RoofAt(c) == RoofDefOf.RoofRockThick) //overhead mountain - indestructible
 				return true;
+			//cells of an already-landed ship (or ship wreck): a blast cannot clear ship parts (GlassCell
+			//spares them), and landing on top of one would corrupt both ships' caches - MoveShip would
+			//throw adding the cell to MapShipCells twice, aborting the move halfway
+			ShipMapComp targetMapComp = map.GetComponent<ShipMapComp>();
+			if (targetMapComp != null && targetMapComp.MapShipCells.ContainsKey(c))
+				return true;
 			//Odyssey-specific landing gates: scripted no-landing zones (quest sites populate map.landingBlockers)
 			//and the per-def preventGravshipLandingOn flag. Both fields live in Core but only carry meaning when
 			//Odyssey is loaded - skip them otherwise so we don't waste cycles on always-empty/false checks.
@@ -126,10 +132,10 @@ namespace SaveOurShip2
 				return true;
 			if (!c.GetAffordances(map).Contains(TerrainAffordanceDefOf.Heavy)) //water, marsh, soft ground
 				return true;
-			//constructed floor (concrete, carpet, wood, etc.) - heavy enough to land on, but blast
-			//landing fuses everything to volcanic glass, so floors in the LZ get vaporized too
-			if (c.GetTerrain(map).IsFloor)
-				return true;
+			//constructed floors do NOT need a blast: they bear a normal landing (Heavy affordance is
+			//checked above), and our own volcanic glass is a floor too - flagging floors here would
+			//force a pointless bombardment onto the player's pad or a previous landing's glass scar.
+			//If a bombardment happens for other reasons, GlassCell still fuses them along with the rest.
 			foreach (Thing t in c.GetThingList(map))
 			{
 				//buildings, walls, rock, enemy structures block a landing. Trees do NOT - a normal
@@ -316,6 +322,21 @@ namespace SaveOurShip2
 				p.mindState.mentalStateHandler.TryStartMentalState(MentalStateDefOf.PanicFlee,
 					reason: null, forced: false, forceWake: false, causedByMood: false,
 					otherPawn: null, transitionSilently: true, causedByDamage: true);
+			}
+		}
+
+		// Final deterministic pass at the moment of touchdown. The descent salvos target randomly, so
+		// footprint cells can reach the ground still roofed or holding a building; MoveShip would then
+		// destroy the supporting walls and leave orphan roofs to collapse onto the freshly landed ship.
+		// Glass every cell that still needs it so the hull sets down on a fully cleared zone.
+		public static void FinalizeLandingZone(Map map, IEnumerable<IntVec3> cells)
+		{
+			if (map == null || cells == null)
+				return;
+			foreach (IntVec3 c in cells)
+			{
+				if (c.InBounds(map) && !CellIsHardBlocked(c, map) && CellNeedsBlast(c, map))
+					GlassCell(map, c);
 			}
 		}
 

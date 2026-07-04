@@ -157,6 +157,14 @@ namespace SaveOurShip2
 			HashSet<IntVec3> footprint = new HashSet<IntVec3>();
 			foreach (SketchEntity e in bp.shipSketch.Entities)
 				footprint.Add(placed.Position + e.pos);
+			//outer-airlock cells live in the extender sketch, not the ship sketch, but they are ship
+			//cells too (part of Area, so the bombardment covers them) - without them an obstruction
+			//only under an airlock would skip the confirmation and never be blasted
+			if (bp.extenderSketch != null)
+			{
+				foreach (SketchEntity e in bp.extenderSketch.Entities)
+					footprint.Add(placed.Position + e.pos);
+			}
 			if (!BlastLanding.FootprintNeedsBlast(footprint, targetMap))
 				return true;
 			if (!blastConfirmed)
