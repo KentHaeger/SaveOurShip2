@@ -14,22 +14,25 @@ using Verse.AI;
 
 namespace SaveOurShip2
 {
-	//ship map state, only use on space maps
+	// ship map state, only use on space maps
 	public enum ShipMapState : byte
 	{
-		nominal, //stable, maintained orbit - player home ship only
-		inCombat, //fighting another ship - player or enemy ship
-		isGraveyard, //will fall to the ground
-		inTransit, //moving from/to planet surface
-		inEvent, //events that have movement - meteors
-		burnUpSet //force terminate map+WO if no player pawns or pods present or in flight to
+		nominal, // stable, maintained orbit - player home ship only
+		inCombat, // fighting another ship - player or enemy ship
+		isGraveyard, // will fall to the ground
+		inTransit, // moving from/to planet surface
+		inEvent, // events that have movement - meteors
+		burnUpSet // force terminate map+WO if no player pawns or pods present or in flight to
 	}
 	public enum ShipAI : byte
 	{
 		none,
-		normal, //aggressive, consider weapons vs enemy
-		carrier, //try to stay just out of torp range
-		avoidant //flee is possible, else fight - traders, etc.
+		normal,   // aggressive, consider weapons vs enemy
+		carrier,  // try to stay just out of torp range
+		avoidant, // flee is possible, else fight - traders, etc.
+		ramming   // will try to advamce and ram player ship. For players preferring long range weapons
+			      // asnd having faster ship, that won't be nuch ifferent from normal strategy.
+				  // Obviously, will need to be faster than player to succeed if plyer doesn't want collisoion
 	}
 
 	public class ShipMapComp : MapComponent, IThingHolder //It's an IThingHolder because it holds shuttles while they're on missions
@@ -355,6 +358,7 @@ namespace SaveOurShip2
 				Scribe_Values.Look<float>(ref Range, "Range");
 				Scribe_Values.Look<bool>(ref attackedTradeship, "attackedTradeship");
 				Scribe_Values.Look<bool>(ref callSlowTick, "callSlowTick");
+				Scribe_Deep.Look<ShipCollisionManager>(ref collisionManager, "collisionManager");
 
 				//SC only - target only
 				Scribe_Values.Look<ShipAI>(ref ShipMapAI, "ShipMapAI", 0);
@@ -433,10 +437,17 @@ namespace SaveOurShip2
 		//SC only - origin only
 		public float Difficulty; //current battle difficulty factor taken from settings
 		public float Range; //400 is furthest away, 0 is up close and personal
+		public const float MaxBattleRange = 400;
+		public const float PDWeaponRange = 50;
 		public bool attackedTradeship; //target was AI tradeship - notoriety gain
 		public bool callSlowTick = false; //call both slow ticks
 		public int LastAttackTick;
 		public int LastBountyRaidTick;
+		private ShipCollisionManager collisionManager;
+		public ShipCollisionManager CollisionManager
+		{
+			get => collisionManager;
+		}
 		private bool shipCombatOrigin = false;
 		public bool ShipCombatOrigin //reset after battle
 		{
@@ -1284,9 +1295,17 @@ namespace SaveOurShip2
 			else if (shipDef != null)
 			{
 				if (shipDef.carrier)
+				{
 					newMapComp.ShipMapAI = ShipAI.carrier;
+				}
 				else if (shipDef.tradeShip)
+				{
 					newMapComp.ShipMapAI = ShipAI.avoidant;
+				}
+				else if (ShipCollisionManager.PirateFactionWantsRamming(faction))
+				{
+					newMapComp.ShipMapAI = ShipAI.ramming;
+				}
 			}
 			newMapComp.ShipFaction = faction;
 			if (wreckLevel != 3)
@@ -1373,6 +1392,11 @@ namespace SaveOurShip2
 			ShuttlesInRange = new List<VehiclePawn>();
 			ShuttlesOnMissions = new ThingOwner<VehiclePawn>();
 			ShuttleMissions = new List<ShuttleMissionData>();
+			if (ShipCombatOrigin)
+			{
+				collisionManager = new ShipCollisionManager();
+				collisionManager.OriginMapComp = this;
+			}
 			//ship AI
 			if (HasShipMapAI)
 			{
@@ -1442,6 +1466,12 @@ namespace SaveOurShip2
 				else if (Heading == -1)
 				{
 					OriginMapComp.Range += MapEnginePower; //inrease distance
+				}
+
+				// only  origin map has it
+				if (collisionManager != null)
+				{
+					collisionManager.RangeUpdated();
 				}
 
 				OriginMapComp.Range = Mathf.Clamp(OriginMapComp.Range, 0f, 400f);
@@ -2147,11 +2177,11 @@ namespace SaveOurShip2
 						}
 						int prevHeading = Heading;
 						//Log.Message(str);
-						if (OriginMapComp.Range > maxRange[best]) //forward
+						if (ShipMapAI == ShipAI.ramming || OriginMapComp.Range > maxRange[best]) // forward
 							Heading = 1;
-						else if (OriginMapComp.Range <= minRange[best]) //back
+						else if (OriginMapComp.Range <= minRange[best]) // back
 							Heading = -1;
-						else //chill
+						else // chill
 							Heading = 0;
 
 						if (Prefs.DevMode && prevHeading != Heading)
@@ -3489,5 +3519,5 @@ namespace SaveOurShip2
 			else
 				return "";
 		}
-    }
+	}
 }

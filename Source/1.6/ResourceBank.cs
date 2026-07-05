@@ -433,6 +433,11 @@ namespace SaveOurShip2
 				def == ThingDefOf.Ship_Beam_Wrecked;
 		}
 
+		public static bool IsFoamBuilding(ThingDef def)
+		{
+			return def == ThingDefOf.HullFoamWall || def == ThingDefOf.ShipHullfoamTile;
+		}
+
 		public static TerrainDef GetTerrainFromRockType(ThingDef rockType)
 		{
 			if (rockType == RimWorld.ThingDefOf.Granite)

@@ -164,6 +164,7 @@
     <Compile Include="LogInterop.cs" />
     <Compile Include="Quest\QuestHandler_SosStashedShip.cs" />
     <Compile Include="ShipCatalog.cs" />
+    <Compile Include="ShipCollisionManager.cs" />
     <Compile Include="ShipImorter.cs" />
     <Compile Include="ShipPainter.cs" />
     <Compile Include="SOS2MapUtility.cs" />
