@@ -42,8 +42,13 @@ namespace SaveOurShip2
 
 		// Tunable parameters
 		private const float warningRange = ShipMapComp.PDWeaponRange / 2f;
+		// Initial damage scale, value is expected to be lower than mass.
+		private const float damageScale = 0.45f;
 		private const float pirateFactionRammingCahnce = 0.35f;
 		private const float maxDamage = 7000;
+		// This implements the idea "Impact is impact". If ramming ship is just barely faster than retreating ship,
+		// damage will hit this lower cap and won't reduce to alsmost nothing.
+		private const float minCollisionspeed = 0.3f;
 		// Ramming ships with a frequence of some power tool is not considered reasonable,
 		// so there is a cooldown between collisions.
 		private const int collisionTickInterval = 720;
@@ -51,9 +56,9 @@ namespace SaveOurShip2
 		{
 			new CurvePoint(300f, 1.4f ),
 			new CurvePoint(500f, 1.8f), // this is more than sqrt(2), so 3x3 tiles affected
-			new CurvePoint(900f, 4f),   // subject to manual tuning
-			new CurvePoint(2000f, 7f),
-			new CurvePoint(7000f, 10f),
+			new CurvePoint(900f, 5f),   // 5 radius for 900 dmg is not much, as that damage doesn't even destroy normal 1000HP hull at the impact point
+			new CurvePoint(2500f, 8f),  // subject to manual tuning
+			new CurvePoint(7000f, 12f),
 		};
 		// Damage decrease multiplir from distance from distance, 0 distance means impact point, 1 is at max distance
 		private static readonly SimpleCurve damageFromDistance = new SimpleCurve
@@ -128,18 +133,18 @@ namespace SaveOurShip2
 			// As 1 means advance and -1 means retreat in heading, this is the relative speed
 			float collisionSpeed = Mathf.Abs(playerTWR * OriginMapComp.Heading + enemyTWR * targetMapComp.Heading);
 
+			collisionSpeed = Mathf.Max(collisionSpeed, minCollisionSpeed);
+
 			inflictDamage(playerShip, OriginMapComp, enemyShip, targetMapComp, collisionSpeed);
 		}
 		private void inflictDamage(SpaceShipCache rammingShip, ShipMapComp rammingMapComp, SpaceShipCache targetShip, ShipMapComp targetMapComp, float collisionSpeed)
 		{
-			// Initial damage scale, value is expected to be lower than mass.
-			float damageScale = 0.7f;
 			// This denies physics, but in order to make ramming favorable for the player, reflected damage done by larger and slower enemy
 			// ship needs to be reduced
 			float baseDamage = Mathf.Sqrt(rammingShip.MassActual) * Mathf.Sqrt(targetShip.MassActual) * damageScale;
 
-			// Speed factor is good for the player, so allow squared speed here
-			float speedFactor = collisionSpeed * collisionSpeed;
+			// Speed factor is good for the player, so allow faster than linear grow here
+			float speedFactor = collisionSpeed * Mathf.Sqrt(collisionSpeed);
 
 			float damage = Mathf.Clamp(baseDamage * speedFactor, 0, maxDamage);
 
