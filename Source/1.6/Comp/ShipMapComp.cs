@@ -626,6 +626,41 @@ namespace SaveOurShip2
 				ship.RebuildCorePath();
 			}
 		}
+		// Complete rebuild of ship cache from roots. Includes updating both both MapRootListAll, which are roots for ships
+		// and updating MapShipCells, which work as roots/triggers for generating wrecks when they exist, but ship index is set to -1 (invalid)
+		public void RecacheFromRoots()
+		{
+			Log.Message("SoS 2: updating ship cache including root");
+			List<Building> allBuildings = map.listerBuildings.allBuildingsNonColonist.ToList().ListFullCopy();
+			allBuildings.AddRange(map.listerBuildings.allBuildingsNonColonist);
+
+			MapRootListAll.Clear();
+			foreach(Building b in allBuildings)
+			{
+				if (b is Building_ShipBridge bridge)
+				{
+					MapRootListAll.Add(bridge);
+				}
+			}
+
+			MapShipCells.Clear();
+			foreach (Building b in allBuildings)
+			{
+				CompShipCachePart cachePart = b.TryGetComp<CompShipCachePart>();
+				if (cachePart != null)
+				{
+					cachePart.cellsUnder = cachePart.parent.OccupiedRect().ToHashSet();
+					foreach (IntVec3 vec in cachePart.cellsUnder) //init cells if not already in ShipCells
+					{
+						if (!MapShipCells.ContainsKey(vec))
+						{
+							MapShipCells.Add(vec, new Tuple<int, int>(-1, -1));
+						}
+					}
+				}
+			}
+			RecacheMap();
+		}
 		public void RecacheMap() //rebuild all ships, wrecks on map init or after ship gen
 		{
 			foreach (Building_ShipBridge b in MapRootListAll)
@@ -1301,6 +1336,17 @@ namespace SaveOurShip2
 						"SoS.EncounterStartDesc".Translate(newMap.Parent.GetComponent<TimedForcedExitShip>().ForceExitAndRemoveMapCountdownTimeLeftString), LetterDefOf.NeutralEvent);
 				}
 			}
+			// TODO: there is a complicated error with updating ship cache during new derelict map creation. Shpis aren't properly created andadded to
+			// the list of ships on the map, so it shows that 0 ship on map. Aslo ship index is -1 on ship wreck tiles.
+			// This temporary fix will properly regenerate cache for now. Temporary fix should be removed and proper fix should be applied
+			// when there is more time/more developers to actually do that.
+
+			// The issue is apparently caused by new base game version having undocumented behaviour changes. So it may be better to wait for
+			// new version called 1.7, officially released with supposed new DLC maybe with some documentation.
+			// And stabilized after release.
+
+			// Recaching map is posted to tasks queue here because it is per map task, but needs to be done after all map + map content generation is completed.
+			LongEventHandler.QueueLongEvent(newMapComp.RecacheFromRoots, "PostGameStart", doAsynchronously: false, null);
 			return newMap;
 		}
 		private void ResetCombatVars()
