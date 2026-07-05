@@ -48,7 +48,7 @@ namespace SaveOurShip2
 		private const float maxDamage = 7000;
 		// This implements the idea "Impact is impact". If ramming ship is just barely faster than retreating ship,
 		// damage will hit this lower cap and won't reduce to alsmost nothing.
-		private const float minCollisionspeed = 0.3f;
+		private const float minCollisionSpeed = 0.3f;
 		// Ramming ships with a frequence of some power tool is not considered reasonable,
 		// so there is a cooldown between collisions.
 		private const int collisionTickInterval = 720;
