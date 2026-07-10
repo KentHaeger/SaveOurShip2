@@ -12,6 +12,9 @@ namespace SaveOurShip2
 
 		public const string AntiBoardingNotGeneratedPattern = "Anti-boarding defenses not generated for ship";
 		public static readonly string AntiBoardingNotGenerated = AntiBoardingNotGeneratedPattern + ": {0}";
+
+		// This isn't the best name, but that's how it used to be logged for years.
+		public const string LostShipBattle = "Lost ship battle!";
 	}
 }
 
