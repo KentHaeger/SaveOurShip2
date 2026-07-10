@@ -1305,18 +1305,14 @@ namespace SaveOurShip2
 		public override void DeSpawn(DestroyMode mode = DestroyMode.Vanish)
 		{
 			if (mapComp.MapRootListAll.Contains(this))
-				mapComp.MapRootListAll.Remove(this);
-			if (Map.IsSpace() && mapComp.MapRootListAll.NullOrEmpty() && mapComp.IsPlayerShipMap && mapComp.ShipMapState != ShipMapState.inTransit && !ShipInteriorMod2.MoveShipFlag) //last bridge on player map - deorbit warn
 			{
-				var countdownComp = Map.Parent.GetComponent<TimedForcedExitShip>();
-				if (countdownComp != null && !countdownComp.ForceExitAndRemoveMapCountdownActive)
-				{
-					countdownComp.StartForceExitAndRemoveMapCountdown();
-					Find.LetterStack.ReceiveLetter(TranslatorFormattedStringExtensions.Translate("SoS.BurnUpPlayer"), TranslatorFormattedStringExtensions.Translate("SoS.BurnUpPlayerDesc", countdownComp.ForceExitAndRemoveMapCountdownTimeLeftString), LetterDefOf.ThreatBig);
-				}
+				mapComp.MapRootListAll.Remove(this);
+				Log.Message($"SoS 2: Bridge removed. Remaining count: { mapComp.MapRootListAll.Count }" );
 			}
+			mapComp.CheckForPlayerOrbitFailure();
 			base.DeSpawn(mode);
 		}
+
 		protected override void Tick()
 		{
 			base.Tick();

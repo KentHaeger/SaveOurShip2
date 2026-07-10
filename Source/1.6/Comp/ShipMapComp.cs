@@ -372,8 +372,6 @@ namespace SaveOurShip2
 				Scribe_Values.Look<bool>(ref startedPilotLoad, "StartedShuttleMissions");
 				Scribe_Collections.Look<VehiclePawn>(ref shuttlesYetToLaunch, "ShuttlesYetToLaunch", LookMode.Reference);
 				Scribe_Collections.Look<VehiclePawn>(ref shuttlesWantingBoarders, "ShuttlesWantingBoarders", LookMode.Reference);
-
-				Scribe_Collections.Look<Building_ShipBridge>(ref MapRootListAll, "MapRootListAll", LookMode.Reference); //td rem?
 				Scribe_Deep.Look(ref ShuttlesOnMissions, "ShuttlesOnMissions", this);
 				Scribe_Collections.Look<ShuttleMissionData>(ref ShuttleMissions, "ShuttleMissions", LookMode.Deep);
 
@@ -594,7 +592,7 @@ namespace SaveOurShip2
 		public override void FinalizeInit() //after spawn cache all ships
 		{
 			base.FinalizeInit();
-			RecacheMap();
+			RecacheFromRoots();
 		}
 		private Dictionary<IntVec3, Tuple<int, int>> shipCells; //cells occupied by shipParts, (index, path), if path is -1 = wreck
 		public Dictionary<IntVec3, Tuple<int, int>> MapShipCells //td add bool if floor
@@ -643,17 +641,19 @@ namespace SaveOurShip2
 		{
 			Log.Message("SoS 2: updating ship cache including root");
 			List<Building> allBuildings = map.listerBuildings.allBuildingsNonColonist.ToList().ListFullCopy();
-			allBuildings.AddRange(map.listerBuildings.allBuildingsNonColonist);
+			allBuildings.AddRange(map.listerBuildings.allBuildingsColonist);
 
 			MapRootListAll.Clear();
 			foreach(Building b in allBuildings)
 			{
 				if (b is Building_ShipBridge bridge)
 				{
-					MapRootListAll.Add(bridge);
+					if (!MapRootListAll.Contains(bridge))
+					{
+						MapRootListAll.Add(bridge);
+					}
 				}
 			}
-
 			MapShipCells.Clear();
 			foreach (Building b in allBuildings)
 			{
@@ -710,6 +710,18 @@ namespace SaveOurShip2
 			}
 			CacheOff = false;
 			Log.Message("SOS2: ".Colorize(Color.cyan) + map + " Recached,".Colorize(Color.green) + " Found ships: " + ShipsOnMap.Count);
+		}
+		public void CheckForPlayerOrbitFailure()
+		{
+			if (map.IsSpace() && MapRootListAll.NullOrEmpty() && IsPlayerShipMap && ShipMapState != ShipMapState.inTransit && !ShipInteriorMod2.MoveShipFlag) //last bridge on player map - deorbit warn
+			{
+				var countdownComp = map.Parent.GetComponent<TimedForcedExitShip>();
+				if (countdownComp != null && !countdownComp.ForceExitAndRemoveMapCountdownActive)
+				{
+					countdownComp.StartForceExitAndRemoveMapCountdown();
+					Find.LetterStack.ReceiveLetter(TranslatorFormattedStringExtensions.Translate("SoS.BurnUpPlayer"), TranslatorFormattedStringExtensions.Translate("SoS.BurnUpPlayerDesc", countdownComp.ForceExitAndRemoveMapCountdownTimeLeftString), LetterDefOf.ThreatBig);
+				}
+			}
 		}
 		public void CheckAndMerge(HashSet<int> indexes) //slower, finds best ship to merge to, removes all other ships
 		{
@@ -1927,6 +1939,7 @@ namespace SaveOurShip2
 				totalThreat += ship.ThreatCurrent;
 			}
 		}
+		private int lastFailsafeRecacheTick = -GenDate.TicksPerHour;
 		public void SlowTick(int tick)
 		{
 			foreach (SpaceShipCache ship in ShipsOnMap.Values.ToList())
@@ -1935,6 +1948,21 @@ namespace SaveOurShip2
 			}
 			if (ShipMapState == ShipMapState.inCombat)
 			{
+				const int failsafeRecacheInterval = 1200;
+				// Once this was discovered to be possible, this failsafe is considered useful
+				CheckForPlayerOrbitFailure();
+				if (Find.TickManager.TicksGame > lastFailsafeRecacheTick + failsafeRecacheInterval)
+				{
+					foreach (Building_ShipBridge bridge in MapRootListAll)
+					{
+						if (bridge.Destroyed)
+						{
+							Log.Error("SoS 2: destroyed bridge detected in ship cache during battle");
+							RecacheFromRoots();
+							break;
+						}
+					}
+				}
 				ShipBattleSlowTick(tick);
 			}
 			else if (ShipMapState == ShipMapState.inTransit)
@@ -2900,7 +2928,7 @@ namespace SaveOurShip2
 		{
 			if (loser.GetComponent<ShipMapComp>().ShipMapState != ShipMapState.inCombat)
 				return;
-			Log.Message("SOS2: ".Colorize(Color.cyan) + loser + " Lost ship battle!".Colorize(Color.red));
+			Log.Message("SOS2: ".Colorize(Color.cyan) + loser + " " + LogInterop.LostShipBattle.Colorize(Color.red));
 			//tgtMap is opponent of origin
 			Map tgtMap = OriginMapComp.ShipCombatTargetMap;
 			var tgtMapComp = OriginMapComp.TargetMapComp;
