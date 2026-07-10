@@ -747,7 +747,7 @@ Successful dodge means miss by a lot, projectile doesn't even enter target map.<
 	<SoS.StashedShip.DevAllShipsFlipped>Dev: All ships flipped (use with caution)</SoS.StashedShip.DevAllShipsFlipped>
 	
 	<!-- Ship collision feature -->
-	<SoS.Collision.WarningMessage>Distance between player and enemy ship got very low. Beware of possible collision.</SoS.Collision.WarningMessage>
+	<SoS.Collision.WarningMessage>Distance between player and enemy ships got very low. Beware of possible collision.</SoS.Collision.WarningMessage>
 	<SoS.Collision.Message>Ships collided, cusing some damage to both! They will bounce off, increasing battle distance and it will take some time to stabilize course before next ramming attempt if that is desired.</SoS.Collision.Message>
 	
 </LanguageData>
