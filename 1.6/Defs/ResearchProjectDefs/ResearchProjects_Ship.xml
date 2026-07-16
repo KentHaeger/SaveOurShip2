@@ -63,6 +63,8 @@
 		<tab>ResearchTabShip</tab>
 		<researchViewX>0</researchViewX>
 		<researchViewY>0</researchViewY>
+        <discoveredLetterTitle>About: Ship engines</discoveredLetterTitle>
+        <discoveredLetterText>Ship engines are grouped together on the same button in Architect menu, Ship tab. When that tab is active, you can click on engine gizmo(button) and select engine type.</discoveredLetterText>
 		<generalRules>
 		  <rulesStrings>
 			<li>subject->rocket propulsion</li>
