@@ -285,6 +285,10 @@
 	<SoS.TurretPointDefenseDesc>Use this turret to intercept incoming torpedoes and shuttles</SoS.TurretPointDefenseDesc>
 	<SoS.TurretNotConnected>Not connected to the ship bridge via heat network, can't fire!</SoS.TurretNotConnected>
 	<SoS.TorpedoAllowedDesc>Toggle to prevent or allow firing of this type of torpedo.</SoS.TorpedoAllowedDesc>
+	<!-- blast landing -->
+	<SoS.BlastLandingTitle>Blast landing</SoS.BlastLandingTitle>
+	<SoS.BlastLandingConfirm>The landing zone is obstructed. On final approach the ship's plasma batteries will bombard it - destroying everything within the ship's footprint, blasting away roofs, and fusing the ground to volcanic glass. Plasma fire is imprecise: the glassing will spread and scar the surrounding terrain. Overhead mountain cannot be breached.\n\nProceed with blast landing?</SoS.BlastLandingConfirm>
+	<SoS.BlastLandingUnavailable>Landing zone obstructed. Bombarding it clear on approach requires a ship with substantial plasma weaponry and power capacity - this ship does not qualify.</SoS.BlastLandingUnavailable>
 	<SoS.TorpedoNotLoaded>Not loaded</SoS.TorpedoNotLoaded>
 	<SoS.TorpedoFullyLoaded>Fully loaded</SoS.TorpedoFullyLoaded>
 	<SoS.TorpedoNone>No torpedoes</SoS.TorpedoNone>

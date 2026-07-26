@@ -20,7 +20,6 @@ namespace SaveOurShip2
 
 		public override AcceptanceReport AllowsPlacing(BuildableDef def, IntVec3 loc, Rot4 rot, Map map, Thing thingToIgnore = null, Thing thing = null)
 		{
-			
 			if (thing is ShipMoveBlueprint ship)
 			{
 				try
@@ -31,6 +30,7 @@ namespace SaveOurShip2
 					{
 						targetMapLarger = true;
 					}
+					bool blastCapable = ship.canBlastLand;
 					AcceptanceReport result = true;
 					IEnumerable<SketchEntity> entities;
 					if (ship.extenderSketch != null)
@@ -45,11 +45,38 @@ namespace SaveOurShip2
 							result = false;
 							break;
 						}
-						bool isSpawnBlocked = current.IsSpawningBlocked(vec, map) && map.terrainGrid.TerrainAt(vec) != TerrainDefOf.Space;
-						if (GenGrid.InNoBuildEdgeArea(vec, map) || isSpawnBlocked || map.roofGrid.Roofed(vec) || (targetMapLarger && (vec.x > originMap.Size.x || vec.z > originMap.Size.z)))
+						if (GenGrid.InNoBuildEdgeArea(vec, map) || (targetMapLarger && (vec.x > originMap.Size.x || vec.z > originMap.Size.z)))
 						{
-							current.DrawGhost(vec, new Color(0.8f, 0.2f, 0.2f, 0.3f));
+							current.DrawGhost(vec, ShipMoveBlueprint.BlockedColor);
 							result = false;
+							continue;
+						}
+						if (blastCapable)
+						{
+							//a plasma-armed ship bombards its own landing site clear - obstructed cells are allowed,
+							//but overhead mountain and steam geysers can never be breached
+							if (BlastLanding.CellIsHardBlocked(vec, map))
+							{
+								current.DrawGhost(vec, ShipMoveBlueprint.BlockedColor);
+								result = false;
+								continue;
+							}
+							if (BlastLanding.CellNeedsBlast(vec, map))
+								current.DrawGhost(vec, ShipMoveBlueprint.BlastColor);
+							continue;
+						}
+						bool isSpawnBlocked = current.IsSpawningBlocked(vec, map) && map.terrainGrid.TerrainAt(vec) != TerrainDefOf.Space;
+						if (isSpawnBlocked || map.roofGrid.Roofed(vec))
+						{
+							current.DrawGhost(vec, ShipMoveBlueprint.BlockedColor);
+							//follow-through on the legal gate in BlastLanding.CanBlastLand, not a technical need:
+							//only advertise "a plasma-armed ship could clear this" to players who can have one -
+							//and only for cells a blast could actually clear, or the advice is a lie (e.g.
+							//overhead mountain is roofed AND hard-blocked; no plasma refit will ever land there)
+							if (ModsConfig.OdysseyActive && !BlastLanding.CellIsHardBlocked(vec, map))
+								result = new AcceptanceReport(TranslatorFormattedStringExtensions.Translate("SoS.BlastLandingUnavailable"));
+							else
+								result = false;
 							continue;
 						}
 						foreach (Thing t in vec.GetThingList(map))
@@ -58,8 +85,12 @@ namespace SaveOurShip2
 							{
 								if (b.def.passability == Traversability.Impassable || b is Building_SteamGeyser)
 								{
-									current.DrawGhost(vec, new Color(0.8f, 0.2f, 0.2f, 0.3f));
-									result = false;
+									current.DrawGhost(vec, ShipMoveBlueprint.BlockedColor);
+									//same legal-gate + hard-block follow-through as the roofed/blocked case above
+									if (ModsConfig.OdysseyActive && !BlastLanding.CellIsHardBlocked(vec, map))
+										result = new AcceptanceReport(TranslatorFormattedStringExtensions.Translate("SoS.BlastLandingUnavailable"));
+									else
+										result = false;
 									break;
 								}
 							}

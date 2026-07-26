@@ -1120,6 +1120,12 @@ namespace SaveOurShip2
 		{
 			shipTarget = target;
 		}
+		//Blast landing: point the gun in a fixed direction. The turret's own TurretTopTick keeps tracking
+		//this target, so the barrel swings to it and holds - no actual firing, heat or power cost.
+		public void SetBlastAim(LocalTargetInfo target)
+		{
+			currentTargetInt = target;
+		}
 		public bool IncomingPtDefTargetsInRange() //PD targets are in range if they are on target map and in PD range
 		{
 			if (mapComp.TargetMapComp.TorpsInRange.Any() || mapComp.TargetMapComp.ShuttlesInRange.Where(shuttle=>shuttle.Faction!=this.Faction).Any())
