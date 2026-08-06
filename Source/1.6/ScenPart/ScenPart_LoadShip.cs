@@ -171,6 +171,7 @@ namespace SaveOurShip2
 		void LoadShip()
 		{
 			Log.Message("SOS2: ".Colorize(Color.cyan) + "LoadShip");
+			Log.Message("Ship file name: " + filename);
 			Scribe.mode = LoadSaveMode.Inactive;
 			Scribe.loader.InitLoading(Path.Combine(Path.Combine(GenFilePaths.SaveDataFolderPath, "SoS2"), filename + ".sos2"));
 
@@ -502,7 +503,8 @@ namespace SaveOurShip2
 			}
 			return null;
 		}
-		public override void PostGameStart() //post load cleanup, open player crypto, sickness
+
+		private void PostGameStartImpl()
 		{
 			Map map = Find.CurrentMap;
 			map.GetComponent<ShipMapComp>().RecacheMap();
@@ -510,6 +512,7 @@ namespace SaveOurShip2
 			//List<Pawn> toKill = new List<Pawn>();
 			try
 			{
+				Log.Message("SOS 2 Load Ship: resetting pawn memories");
 				foreach (Pawn p in map.mapPawns.AllPawns)
 				{
 					/*if (p.RaceProps != null && p.RaceProps.IsFlesh && (!p.InContainerEnclosed) && (!ShipInteriorMod2.IsHologram(p) || p.health.hediffSet.GetFirstHediff<HediffPawnIsHologram>().consciousnessSource.Map != map))
@@ -519,6 +522,7 @@ namespace SaveOurShip2
 				}
 				/*foreach (Pawn p in toKill)
 					p.Kill(null);*/
+				Log.Message("SOS 2 Load Ship: rotting things");
 				foreach (Thing t in map.spawnedThings)
 				{
 					if (t is Corpse c)
@@ -529,14 +533,18 @@ namespace SaveOurShip2
 					}
 				}
 				//eject crypto pawns
+				Log.Message("SOS 2 Load Ship: ejecting crypto pawns");
 				foreach (Building b in map.listerBuildings.allBuildingsColonist.Where(b => b.TryGetComp<CompCryptoLaunchable>() != null))
 				{
 					Building_CryptosleepCasket c = b as Building_CryptosleepCasket;
-					if (c.ContainedThing is Pawn p)
+					if (c != null)
 					{
-						p.health.AddHediff(HediffDefOf.CryptosleepSickness, null, null, null);
+						if (c.ContainedThing is Pawn p)
+						{
+							p.health.AddHediff(HediffDefOf.CryptosleepSickness, null, null, null);
+						}
+						c.Open();
 					}
-					c.Open();
 				}
 			}
 			catch (Exception e)
@@ -544,6 +552,12 @@ namespace SaveOurShip2
 				Log.Warning(e.Message + "\n" + e.StackTrace);
 			}
 			Find.LetterStack.ReceiveLetter(TranslatorFormattedStringExtensions.Translate("SoS.TimePassed"), TranslatorFormattedStringExtensions.Translate("SoS.TimePassedDesc", traveltime), LetterDefOf.NeutralEvent);
+		}
+		public override void PostGameStart() //post load cleanup, open player crypto, sickness
+		{
+			// There is quite some work to here in Load Ship scenario, and no proof that it will work well in another thread with unknown mods involved.
+			// So opting out from doing it asyncronously by queuing sync task.
+			LongEventHandler.QueueLongEvent(PostGameStartImpl, "PostGameStart", doAsynchronously: false, null);
 		}
 	}
 }

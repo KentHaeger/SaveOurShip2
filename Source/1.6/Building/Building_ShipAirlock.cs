@@ -201,7 +201,7 @@ namespace SaveOurShip2
 				}
 			}
 			//Glow when opened
-			if (this.Map.IsSpace() && OpenPct > 0 && ticks % 16 == 0 && Outerdoor())
+			if ((ticks & 0xF) == 0 && this.Map.IsSpace() && ticksSinceOpen > 0 && Outerdoor())
 				Map.flecks.CreateFleck(FleckMaker.GetDataStatic(DrawPos, Map, FleckDefOf.LightningGlow, 3));
 		}
 		public override IEnumerable<Gizmo> GetGizmos()

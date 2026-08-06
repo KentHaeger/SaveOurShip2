@@ -6,6 +6,7 @@ using Verse;
 using Verse.AI;
 using Verse.AI.Group;
 using RimWorld;
+using Vehicles;
 
 namespace SaveOurShip2
 {
@@ -41,10 +42,23 @@ namespace SaveOurShip2
 		{
 			for (int i = 0; i < this.lord.ownedPawns.Count; i++)
 			{
-				this.lord.ownedPawns[i].mindState.duty = new PawnDuty(ResourceBank.DutyDefOf.SoSAssaultShip);
-				this.lord.ownedPawns[i].mindState.duty.attackDownedIfStarving = this.attackDownedIfStarving;
-				this.lord.ownedPawns[i].mindState.duty.pickupOpportunisticWeapon = this.canPickUpOpportunisticWeapons;
+                AssignDutyTo(this.lord.ownedPawns[i]);
+
 			}
 		}
+
+		private void AssignDutyTo(Pawn pawn)
+		{
+            if (!(pawn is VehiclePawn))
+            {
+                pawn.mindState.duty = new PawnDuty(ResourceBank.DutyDefOf.SoSAssaultShip);
+                pawn.mindState.duty.attackDownedIfStarving = this.attackDownedIfStarving;
+                pawn.mindState.duty.pickupOpportunisticWeapon = this.canPickUpOpportunisticWeapons;
+            }
+            else
+            {
+                pawn.mindState.duty = new PawnDuty(DefDatabase<DutyDef>.GetNamed("TravelOrWaitVehicle"));
+            }
+        }
 	}
 }

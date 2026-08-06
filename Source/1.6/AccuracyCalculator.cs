@@ -171,12 +171,15 @@ namespace SaveOurShip2
 				baseChance *= 0.5f;
 			// attacker tactician shooting skill
 			float dodgeMultiplierFromShooting = DodgeChanceMultiplierFromShooting.Evaluate(SourceMapAccuracyBoost);
-			// pilot skill
-			float dodgeMultiplierFromPiloting = DodgeChanceMultiplierFromPiloting.Evaluate(ThisMapEvasionBoost);
-			// Extra buildings
-			float dodgeMultiplierFromBuildings = ThisMapEvasionScaleFromBuildings;
+			dodgeMultiplierFromShooting = Mathf.LerpUnclamped(1, dodgeMultiplierFromShooting, (float)ModSettings_SoS.dodgeSkillImpact);
+            // pilot skill
+            float dodgeMultiplierFromPiloting = DodgeChanceMultiplierFromPiloting.Evaluate(ThisMapEvasionBoost);
+            dodgeMultiplierFromPiloting = Mathf.LerpUnclamped(1, dodgeMultiplierFromPiloting, (float)ModSettings_SoS.dodgeSkillImpact);
+
+            // Extra buildings
+            float dodgeMultiplierFromBuildings = ThisMapEvasionScaleFromBuildings;
 			// TWR
-			float dodgeMultiplierFromTWR = DodgeChanceMultiplier.Evaluate(ThisMapComp.SlowestThrustRatio());
+			float dodgeMultiplierFromTWR = DodgeChanceMultiplier.Evaluate(ThisMapComp.SlowestThrustRatio(out var blockingShip, out var slowestShip));
 			float finalChance = baseChance * dodgeMultiplierFromShooting * dodgeMultiplierFromPiloting * dodgeMultiplierFromTWR *
 				dodgeMultiplierFromBuildings * DodgeChanceSubmodScale;
 			return Mathf.Clamp(finalChance, 0f, 0.9f);
@@ -184,9 +187,11 @@ namespace SaveOurShip2
 
 		private bool ShouldLogDataNow
 		{
+			// Check preventing excess log spam. 
+			// Could be set to fisrst few projectiles or every X projectiles base on projectileCount
 			get
 			{
-				return projectileCount < 5;
+				return false;
 			}
 		}
 
@@ -194,7 +199,7 @@ namespace SaveOurShip2
 		{
 			if(ShouldLogDataNow)
 			{
-				Log.Warning("Doddging, chance: " + DodgeCance(proj));
+				Log.Warning("Dodging, chance: " + DodgeCance(proj));
 			}
 			return Rand.Chance(DodgeCance(proj));
 		}
@@ -228,17 +233,17 @@ namespace SaveOurShip2
 			//shooter adj 0-50%
 			missAngle *= (100 - proj.accBoost * 2.5f) / 100;
 			// Use reasonable clamp when working with MapEnginePower
-			dodgeAngle = Mathf.Clamp(DodgeAngleMultiplier.Evaluate(ThisMapComp.SlowestThrustRatio()), 0f, 40f);
+			dodgeAngle = Mathf.Clamp(DodgeAngleMultiplier.Evaluate(ThisMapComp.SlowestThrustRatio(out var blockingShip, out var slowestShip)), 0f, 40f);
 			if (ModSettings_SoS.debugMode)
 			{
 				Log.Warning("===Base DodgeAngle:" + dodgeAngle.ToString("F2"));
-				Log.Warning("From TWR:" + ThisMapComp.SlowestThrustRatio());
+				Log.Warning("From TWR:" + ThisMapComp.SlowestThrustRatio(out var blockingShip2, out var slowestShip2));
 				Log.Warning("For map:" + thisMap.Parent?.Label ?? "(no parent)");
 			}
 			// There can be orphan projectiles on the way after battle ends
 			if (SourceMapComp.IsValid)
 			{
-				dodgeAngle *= Mathf.Clamp(DodgePenaltyMultiplier.Evaluate(SourceMapComp.SlowestThrustRatio()), 1f, 10f);
+				dodgeAngle *= Mathf.Clamp(DodgePenaltyMultiplier.Evaluate(SourceMapComp.SlowestThrustRatio(out var blockingShip3, out var slowestShip3)), 1f, 10f);
 			}
 			// Dodge angle reduced for short-ranged weapons
 			dodgeAngle *= DodgeMultiplierFromWeaponRange.Evaluate(proj.turret.heatComp.Props.maxRange);
@@ -246,7 +251,8 @@ namespace SaveOurShip2
 			dodgeAngle *= DodgeMultiplierFromCurrentRange.Evaluate(proj.range);
 			//shooter adj 0-70% for miss angle
 			float shooterMultiplierFoDodge = (100 - proj.accBoost * 2f) / 100;
-			if (ModSettings_SoS.debugMode)
+			shooterMultiplierFoDodge = Mathf.LerpUnclamped(1, shooterMultiplierFoDodge, (float)ModSettings_SoS.dodgeSkillImpact);
+            if (ModSettings_SoS.debugMode)
 			{
 				Log.Warning("shooterMultiplierFoDodge: " + shooterMultiplierFoDodge);
 			}
@@ -266,7 +272,7 @@ namespace SaveOurShip2
 
 			if (ShouldLogDataNow)
 			{
-				Log.Warning("++TotalSpread: " + totalSpread.ToString("F3"));
+				Log.Warning("TotalSpread: " + totalSpread.ToString("F3"));
 			}
 			return Rand.Range(-totalSpread, totalSpread);
 		}
@@ -330,7 +336,7 @@ namespace SaveOurShip2
 				{
 					foreach (Building building in ship.Buildings)
 					{
-						if (building.def == ResourceBank.ThingDefOf.GravEngine)
+						if (ResourceBank.IsGravEngine(building.def))
 						{
 							gravEngineCount++;
 						}

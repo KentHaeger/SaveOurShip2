@@ -61,19 +61,48 @@ namespace SaveOurShip2
 				return false;
 			}
 		}
+
+		private bool HasHeat()
+		{
+			return heatComp != null && heatComp.myNet != null;
+		}
+		private bool HasHeatAndConsole()
+		{
+			return HasHeat() && (heatComp.myNet.PilCons.Any() || heatComp.myNet.AICores.Any() || heatComp.myNet.TacCons.Any());
+		}
 		public bool IsThreat //is turret a threat
 		{
 			get
 			{
-				if (!(Spawned && heatComp != null && heatComp.myNet != null && (powerComp == null || powerComp.PowerOn) && (heatComp.myNet.PilCons.Any() || heatComp.myNet.AICores.Any() || heatComp.myNet.TacCons.Any())))
+				// TODO: that would be some work to do sometime, to ensure it works without errors when ship psarts get destroyed. And get rid of rty block,   
+				try
+				{
+					bool hasHeat = HasHeat();
+					bool hasPower = powerComp == null || powerComp.PowerOn;
+					bool hasHeatAndConsole = HasHeatAndConsole();
+					bool isSpawned = Spawned;
+					if (ModIntegration.IsCEEnabled())
+					{
+						// Temporary fix for when CE uses teir own turret as building on map, but does create SOS turret object to add to turret list,
+						// that representativbe object is not spawned after ship generation
+						// Non-spawned turret shouldn't be in the list anyways
+						isSpawned = true;
+					}
+					if (!(isSpawned && hasPower && hasHeatAndConsole))
+						return false;
+					if ((torpComp != null && !torpComp.Loaded) || (fuelComp != null && fuelComp.Fuel == 0f))
+						return false;
+					if (Faction != Faction.OfPlayer && SpinalHasNoAmps)
+						return false;
+					if ((powerComp != null && powerComp.PowerNet.CurrentStoredEnergy() < EnergyToFire) || (heatComp.Props.heatPerPulse > 0 && heatComp.myNet.StorageCapacity < HeatToFire))
+						return false;
+					return true;
+				}
+				catch (Exception ex)
+				{
+					Log.Warning("Error determinig if turret poses a threat: " + ex.Message);
 					return false;
-				if ((torpComp != null && !torpComp.Loaded) || (fuelComp != null && fuelComp.Fuel == 0f))
-					return false;
-				if (Faction != Faction.OfPlayer && SpinalHasNoAmps)
-					return false;
-				if ((powerComp != null && powerComp.PowerNet.CurrentStoredEnergy() < EnergyToFire) || (heatComp.Props.heatPerPulse > 0 && heatComp.myNet.StorageCapacity < HeatToFire))
-					return false;
-				return true;
+				}
 			}
 		}
 		public float EnergyToFire => heatComp.Props.energyToFire * (1 + AmplifierDamageBonus);
@@ -160,6 +189,7 @@ namespace SaveOurShip2
 			Scribe_Values.Look<IntVec3>(ref SynchronizedBurstLocation, "burstLocation");
 			Scribe_Values.Look<bool>(ref PointDefenseMode, "pointDefenseMode");
 			Scribe_Values.Look<bool>(ref useOptimalRange, "useOptimalRange");
+			Scribe_TargetInfo.Look(ref shipTarget, "shipTarget");
 			BackCompatibility.PostExposeData(this);
 			if (Scribe.mode == LoadSaveMode.PostLoadInit)
 			{
@@ -303,10 +333,10 @@ namespace SaveOurShip2
 						}
 						if (mapComp.ShipMapState == ShipMapState.inCombat && !heatComp.Venting)
 						{
-							if (heatComp.Props.pointDefense) //PD mode
+							if (heatComp.Props.pointDefense && !WarmingUp) //PD mode
 							{
 								bool pdActive = false;
-								if (burstCooldownTicksLeft <= 0 && this.IsHashIntervalTick(10))
+								if (this.IsHashIntervalTick(10))
 								{
 									pdActive = IncomingPtDefTargetsInRange();
 									if (!PlayerControlled)
@@ -980,6 +1010,48 @@ namespace SaveOurShip2
 				};
 				yield return command_Toggle;
 			}
+			foreach(Gizmo g in GetWeaponGroupGizmos())
+			{
+				yield return g;
+			}
+
+		}
+
+		private IEnumerable<Gizmo> GetWeaponGroupGizmos()
+		{
+			if (!Spawned || Map != ShipInteriorMod2.FindPlayerShipMap())
+			{
+				yield break;
+			}
+			List<Gizmo> weaponGroupGizmos = new List<Gizmo>();
+			try
+			{
+				if (ShipInteriorMod2.WorldComp.WeaponGroups.Enabled)
+				{
+					for (int i = 0; i < ShipInteriorMod2.WorldComp.WeaponGroups.CountToDisplay; i++)
+					{
+						int index_captured = i;
+						Command_Toggle toggleIncludeInWeaponGroup = new Command_Toggle();
+						toggleIncludeInWeaponGroup.defaultLabel = "SoS.CommandIncludeInWeaponGroup".Translate(i + 1);
+						toggleIncludeInWeaponGroup.defaultDesc = "SoS.CommandIncludeInWeaponGroupDesc".Translate();
+						toggleIncludeInWeaponGroup.icon = ContentFinder<Texture2D>.Get("UI/WeaponGroup" + (i + 1).ToString());
+						toggleIncludeInWeaponGroup.isActive = () => ShipInteriorMod2.WorldComp.WeaponGroups[index_captured].Contains(this);
+						toggleIncludeInWeaponGroup.toggleAction = delegate
+						{
+							ShipInteriorMod2.WorldComp.WeaponGroups[index_captured].ToggleTurret(this);
+						};
+						weaponGroupGizmos.Add(toggleIncludeInWeaponGroup);
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.ErrorOnce("Error creating tac con weapon group gizmos: " + ex.Message, 535271124);
+			}
+			foreach (Gizmo g in weaponGroupGizmos)
+			{
+				yield return g;
+			}
 		}
 
 		private void ExtractShells()
@@ -1047,6 +1119,12 @@ namespace SaveOurShip2
 		public void SetTarget(LocalTargetInfo target)
 		{
 			shipTarget = target;
+		}
+		//Blast landing: point the gun in a fixed direction. The turret's own TurretTopTick keeps tracking
+		//this target, so the barrel swings to it and holds - no actual firing, heat or power cost.
+		public void SetBlastAim(LocalTargetInfo target)
+		{
+			currentTargetInt = target;
 		}
 		public bool IncomingPtDefTargetsInRange() //PD targets are in range if they are on target map and in PD range
 		{

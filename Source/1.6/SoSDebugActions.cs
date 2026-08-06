@@ -41,8 +41,9 @@ namespace SaveOurShip2
 			DoEnemyPawnsAction((Pawn p) => p.Destroy(DestroyMode.Vanish));
 		}
 
+		// Public because win ship battle command is intended to be used by automated testing, not invoked for real gameplay.
 		[DebugAction(sos2Category, null, false, false, false, false, false, 0, false, actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
-		private static void WinShipBattle()
+		public static void WinShipBattle()
 		{
 			Map playerShipMap = ShipInteriorMod2.FindPlayerShipMap();
 			if (playerShipMap == null)
@@ -84,6 +85,13 @@ namespace SaveOurShip2
 		private static void PngToNanameBlueprint()
 		{
 			ShipImporter.ImportShipDesign(placeActualBuildings: true, useNanameWalls:true);
+		}
+
+		[DebugAction(sos2Category, null, false, false, false, false, false, 0, false, actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.PlayingOnMap)]
+		private static void AddColoredFloor()
+		{
+			Map map = Find.CurrentMap;
+			ShipPainter.PaintFloorAndBuildings(map, useBuiltInTexture:false);
 		}
 	}
 }

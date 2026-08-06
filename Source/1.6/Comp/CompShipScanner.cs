@@ -21,6 +21,8 @@ namespace SaveOurShip2
 		public ShipMapComp mapComp;
 		public CompPowerTrader powerComp;
 
+		private static Dictionary<Pawn, float> researchSpeedCache = new Dictionary<Pawn, float>();
+
 		public CompProps_ShipScanner Props
 		{
 			get
@@ -48,7 +50,7 @@ namespace SaveOurShip2
 		public override void Initialize(CompProperties props)
 		{
 			base.Initialize(props);
-		}
+        }
 
 		public override void PostSpawnSetup(bool respawningAfterLoad)
 		{
@@ -66,28 +68,45 @@ namespace SaveOurShip2
 			if (parent.Faction != Faction.OfPlayer)
 				return;
 
-			if (Find.TickManager.TicksGame % 60 == 0)
+			if (parent.IsHashIntervalTick(60))
 			{
-				float statValue = worker.GetStatValue(StatDefOf.ResearchSpeed, true);
-				if (mapComp.ShipMapState == ShipMapState.inCombat)
-				{
-					if (Find.TickManager.TicksGame % 300 == 0 && Rand.RangeInclusive(0, 21) > statValue)
-						ScannedRoom();
-				}
-				else
-				{
-					float rate = findRate;
-					if (mapComp.Cloaks.Any(c => c.active))
-						rate /= 4;
-					daysWorkingSinceLastMinerals += 60 * statValue / rate;
-					float mtb = Props.mtbDays / statValue;
-					if (daysWorkingSinceLastMinerals >= Props.guaranteedToFindLumpAfterDaysWorking || Rand.MTBEventOccurs(mtb, 40000f, 60f))
-					{
-						FoundMinerals(worker);
-					}
-				}
-			}
+				DoUsed(worker);
+            }
 		}
+		private void DoUsed(Pawn worker)
+		{
+            if (Find.TickManager.TicksGame % 1800 == 0)
+            {
+                researchSpeedCache.Clear();
+            }
+            float statValue;
+            if (researchSpeedCache.ContainsKey(worker))
+            {
+                statValue = researchSpeedCache[worker];
+            }
+            else
+            {
+				statValue = worker.GetStatValue(StatDefOf.ResearchSpeed, true);
+				researchSpeedCache.Add(worker, statValue);
+            }
+            if (mapComp.ShipMapState == ShipMapState.inCombat)
+            {
+                if (Find.TickManager.TicksGame % 300 == 0 && Rand.RangeInclusive(0, 21) > statValue)
+                    ScannedRoom();
+            }
+            else
+            {
+                float rate = findRate;
+                if (mapComp.Cloaks.Any(c => c.active))
+                    rate /= 4;
+                daysWorkingSinceLastMinerals += 60 * statValue / rate;
+                float mtb = Props.mtbDays / statValue;
+                if (daysWorkingSinceLastMinerals >= Props.guaranteedToFindLumpAfterDaysWorking || Rand.MTBEventOccurs(mtb, 40000f, 60f))
+                {
+                    FoundMinerals(worker);
+                }
+            }
+        }
 		public void ScannedRoom()
 		{
 			if (mapComp.TargetMapComp.Scanned)
@@ -181,7 +200,7 @@ namespace SaveOurShip2
 					if (worker != null)
 						Find.LetterStack.ReceiveLetter("SoS.FoundOrbitalSite".Translate(), DescVersion.Translate(worker), LetterDefOf.PositiveEvent);
 					else
-						Find.LetterStack.ReceiveLetter("SoS.FoundOrbitalSite".Translate(), DescVersion.Translate("SoS.FoundSiteAI".Translate()), LetterDefOf.PositiveEvent);
+						Find.LetterStack.ReceiveLetter("SoS.FoundOrbitalSite".Translate(), DescVersion.Translate(TranslatableStrings.FoundSiteAI), LetterDefOf.PositiveEvent);
 				}
 				else //asteroids, sats
 				{
@@ -226,7 +245,7 @@ namespace SaveOurShip2
 				if (worker != null)
 					Find.LetterStack.ReceiveLetter("SoS.DerelictScan".Translate(), "SoS.DerelictScanDesc".Translate(worker, ship.derelictShip), LetterDefOf.PositiveEvent);
 				else
-					Find.LetterStack.ReceiveLetter("SoS.DerelictScan".Translate(), "SoS.DerelictScanDesc".Translate("its AI", ship.derelictShip), LetterDefOf.PositiveEvent);
+					Find.LetterStack.ReceiveLetter("SoS.DerelictScan".Translate(), "SoS.DerelictScanDesc".Translate(TranslatableStrings.FoundSiteAI, ship.derelictShip), LetterDefOf.PositiveEvent);
 			}
 			else if (chance > 3 && chance < 8) //ship wreck
 			{
@@ -257,7 +276,7 @@ namespace SaveOurShip2
 				if (worker != null)
 					Find.LetterStack.ReceiveLetter("SoS.DerelictScan".Translate(), "SoS.DerelictScanDesc".Translate(worker, ship.derelictShip) + GetContentPackDescription(ship.derelictShip), LetterDefOf.PositiveEvent);
 				else
-					Find.LetterStack.ReceiveLetter("SoS.DerelictScan".Translate(), "SoS.DerelictScanDesc".Translate("its AI", ship.derelictShip) + GetContentPackDescription(ship.derelictShip), LetterDefOf.PositiveEvent);
+					Find.LetterStack.ReceiveLetter("SoS.DerelictScan".Translate(), "SoS.DerelictScanDesc".Translate(TranslatableStrings.FoundSiteAI, ship.derelictShip) + GetContentPackDescription(ship.derelictShip), LetterDefOf.PositiveEvent);
 			}
 			else if (chance > 7 && chance < 12) //tradeship, already has faction, navy resolves in SpawnEnemyShip
 			{
@@ -270,7 +289,7 @@ namespace SaveOurShip2
 					if (worker != null)
 						Find.LetterStack.ReceiveLetter(TranslatorFormattedStringExtensions.Translate("SoS.TraderScan"), TranslatorFormattedStringExtensions.Translate("SoS.TraderScanDesc", worker), LetterDefOf.PositiveEvent);
 					else
-						Find.LetterStack.ReceiveLetter(TranslatorFormattedStringExtensions.Translate("SoS.TraderScan"), TranslatorFormattedStringExtensions.Translate("SoS.TraderScanDesc", "its AI"), LetterDefOf.PositiveEvent);
+						Find.LetterStack.ReceiveLetter(TranslatorFormattedStringExtensions.Translate("SoS.TraderScan"), TranslatorFormattedStringExtensions.Translate("SoS.TraderScanDesc", TranslatableStrings.FoundSiteAI), LetterDefOf.PositiveEvent);
 				}
 			}
 			else //random ship
@@ -303,7 +322,7 @@ namespace SaveOurShip2
 				if (worker != null)
 					Find.LetterStack.ReceiveLetter("SoS.EnemyScan".Translate(), "SoS.EnemyScanDesc".Translate(worker, ship.attackableShip) + GetContentPackDescription(ship.attackableShip), LetterDefOf.PositiveEvent);
 				else
-					Find.LetterStack.ReceiveLetter("SoS.EnemyScan".Translate(), "SoS.EnemyScanDesc".Translate("its AI", ship.attackableShip) + GetContentPackDescription(ship.attackableShip), LetterDefOf.PositiveEvent);
+					Find.LetterStack.ReceiveLetter("SoS.EnemyScan".Translate(), "SoS.EnemyScanDesc".Translate(TranslatableStrings.FoundSiteAI, ship.attackableShip) + GetContentPackDescription(ship.attackableShip), LetterDefOf.PositiveEvent);
 			}
 		}
 

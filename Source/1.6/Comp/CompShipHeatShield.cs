@@ -22,13 +22,14 @@ namespace SaveOurShip2
 		public float radius = -1;
 		public bool shutDown;
 		bool vehicleWantsShutDown = false;
-		private int lastIntercepted = -69;
-		private float lastInterceptAngle;
+		// Made public for more convenient access for Combat Extended compatibility patch
+		public int lastIntercepted = -69;
+		public float lastInterceptAngle;
 
 		public CompFlickable flickComp;
 		public CompPowerTrader powerComp;
 		public CompBreakdownable breakComp;
-		VehiclePawn parentVehicle;
+		public VehiclePawn parentVehicle;
 
 		public override void PostSpawnSetup(bool respawningAfterLoad)
 		{
@@ -101,6 +102,8 @@ namespace SaveOurShip2
 			{ThingDef.Named("Bullet_Torpedo_HighExplosive"), 0.33f},
 			{ThingDef.Named("Bullet_Torpedo_EMP"), 10f},
 			{ThingDef.Named("Bullet_Torpedo_Antimatter"), 0.33f},
+			{ThingDef.Named("Proj_ShipTurretACI"), 0.4f},           // small/PD Laser and Cannon get 0.4 shield damage multiplier
+			{ThingDef.Named("Proj_ShipTurretLaser"), 0.4f},         // to make getting through PD damge zone for rammoing viable
 		};
 
 		public virtual float CalcHeatGenerated(Projectile proj)
@@ -110,6 +113,25 @@ namespace SaveOurShip2
 			if (proj is Projectile_ExplosiveShipDebris)
 				heatGenerated *= 10;
 			return heatGenerated;
+		}
+
+		private void DoShieldExplosion()
+		{
+			if (parent.def == ResourceBank.ThingDefOf.ShipCombatShieldGeneratorMini)
+			{
+				// Because popping shield that is currently up "consumes" any projectile, spamming mini shields colse to each other is
+				// unintended esploit. To make that strategy less viable, their explosion should be strong enough to cause destruction of
+				// other nearby small shields. Note that this explosion only happens on shiewld pop/breakdown, but not on destruction.
+				// Above Sqrt(5) is enough to reach tile that is chess knight move away from center.
+				float unstableRadius = Mathf.Sqrt(5) + 0.1f;
+				// Bomb damage to building will be 2x. Shouldn't be too rough to player pawns in small fighter that proipery uses 1 or a couple fo those shields.
+				const int ustableDamageAmount = 8;
+				GenExplosion.DoExplosion(parent.Position, parent.Map, unstableRadius, DamageDefOf.Bomb, parent, ustableDamageAmount);
+			}
+			else
+			{
+				GenExplosion.DoExplosion(parent.Position, parent.Map, 1.9f, DamageDefOf.Flame, parent);
+			}
 		}
 
 		public void HitShield(Projectile proj)
@@ -146,8 +168,10 @@ namespace SaveOurShip2
 					if(parentVehicle.Spawned)
 						parentVehicle.Map.GetComponent<ListerVehiclesRepairable>().NotifyVehicleTookDamage(parentVehicle);
 				}
-				if(parent.Spawned)
-					GenExplosion.DoExplosion(parent.Position, parent.Map, 1.9f, DamageDefOf.Flame, parent);
+				if (parent.Spawned)
+				{
+					DoShieldExplosion();
+				}
 				SoundDef.Named("EnergyShield_Broken").PlayOneShot(new TargetInfo(parent));
 				if (parent.Faction != Faction.OfPlayer)
 					Messages.Message(TranslatorFormattedStringExtensions.Translate("SoS.CombatShieldBrokenEnemy"), parent, MessageTypeDefOf.PositiveEvent);

@@ -1,4 +1,5 @@
-﻿using Verse;
+﻿using UnityEngine;
+using Verse;
 using RimWorld;
 using RimWorld.Planet;
 using System.Collections.Generic;
@@ -17,7 +18,6 @@ namespace SaveOurShip2
 		public bool renderedThatAlready = false;
 		public List<Building_ShipSensor> Sensors = new List<Building_ShipSensor>();
 		public bool MoveShipFlag = false;
-		public bool SlowTimeFlag = false;
 		// If player had already had space map, for tutorial-ish letter.
 		private bool hadSpaceMap = false;
 		private float? previousThreatScale = null;
@@ -26,14 +26,22 @@ namespace SaveOurShip2
 		public const int StarhipBowTimeout = 720000; // 12 days
 		public int LastStarshipBowTick = -StarhipBowTimeout;
 		public int LastFoundAmplifierTick = 0;
-		public Dictionary<Pawn, float> MinorBreakThresholds = new Dictionary<Pawn, float>();
-		public Dictionary<Pawn, float> MajorBreakThresholds = new Dictionary<Pawn, float>();
-		public Dictionary<Pawn, float> ExtremeBreakThresholds = new Dictionary<Pawn, float>();
+		// 
+		public const int StashedShipRequestInterval = GenDate.TicksPerDay * 15;
+		public int LastStashedShipRequestTick = -GenDate.TicksPerYear;
+
+		// Ships can move between maps back and fourth and weapon groups should be preserved in this case, therefore
+		// this belongs here, but not to specific map or ship
+		private WeaponGroupManager weaponGroups = new WeaponGroupManager();
+		public WeaponGroupManager WeaponGroups
+		{
+			get => weaponGroups;
+		}
 
 		public ShipWorldComp(World world) : base(world)
 		{
-			ShipInteriorMod2.PurgeWorldComp();
-		}
+			ShipInteriorMod2.PurgeSaveSpecificState();
+        }
 
 		private int nextShipId = 0;
 		private int newShipId
@@ -87,8 +95,33 @@ namespace SaveOurShip2
 				Log.Warning("SOS2: Insect faction not found! SOS2 gameplay experience will be affected.");
 		}
 
-		// Will show that letter once per save in order not to annoy players
-		private bool difficultyLetterShown = false;
+		public bool NotorietyActive
+		{
+			get
+			{
+				return PlayerFactionBounty > 20;
+			}
+		}
+		public int TicksBetweenNotorietyAttacks
+        {
+            get
+            {
+                // Updated formula: bounty hunters attack evry (15 days / Sqrt(notoriety)) with min notoriety 20 causing attachs every ~ 3.4 days,
+				// every 2 days at 55 notoriety, every 1.5 days at 100 notoriety
+                return (int)Mathf.Max((float)GenDate.TicksPerDay * 15 / Mathf.Sqrt(PlayerFactionBounty), (float)GenDate.TicksPerDay);
+            }
+        }
+
+		public int BountyPayment
+		{
+			get
+			{
+				return 1250 * PlayerFactionBounty;
+			}
+		}
+
+        // Will show that letter once per save in order not to annoy players
+        private bool difficultyLetterShown = false;
 		public override void WorldComponentTick()
 		{
 			if (Find.TickManager.TicksGame % GenTicks.TickRareInterval == 0)
@@ -120,23 +153,27 @@ namespace SaveOurShip2
 			// Finding amplifier is forced so for old saves last found apmplifier tick should be set to current tick
 			// In this case it won't be found immediately, only after find interval is passed
 			Scribe_Values.Look<int>(ref LastFoundAmplifierTick, "LastFoundAmplifierTick", Find.TickManager.TicksGame);
+			Scribe_Values.Look<int>(ref LastStashedShipRequestTick, "LastStashedShipRequestTick", -GenDate.TicksPerYear);
 			Scribe_Values.Look<bool>(ref hadSpaceMap, "hadSpaceMap");
 			Scribe_Values.Look<bool>(ref difficultyLetterShown, "difficultyDialogShown");
-
-			if (Scribe.mode != LoadSaveMode.PostLoadInit)
+			Scribe_Deep.Look<WeaponGroupManager>(ref weaponGroups, "weaponGroups");
+			if (weaponGroups == null)
 			{
-				ShipInteriorMod2.PurgeWorldComp();
-				MinorBreakThresholds.Clear();
-				MajorBreakThresholds.Clear();
-				ExtremeBreakThresholds.Clear();
+				weaponGroups = new WeaponGroupManager();
 			}
+
+			if (weaponGroups == null)
+			{
+				weaponGroups = new WeaponGroupManager();
+			}
+
+			if (Scribe.mode == LoadSaveMode.LoadingVars)
+			{
+				ShipInteriorMod2.PurgeSaveSpecificState();
+            }
 			// Devmode-only flag should be reset to false if devmode is not enabled after loading a save where it is set to true
 			if (Scribe.mode == LoadSaveMode.PostLoadInit)
 			{
-				if (!Prefs.DevMode)
-				{
-					SlowTimeFlag = false;
-				}
 				previousThreatScale = Find.Storyteller.difficulty.threatScale;
 			}
 			/*if (Scribe.mode!=LoadSaveMode.Saving)

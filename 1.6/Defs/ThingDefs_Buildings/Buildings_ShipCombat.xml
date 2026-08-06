@@ -50,6 +50,7 @@
 			<isAirtight>true</isAirtight>
 			<!-- When not enough energy to fire, Vanilla sound logic would cause enemy turrets to beep continually and annoyingly, so disabled -->
 			<playTargetAcquiredSound>false</playTargetAcquiredSound>
+			<paintable>true</paintable>
 		</building>
 		<uiIconScale>1.0</uiIconScale>
 		<seeThroughFog>true</seeThroughFog>
@@ -146,11 +147,11 @@
 		<defName>ShipCombatShieldGeneratorMini</defName>
 		<label>miniaturized shield generator</label>
 		<designatorDropdown>Ship_Shields</designatorDropdown>
-		<description>A small shielding device which projects a momentum repulsor field. Shots can go out, but not in.\n\nDue to its small size, generates 125% of a standard shield generator's heat when it blocks attacks. If no heatsink capacity is available, the shield will be damaged and require repairs.\n\nCaptains are advised to drop shields once coolant reaches very high temperature, or risk heatsink damage.</description>
+		<description>A small shielding device which projects a momentum repulsor field. Shots can go out, but not in.\n\nDue to its small size, generates 125% of a standard shield generator's heat when it blocks attacks. If no heatsink capacity is available, the shield will be damaged and require repairs.\n\nCaptains are advised to drop shields once coolant reaches very high temperature, or risk heatsink damage. This shield generator is unstable when damaged, so you should not build these in close proximity to each other.</description>
 		<size>(1,1)</size>
 		<receivesSignals>true</receivesSignals>
 		<statBases>
-			<MaxHitPoints>200</MaxHitPoints>
+			<MaxHitPoints>40</MaxHitPoints>
 			<Flammability>0.5</Flammability>
 			<WorkToBuild>4000</WorkToBuild>
 		</statBases>
@@ -334,6 +335,7 @@
 			<texPath>Things/Building/Ship/Heatsink</texPath>
 			<graphicClass>Graphic_Single</graphicClass>
 			<drawSize>(2,2)</drawSize>
+			<shaderType>CutoutComplex</shaderType>
 		</graphicData>
 		<statBases>
 			<MaxHitPoints>800</MaxHitPoints>
@@ -384,6 +386,7 @@
 			<texPath>Things/Building/Ship/HeatsinkLarge</texPath>
 			<graphicClass>Graphic_Single</graphicClass>
 			<drawSize>(4,4)</drawSize>
+			<shaderType>CutoutComplex</shaderType>
 		</graphicData>
 		<statBases>
 			<MaxHitPoints>1600</MaxHitPoints>
@@ -396,7 +399,7 @@
 		<costList>
 			<Steel>300</Steel>
 			<Plasteel>75</Plasteel>
-			<ComponentSpacer>5</ComponentSpacer>
+			<ComponentSpacer>4</ComponentSpacer>
 		</costList>
 		<comps>
 			<li Class="SaveOurShip2.CompProps_ShipHeat">
@@ -1023,7 +1026,7 @@
 		</costList>
 		<uiIconPath>Things/Building/Ship/TurretACIII_MenuIcon</uiIconPath>
 		<researchPrerequisites>
-			<li>ShipTurretLarge</li>
+			<li>ShipTurretMedium</li>
 		</researchPrerequisites>
 		<size>(5,5)</size>
 	</ThingDef>
@@ -2114,7 +2117,7 @@
 		</graphicData>
 		<size>(5,1)</size>
 		<rotatable>true</rotatable>
-		<tickerType>Normal</tickerType>
+		<tickerType>Rare</tickerType>
 		<altitudeLayer>BuildingOnTop</altitudeLayer>
 		<passability>PassThroughOnly</passability>
 		<castEdgeShadows>false</castEdgeShadows>

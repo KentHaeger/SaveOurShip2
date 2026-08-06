@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Linq;
 using System.Text;
 using UnityEngine;
@@ -34,7 +35,7 @@ namespace SaveOurShip2
 			harmony.Patch(delegateValidateTarget, prefix: new HarmonyMethod(typeof(GravshipTargetingPatch), nameof(ValidateTargetPrefix)));
 		}
 
-		// Delegate validating gravship target will disallow sending it to the pap participating in ship battle
+		// Delegate validating gravship target will disallow sending it to the map participating in ship battle
 		// to avoid some tricks: for going to enemy, that is cheatingly big boarding shuttle that can have non-ship turrets around
 		// and completely bypasses enemy weapons and PDs.
 		// For sending to player ship, gravship implements reduced set of ship mechanics, no TWR, so better not be used 

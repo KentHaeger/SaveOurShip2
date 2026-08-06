@@ -40,7 +40,7 @@
     <DefineConstants>DEBUG;</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
+    <LangVersion>8.0</LangVersion>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
@@ -48,7 +48,7 @@
     <Optimize>true</Optimize>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
+    <LangVersion>8.0</LangVersion>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -61,9 +61,9 @@
       <HintPath>..\..\..\..\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="SmashTools">
-      <HintPath>..\..\..\Vehicle-Framework\1.6\Assemblies\SmashTools.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="SmashTools, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Partial\_VFVersions\VF_DEV_Steam\1.6\Assemblies\SmashTools.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
@@ -92,21 +92,28 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Vehicles">
-      <HintPath>..\..\..\Vehicle-Framework\1.6\Assemblies\Vehicles.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\..\Partial\_VFVersions\VF_DEV_Steam\1.6\Assemblies\Vehicles.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccuracyCalculator.cs" />
     <Compile Include="AISettings.cs" />
+    <Compile Include="Alert\AlertTWR.cs" />
+    <Compile Include="AssetPreprocessor.cs" />
+    <Compile Include="BlastLanding.cs" />
+    <Compile Include="ColorDefMatcher.cs" />
+    <Compile Include="CompShipEngineBreakdownable.cs" />
     <Compile Include="Alert\AlertDodgeChanceBase.cs" />
     <Compile Include="Alert\AlertDodgeChanceEnemy.cs" />
     <Compile Include="Alert\AlertDodgeChancePlayer.cs" />
+    <Compile Include="Alert\AlertNotoriety.cs" />
     <Compile Include="Alert_ArchotechSporeMoodLow.cs" />
     <Compile Include="Alert_MechanitesInHomeArea.cs" />
     <Compile Include="ApparelHolographic.cs" />
     <Compile Include="ArrivalAction\AerialVehicleArrivalAction_ShipAssault.cs" />
     <Compile Include="ArrivalAction\PawnPublicizer.cs" />
+    <Compile Include="CompProps\CompProps_ExplosiveInstant.cs" />
+    <Compile Include="Comp\CompExplosiveInstant.cs" />
     <Compile Include="Comp\CompHyperchargingBattery.cs" />
     <Compile Include="Comp\CompShipBay.cs" />
     <Compile Include="Def\ArchoGiftDef.cs" />
@@ -121,12 +128,18 @@
     <Compile Include="Def\DodgeChanceSubmodScaleDef.cs" />
     <Compile Include="Def\GlobalUnlockDef.cs" />
     <Compile Include="Designator_RestoreHull.cs" />
+    <Compile Include="Dialog\DialogOptionGetter_StashedShip.cs" />
     <Compile Include="GenAdjExtension.cs" />
     <Compile Include="HarmonyCustomPatches.cs" />
+    <Compile Include="HarmonyPatchesInactive.cs" />
+    <Compile Include="HarmonyPatchesPerformance.cs" />
+    <Compile Include="HarmonyPatchesShuttleRange.cs" />
     <Compile Include="HediffCompProperties_GearRepair.cs" />
     <Compile Include="HediffComp_GearRepair.cs" />
     <Compile Include="Jobs\JobUtility.cs" />
     <Compile Include="MapDodgeAbility.cs" />
+    <Compile Include="MapGen\GenStep_ShipEngineImpactSiteUnfog.cs" />
+    <Compile Include="MapGen\GenStep_StashedShip.cs" />
     <Compile Include="ModIntegration.cs" />
     <Compile Include="Obs-Shuttle\TransportPodsArrivalAction_MoonBase.cs" />
     <Compile Include="Obs-Shuttle\TransportPodsArrivalAction_ShipAssault.cs" />
@@ -149,11 +162,20 @@
     <Compile Include="CompProps\CompProps_Archolife.cs" />
     <Compile Include="CompProps\CompProps_ArcholifeCosmetics.cs" />
     <Compile Include="CloakThresholdGizmo.cs" />
+    <Compile Include="LogInterop.cs" />
+    <Compile Include="Quest\QuestHandler_SosStashedShip.cs" />
+    <Compile Include="ShipCatalog.cs" />
+    <Compile Include="ShipCollisionManager.cs" />
     <Compile Include="ShipImorter.cs" />
+    <Compile Include="ShipPainter.cs" />
     <Compile Include="SOS2MapUtility.cs" />
     <Compile Include="SoSDebugActions.cs" />
     <Compile Include="SoSSpawnOverride.cs" />
+    <Compile Include="TextureUtility.cs" />
+    <Compile Include="TranslatableStrings.cs" />
     <Compile Include="TranslationUtility.cs" />
+    <Compile Include="TurretGenerator.cs" />
+    <Compile Include="TWRMath.cs" />
     <Compile Include="Vehicles\CompHoverMode.cs" />
     <Compile Include="Vehicles\CompProperties_HoverMode.cs" />
     <Compile Include="Vehicles\CompVehicleHeatNet.cs" />
@@ -404,6 +426,8 @@
     <Compile Include="Vehicles\SoS2VehicleUtility.cs" />
     <Compile Include="Vehicles\VehicleEventMethods.cs" />
     <Compile Include="Vehicles\VehicleExtensions.cs" />
+    <Compile Include="WeaponGroup.cs" />
+    <Compile Include="WeaponGroupManager.cs" />
     <Compile Include="WorldObject\MoonBase.cs" />
     <Compile Include="Obsolete\Building_Radiator.cs" />
     <Compile Include="Obsolete\Bullet_HologramLaser.cs" />
@@ -492,6 +516,7 @@
     <Compile Include="WorldDrawLayer\WorldDrawLayer_DevSelectedTile.cs" />
     <Compile Include="WorldObject\WorldObjectMath.cs" />
     <Compile Include="WorldObject\WorldObjectOrbitingShip.cs" />
+    <Compile Include="WorldObject\WorldObject_FastTileGetter.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Krafs.Publicizer">

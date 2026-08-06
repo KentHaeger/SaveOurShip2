@@ -10,7 +10,8 @@ namespace SaveOurShip2
 		{
 			Map map = (Map)parms.target;
 			var mapComp = map.GetComponent<ShipMapComp>();
-			if (!mapComp.IsPlayerShipMap || mapComp.ShipMapState != ShipMapState.nominal || mapComp.NextTargetMap != null || ModSettings_SoS.frequencySoS == 0 || Find.TickManager.TicksGame < mapComp.LastAttackTick + 300000 / ModSettings_SoS.frequencySoS)
+			if (!mapComp.IsPlayerShipMap || mapComp.ShipMapState != ShipMapState.nominal || mapComp.NextTargetMap != null ||
+				ModSettings_SoS.frequencySoS == 0 || !mapComp.ShipBattleMandatoryIntervalExpired())
 				return false;
 
 			// Can't be attacked if just got to space, for interoperability with Odyssey
@@ -19,10 +20,9 @@ namespace SaveOurShip2
 				return false;
             }
 
-			foreach (Building_ShipCloakingDevice cloak in mapComp.Cloaks)
+			if(mapComp.GetActiveCloak() != null)
 			{
-				if (cloak.active)
-					return false;
+				return false;
 			}
 			return true;
 		}
@@ -31,6 +31,7 @@ namespace SaveOurShip2
 		{
 			var mapComp = ((Map)parms.target).GetComponent<ShipMapComp>();
 			mapComp.LastAttackTick = Find.TickManager.TicksGame;
+			Log.Message("Ship battle starting, storyteller incident");
 			mapComp.StartShipEncounter(fac: parms.faction);
 			return true;
 		}

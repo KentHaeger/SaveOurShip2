@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Verse;
 using RimWorld;
 using UnityEngine;
@@ -70,6 +71,10 @@ namespace SaveOurShip2
 		public static RenderTexture target = new RenderTexture(2048, 2048, 16);
 		public static Material PlanetMaterial = new Material(ShaderDatabase.Cutout);
 
+		public static Texture2D CannonColorTex = SolidColorMaterials.NewSolidColorTexture(new Color(0.9f, 0.9f, 0.0f));
+		public static Texture2D LaserColorTex = SolidColorMaterials.NewSolidColorTexture(new Color(0.9f, 0f, 0f));
+		public static Texture2D PlasmaColorTex = SolidColorMaterials.NewSolidColorTexture(new Color(0f, 0.9f, 0.1f));
+		public static Texture2D RailColorTex = SolidColorMaterials.NewSolidColorTexture(new Color(0f, 0f, 0.9f));
 
 		[DefOf]
 		public static class ThingDefOf
@@ -80,10 +85,13 @@ namespace SaveOurShip2
 			public static ThingDef ShipArchotechPillarB;
 			public static ThingDef ShipArchotechPillarC;
 			public static ThingDef ShipArchotechPillarD;
-			public static ThingDef Ship_Beam;
-			public static ThingDef Ship_Beam_Wrecked;
+            public static ThingDef Ship_Beam;
+            public static ThingDef Ship_Beam_Unpowered;
+            public static ThingDef Ship_Beam_Wrecked;
 			public static ThingDef Ship_BeamMech;
+			public static ThingDef Ship_BeamMech_Unpowered;
 			public static ThingDef Ship_BeamArchotech;
+			public static ThingDef Ship_BeamArchotech_Unpowered;
 			public static ThingDef HullFoamWall;
 			public static ThingDef ShipAirlockWrecked;
 			public static ThingDef ShipHullTileWrecked;
@@ -92,6 +100,9 @@ namespace SaveOurShip2
 			public static ThingDef ShipHullTileArchotech;
 			public static ThingDef ShipHullfoamTile;
 			public static ThingDef ShipAirlock;
+			public static ThingDef ShipAirlockArchotech;
+			public static ThingDef ShipAirlockMech;
+			public static ThingDef ShipAirlockBeam;
 			public static ThingDef ShipAirlockBeamWall;
 			public static ThingDef ShipAirlockBeamWallInert;
 			public static ThingDef ShipAirlockBeamTile;
@@ -139,11 +150,42 @@ namespace SaveOurShip2
 			public static ThingDef Weapon_GrenadeMechanite;
 			public static ThingDef Apparel_SpaceSuitHelmet;
 			public static ThingDef Apparel_SpaceSuitBody;
+			public static ThingDef JTDriveSalvage;
+			public static ThingDef ShipCombatShieldGeneratorMini;
+			public static ThingDef ShipHardpointSmall;
+
+			//Corners
+			public static ThingDef Ship_Corner_OneOne;
+			public static ThingDef Ship_Corner_OneOneFlip;
+			public static ThingDef Ship_Corner_OneTwo;
+			public static ThingDef Ship_Corner_OneTwoFlip;
+			public static ThingDef Ship_Corner_OneThree;
+			public static ThingDef Ship_Corner_OneThreeFlip;
+			public static ThingDef Ship_Corner_OneOne_Mech;
+			public static ThingDef Ship_Corner_OneOne_MechFlip;
+			public static ThingDef Ship_Corner_OneTwo_Mech;
+			public static ThingDef Ship_Corner_OneTwoFlip_Mech;
+			public static ThingDef Ship_Corner_OneThree_Mech;
+			public static ThingDef Ship_Corner_OneThreeFlip_Mech;
+			public static ThingDef Ship_Corner_Archo_OneOne;
+			public static ThingDef Ship_Corner_Archo_OneOneFlip;
+			public static ThingDef Ship_Corner_Archo_OneTwo;
+			public static ThingDef Ship_Corner_Archo_OneTwoFlip;
+			public static ThingDef Ship_Corner_Archo_OneThree;
+			public static ThingDef Ship_Corner_Archo_OneThreeFlip;
+
 			//vanilla defs
 			public static ThingDef Turret_Autocannon;
 			public static ThingDef Turret_Sniper;
 			public static ThingDef MechSerumResurrector;
 			public static ThingDef Mote_Bubble;
+
+			public static ThingDef Limestone;
+			public static ThingDef Marble;
+
+			public static ThingDef PlantPot_Bonsai;
+			public static ThingDef PlantPot;
+
 			[MayRequireOdyssey]
 			public static ThingDef GravcorePowerCell;
 			[MayRequireOdyssey]
@@ -186,6 +228,10 @@ namespace SaveOurShip2
 			public static TerrainDef FakeFloorInsideShipArchotech;
 			public static TerrainDef ShipWreckageTerrain;
 			public static TerrainDef FakeFloorInsideShipFoam;
+			public static TerrainDef Granite_Rough;
+			public static TerrainDef Slate_Rough;
+			public static TerrainDef Sandstone_Rough;
+			public static TerrainDef Marble_Rough;
 		}
 
 		[DefOf]
@@ -247,6 +293,7 @@ namespace SaveOurShip2
 		[DefOf]
 		public static class ResearchProjectDefOf
 		{
+			public static ResearchProjectDef ShipBasics;
 			public static ResearchProjectDef ArchotechPillarA;
 			public static ResearchProjectDef ArchotechPillarB;
 			public static ResearchProjectDef ArchotechPillarC;
@@ -342,5 +389,152 @@ namespace SaveOurShip2
         {
 			public static ShipDef MechPsychicAmp;
 		}
+
+		public static class ShipDefNames
+		{
+			// Special def for random srating ship, needs to be excluded from being directly used
+			public const string Random = "0";
+		}
+
+		public static class ShipHardwareNames
+		{
+			public static readonly List<string> TorpedoTurrets = new List<string>
+			{
+				"ShipTorpedoOne", "ShipTorpedoTwo", "ShipTorpedoSix",
+			};
+		}
+
+
+		[DefOf]
+		public static class QuestScriptDefOf
+		{
+			public static QuestScriptDef SoSStashedShipScript;
+		}
+
+		public static bool IsGravEngine(ThingDef def)
+		{
+			const string VGEHulkEngineDefName = "VGE_GravhulkEngine";
+			const string VGEJumperEngineDefName = "VGE_GravjumperEngine";
+			return def == ThingDefOf.GravEngine || def.defName == VGEHulkEngineDefName || def.defName == VGEJumperEngineDefName;
+		}
+
+		// Used for fast leavings, other types of plating in submods can be expensive and can leave something behind.
+		public static bool IsNonModdedPlating(ThingDef def)
+		{
+			return def == ThingDefOf.ShipHullTile || def == ThingDefOf.ShipHullTileMech ||
+				def == ThingDefOf.ShipHullTileArchotech || def == ThingDefOf.ShipHullTileWrecked;
+		}
+
+		public static bool IsNonModdedHull(ThingDef def)
+		{
+			return def == ThingDefOf.Ship_Beam || def == ThingDefOf.Ship_Beam_Unpowered ||
+				def == ThingDefOf.Ship_BeamMech || def == ThingDefOf.Ship_BeamMech_Unpowered ||
+				def == ThingDefOf.Ship_BeamArchotech || def == ThingDefOf.Ship_BeamArchotech_Unpowered ||
+				def == ThingDefOf.Ship_Beam_Wrecked;
+		}
+
+		public static bool IsFoamBuilding(ThingDef def)
+		{
+			return def == ThingDefOf.HullFoamWall || def == ThingDefOf.ShipHullfoamTile;
+		}
+
+		public static TerrainDef GetTerrainFromRockType(ThingDef rockType)
+		{
+			if (rockType == RimWorld.ThingDefOf.Granite)
+			{
+				return TerrainDefOf.Granite_Rough;
+			}
+			else if (rockType == RimWorld.ThingDefOf.Sandstone)
+			{
+				return TerrainDefOf.Sandstone_Rough;
+			}
+			else if (rockType == RimWorld.ThingDefOf.Slate)
+			{
+				return TerrainDefOf.Slate_Rough;
+			}
+			else if (rockType == ThingDefOf.Limestone)
+			{
+				return DefDatabase<TerrainDef>.GetNamedSilentFail("Limestone_Rough");
+			}
+			else if (rockType == ThingDefOf.Marble)
+			{
+				return TerrainDefOf.Marble_Rough;
+			}
+			return null;
+		}
+
+		public static readonly List<ThingDef> HullDefs = new List<ThingDef>() {
+				ThingDefOf.Ship_Beam,
+				ThingDefOf.Ship_Beam_Unpowered,
+				ThingDefOf.Ship_BeamMech,
+				ThingDefOf.Ship_BeamMech_Unpowered,
+				ThingDefOf.Ship_BeamArchotech,
+				ThingDefOf.Ship_BeamArchotech_Unpowered,
+				ThingDefOf.Ship_Beam_Wrecked
+		};
+
+		public static readonly List<ThingDef> CornerDefs = new List<ThingDef>()
+		{
+			ThingDefOf.Ship_Corner_OneOne,
+			ThingDefOf.Ship_Corner_OneOneFlip,
+			ThingDefOf.Ship_Corner_OneTwo,
+			ThingDefOf.Ship_Corner_OneTwoFlip,
+			ThingDefOf.Ship_Corner_OneThree,
+			ThingDefOf.Ship_Corner_OneThreeFlip,
+			ThingDefOf.Ship_Corner_OneOne_Mech,
+			ThingDefOf.Ship_Corner_OneOne_MechFlip,
+			ThingDefOf.Ship_Corner_OneTwo_Mech,
+			ThingDefOf.Ship_Corner_OneTwoFlip_Mech,
+			ThingDefOf.Ship_Corner_OneThree_Mech,
+			ThingDefOf.Ship_Corner_OneThreeFlip_Mech,
+			ThingDefOf.Ship_Corner_Archo_OneOne,
+			ThingDefOf.Ship_Corner_Archo_OneOneFlip,
+			ThingDefOf.Ship_Corner_Archo_OneTwo,
+			ThingDefOf.Ship_Corner_Archo_OneTwoFlip,
+			ThingDefOf.Ship_Corner_Archo_OneThree,
+			ThingDefOf.Ship_Corner_Archo_OneThreeFlip,
+		};
+
+		//These buildings were manually chosen to be auto-paintable
+		public static readonly List<ThingDef> AutoPaintableBuildingDefs = new List<ThingDef>
+		{
+			// ResourceBank.ThingDefOf
+			ResourceBank.ThingDefOf.ShipAirlock,
+			ResourceBank.ThingDefOf.ShipAirlockBeam,
+			ResourceBank.ThingDefOf.ShipInside_SolarGenerator,
+			ResourceBank.ThingDefOf.Ship_Engine,
+			ResourceBank.ThingDefOf.Ship_Engine_Interplanetary,
+			ResourceBank.ThingDefOf.Ship_Engine_Interplanetary_Large,
+			ResourceBank.ThingDefOf.Ship_Engine_Large,
+			ResourceBank.ThingDefOf.ShipSpinalAmplifier,
+			// DefDatabase lookups
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipCapacitor"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipCapacitorSmall"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipInside_PassiveVent"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipHeatsink"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipHeatsinkLarge"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("Ship_Reactor"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("Ship_Reactor_Small"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("Ship_Engine_Small"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("Ship_Thruster"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipSpinalBarrelKinetic"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipSpinalBarrelLaser"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipSpinalBarrelPlasma"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipSpinalEmitter"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipTorpedoOne"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipTorpedoSix"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipTorpedoTwo"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipTurret_ACI"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipTurret_ACII"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipTurret_ACIII"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipTurret_Kinetic"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipTurret_Kinetic_Large"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipTurret_Laser"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipTurret_Laser_Large"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipTurret_Plasma"),
+			DefDatabase<ThingDef>.GetNamedSilentFail("ShipTurret_Plasma_Large"),
+		};
+
+		public const string noMapMessage = "To import ship blueprint, switch from world view to loacl map view";
 	}
 }

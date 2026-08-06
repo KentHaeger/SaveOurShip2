@@ -125,12 +125,36 @@
       <li>SoSMayday</li>
     </tags>
   </SitePartDef>
-
+  
   <GenStepDef>
     <defName>SoSMayday</defName>
     <linkWithSite>SoSMayday</linkWithSite>
     <order>420</order>
     <genStep Class="SaveOurShip2.GenStep_DownedShip">
+      <count>1</count>
+      <nearMapCenter>true</nearMapCenter>
+    </genStep>
+  </GenStepDef>
+  
+  <SitePartDef>
+    <defName>SoSStashedShipSitePart</defName>
+    <label>stashed ship, may be guarded</label>
+    <description>A hidden starship.</description>
+    <siteTexture>World/WorldObjects/Sites/GenericSite</siteTexture>
+    <expandingIconTexture>World/WorldObjects/Expanding/Sites/ItemStash</expandingIconTexture>
+    <handlesWorldObjectTimeoutInspectString>true</handlesWorldObjectTimeoutInspectString>
+	<minMapSize>(250, 0, 250)</minMapSize>
+    <tags>
+      <li>SoSStashedShip</li>
+      <li>QuestActiveThreat</li>
+    </tags>
+  </SitePartDef>
+  
+  <GenStepDef>
+    <defName>SoSStashedShip</defName>
+    <linkWithSite>SoSStashedShipSitePart</linkWithSite>
+    <order>1510</order>
+    <genStep Class="SaveOurShip2.GenStep_StashedShip">
       <count>1</count>
       <nearMapCenter>true</nearMapCenter>
     </genStep>

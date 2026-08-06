@@ -284,17 +284,17 @@ namespace SaveOurShip2
 						TranslatorFormattedStringExtensions.Translate("SoS.ArchotechPrank"),
 						TranslatorFormattedStringExtensions.Translate("SoS.ArchotechPrankLovers", worstA.Label, worstB.Label), LetterDefOf.NegativeEvent);
 					InteractionWorker_RomanceAttempt worker = new InteractionWorker_RomanceAttempt();
-					object[] parms = new object[] { worstA, null };
-					typeof(InteractionWorker_RomanceAttempt).GetMethod("BreakLoverAndFianceRelations", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).Invoke(worker, parms);
-					for (int i = 0; i < ((List<Pawn>)parms[1]).Count; i++)
+					List<Pawn> oldInitiatorLovers = null;
+					worker.BreakLoverAndFianceRelations(worstA, out oldInitiatorLovers);
+					for (int i = 0; i < oldInitiatorLovers.Count; i++)
 					{
-						typeof(InteractionWorker_RomanceAttempt).GetMethod("TryAddCheaterThought", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).Invoke(worker, new object[] { ((List<Pawn>)parms[1])[i], worstA });
+						worker.TryAddCheaterThought(oldInitiatorLovers[i], worstA);
 					}
-					object[] parms2 = new object[] { worstB, null };
-					typeof(InteractionWorker_RomanceAttempt).GetMethod("BreakLoverAndFianceRelations", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).Invoke(worker, parms2);
-					for (int i = 0; i < ((List<Pawn>)parms2[1]).Count; i++)
+					List<Pawn> oldRecipientLovers = null;
+					worker.BreakLoverAndFianceRelations(worstB, out oldRecipientLovers);
+					for (int i = 0; i < oldRecipientLovers.Count; i++)
 					{
-						typeof(InteractionWorker_RomanceAttempt).GetMethod("TryAddCheaterThought", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).Invoke(worker, new object[] { ((List<Pawn>)parms2[1])[i], worstB });
+						worker.TryAddCheaterThought(oldRecipientLovers[i], worstB);
 					}
 					worstA.relations.TryRemoveDirectRelation(PawnRelationDefOf.ExLover, worstB);
 					worstA.relations.AddDirectRelation(PawnRelationDefOf.Lover, worstB);
@@ -313,9 +313,10 @@ namespace SaveOurShip2
 					}
 					if (PawnUtility.ShouldSendNotificationAbout(worstB) || PawnUtility.ShouldSendNotificationAbout(worstA))
 					{
-						object[] parms3 = new object[] { worstA, worstB, parms[1], parms2[1], null, null, null, null };
-						typeof(InteractionWorker_RomanceAttempt).GetMethod("GetNewLoversLetter", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).Invoke(worker, parms3);
-						Find.LetterStack.ReceiveLetter((string)parms3[5], TranslatorFormattedStringExtensions.Translate((string)parms3[4], (string)parms3[0], (string)parms3[1], (string)parms3[2], (string)parms3[3]), LetterDefOf.PositiveEvent);
+						worker.GetNewLoversLetter(worstA, worstB, oldInitiatorLovers, oldRecipientLovers, true, out string letterText,
+							out string letterLabel, out LetterDef letterDef, out LookTargets loolTargets);
+						Find.LetterStack.ReceiveLetter(letterLabel, TranslatorFormattedStringExtensions.Translate(letterText, worstA, worstB,
+							oldInitiatorLovers.ToString(), oldRecipientLovers.ToString()), LetterDefOf.PositiveEvent);
 					}
 					LovePartnerRelationUtility.TryToShareBed(worstA, worstB);
 				}
@@ -363,7 +364,10 @@ namespace SaveOurShip2
 					TranslatorFormattedStringExtensions.Translate("SoS.ArchotechPrankMechanites"), LetterDefOf.NegativeEvent);
 				GenPlace.TryPlaceThing(ThingMaker.MakeThing(ResourceBank.ThingDefOf.Weapon_GrenadeMechanite), InteractionCell, Map, ThingPlaceMode.Near);
             }
-			Consciousness.needs.mood.thoughts.memories.TryGainMemory(ThoughtDefOf.Catharsis);
+			if (Consciousness != null)
+			{
+				Consciousness.needs.mood.thoughts.memories.TryGainMemory(ThoughtDefOf.Catharsis);
+			}
 		}
 
 		public override void ExposeData()
@@ -820,10 +824,12 @@ namespace SaveOurShip2
 
 		private void MakeGift(int numUnlock)
 		{
+			// Main focus is to give more exotic particles, but as they are in the rewards pool, there will be more of other rewards too
+			const float bonusScale = 1.5f;
 			if (GiftParticles) //spawn particles
 			{
 				Thing thing = ThingMaker.MakeThing(ResourceBank.ThingDefOf.ArchotechExoticParticles);
-				thing.stackCount = Math.Min(numUnlock * Rand.RangeInclusive(7, 10), thing.def.stackLimit);
+				thing.stackCount = Math.Min((int)(numUnlock * Rand.RangeInclusive(7, 10) * bonusScale), thing.def.stackLimit);
 				GenSpawn.Spawn(thing, Position, Map);
 			}
 			else //quest
@@ -832,7 +838,7 @@ namespace SaveOurShip2
 				slate.Set<string>("quest_name", TranslatorFormattedStringExtensions.Translate("SoS.ArchotechGiftQuestDesc",Consciousness.Name.ToStringFull));
 				slate.Set<string>("archotech_name", Consciousness.Name.ToStringShort);
 				slate.Set<Map>("map", Map);
-				slate.Set<int>("value", numUnlock * 1000);
+				slate.Set<int>("value", (int)(numUnlock * 1000 * bonusScale));
 				Quest quest = QuestUtility.GenerateQuestAndMakeAvailable(DefDatabase<QuestScriptDef>.GetNamed("ArchotechGiftQuest"), slate);
 				Find.LetterStack.ReceiveLetter(quest.name, quest.description, LetterDefOf.PositiveEvent, null, null, quest, null, null);
 			}

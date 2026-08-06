@@ -34,7 +34,7 @@
 			<MaxHitPoints>1000</MaxHitPoints>
 			<Flammability>0</Flammability>
 		</statBases>
-		<tickerType>Normal</tickerType>
+		<tickerType>Never</tickerType>
 		<description>The outer structural elements of a mechanoid ship's hull. Does not include conduits for power or coolant.</description>
 		<drawStyleCategory>Walls</drawStyleCategory>
 		<comps>
@@ -49,6 +49,7 @@
 			</li>
 		</comps>
 		<rotatable>false</rotatable>
+		<tickerType>Never</tickerType>
 		<building>
 			<shipPart>true</shipPart>
 			<blueprintGraphicData>
@@ -92,7 +93,7 @@
 			<MaxHitPoints>1000</MaxHitPoints>
 			<Flammability>0</Flammability>
 		</statBases>
-		<tickerType>Normal</tickerType>
+		<tickerType>Never</tickerType>
 		<description>The outer structural elements of a mechanoid ship's hull. Includes conduits for power and coolant.</description>
 		<drawStyleCategory>Walls</drawStyleCategory>
 		<comps>
@@ -411,7 +412,7 @@
 		<defName>ShipAirlockMech</defName>
 		<label>mechanoid ship airlock</label>
 		<designatorDropdown>Ship_Airlocks</designatorDropdown>
-		<description>Allows access to a ship or divides rooms inside it. Low-energy plasma barriers prevent gases from escaping.</description>
+		<description>Allows access to a ship or divides rooms inside it. Low-energy plasma barriers prevent gases from escaping. In Odyssey space, partially allows vacuum in when open, so having double airlocks on ship exits is recommended.</description>
 		<category>Building</category>
 		<thingClass>SaveOurShip2.Building_ShipAirlock</thingClass>
 		<altitudeLayer>DoorMoveable</altitudeLayer>
@@ -505,7 +506,7 @@
 		<label>mechanoid hull plating</label>
 		<designatorDropdown>Ship_Hulls</designatorDropdown>
 		<thingClass>Building</thingClass>
-		<drawerType>MapMeshAndRealTime</drawerType>
+		<drawerType>MapMeshOnly</drawerType>
 		<category>Building</category>
 		<graphicData>
 			<texPath>Things/Building/Ship/HullPlateTransparent</texPath>
@@ -552,6 +553,7 @@
 			<li>SaveOurShip2.PlaceWorker_ShipPlating</li>
 		</placeWorkers>
 		<rotatable>false</rotatable>
+		<tickerType>Never</tickerType>
 		<selectable>false</selectable>
 		<neverMultiSelect>true</neverMultiSelect>
 		<soundImpactDefault>BulletImpact_Metal</soundImpactDefault>

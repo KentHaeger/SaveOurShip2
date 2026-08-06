@@ -74,7 +74,7 @@
 		<description>A canister of compressed ceramo-metallic foam. When sprayed, it rapidly hardens into an airtight and relatively durable barrier. Its primary use involves patching destroyed sections of starship hull until proper repairs can be made.</description>
 		<graphicData>
 			<texPath>Things/Item/Resource/Hullfoam</texPath>
-			<graphicClass>Graphic_Single</graphicClass>
+			<graphicClass>Graphic_StackCount</graphicClass>
 		</graphicData>
 		<resourceReadoutPriority>Middle</resourceReadoutPriority>
 		<soundInteract>Metal_Drop</soundInteract>

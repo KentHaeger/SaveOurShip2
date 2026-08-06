@@ -28,7 +28,7 @@ namespace SaveOurShip2
             return upgradeableShuttleNames.Contains(vehicle.def.defName);
         }
 
-        public static bool IsShuttle(VehiclePawn vehicle)
+        public static bool IsSOS2Shuttle(VehiclePawn vehicle)
 		{
             return IsPersonalShuttle(vehicle) || IsUpgradeableShuttle(vehicle);
 

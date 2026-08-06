@@ -20,6 +20,8 @@ namespace SaveOurShip2
 		public bool atmospheric = false;
 		public float fuelPaidByTarget = 0;
 		public Faction fac = null;
+		bool blastConfirmRequested = false;
+		bool blastConfirmed = false;
 
 		protected override void Tick()
 		{
@@ -28,6 +30,8 @@ namespace SaveOurShip2
 			{
 				if (InstallBlueprintUtility.ExistingBlueprintFor(this) != null)
 				{
+					if (!BlastLandingGate())
+						return;
 					if (atmospheric) //transit from/to space, pick landing site and set vars instead of moving
 					{
 						//ShipInteriorMod2.LaunchShip counterpart
@@ -72,6 +76,7 @@ namespace SaveOurShip2
 						mapComp.MoveToVec = InstallBlueprintUtility.ExistingBlueprintFor(this).Position - bottomLeftPos;
 						mapComp.MoveToMap = targetMap;
 						mapComp.MoveToTile = targetMap.Tile;
+						mapComp.BlastLandingPending = blastConfirmed;
 
 						//vars1
 						mapPar.originDrawPos = originMap.Parent.DrawPos;
@@ -96,7 +101,7 @@ namespace SaveOurShip2
 						mapComp.PrevTile = originMap.Tile;
 						mapComp.EnginesOn = true;
 						mapComp.ShipMapState = ShipMapState.inTransit;
-						CameraJumper.TryJump(mapComp.MapRootListAll.FirstOrDefault().Position, originMap);
+                        CameraJumper.TryJump(mapComp.MapRootListAll.FirstOrDefault().Position, originMap);
 					}
 					else //normal move to target map, claim moved ships for player
 					{
@@ -138,6 +143,52 @@ namespace SaveOurShip2
 				if (!Destroyed)
 					Destroy(DestroyMode.Vanish);
 			}
+		}
+
+		//Returns false while waiting on the player's blast-landing confirmation; performs the bombardment once confirmed.
+		bool BlastLandingGate()
+		{
+			ShipMoveBlueprint bp = InnerThing as ShipMoveBlueprint;
+			if (bp == null || !bp.canBlastLand || targetMap == null || BlastLanding.IsSpaceLanding(targetMap))
+				return true;
+			Thing placed = InstallBlueprintUtility.ExistingBlueprintFor(this);
+			if (placed == null)
+				return true;
+			HashSet<IntVec3> footprint = new HashSet<IntVec3>();
+			foreach (SketchEntity e in bp.shipSketch.Entities)
+				footprint.Add(placed.Position + e.pos);
+			//outer-airlock cells live in the extender sketch, not the ship sketch, but they are ship
+			//cells too (part of Area, so the bombardment covers them) - without them an obstruction
+			//only under an airlock would skip the confirmation and never be blasted
+			if (bp.extenderSketch != null)
+			{
+				foreach (SketchEntity e in bp.extenderSketch.Entities)
+					footprint.Add(placed.Position + e.pos);
+			}
+			if (!BlastLanding.FootprintNeedsBlast(footprint, targetMap))
+				return true;
+			if (!blastConfirmed)
+			{
+				if (!blastConfirmRequested)
+				{
+					blastConfirmRequested = true;
+					Find.WindowStack.Add(new Dialog_MessageBox(
+						TranslatorFormattedStringExtensions.Translate("SoS.BlastLandingConfirm"),
+						TranslatorFormattedStringExtensions.Translate("Confirm"), delegate { blastConfirmed = true; },
+						TranslatorFormattedStringExtensions.Translate("Cancel"), delegate
+						{
+							Thing toCancel = InstallBlueprintUtility.ExistingBlueprintFor(this);
+							if (toCancel != null && !toCancel.Destroyed)
+								toCancel.Destroy(DestroyMode.Cancel);
+							if (!Destroyed)
+								Destroy(DestroyMode.Vanish);
+						},
+						TranslatorFormattedStringExtensions.Translate("SoS.BlastLandingTitle"), true));
+				}
+				return false;
+			}
+			//confirmed - the bombardment itself runs at the landing moment, in ShipMapComp.TransitSlowTick
+			return true;
 		}
 
 		protected override void DrawAt(Vector3 drawLoc, bool flip = false)

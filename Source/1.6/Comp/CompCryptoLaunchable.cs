@@ -118,7 +118,7 @@ namespace SaveOurShip2
 			if (targetMapParent != null && targetMapParent.HasMap)
 			{
 				//to ground only
-				if (targetMapParent is WorldObjectOrbitingShip || targetMapParent is SpaceSite || targetMapParent is MoonBase)
+				if (targetMapParent.IsSpaceMapParent())
 				{
 					Messages.Message(TranslatorFormattedStringExtensions.Translate("No"), MessageTypeDefOf.RejectInput);
 					return false;

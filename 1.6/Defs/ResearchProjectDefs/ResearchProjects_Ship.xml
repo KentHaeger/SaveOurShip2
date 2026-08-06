@@ -63,6 +63,8 @@
 		<tab>ResearchTabShip</tab>
 		<researchViewX>0</researchViewX>
 		<researchViewY>0</researchViewY>
+        <discoveredLetterTitle>About: Ship engines</discoveredLetterTitle>
+        <discoveredLetterText>Ship engines are grouped together on the same button in Architect menu, Ship tab. When that tab is active, you can click on engine gizmo(button) and select engine type.</discoveredLetterText>
 		<generalRules>
 		  <rulesStrings>
 			<li>subject->rocket propulsion</li>
@@ -671,7 +673,7 @@
 	<ResearchProjectDef ParentName="ShipResearchProjectBase">
 		<defName>ShipTurretAC</defName>
 		<label>ship cannons</label>
-		<description>Construct ballistic slugthrowers for ship-to-ship combat. Unlike energy weapons, these require ammo but need almost no cooling.</description>
+		<description>Construct ballistic slugthrowers for ship-to-ship combat. Unlike energy weapons, these require ammo but produce almost no heat. Can intercept torpedoes and shuttles.</description>
 		<baseCost>800</baseCost>
 		<techLevel>Spacer</techLevel>
 		<prerequisites>
@@ -696,7 +698,7 @@
 	<ResearchProjectDef ParentName="ShipResearchProjectBase">
 		<defName>ShipTurretLaser</defName>
 		<label>laser turrets</label>
-		<description>Construct small lasers for ship-to-ship combat. Highly damaging but only usable at short range. Can intercept torpedoes.</description>
+		<description>Construct small lasers for ship-to-ship combat. Highly damaging but only usable at short range. Can intercept torpedoes and shuttles.</description>
 		<baseCost>2000</baseCost>
 		<techLevel>Spacer</techLevel>
 		<prerequisites>
@@ -820,8 +822,8 @@
 	</ResearchProjectDef>
 	<ResearchProjectDef ParentName="ShipResearchProjectBase">
 		<defName>ShipTurretMedium</defName>
-		<label>cruiser armaments</label>
-		<description>Construct larger versions of ship turrets, suitable for a mid-sized cruiser.</description>
+		<label>heavy armaments</label>
+		<description>Construct larger versions of ship turrets. Large turrets are not capablble of point defense against incoming shuttles and torpedoes.</description>
 		<baseCost>4000</baseCost>
 		<techLevel>Spacer</techLevel>
 		<prerequisites>
@@ -837,7 +839,7 @@
 		<researchViewY>4.25</researchViewY>
 		<generalRules>
 		  <rulesStrings>
-			<li>subject->cruiser armaments</li>
+			<li>subject->heavy armaments</li>
 
 			<li>subject_story->was taken captive during an arms race between rival planets, forced to design starship weaponry for the opposing side</li>
 			<li>subject_story->oversaw the retrofit of an interstellar passenger liner into a vessel of war</li>
@@ -850,8 +852,8 @@
 	</ResearchProjectDef>
 	<ResearchProjectDef ParentName="ShipResearchProjectBase">
 		<defName>ShipTurretLarge</defName>
-		<label>capital ship armaments</label>
-		<description>Construct modular spinal-mount weapons, typically seen only on capital ships.</description>
+		<label>spinal armaments</label>
+		<description>Construct modular spinal-mount weapons consisting of spinal barrel, optional amplifiers and a spinal capacitor.</description>
 		<baseCost>6000</baseCost>
 		<techLevel>Spacer</techLevel>
 		<prerequisites>

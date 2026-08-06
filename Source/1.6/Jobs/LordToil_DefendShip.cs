@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Vehicles;
 using Verse;
 using Verse.AI;
 using Verse.AI.Group;
@@ -24,14 +25,25 @@ namespace SaveOurShip2
 		{
 			for (int i = 0; i < lord.ownedPawns.Count; i++)
 			{
-				lord.ownedPawns[i].mindState.duty = new PawnDuty(ResourceBank.DutyDefOf.SoSDefendShip, baseCenter);
+                AssignDutyTo(lord.ownedPawns[i]);
 			}
 		}
         public override void Notify_PawnJobDone(Pawn p, JobCondition condition)
         {
 			if(p.mindState.duty == null)
 			{
-                p.mindState.duty = new PawnDuty(ResourceBank.DutyDefOf.SoSDefendShip, baseCenter);
+                AssignDutyTo(p);
+            }
+        }
+        private void AssignDutyTo(Pawn pawn)
+        {
+            if (!(pawn is VehiclePawn))
+            {
+                pawn.mindState.duty = new PawnDuty(ResourceBank.DutyDefOf.SoSDefendShip, baseCenter);
+            }
+            else
+            {
+                pawn.mindState.duty = new PawnDuty(DutyDefOf_Vehicles.TravelOrWaitVehicle);
             }
         }
     }

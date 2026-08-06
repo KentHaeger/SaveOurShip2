@@ -10,6 +10,9 @@
 		<canOverlapZones>false</canOverlapZones>
 		<terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
 		<staticSunShadowHeight>1.0</staticSunShadowHeight>
+		<building>
+			<paintable>true</paintable>
+		</building>
 	</ThingDef>
 	<ThingDef ParentName="BuildingShipBase" Name="BuildingShipHullBase" Abstract="True">
 		<holdsRoof>true</holdsRoof>
@@ -54,7 +57,7 @@
 		</graphicData>
 		<uiIconPath>Things/Building/Ship/ShipBeamModular_east</uiIconPath>
 		<statBases>
-			<WorkToBuild>1500</WorkToBuild>
+			<WorkToBuild>1200</WorkToBuild>
 			<MaxHitPoints>1000</MaxHitPoints>
 			<Flammability>0</Flammability>
 		</statBases>
@@ -72,6 +75,7 @@
 			</li>
 		</comps>
 		<rotatable>false</rotatable>
+		<tickerType>Never</tickerType>
 		<building>
 			<shipPart>true</shipPart>
 			<blueprintGraphicData>
@@ -115,7 +119,7 @@
 		</graphicData>
 		<uiIconPath>Things/Building/Ship/ShipBeamModular_north</uiIconPath>
 		<statBases>
-			<WorkToBuild>1600</WorkToBuild>
+			<WorkToBuild>1280</WorkToBuild>
 			<MaxHitPoints>1000</MaxHitPoints>
 			<Flammability>0</Flammability>
 		</statBases>
@@ -140,6 +144,7 @@
 			</li>
 		</comps>
 		<rotatable>false</rotatable>
+		<tickerType>Never</tickerType>
 		<building>
 			<shipPart>true</shipPart>
 			<blueprintGraphicData>
@@ -174,7 +179,7 @@
 			</damageData>
 		</graphicData>
 		<statBases>
-			<WorkToBuild>800</WorkToBuild>
+			<WorkToBuild>640</WorkToBuild>
 			<Flammability>0</Flammability>
 		</statBases>
 		<rotatable>true</rotatable>
@@ -320,7 +325,7 @@
 		<rotatable>true</rotatable>
 		<tickerType>Normal</tickerType>
 		<statBases>
-			<WorkToBuild>8000</WorkToBuild>
+			<WorkToBuild>6400</WorkToBuild>
 			<MaxHitPoints>500</MaxHitPoints>
 			<Flammability>0</Flammability>
 		</statBases>
@@ -413,7 +418,7 @@
 		<rotatable>true</rotatable>
 		<tickerType>Rare</tickerType>
 		<statBases>
-			<WorkToBuild>4000</WorkToBuild>
+			<WorkToBuild>3200</WorkToBuild>
 			<MaxHitPoints>500</MaxHitPoints>
 			<Flammability>0</Flammability>
 		</statBases>
@@ -482,7 +487,7 @@
 		<defName>ShipAirlock</defName>
 		<label>ship airlock</label>
 		<designatorDropdown>Ship_Airlocks</designatorDropdown>
-		<description>Allows access to a ship or divides rooms inside it. Low-energy plasma barriers prevent gases from escaping.</description>
+		<description>Allows access to a ship or divides rooms inside it. Low-energy plasma barriers prevent gases from escaping. In Odyssey space, partially allows vacuum in when open, so having double airlocks on ship exits is recommended.</description>
 		<category>Building</category>
 		<thingClass>SaveOurShip2.Building_ShipAirlock</thingClass>
 		<designationCategory>Ship</designationCategory>
@@ -725,7 +730,7 @@
 		<defName>ShipHullTile</defName>
 		<label>hull plating</label>
 		<designatorDropdown>Ship_Hulls</designatorDropdown>
-		<drawerType>MapMeshAndRealTime</drawerType>
+		<drawerType>MapMeshOnly</drawerType>
 		<category>Building</category>
 		<graphicData>
 			<texPath>Things/Building/Ship/HullPlateTransparent</texPath>
@@ -748,7 +753,7 @@
 		<drawStyleCategory>Foundations</drawStyleCategory>
 		<statBases>
 			<MaxHitPoints>300</MaxHitPoints>
-			<WorkToBuild>900</WorkToBuild>
+			<WorkToBuild>720</WorkToBuild>
 			<Flammability>0.0</Flammability>
 			<Beauty>1</Beauty>
 		</statBases>
@@ -768,6 +773,7 @@
 			<li>SaveOurShip2.PlaceWorker_ShipPlating</li>
 		</placeWorkers>
 		<rotatable>false</rotatable>
+		<tickerType>Never</tickerType>
 		<selectable>false</selectable>
 		<neverMultiSelect>true</neverMultiSelect>
 		<soundImpactDefault>BulletImpact_Metal</soundImpactDefault>
@@ -924,6 +930,7 @@
 		</statBases>
 		<tickerType>Normal</tickerType>
 		<description>A chemfuel-powered engine capable of launching a ship into orbit. Not suitable for interplanetary travel.\n\nThrust: 500\nFuel use: 1 chemfuel/s\nMax takeoff strength: 750</description>
+		<description MayRequire="Ludeon.RimWorld.Odyssey">A chemfuel-powered engine capable of launching a ship into orbit. Not suitable for interplanetary travel.\n\nThrust: 500\nFuel use: 1 chemfuel/s\nMax takeoff strength: 750\n\nGravship use specifics: a relatively small rocket, simple enough to bolt onto a gravship without fuss.\n\nGameplay effect: doubles as a thruster and a fuel tank. Adds +15 to max travel range. Must be entirely placed on a gravship substructure.</description>
 		<size>(2,3)</size>
 		<receivesSignals>true</receivesSignals>
 		<designationCategory>Ship</designationCategory>
@@ -965,6 +972,42 @@
 				<killZoneWidth>4</killZoneWidth>
 				<soundWorking>ShipEngineFuel</soundWorking>
 			</li>
+			<!-- Odyssey: doubles as a gravship thruster that holds its own fuel (range + FuelStorage in one) -->
+			<li Class="CompProperties_GravshipThruster" MayRequire="Ludeon.RimWorld.Odyssey">
+				<componentTypeDef>Thruster</componentTypeDef>
+				<providesFuel>true</providesFuel>
+				<statOffsets>
+					<GravshipRange>15</GravshipRange>
+				</statOffsets>
+				<requiresLOS>false</requiresLOS>
+				<maxSimultaneous>4</maxSimultaneous>
+				<maxDistance>500</maxDistance>
+				<directionInfluence>20</directionInfluence>
+				<flameSize>5.0</flameSize>
+				<flameOffsetsPerDirection>
+					<li>(0, 0, 0.85)</li>
+					<li>(0, 0, 0.85)</li>
+					<li>(0, 0, 0.85)</li>
+					<li>(0, 0, 0.85)</li>
+				</flameOffsetsPerDirection>
+				<flameShaderType>MoteGlow</flameShaderType>
+				<flameShaderParameters>
+					<_MainTex>/Things/Mote/LargeThruster_Burn</_MainTex>
+				</flameShaderParameters>
+				<exhaustSettings>
+					<exhaustFleckDef>GravshipThrusterExhaust</exhaustFleckDef>
+					<emissionsPerSecond>40.0</emissionsPerSecond>
+					<spawnRadiusRange>0.0~0.5</spawnRadiusRange>
+					<velocity>(0.0,0.0,-20.0)</velocity>
+					<velocityRotationRange>-10.0~10.0</velocityRotationRange>
+					<velocityMultiplierRange>0.8~1.2</velocityMultiplierRange>
+					<rotationOverTimeRange>-180.0~180.0</rotationOverTimeRange>
+					<scaleRange>1.5~3.0</scaleRange>
+				</exhaustSettings>
+			</li>
+			<li Class="CompProperties_Breakdownable" MayRequire="Ludeon.RimWorld.Odyssey">
+				<compClass>SaveOurShip2.CompShipEngineBreakdownable</compClass>
+			</li>
 			<li Class="Rimefeller.CompProperties_Pipe" MayRequire="Dubwise.Rimefeller"/>
 		</comps>
 		<placeWorkers>
@@ -1002,6 +1045,7 @@
 		</statBases>
 		<tickerType>Normal</tickerType>
 		<description>A chemfuel-powered engine capable of launching a ship into orbit. Not suitable for interplanetary travel.\n\nThrust: 1000\nFuel use: 2 chemfuel/s\nMax takeoff strength: 1000</description>
+		<description MayRequire="Ludeon.RimWorld.Odyssey">A chemfuel-powered engine capable of launching a ship into orbit. Not suitable for interplanetary travel.\n\nThrust: 1000\nFuel use: 2 chemfuel/s\nMax takeoff strength: 1000\n\nGravship use specifics: a reliable and efficient rocket engine.\n\nGameplay effect: doubles as a thruster and a fuel tank. Adds +30 to max travel range. Must be entirely placed on a gravship substructure.</description>
 		<size>(3,3)</size>
 		<receivesSignals>true</receivesSignals>
 		<designationCategory>Ship</designationCategory>
@@ -1043,6 +1087,44 @@
 				<killZoneWidth>5</killZoneWidth>
 				<soundWorking>ShipEngineFuel</soundWorking>
 			</li>
+			<!-- Odyssey: doubles as a gravship thruster that holds its own fuel (range + FuelStorage in one) -->
+			<li Class="CompProperties_GravshipThruster" MayRequire="Ludeon.RimWorld.Odyssey">
+				<componentTypeDef>Thruster</componentTypeDef>
+				<providesFuel>true</providesFuel>
+				<maxSimultaneous>2</maxSimultaneous>
+				<fuelSavingsPercent>0.10</fuelSavingsPercent>
+				<statOffsets>
+					<GravshipRange>30</GravshipRange>
+				</statOffsets>
+				<requiresLOS>false</requiresLOS>
+				<maxSimultaneous>2</maxSimultaneous>
+				<maxDistance>500</maxDistance>
+				<directionInfluence>30</directionInfluence>
+				<flameSize>6.0</flameSize>
+				<flameOffsetsPerDirection>
+					<li>(0, 0, 1.5)</li>
+					<li>(0, 0, 1.5)</li>
+					<li>(0, 0, 1.5)</li>
+					<li>(0, 0, 1.5)</li>
+				</flameOffsetsPerDirection>
+				<flameShaderType>MoteGlow</flameShaderType>
+				<flameShaderParameters>
+					<_MainTex>/Things/Mote/LargeThruster_Burn</_MainTex>
+				</flameShaderParameters>
+				<exhaustSettings>
+					<exhaustFleckDef>GravshipThrusterExhaust</exhaustFleckDef>
+					<emissionsPerSecond>50.0</emissionsPerSecond>
+					<spawnRadiusRange>0.0~0.7</spawnRadiusRange>
+					<velocity>(0.0,0.0,-22.0)</velocity>
+					<velocityRotationRange>-10.0~10.0</velocityRotationRange>
+					<velocityMultiplierRange>0.8~1.2</velocityMultiplierRange>
+					<rotationOverTimeRange>-180.0~180.0</rotationOverTimeRange>
+					<scaleRange>1.8~3.4</scaleRange>
+				</exhaustSettings>
+			</li>
+			<li Class="CompProperties_Breakdownable" MayRequire="Ludeon.RimWorld.Odyssey">
+				<compClass>SaveOurShip2.CompShipEngineBreakdownable</compClass>
+			</li>
 			<li Class="Rimefeller.CompProperties_Pipe" MayRequire="Dubwise.Rimefeller"/>
 		</comps>
 		<placeWorkers>
@@ -1082,6 +1164,7 @@
 		</statBases>
 		<tickerType>Normal</tickerType>
 		<description>A nuclear-powered engine capable of launching a ship into orbit. Not suitable for interplanetary travel.\n\nThrust: 3000\nFuel use: 3 fuel pods/s\nMax takeoff strength: 4000</description>
+		<description MayRequire="Ludeon.RimWorld.Odyssey">A nuclear-powered engine capable of launching a ship into orbit. Not suitable for interplanetary travel.\n\nThrust: 3000\nFuel use: 3 fuel pods/s\nMax takeoff strength: 4000\n\nGravship use specifics: this monstrous engine was designed to propel a colossal mass of dreadnoughts and interplanetary freighters. When jury-rigged to a weightless gravship it can easily fly you anywhere on a planet in no time and with exceptional fuel efficiency... Too easily.\n\nGameplay effect: only one is required to maximize range, and fuel consumption is greatly reduced. However, its sheer power makes gravship controls fiddly, reducing piloting quality. Adds +500 to max travel range, but -15 to piloting quality. Must be entirely placed on a gravship substructure.</description>
 		<size>(5,5)</size>
 		<receivesSignals>true</receivesSignals>
 		<designationCategory>Ship</designationCategory>
@@ -1123,6 +1206,43 @@
 				<killZoneWidth>9</killZoneWidth>
 				<soundWorking>ShipEngineFuel</soundWorking>
 			</li>
+			<!-- Odyssey: doubles as a gravship thruster that holds its own fuel (range + FuelStorage in one) -->
+			<li Class="CompProperties_GravshipThruster" MayRequire="Ludeon.RimWorld.Odyssey">
+				<componentTypeDef>Thruster</componentTypeDef>
+				<providesFuel>true</providesFuel>
+				<fuelSavingsPercent>0.4</fuelSavingsPercent>
+				<statOffsets>
+					<GravshipRange>500</GravshipRange>
+				</statOffsets>
+				<requiresLOS>false</requiresLOS>
+				<maxSimultaneous>1</maxSimultaneous>
+				<maxDistance>500</maxDistance>
+				<directionInfluence>50</directionInfluence>
+				<flameSize>9.0</flameSize>
+				<flameOffsetsPerDirection>
+					<li>(0, 0, 3.95)</li>
+					<li>(0, 0, 3.95)</li>
+					<li>(0, 0, 3.95)</li>
+					<li>(0, 0, 3.95)</li>
+				</flameOffsetsPerDirection>
+				<flameShaderType>MoteGlow</flameShaderType>
+				<flameShaderParameters>
+					<_MainTex>/Things/Mote/LargeThruster_Burn</_MainTex>
+				</flameShaderParameters>
+				<exhaustSettings>
+					<exhaustFleckDef>GravshipThrusterExhaust</exhaustFleckDef>
+					<emissionsPerSecond>70.0</emissionsPerSecond>
+					<spawnRadiusRange>0.0~1.0</spawnRadiusRange>
+					<velocity>(0.0,0.0,-26.0)</velocity>
+					<velocityRotationRange>-10.0~10.0</velocityRotationRange>
+					<velocityMultiplierRange>0.8~1.2</velocityMultiplierRange>
+					<rotationOverTimeRange>-180.0~180.0</rotationOverTimeRange>
+					<scaleRange>2.2~4.2</scaleRange>
+				</exhaustSettings>
+			</li>
+			<li Class="CompProperties_Breakdownable" MayRequire="Ludeon.RimWorld.Odyssey">
+				<compClass>SaveOurShip2.CompShipEngineBreakdownable</compClass>
+			</li>
 		</comps>
 		<placeWorkers>
 			<li>SaveOurShip2.PlaceWorker_ShipEngine</li>
@@ -1158,7 +1278,7 @@
 			<MaxHitPoints>300</MaxHitPoints>
 			<Flammability>0</Flammability>
 		</statBases>
-		<tickerType>Normal</tickerType>
+		<tickerType>Rare</tickerType>
 		<description>A small thruster that is required to reposition ships. One is required for every 2000 weight.</description>
 		<size>(1,1)</size>
 		<receivesSignals>true</receivesSignals>
@@ -1778,9 +1898,6 @@
 				<airPerSecondPerHundredCells>2</airPerSecondPerHundredCells>
 			</li>
 		</comps>
-		<placeWorkers>
-			<li>SaveOurShip2.PlaceWorker_OnShipHull</li>
-		</placeWorkers>
 		<costList>
 			<Steel>60</Steel>
 			<Plasteel>30</Plasteel>
@@ -1841,9 +1958,6 @@
 				<airPerSecondPerHundredCells>1</airPerSecondPerHundredCells>
 			</li>
 		</comps>
-		<placeWorkers>
-			<li>SaveOurShip2.PlaceWorker_OnShipHull</li>
-		</placeWorkers>
 		<costList>
 			<Steel>20</Steel>
 			<Plasteel>10</Plasteel>
@@ -1898,6 +2012,9 @@
 			<Mass>20</Mass>
 			<Flammability>0</Flammability>
 		</statBases>
+		<building>
+			<paintable>true</paintable>
+		</building>
 		<description>Efficiently stores up to 1,000Wd of energy.</description>
 		<size>(1,2)</size>
 		<costList>
@@ -1957,6 +2074,9 @@
 			<Mass>200</Mass>
 			<Flammability>0</Flammability>
 		</statBases>
+		<building>
+			<paintable>true</paintable>
+		</building>
 		<description>Efficiently stores up to 10,000Wd of energy.</description>
 		<size>(3,5)</size>
 		<costList>
@@ -2027,8 +2147,11 @@
 			<MaxHitPoints>500</MaxHitPoints>
 			<Flammability>0.1</Flammability>
 		</statBases>
+		<building>
+			<paintable>true</paintable>
+		</building>
 		<tickerType>Normal</tickerType>
-		<description>A compact, self-contained fission reactor. Burns uranium fuel pods. Vents heat into a heatsink network if available, or into the surrounding room if not.\n\nIts base power production of 10,000W can be boosted with several increasingly risky overdrive modes.</description>
+		<description>A compact, self-contained fission reactor. Burns uranium fuel pods. Vents heat into a heatsink network if available, or into the surrounding room if not.\n\nIts base power production of 10,000W can be boosted with several increasingly risky overdrive modes. Produces a lot of heat and will require proper ventilation.</description>
 		<size>(5,5)</size>
 		<designationCategory>Ship</designationCategory>
 		<costList>
@@ -2075,9 +2198,6 @@
 				<postExplosionSpawnThingCount>200</postExplosionSpawnThingCount>
 			</li>
 		</comps>
-		<placeWorkers>
-			<li>SaveOurShip2.PlaceWorker_OnShipHull</li>
-		</placeWorkers>
 		<rotatable>false</rotatable>
 		<terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
 		<staticSunShadowHeight>1.0</staticSunShadowHeight>
@@ -2123,8 +2243,11 @@
 			<MaxHitPoints>200</MaxHitPoints>
 			<Flammability>0.1</Flammability>
 		</statBases>
+		<building>
+			<paintable>true</paintable>
+		</building>
 		<tickerType>Normal</tickerType>
-		<description>A compact, self-contained fission reactor. Burns uranium fuel pods. Vents heat into a heatsink network if available, or into the surrounding room if not.\n\nIts base power production of 3,000W can be boosted with several increasingly risky overdrive modes.</description>
+		<description>A compact, self-contained fission reactor. Burns uranium fuel pods. Vents heat into a heatsink network if available, or into the surrounding room if not.\n\nIts base power production of 3,000W can be boosted with several increasingly risky overdrive modes. Produces a lot of heat and will require proper ventilation.</description>
 		<size>(3,3)</size>
 		<designationCategory>Ship</designationCategory>
 		<costList>
@@ -2171,9 +2294,6 @@
 				<postExplosionSpawnThingCount>50</postExplosionSpawnThingCount>
 			</li>
 		</comps>
-		<placeWorkers>
-			<li>SaveOurShip2.PlaceWorker_OnShipHull</li>
-		</placeWorkers>
 		<rotatable>false</rotatable>
 		<terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
 		<staticSunShadowHeight>1.0</staticSunShadowHeight>
@@ -2838,6 +2958,9 @@
 			<Flammability>0</Flammability>
 			<Mass>200</Mass>
 		</statBases>
+		<building>
+			<paintable>true</paintable>
+		</building>
 		<tickerType>Normal</tickerType>
 		<size>(2,2)</size>
 		<designationCategory>Ship</designationCategory>

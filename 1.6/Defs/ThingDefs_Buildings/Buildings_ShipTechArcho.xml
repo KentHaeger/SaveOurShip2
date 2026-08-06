@@ -52,6 +52,7 @@
 			</li>
 		</comps>
 		<rotatable>false</rotatable>
+		<tickerType>Never</tickerType>
 		<building>
 			<shipPart>true</shipPart>
 			<blueprintGraphicData>
@@ -123,6 +124,7 @@
 			</li>
 		</comps>
 		<rotatable>false</rotatable>
+		<tickerType>Never</tickerType>
 		<building>
 			<shipPart>true</shipPart>
 			<blueprintGraphicData>
@@ -440,7 +442,7 @@
 		<defName>ShipAirlockArchotech</defName>
 		<label>archotech ship airlock</label>
 		<designatorDropdown>Ship_Airlocks</designatorDropdown>
-		<description>Allows access to a ship or divides rooms inside it. Low-energy plasma barriers prevent gases from escaping.</description>
+		<description>Allows access to a ship or divides rooms inside it. Low-energy plasma barriers prevent gases from escaping. In Odyssey space, partially allows vacuum in when open, so having double airlocks on ship exits is recommended.</description>
 		<category>Building</category>
 		<thingClass>SaveOurShip2.Building_ShipAirlock</thingClass>
 		<designationCategory>Ship</designationCategory>
@@ -540,7 +542,7 @@
 		<label>archotech hull plating</label>
 		<designatorDropdown>Ship_Hulls</designatorDropdown>
 		<thingClass>Building</thingClass>
-		<drawerType>MapMeshAndRealTime</drawerType>
+		<drawerType>MapMeshOnly</drawerType>
 		<category>Building</category>
 		<graphicData>
 			<texPath>Things/Building/Ship/HullPlateTransparent</texPath>
@@ -591,6 +593,7 @@
 			<li>SaveOurShip2.PlaceWorker_ShipPlating</li>
 		</placeWorkers>
 		<rotatable>false</rotatable>
+		<tickerType>Never</tickerType>
 		<selectable>false</selectable>
 		<neverMultiSelect>true</neverMultiSelect>
 		<soundImpactDefault>BulletImpact_Metal</soundImpactDefault>

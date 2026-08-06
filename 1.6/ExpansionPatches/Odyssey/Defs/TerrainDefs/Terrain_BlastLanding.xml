@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+	<!-- Surface left by a plasma blast landing. Inherits FloorBase affordances (Light/Medium/Heavy/Walkable)
+	     so a ship - and anything else - can sit on it. Not player-buildable; only created by the bombardment. -->
+	<TerrainDef ParentName="FloorBase">
+		<defName>ShipVolcanicGlass</defName>
+		<label>volcanic glass</label>
+		<!-- FloorBase carries designationCategory Floors, and the game generates a build designator for
+		     every def in a designation category even with no costList - null it out or a free buildable
+		     "volcanic glass" floor appears in the Architect menu -->
+		<designationCategory IsNull="True" />
+		<description>A sheet of dark, glossy glass - ground fused solid by a plasma bombardment. Hard enough to bear the weight of a starship.</description>
+		<!-- Odyssey's cooled-lava texture - safe to reference directly: this def only loads when
+		     Odyssey is active (the whole folder is DLC-gated by LoadFolders.xml). -->
+		<texturePath>Terrain/Surfaces/CooledLava</texturePath>
+		<color>(0.16, 0.15, 0.20)</color>
+		<edgeType>FadeRough</edgeType>
+		<layerable>false</layerable>
+		<renderPrecedence>340</renderPrecedence>
+		<pathCost>0</pathCost>
+		<statBases>
+			<Beauty>-2</Beauty>
+		</statBases>
+	</TerrainDef>
+
+</Defs>

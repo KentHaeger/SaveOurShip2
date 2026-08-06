@@ -49,6 +49,7 @@
 	<SoS.CombatShieldBrokenEnemy>Enemy shield has broken due to lack of heat capacity!</SoS.CombatShieldBrokenEnemy>
 	<SoS.CombatPodDestroyedPlayer>Your shuttle was destroyed by enemy point defense! If any crew survived, their ejector seats will take them back to your ship.</SoS.CombatPodDestroyedPlayer>
 	<SoS.CombatPodDestroyedEnemy>Enemy shuttle was destroyed by your point defense!</SoS.CombatPodDestroyedEnemy>
+	<SoS.CombatCantDeconstructBridge>Can't deconstruct ship bridge during ship battle.</SoS.CombatCantDeconstructBridge>
 	<SoS.WithdrawShip>Withdraw ship</SoS.WithdrawShip>
 	<SoS.WithdrawShipDesc>Withdraw this ship from the battle.</SoS.WithdrawShipDesc>
 	<SoS.WithdrawShipLast>Last ship can not withdraw</SoS.WithdrawShipLast>
@@ -111,6 +112,7 @@
 	<SoS.ClaimWrecksCommandDesc>Claim all wrecks on this map</SoS.ClaimWrecksCommandDesc>
 	<SoS.ClaimWrecksSuccess>Claimed {0} buildings!</SoS.ClaimWrecksSuccess>
 	<SoS.ClaimWrecksDisabled>Enemy forces present!</SoS.ClaimWrecksDisabled>
+	<SoS.AutoClaimedShuttles>Automatically claimed {0} shuttles after battle</SoS.AutoClaimedShuttles>
 	<SoS.RemoveWrecksCommand>Remove wreck</SoS.RemoveWrecksCommand>
 	<SoS.RemoveWrecksCommandDesc>Remove target wreck from this map</SoS.RemoveWrecksCommandDesc>
 	<!-- placeworkers -->
@@ -152,6 +154,9 @@
 	<SelectEverything>Select Everything</SelectEverything>
 	<SelectEverythingDesc>Select everything.</SelectEverythingDesc>
 	<!-- bridge -->
+	<!-- Ship name in case there is no bridge -->
+	<SoS.Ship.WreckName>Wreck</SoS.Ship.WreckName>
+	<SoS.Ship.DefaultName>Unnamed Ship</SoS.Ship.DefaultName>
 	<SoS.StatsShipName>Ship name: {0}</SoS.StatsShipName>
 	<SoS.StatsNotoriety>Notoriety: {0}</SoS.StatsNotoriety>
 	<SoS.StatsShipMass>Weight: {0}</SoS.StatsShipMass>
@@ -162,7 +167,8 @@
 	<SoS.StatsShipHeatMaximumShort>maximum</SoS.StatsShipHeatMaximumShort>
 	<SoS.StatsShipHeatMaximum>Heat maximum: {0}</SoS.StatsShipHeatMaximum>
 	<SoS.StatsShipCombatRating>Combat rating: {0}</SoS.StatsShipCombatRating>
-	<SoS.StatsShipCombatThrust>Thrust/Weight ratio: {0}</SoS.StatsShipCombatThrust>
+	<SoS.StatsShipCombatThrust>Ship Thrust/Weight ratio: {0}</SoS.StatsShipCombatThrust>
+	<SoS.StatsShipCombatMapThrust>Fleet Thrust/Weight ratio: {0}</SoS.StatsShipCombatMapThrust>
 	<SoS.ReportInterReady>Ready for interstellar travel.</SoS.ReportInterReady>
 	<SoS.ReportInterNotReady>Not ready for interstellar travel:</SoS.ReportInterNotReady>
 	<SoS.ReportNeedPilot>Ship requires either a pilot or an AI core.</SoS.ReportNeedPilot>
@@ -197,13 +203,32 @@
 	<SoS.MoveFailFuel>Not enough fuel to move ship, required {0} fuel</SoS.MoveFailFuel>
 	<SoS.MoveFailFaction>Ship from another faction next to target area. Move aborted.</SoS.MoveFailFaction>
 	<SoS.MoveFailCombat>Main ship map is in battle.</SoS.MoveFailCombat>
-	<SoS.Land>Land ship</SoS.Land>
-	<SoS.LandDesc>Land this ship near </SoS.LandDesc>
+	<SoS.Land>Land ship ({0})</SoS.Land>
+	<SoS.LandDesc>Land this ship near {0}</SoS.LandDesc>
+	<!-- Used in 2 above strings as key filler when there in actual location to land available -->
+	<SoS.LandSomewhere>somewhere</SoS.LandSomewhere>
+	<SoS.LandNoTargetTile>There is no surface map to land on. Observe planet surface tile with ship scanner or science console.</SoS.LandNoTargetTile>
 	<SoS.Rebuild>Rebuild ship parts</SoS.Rebuild>
 	<SoS.RebuildDesc>Places blueprints for destroyed buildings on this ship.</SoS.RebuildDesc>
 	<SoS.BridgeConnectTooltip>Bridge is not connected! Make sure this is hooked up to both heat and power networks.</SoS.BridgeConnectTooltip>
 	<SoS.BridgeSelectOuterdoors>Select outer airlocks</SoS.BridgeSelectOuterdoors>
 	<SoS.BridgeSelectOuterdoorsDesc>Select all outer airlocks for the current ship</SoS.BridgeSelectOuterdoorsDesc>
+	<!-- weapon groups -->
+	<SoS.CommandEnableWeaponGroups>Enable weapon groups</SoS.CommandEnableWeaponGroups>
+	<SoS.CommandEnableWeaponGroupsDesc>Weapon group system allows assigning ship weapons to groups and easily selecting each group later. Only works for player ship map. Can be disabled to save screen space if not used.</SoS.CommandEnableWeaponGroupsDesc>
+	<SoS.CommandSelectWeaponGroup>Select weapon group {0}</SoS.CommandSelectWeaponGroup>
+	<SoS.CommandSelectWeaponGroupDesc>Select specific weapon group. Only works for player ship map.</SoS.CommandSelectWeaponGroupDesc>
+	<SoS.CommandIncludeInWeaponGroup>Include to weapon group {0}</SoS.CommandIncludeInWeaponGroup>
+	<SoS.CommandIncludeInWeaponGroupDesc>Check/uncheck to add/remove rurret to specific weapon group.</SoS.CommandIncludeInWeaponGroupDesc>
+	<SoS.WeaponGroup.1>1</SoS.WeaponGroup.1>
+	<SoS.WeaponGroup.2>2</SoS.WeaponGroup.2>
+	<SoS.WeaponGroup.3>3</SoS.WeaponGroup.3>
+	<SoS.WeaponGroup.4>4</SoS.WeaponGroup.4>
+	<SoS.WeaponGroup.5>5</SoS.WeaponGroup.5>
+	<SoS.WeaponGroup.6>6</SoS.WeaponGroup.6>
+	<SoS.WeaponGroup.7>7</SoS.WeaponGroup.7>
+	<SoS.WeaponGroup.8>8</SoS.WeaponGroup.8>
+	<SoS.WeaponGroup.9>9</SoS.WeaponGroup.9>
 	<!-- story -->
 	<SoS.QuestPillarA>Attack KSS Horizon</SoS.QuestPillarA>
 	<SoS.QuestPillarADesc>Attempt to engage the ancient terraforming station and recover an archotech pillar</SoS.QuestPillarADesc>
@@ -260,6 +285,10 @@
 	<SoS.TurretPointDefenseDesc>Use this turret to intercept incoming torpedoes and shuttles</SoS.TurretPointDefenseDesc>
 	<SoS.TurretNotConnected>Not connected to the ship bridge via heat network, can't fire!</SoS.TurretNotConnected>
 	<SoS.TorpedoAllowedDesc>Toggle to prevent or allow firing of this type of torpedo.</SoS.TorpedoAllowedDesc>
+	<!-- blast landing -->
+	<SoS.BlastLandingTitle>Blast landing</SoS.BlastLandingTitle>
+	<SoS.BlastLandingConfirm>The landing zone is obstructed. On final approach the ship's plasma batteries will bombard it - destroying everything within the ship's footprint, blasting away roofs, and fusing the ground to volcanic glass. Plasma fire is imprecise: the glassing will spread and scar the surrounding terrain. Overhead mountain cannot be breached.\n\nProceed with blast landing?</SoS.BlastLandingConfirm>
+	<SoS.BlastLandingUnavailable>Landing zone obstructed. Bombarding it clear on approach requires a ship with substantial plasma weaponry and power capacity - this ship does not qualify.</SoS.BlastLandingUnavailable>
 	<SoS.TorpedoNotLoaded>Not loaded</SoS.TorpedoNotLoaded>
 	<SoS.TorpedoFullyLoaded>Fully loaded</SoS.TorpedoFullyLoaded>
 	<SoS.TorpedoNone>No torpedoes</SoS.TorpedoNone>
@@ -310,6 +339,8 @@
 	<SoS.DespawnHologramDesc>Destroy the formgel controlled by this device. Breeding a new mechanite swarm to replace it will take one day</SoS.DespawnHologramDesc>
 	<SoS.RenameAI>Rename AI</SoS.RenameAI>
 	<SoS.RenameAIDesc>Give this AI a new name</SoS.RenameAIDesc>
+	<!-- Default AI Pawn name for Archotech Spore or AI Core-->
+	<SoS.AIBuilding.UnnamedAI>Unnamed AI</SoS.AIBuilding.UnnamedAI>
 	<SoS.InstallConsciousness>Install consciousness</SoS.InstallConsciousness>
 	<SoS.InstallConsciousnessThisOne>Install consciousness: {0}</SoS.InstallConsciousnessThisOne>
 	<SoS.InstallConsciousnessDesc>Install a consciousness into this device</SoS.InstallConsciousnessDesc>
@@ -459,10 +490,24 @@
 	<SoSAIName>AI name: {0}</SoSAIName>
 	<SoSNoMapObserve>This type of map cannot be observed from orbit. Its owners have likely deployed sensor scrambling technology.</SoSNoMapObserve>
 	<SoS.Breathable>Breathable</SoS.Breathable>
-	<!-- satellite -->
+	<!-- Satellite -->
 	<SoS.SatelliteRepair>Repair</SoS.SatelliteRepair>
 	<SoS.SatelliteHack>Hack</SoS.SatelliteHack>
 
+	<!-- Notorietuy alert -->
+	<SoS.Alert.NotoriertyLabel>Notoriety: {0}</SoS.Alert.NotoriertyLabel>
+	<SoS.Alert.NotoriertyLowDesc>Because of pirating trade ships and/or because of using Orbital Bombardment (submod), player ship got notorious. Not too much yet, but continued piracy or bombardment will make it higher and attract bounty hunters.</SoS.Alert.NotoriertyLowDesc>
+	<SoS.Alert.NotoriertyHighDesc>Because of pirating trade ships and/or because of using Orbital Bombardment (submod), player ship got very notorious and is chased by bounty hunters. Attacks will happen roughly evey {0} days.</SoS.Alert.NotoriertyHighDesc>
+
+	<!-- TWR / Movement blocked alert -->
+	<SoS.Alert.MovemenyBlocked>Player ship movement is blocked!</SoS.Alert.MovemenyBlocked>
+	<SoS.Alert.MovemenyBlockedDesc>Player ship movement in battle is blocked because of wrecks or immobile ships on map.</SoS.Alert.MovemenyBlockedDesc>
+	<SoS.Alert.TWR>TWR: Player {0}, Enemy: {1}</SoS.Alert.TWR>	
+	<SoS.Alert.TWRDesc>Final thrust to weight ratios (TWRs) for player and enemy maps in ship battle. When there are multiple ships on one map, this is equal to TWR of the slowest ship.
+Slowest player ship: {0}, click to jump to it.
+Slowest enemy ship: {1}.
+	</SoS.Alert.TWRDesc>	
+	
 	<!-- This scetion and lower were added during major translation upgrade -->
 	<!-- Archotech and endgame stuff -->
 	<SoS.ArchotechIdeoKeep>Discover the truth of {0}</SoS.ArchotechIdeoKeep>
@@ -529,6 +574,7 @@
 
 	<!-- Starship bow quest -->
 	<SoS.AIPersuade>Persuade to live</SoS.AIPersuade>
+	<SoS.AIPersuadeConfirmation>Persuading insane AI is dangerous and can cause permanent health issues if failed. Continue?</SoS.AIPersuadeConfirmation>
 	<SoS.BlackBoxHack>Hack</SoS.BlackBoxHack>
 	<SoS.ReactorDisableSuccess>Reactors successfully disabled!</SoS.ReactorDisableSuccess>
 	<SoS.DoorOpenSuccess>Doors successfully opened!</SoS.DoorOpenSuccess>
@@ -537,6 +583,19 @@
 
 	<!-- Ship buildings and hardware -->
 	<SoS.HolodeckOnline>Current program: {0}</SoS.HolodeckOnline>
+	<!-- Holodeck progarams that are illustrated with various graphichs around active holodeck -->
+	<SoS.HolodeckProgram.SpaceBattle>Space Battle</SoS.HolodeckProgram.SpaceBattle>
+	<SoS.HolodeckProgram.FightClub>Fight Club</SoS.HolodeckProgram.FightClub>
+	<SoS.HolodeckProgram.HotSpring>Hot Spring</SoS.HolodeckProgram.HotSpring>
+	<SoS.HolodeckProgram.ExoticMenagerie>Exotic Menagerie</SoS.HolodeckProgram.ExoticMenagerie>
+	<SoS.HolodeckProgram.OrganTycoon>Organ Tycoon</SoS.HolodeckProgram.OrganTycoon>
+	<SoS.HolodeckProgram.BeachCookout>Beach Cookout</SoS.HolodeckProgram.BeachCookout>
+	<SoS.HolodeckProgram.GoldenPalace>Golden Palace</SoS.HolodeckProgram.GoldenPalace>
+	<SoS.HolodeckProgram.EnchantedGarden>Enchanted Garden</SoS.HolodeckProgram.EnchantedGarden>
+	<SoS.HolodeckProgram.Caveworld>Caveworld</SoS.HolodeckProgram.Caveworld>
+	<SoS.HolodeckProgram.ArtMuseum>Art Museum</SoS.HolodeckProgram.ArtMuseum>
+	<SoS.HolodeckProgram.MechanoidHive>Mechanoid Hive</SoS.HolodeckProgram.MechanoidHive>
+	<SoS.HolodeckProgram.Psychedelia>Psychedelia</SoS.HolodeckProgram.Psychedelia>
 	<SoS.HolodeckOffline>Offline</SoS.HolodeckOffline>
 
 	<SoS.FuelInfo>{0}: {1} / {2}</SoS.FuelInfo>
@@ -649,6 +708,7 @@ Long-range weapons are railguns, plasma has medum range, lasers and cannons have
 Dodge chance is based on target ship Thrust To Weight ratio, so only fast ships dodge very well. Pilot Intellectual skill increases dodge chance. Tactician with high shooting skill on attacking ship decreases enemy dodge chance.
 For Thrust to weight ratio, slowest ship on the map is taken into account.
 Successful dodge means miss by a lot, projectile doesn't even enter target map.</SoS.DodgeChanceExplanation>
+
 	<!-- Dodge mechanics -->
 	<SoS.DodgeNoEnginePower>Can't dodge because of no working engines or wrecks present. Remove wrecks to dodge.</SoS.DodgeNoEnginePower>
 	<SoS.DodgeNoRCSOnShip>Ship {0} needs RCS thrusters to perform dodge.</SoS.DodgeNoRCSOnShip>
@@ -657,5 +717,41 @@ Successful dodge means miss by a lot, projectile doesn't even enter target map.<
 	<SoS.DodgeLeftDesc>Dodge incoming shots, engaging right side RCS thrusters and moving ship to the left.</SoS.DodgeLeftDesc>
 	<SoS.DodgeRight>Dodge right</SoS.DodgeRight>
 	<SoS.DodgeRightDesc>Dodge incoming shots, engaging left side RCS thrusters and moving ship to the right.</SoS.DodgeRightDesc>
+	
+	<!-- Stashed ship quest -->
+	<SoS.StashedShip.RequestOptionParent>Request stashed ship location</SoS.StashedShip.RequestOptionParent>
+	<SoS.StashedShip.RequestOption>{0} (cost: {1} silver) ({2})</SoS.StashedShip.RequestOption>
+	<!-- Top-level option when unavailable -->
+	<SoS.StashedShip.RequestOptionDummy>Request stashed ship location</SoS.StashedShip.RequestOptionDummy>
+	<!-- Specific ship  option when unavailable -->
+	<SoS.StashedShip.RequestOptionDummySpecific>{0}</SoS.StashedShip.RequestOptionDummySpecific>
+	<SoS.StashedShip.OnCooldown>Next request for stashed ship will be available in {0} days.</SoS.StashedShip.OnCooldown>
+	<SoS.StashedShip.RequiresTech>Research Starflight Basics technology before requesting.</SoS.StashedShip.RequiresTech>
+	<SoS.StashedShip.NotInSpace>Ships stashed on planet aren't availaable from space.</SoS.StashedShip.NotInSpace>
+	<SoS.StashedShip.NoSecuroity>Not guarded</SoS.StashedShip.NoSecuroity>
+	<SoS.StashedShip.MinorSceurity>Lightly guarded</SoS.StashedShip.MinorSceurity>
+	<SoS.StashedShip.AverageSceurity>Average security</SoS.StashedShip.AverageSceurity>
+	<SoS.StashedShip.HighSceurity>Heavily guarded</SoS.StashedShip.HighSceurity>
+	<!-- Ship category and class names -->
+	<SoS.StashedShip.RecommendedStarterShips>Recommended starter ships</SoS.StashedShip.RecommendedStarterShips>
+	<SoS.StashedShip.StarterShips>Starter ships</SoS.StashedShip.StarterShips>
+	<SoS.StashedShip.Traders>Trade ships</SoS.StashedShip.Traders>
+	<SoS.StashedShip.LowCR>Low combat rating/non-combat ships</SoS.StashedShip.LowCR>
+	<SoS.StashedShip.Fighters>Fighters</SoS.StashedShip.Fighters>
+	<SoS.StashedShip.Bombers>Bombers</SoS.StashedShip.Bombers>
+	<SoS.StashedShip.Corvettes>Corvettes</SoS.StashedShip.Corvettes>
+	<SoS.StashedShip.Frigates>Frigates</SoS.StashedShip.Frigates>
+	<SoS.StashedShip.Destroyers>Destroyers</SoS.StashedShip.Destroyers>
+	<SoS.StashedShip.Cruisers>Cruisers</SoS.StashedShip.Cruisers>
+	<SoS.StashedShip.Battleships>Battleships</SoS.StashedShip.Battleships>
+	<SoS.StashedShip.Battlecruisers>Battlecruisers</SoS.StashedShip.Battlecruisers>
+	<SoS.StashedShip.Dreadnoughts>Dreadnoughts</SoS.StashedShip.Dreadnoughts>
+	<SoS.StashedShip.Carriers>Carriers</SoS.StashedShip.Carriers>
+	<SoS.StashedShip.DevAllShips>Dev: All ships (use with caution)</SoS.StashedShip.DevAllShips>
+	<SoS.StashedShip.DevAllShipsFlipped>Dev: All ships flipped (use with caution)</SoS.StashedShip.DevAllShipsFlipped>
+	
+	<!-- Ship collision feature -->
+	<SoS.Collision.WarningMessage>Distance between player and enemy ships got very low. Beware of possible collision.</SoS.Collision.WarningMessage>
+	<SoS.Collision.Message>Ships collided, cusing some damage to both! They will bounce off, increasing battle distance and it will take some time to stabilize course before next ramming attempt if that is desired.</SoS.Collision.Message>
 	
 </LanguageData>
