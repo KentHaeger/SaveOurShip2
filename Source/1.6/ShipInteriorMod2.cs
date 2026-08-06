@@ -254,10 +254,7 @@ namespace SaveOurShip2
 
 			options.Gap();
 			options.CheckboxLabeled("SoS.Settings.RenderPlanet".Translate(), ref renderPlanet, "SoS.Settings.RenderPlanet.Desc".Translate());
-			options.Gap();
-			options.Gap();
 			options.Label("SoS.Settings.UI".Translate());
-			options.GapLine();
 			options.CheckboxLabeled("SoS.Settings.UseSplashScreen".Translate(), ref useSplashScreen, "SoS.Settings.UseSplashScreen.Desc".Translate());
 			options.CheckboxLabeled("SoS.Settings.PersistShipUI".Translate(), ref persistShipUI, "SoS.Settings.PersistShipUI.Desc".Translate());
 			options.Label("SoS.Settings.OffsetUIx".Translate(), -1f, "SoS.Settings.OffsetUIx.Desc".Translate());
@@ -269,10 +266,7 @@ namespace SaveOurShip2
 			options.Label("SoS.Settings.ShuttlesToDisplay".Translate(), -1f, "SoS.Settings.ShuttlesToDisplay.Desc".Translate());
 			string bufferShuttleNum = shuttlesToDisplay.ToString();
 			options.TextFieldNumeric<int>(ref shuttlesToDisplay, ref bufferShuttleNum, 0, 20);
-			options.Gap();
-			options.Gap();
 			options.Label("SoS.Settings.Misc".Translate());
-			options.GapLine();
 			options.CheckboxLabeled("SoS.Settings.ShipMapPhysics".Translate(), ref shipMapPhysics, "SoS.Settings.ShipMapPhysics.Desc".Translate());
 			options.CheckboxLabeled("SoS.Settings.EasyMode".Translate(), ref easyMode, "SoS.Settings.EasyMode.Desc".Translate());
 			options.CheckboxLabeled("SoS.Settings.NewAccuiracySystem".Translate(), ref newAccuracySystem,"SoS.Settings.NewAccuiracySystem.Desc".Translate());
